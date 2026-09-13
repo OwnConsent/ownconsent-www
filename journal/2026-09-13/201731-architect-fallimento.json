@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-13T20:17:31+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "adr": "ADR-0002",
+  "titolo": "Un comando unico (helper python con percorso in variabile, poi git add e commit) rifiutato dal controllo di isolamento della worktree",
+  "contesto": "Per risparmiare turni avevo concatenato in un solo comando: assegnazione S=<scratchpad>, python3 $S/voce.py ..., git add, git commit -F $S/msg. Il controllo della worktree lo ha rifiutato prima di eseguire qualunque parte.",
+  "evidenza": [
+    "messaggio: «this command runs python with a value computed at runtime (the variable S) ... so what it runs cannot be shown not to be git. Refusing to run it»",
+    "nessun file scritto e nessun commit: git log invariato al turno successivo"
+  ],
+  "cosa_si_e_imparato": "In questa worktree un comando che mescola git con programmi dai percorsi calcolati a runtime non passa: percorsi letterali, e l'helper separato da git. Costo: un turno.",
+  "esito": "rieseguito in due comandi con percorsi letterali",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 9
+}

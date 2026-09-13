@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-13T20:18:20+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "adr": "ADR-0002",
+  "ramo": "docs/adr-0002-struttura-site",
+  "titolo": "ADR-0002 (struttura di site/) consegnato per la PR-1, stato proposta",
+  "commit": [
+    "bc57178 docs(adr): ADR-0002, struttura di site/ per la consegna 1"
+  ],
+  "dod_soddisfatta": {
+    "adr_per_ogni_scelta_vincolante": "sì: gli 8 punti di adr_previsti[1].deve_decidere più focus e terze parti, in D1-D9, ognuno con le alternative scartate",
+    "contratti_aggiornati": "nessun contratto toccato (vincolo del lotto); ADR-0002 non richiede modifiche ai contratti",
+    "consumatori_impattati_per_agente": "frontend (L05, L06), privacy (L04), qa-test (L07), devops (L12), design (L02, L10), code-reviewer (L08), accessibility (L09)",
+    "journal": "misura toolchain, misura contrasti, decisione, gate footer, misura firma, fallimento comando"
+  },
+  "da_riportare_nel_piano": [
+    "L05: nessun file fuori dai glob per le decisioni; manca però un proprietario di .gitignore per site/.astro/ (e per test-results/ e playwright-report/ di L07)",
+    "L06: site/src/content/pagine/** non ha una collezione in content.config.ts (D7): va tolto dai file di L06 oppure usato senza schema",
+    "L06/L05: rotte con barra finale (/saas/, /hosted/, /on-premise/, /confronto/); legali /legale/termini-di-servizio/, /legale/informativa-privacy/, /legale/cookie-policy/",
+    "L07: e2e/fixtures/** per AC6 e N2 (dentro e2e/**); test degli stili calcolati del focus (D6)",
+    "L12: Node >= 22.12, corepack, due lockfile, ASTRO_TELEMETRY_DISABLED=1",
+    "piano, perimetro: tre segnaposto distinti, non uno (vale la spec)",
+    "@design: gate sul contrasto del focus nel footer; nessun token di spessore del bordo; 01-pagine.md usa URL senza barra e contatto@ownconsent.example"
+  ],
+  "turni_usati": 12,
+  "esito": "committato, nessun push, nessuna PR",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

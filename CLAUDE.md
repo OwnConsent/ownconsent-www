@@ -91,6 +91,11 @@ Le descrizioni di un obiettivo — mie, tue, di chiunque — sono **ipotesi**. C
 misura, e **si ferma** se la misura contraddice la descrizione, invece di adattare la
 misura alla descrizione.
 
+Quando riporti una misura, riporta **il comando e il suo output**, non la conclusione.
+«core.hooksPath è vuoto» è una conclusione; `git config --get core.hooksPath` seguito da
+ciò che ha stampato è una misura. Chi legge deve poter rifare la verifica, e tu devi
+poterti accorgere di aver guardato nel posto sbagliato.
+
 **Shipped vince.** Quando il documento e ciò che è in produzione divergono sul
 meccanismo, vale ciò che è in produzione. La divergenza si segnala, non si assorbe in
 silenzio.

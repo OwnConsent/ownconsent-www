@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-13T20:09:22+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0002",
+  "titolo": "Contrasto dell'anello di focus: 1,06:1 e 1,79:1 sul bottone del marchio confermati; sul footer (bg-inverse) 2,38:1 in chiaro e 1,87:1 in scuro, sotto 3:1 anche con lo scarto",
+  "contesto": "La verifica dei contrasti di L02 (ramo design/token-pagine-pubbliche) regge sull'ipotesi che lo scarto focus.ring-offset di 2 px faccia toccare all'anello solo bg-canvas o bg-surface. Ho ricalcolato con la formula di luminanza relativa WCAG i valori esadecimali di contracts/design-tokens.json di quel ramo, compreso lo sfondo del footer, che ha link focalizzabili e che la verifica di L02 non nomina.",
+  "evidenza": [
+    "comando: python3 -c con la formula WCAG (luminanza relativa, (L1+0.05)/(L2+0.05)) sui valori di color.semantic",
+    "output: light ring/brand 1.06 ring/canvas 7.41 ring/surface 6.91",
+    "output: dark ring/brand 1.79 ring/canvas 9.58 ring/surface 8.8 ring/raised 7.02",
+    "output: light ring/inverse(footer) 2.38 dark ring/inverse 1.87",
+    "coppie: chiaro focus-ring #7A4B00 su brand-bg #175A9E e su bg-inverse #17191C; scuro focus-ring #F0AA2E su brand-bg #3D8ADC e su bg-inverse #F6F7F8"
+  ],
+  "conseguenza": "Lo scarto strutturale di ADR-0002 risolve il caso del bottone del marchio, non quello del footer: con lo scarto l'anello tocca proprio bg-inverse. È una divergenza di classe 2 (accessibilità, WCAG 1.4.11) nel documento di @design, non una scelta di struttura: non la correggo io, la riporto come gate per @design prima di L05.",
+  "esito": "registrata; ADR-0002 la cita come vincolo aperto",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 5
+}

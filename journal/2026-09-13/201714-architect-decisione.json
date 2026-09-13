@@ -1,0 +1,61 @@
+{
+  "ts": "2026-09-13T20:17:14+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "adr": "ADR-0002",
+  "titolo": "Struttura di site/: resa statica, tre segnaposto in site/src/dati/, copia temporanea per AC6 e N2, token via plugin Vite, focus in @layer, progetto di test separato",
+  "contesto": "adr_previsti[1].deve_decidere del piano (8 punti) più i vincoli del prompt di delega: tre segnaposto distinti (la spec prevale sul piano, che ne nomina uno), anello di focus garantito per struttura, terze parti. Nessuna build possibile: site/ non esiste e la macchina ha Node 20 contro Node >= 22.12 richiesto da Astro 7.3.2 (voce misura 200922).",
+  "alternative": [
+    {
+      "opzione": "output server con @astrojs/node",
+      "scartata_perche": "processo in produzione e revisione @security senza un caso d'uso nella consegna 1"
+    },
+    {
+      "opzione": "build.format file con URL senza barra",
+      "scartata_perche": "richiede una riscrittura dell'hosting, che non è scelto (G3)"
+    },
+    {
+      "opzione": "indirizzo di contatto con dominio example.com o ownconsent.example",
+      "scartata_perche": "example.com risolve (getent, voce misura); lo stesso TLD del sito rende ambigua la ricerca dei due domini"
+    },
+    {
+      "opzione": "nome e dominio della casella in due campi separati",
+      "scartata_perche": "l'indirizzo intero non comparirebbe in nessun file, e N2 lo cerca intero"
+    },
+    {
+      "opzione": "variabile d'ambiente per la configurazione di prova del listino",
+      "scartata_perche": "percorso di codice di produzione che esiste solo per i test: rischio di pubblicare importi di prova"
+    },
+    {
+      "opzione": "Style Dictionary oppure tokens.css generato e committato",
+      "scartata_perche": "dipendenza grande per un formato non DTCG; due fonti della stessa verità"
+    },
+    {
+      "opzione": "regola :focus-visible globale senza livello",
+      "scartata_perche": "una regola di componente con la stessa specificità la annulla: sarebbe convenzione, non garanzia"
+    },
+    {
+      "opzione": "workspace pnpm",
+      "scartata_perche": "un lockfile conteso fra L05 e L07 e copia di site/ non autosufficiente per N2 e AC6"
+    },
+    {
+      "opzione": "bozza: boolean nel frontmatter",
+      "scartata_perche": "un false per errore toglie il contrassegno senza approvazione di una persona (regola 7)"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0002-struttura-site.md, sezioni D1-D9 con le alternative per ciascuna",
+    "$ getent hosts segnaposto-dominio-sito.example -> nessun output, exit=2",
+    "$ getent hosts segnaposto-dominio-casella.invalid -> nessun output, exit=2",
+    "$ getent hosts example.com -> 2606:4700:10::ac42:93f3 example.com; 2606:4700:10::6814:179a example.com; exit=0"
+  ],
+  "limiti": "Tre comportamenti di Astro e Vite sono ipotesi non misurate (nessun JS nell'output statico, @custom-media risolto negli .astro con Lightning CSS, rotte con barra servite 200 da astro preview): l'ADR dice a L05 di fermarsi se la misura li smentisce.",
+  "esito": "ADR-0002 scritto con stato proposta, per PR-1",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 7
+}

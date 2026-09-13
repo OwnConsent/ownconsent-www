@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-13T20:09:22+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0002",
+  "titolo": "La toolchain della macchina non costruisce l'Astro corrente: Node 20, pnpm assente, Astro 7.3.2 chiede Node >= 22.12",
+  "contesto": "ADR-0002 deve scegliere modalità di resa e strumenti; la tabella Comandi di CLAUDE.md presuppone pnpm. Prima di scrivere una decisione che dipende dalla versione di Astro ho misurato cosa c'è sulla macchina e cosa chiede il pacchetto oggi.",
+  "evidenza": [
+    "$ node --version -> v20.20.2",
+    "$ pnpm --version -> /bin/bash: line 21: pnpm: command not found",
+    "$ corepack --version -> 0.34.6",
+    "$ npm --version -> 10.8.2",
+    "$ timeout 20 npm view astro version engines -> version = '7.3.2'; engines = { npm: '>=9.6.5', node: '>=22.12.0', pnpm: '>=7.1.0' }",
+    "$ timeout 20 npm view lightningcss version -> 1.33.0"
+  ],
+  "conseguenza": "ADR-0002 dichiara Node >= 22.12 come prerequisito di L05, L07 e L12 e non dà per scontato pnpm: L05 lo attiva con corepack e annota l'esito. Nessuna build è stata eseguita da questo lotto: le affermazioni sul comportamento di Astro nell'ADR restano ipotesi da misurare in L05.",
+  "esito": "registrata; entra in ADR-0002 come prerequisito",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 5
+}

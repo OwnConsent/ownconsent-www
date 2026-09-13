@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T20:17:14+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0001 e ADR-0002",
+  "titolo": "Il marcatore .work/.current-agent è cambiato durante il giro (cantiere:architect, poi orchestrator): firma Cantiere-Agent: architect scritta a mano nei commit",
+  "contesto": "Il prompt di delega chiede di non scrivere né cancellare .work/.current-agent e di firmare a mano se il marcatore non dice architect. L'hook githooks/prepare-commit-msg firma con il contenuto del marcatore e non duplica una firma già presente (grep '^Cantiere-Agent:').",
+  "evidenza": [
+    "20:00:41 $ cat .work/.current-agent -> cantiere:architect",
+    "20:07:10 $ cat .work/.current-agent -> orchestrator",
+    "$ ls -la .work/ -> .current-agent 12 byte, modificato Sep 13 20:07",
+    "$ git config --get core.hooksPath -> /home/andreapernici/src/ownconsent/www/githooks (exit=0)"
+  ],
+  "conseguenza": "Senza la firma a mano l'hook avrebbe attribuito i commit di questo lotto a orchestrator. Ogni commit di L03 porta Cantiere-Agent: architect nel messaggio.",
+  "esito": "registrata una volta, vale per i commit dei due rami",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 7
+}

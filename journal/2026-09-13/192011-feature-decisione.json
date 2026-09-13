@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-13T19:20:11+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Spec della consegna 1 aggiornata su #13: due domini distinti, obbligo manuale OM-1 sulle promesse SaaS, AC49 confermato",
+  "contesto": "Risposte di Andrea alla PR-0. Il dominio della casella può essere diverso da quello del sito; le promesse SaaS di AC49 senza meccanismo fino alla consegna 2 diventano un obbligo manuale con responsabile e scadenza; la resa di AC49 è confermata. Il nome del responsabile non è stato comunicato: resta segnaposto e diventa condizione del gate di pubblicazione.",
+  "alternative": [
+    {
+      "opzione": "un agente product-spec nuovo per queste modifiche",
+      "scartata_perche": "tre aggiunte puntuali dettate da Andrea; circa 115 mila token misurati per L00 contro una modifica meccanica"
+    },
+    {
+      "opzione": "scrivere un nome di responsabile",
+      "scartata_perche": "non comunicato: non si indovina (regola 8)"
+    }
+  ],
+  "evidenza": [
+    "segnaposto_dichiarati: «dominio» diviso in «dominio del sito» e «dominio della casella di contatto», più il segnaposto del responsabile di OM-1",
+    "AC2: canonical sul dominio del sito",
+    "gate_pubblicazione: verifica separata dei due domini; responsabile di OM-1 nominato",
+    "obblighi_manuali: OM-1 con a_carico_di, scadenza (consegna 2), verifica",
+    "rese_del_testo AC49: confermata"
+  ],
+  "esito": "applicata su spec/issue-8, commit separato dalla voce di journal",
+  "umano_coinvolto": true
+}

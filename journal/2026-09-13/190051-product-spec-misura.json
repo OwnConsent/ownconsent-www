@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T19:00:51+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "misura",
+  "titolo": "Verifica di docs/spec/issue-8.json contro il corpo della #8",
+  "contesto": "Controllo richiesto dall'incarico prima di chiudere L00; gli id si riestraggono dal corpo della issue con gh, non dal plan.",
+  "evidenza": [
+    "comando: python3 <scratchpad>/verifica_spec.py (legge docs/spec/issue-8.json e il corpo di gh issue view 8 --json body)",
+    "output: id dalla issue: 21; id dalla spec: 21; OK id della spec = id della issue; OK dato/quando/allora non vuoti — []; OK domande_aperte == []; OK non_goal non vuoto — 14; OK retention «da dichiarare in L11»; OK assenti hosted@, onprem@, simbolo euro, EUR, cifre di prezzo, indirizzi email — []; ESITO: tutti i controlli passano; exit=0"
+  ],
+  "esito": "superata al primo tentativo",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

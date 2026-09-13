@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T18:58:01+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false,
+  "titolo": "La spec si scrive in docs/spec/issue-8.json, non in .work/ come dice ancora docs/HANDOFF.md su main",
+  "contesto": "HANDOFF.md su main indica .work/<id>/spec.json. Il plan (DP-23, lotti[L00].file, PR-0) e l'incarico dicono docs/spec/issue-8.json; la modifica del protocollo è in una PR separata. docs/spec/ non esiste ancora (ls: No such file or directory).",
+  "alternative": [
+    {
+      "opzione": ".work/issue-8/spec.json, come da HANDOFF.md su main",
+      "scartata_perche": ".work/ è ignorata da .gitignore: la spec non sarebbe un artefatto committato, contro «si implementa solo da artefatti committati» e contro DP-23"
+    },
+    {
+      "opzione": "scriverla in tutti e due i percorsi",
+      "scartata_perche": "due copie del contratto divergono; il lotto dichiara un solo file"
+    }
+  ],
+  "evidenza": [
+    "plan.json lotti[L00].file = [\"docs/spec/issue-8.json\"]",
+    "DP-23 stato decisa"
+  ],
+  "esito": "applicata"
+}

@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T18:51:54+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Cancellati dalla working tree 58 file di journal tracciati su main, credendo di essere su issue-4-feature; ripristinati",
+  "contesto": "Per sbloccare il checkout dei rami da main ho rimosso le copie locali di journal/2026-09-13 identiche a origin/main, convinto che fossero non tracciate sul ramo issue-4-feature. Il ramo corrente era invece main (cambiato fuori dalla sessione dopo il merge di #11), dove quei file sono tracciati.",
+  "evidenza": [
+    "$ git status -sb → «## main...origin/main» seguito da 58 righe « D journal/2026-09-13/…»",
+    "$ git rev-parse --abbrev-ref HEAD → main",
+    "$ git restore --source=HEAD -- journal/2026-09-13/ ; git status -sb → solo 4 file ?? (184350, 184945, 185045 ×2)",
+    "$ git diff --stat HEAD -- journal/ → nessun output",
+    "$ ls journal/2026-09-13 | wc -l → 62"
+  ],
+  "cosa_si_e_imparato": "Il ramo corrente è una misura, non un ricordo: prima di un'operazione distruttiva sulla working tree si rilegge con git rev-parse --abbrev-ref HEAD e git status, anche se lo si è controllato poco prima. Una persona può cambiare ramo fra due comandi.",
+  "esito": "nessuna perdita: file identici a HEAD, nulla committato; ripristino verificato",
+  "umano_coinvolto": false
+}

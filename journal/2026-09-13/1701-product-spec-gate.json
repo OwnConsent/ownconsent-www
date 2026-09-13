@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T17:01:22+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "guard-paths ha bloccato di nuovo un comando inline: l'operatore di divisione intera di Python letto come percorso",
+  "contesto": "Il comando che misurava gli esempi di date di AC42 e validava il journal conteneva codice Python inline con l'operatore di divisione intera (doppia barra). L'hook l'ha letto come percorso fuori dal perimetro e ha fermato tutto il comando prima dell'esecuzione: nessun file scritto.",
+  "chi_ha_deciso": "hook guard-paths.sh del plugin cantiere (perimetro della sessione)",
+  "cosa_serviva": "Nulla fuori dal perimetro. Serviva smettere di mettere codice nel testo dei comandi Bash, dove l'hook cerca percorsi.",
+  "evidenza": [
+    "messaggio dell'hook: il percorso formato dalla doppia barra porta fuori dal progetto",
+    "seconda occorrenza dello stesso tipo in questo giro, dopo la voce 1657"
+  ],
+  "cosa_cambia": "Gli script si scrivono in file dello scratchpad di sessione e il comando Bash li lancia soltanto; niente divisione intera con la doppia barra. Controllo dell'hook non disattivato né forzato, nessun accesso fuori dal progetto. Da segnalare a chi mantiene l'hook: due falsi positivi su codice inline.",
+  "esito": "cambiato metodo; segnalato nel report",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

@@ -1,0 +1,16 @@
+{
+  "ts": "2026-09-13T17:28:40+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "02-piano",
+  "tipo": "gate",
+  "titolo": "Issue nel repository della CMP richiesta dall'ADR su NO-1..NO-5: non creabile da questa sessione",
+  "contesto": "Il commento 5654192623 accetta di passare NO-1..NO-5 a un ADR, a condizione che l'ADR produca una issue aperta nel repository della CMP. .cantiere-deny blocca quel nome in qualunque comando della sessione, gh compreso.",
+  "chi_ha_deciso": "hook guard-paths con .cantiere-deny (voluto, CLAUDE.md); non aggirato",
+  "cosa_serviva": "Una persona che apra la issue nel repository della CMP a partire dal testo preparato da @architect in L01",
+  "evidenza": ["commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654192623", ".cantiere-deny contiene il nome del repository della CMP"],
+  "note": "Il commento conferma NO-1..NO-5, AR-10..AR-18 e le regole non coordinate; non risponde a DP-16, DP-17 e DP-01, che l'utente in chat chiama anch'essi «i tre punti». Non li tratto come confermati: la tappa A procede come dichiarato e prima della tappa B serve una risposta.",
+  "esito": "aggirato per delega a una persona: testo della issue a carico di L01",
+  "umano_coinvolto": true
+}

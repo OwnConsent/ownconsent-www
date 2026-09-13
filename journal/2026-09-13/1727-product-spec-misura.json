@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-13T17:27:25+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "misura",
+  "titolo": "Simulazione: senza identità, la forma temporale dell'intero sito non distingue l'integrazione che riscrive a ogni pagina; distingue un ciclo periodico solo a basso traffico",
+  "contesto": "Il coordinatore chiede se il controllo 2 (forma temporale implausibile) sia verificabile. Misurato invece di dedotto, con una simulazione illustrativa scritta nello scratchpad di sessione. Ipotesi del modello, non traffico reale: visite con arrivi di Poisson, pagine per visita geometriche con media 4, permanenza lognormale con mediana 30 s e sigma 1, integrazione corretta che scrive alla prima pagina con probabilità 0,7, seme 42, una sola esecuzione. Metriche sugli intervalli fra scritture consecutive dell'intero sito.",
+  "evidenza": [
+    "20 visite l'ora, corretta: 13 scritture l'ora, coefficiente di variazione degli intervalli 1,04, intervalli sotto 1 s 0,3%, a 5 s esatti 0%",
+    "20 visite l'ora, riscrive a ogni pagina: 79 scritture l'ora, coefficiente di variazione 1,92, sotto 1 s 1,8%, a 5 s esatti 0,5%",
+    "20 visite l'ora, ciclo ogni 5 s: 810 scritture l'ora, coefficiente di variazione 5,53, sotto 1 s 21,6%, a 5 s esatti 30,4%",
+    "20 visite l'ora, corretta più ciclo sull'1% delle visite: 22 scritture l'ora, coefficiente di variazione 1,59, a 5 s esatti 38,9%",
+    "5000 visite l'ora, corretta: 3567 scritture l'ora, coefficiente di variazione 1,03, sotto 1 s 62,8%, a 5 s esatti 0,1%",
+    "5000 visite l'ora, riscrive a ogni pagina: 20507 scritture l'ora, coefficiente di variazione 2,77, sotto 1 s 98,5%, a 5 s esatti 0%",
+    "5000 visite l'ora, ciclo ogni 5 s: 206485 scritture l'ora, coefficiente di variazione 3,6, sotto 1 s 99,9%, a 5 s esatti 0%",
+    "5000 visite l'ora, corretta più ciclo sull'1% delle visite: 5376 scritture l'ora, coefficiente di variazione 1,11, sotto 1 s 76,1%, a 5 s esatti 0,8%"
+  ],
+  "interpretazione": "Il controllo 2 si può verificare con dati di prova costruiti agli estremi (AC60). Sul caso citato da Andrea, l'integrazione che riscrive a ogni pagina, la firma a livello di sito è fatta di quantità (circa 6 volte le scritture) e di raffiche (intervalli più irregolari, non più regolari), non di intervalli troppo brevi o troppo regolari. Un ciclo periodico è evidente a basso traffico e quasi scompare ad alto traffico. Ad alto traffico la maggioranza degli intervalli legittimi è già sotto 1 s. La quota a 5 s esatti presuppone di conoscere il periodo, che un rilevatore reale non conosce: la separazione reale è peggiore di quella misurata. La misura contraddice in parte la descrizione del controllo: va portata ad Andrea, non assorbita nei parametri.",
+  "esito": "controllo 2 verificabile ma di efficacia dubbia sul caso che lo motiva; registrato in rischi",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

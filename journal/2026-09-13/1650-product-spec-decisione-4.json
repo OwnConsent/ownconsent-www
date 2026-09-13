@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-13T16:50:53+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Conferme di Andrea: DA-2, DA-7 e DA-8 decise; DA-3, DA-4 e DA-6 confermate come rinvii, non come risposte; DA-5 divisa",
+  "contesto": "Commento 5653909118: «Confermo le scelte provvisorie proposte. Restano rimandabili.» DA-2, DA-7 e DA-8 avevano un'opzione adottata. DA-3 non ne aveva nessuna, DA-4 e DA-6 solo un segnaposto. DA-5 conteneva sia la definizione di richiesta (ora chiusa da due commenti) sia tetti e taglie (non risposti).",
+  "alternative": [
+    {
+      "opzione": "registrare anche DA-3, DA-4 e DA-6 come decise",
+      "scartata_perche": "non c'era una risposta da confermare: è confermato il rinvio con il suo segnaposto. Le domande restano da decidere nella spec Hosted e nel contratto di dismissione"
+    },
+    {
+      "opzione": "lasciarle in domande_aperte come non bloccanti",
+      "scartata_perche": "HANDOFF.md ferma la catena se domande_aperte non è vuoto, e Andrea le ha dichiarate rimandabili"
+    },
+    {
+      "opzione": "limitare la conferma alle sole DA",
+      "scartata_perche": "il primo commento chiedeva di confermare anche niente periodo di prova, solo partita IVA italiana, chiusura a fine periodo e WCAG 2.2 AA: le considero comprese (AR-03, AR-04, AR-05, AR-08). AR-09 non era elencata e resta un'assunzione"
+    }
+  ],
+  "scelta": "Campo decisioni_confermate con esito «deciso» (DA-1, DA-2, DA-5a, DA-7, DA-8) o «rinvio confermato» (DA-3, DA-4, DA-5b, DA-6), ognuna con link al commento. Tetti e taglie (DA-5b) diventano segnaposto dichiarati come i prezzi. domande_aperte vuoto.",
+  "evidenza": [
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118",
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653795379 (elenco «Da confermare anche»)"
+  ],
+  "esito": "applicata nella copia di lavoro della spec",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

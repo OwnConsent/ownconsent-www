@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-13T17:41:24+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Lezione: riprendere lo stesso agente per compiti nuovi fa crescere il costo a ogni giro",
+  "contesto": "Sulla issue 4 product-spec è stato ripreso tre volte con SendMessage per compiti nuovi (riallineamento al formato, integrazione risposte, L00) invece di aprire agenti puliti.",
+  "evidenza": [
+    "product-spec: 74037 token (giro nuovo) → 136609 → 248369 → 334389 (riprese)",
+    "orchestrator, giro nuovo: 189216",
+    "media per invocazione salita da 162058 (4 giri) a 196524 (5 giri)",
+    "una ripresa ha anche perso un messaggio accodato (173708-feature-fallimento.json)"
+  ],
+  "alternative": [
+    {
+      "opzione": "riprendere l'agente che ha già il contesto",
+      "scartata_perche": "il contesto si trascina e il costo cresce a ogni giro; il contesto viaggia nell'agente invece che nell'artefatto e il protocollo di handoff smette di servire"
+    }
+  ],
+  "cosa_si_e_imparato": "Regola da ora (Andrea): non si riprende un agente per un compito nuovo. L'agente si chiude, l'esito si scrive nell'artefatto di handoff (spec.json, plan.json), e il compito successivo lo fa un agente pulito che legge quell'artefatto. Se un'informazione serve al giro dopo e non è nel file, il difetto è del file.",
+  "esito": "regola adottata dalla ripianificazione della prima consegna in poi",
+  "umano_coinvolto": true
+}

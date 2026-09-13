@@ -1,0 +1,52 @@
+{
+  "ts": "2026-09-13T16:50:41+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Modulo di contatto: difese nell'ordine di Andrea; comportamento visibile di campo trappola, tempo di compilazione e limite per IP",
+  "contesto": "Il commento 5653909118 conferma che non si usano captcha esterni e fissa l'ordine delle difese: 1) campo trappola e tempo di compilazione; 2) limite per IP, con IP pseudonimizzato e retention minima; 3) prova di lavoro auto-ospitata, solo se servisse. Il testo non dice cosa vede chi viene fermato.",
+  "alternative": [
+    {
+      "punto": "campo trappola compilato",
+      "opzione": "messaggio di errore",
+      "scartata_perche": "rivela al programma automatico quale campo lo ha tradito; scelto: stessa conferma di un invio riuscito, nessun recapito (AR-16)"
+    },
+    {
+      "punto": "invio più veloce della soglia",
+      "opzione": "scarto silenzioso",
+      "scartata_perche": "una persona veloce o con compilazione automatica perderebbe la richiesta senza che nessuno se ne accorga; scelto: messaggio che invita a confermare, valori conservati, secondo invio recapitato (AR-16)"
+    },
+    {
+      "punto": "limite per IP superato",
+      "opzione": "scarto silenzioso",
+      "scartata_perche": "stesso rischio di richieste vere perse; scelto: messaggio «riprova più tardi» con i valori conservati"
+    },
+    {
+      "punto": "prova di lavoro",
+      "opzione": "introdurla subito",
+      "scartata_perche": "Andrea: solo se le prime due difese non bastano; messa fra i non_goal"
+    },
+    {
+      "punto": "retention dell'IP pseudonimizzato",
+      "opzione": "fissare un valore in ore o giorni",
+      "scartata_perche": "sarebbe un numero inventato; proposta: non oltre la finestra del limite di frequenza, cioè il minimo che serve alla funzione. Ratifica di @privacy"
+    },
+    {
+      "punto": "campo trappola e accessibilità",
+      "opzione": "lasciare il come a chi implementa",
+      "scartata_perche": "un campo trappola raggiungibile da tastiera o letto dagli screen reader fa compilare il campo a persone vere: aggiunto criterio osservabile (accessibilità, divergenza di classe 2)"
+    }
+  ],
+  "dubbio_residuo": "Più persone dietro lo stesso IP (uffici, agenzie) possono far scattare il limite: registrato in rischi. Andrea scrive che il campo IP va in contracts/data-map.json: la modifica spetta a @privacy, questa spec non tocca contracts/. Il rischio del captcha è chiuso.",
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118, sezione «Protezione del modulo di contatto»"
+  ],
+  "esito": "applicata nella copia di lavoro della spec",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

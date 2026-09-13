@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-13T17:48:41+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "lotto": null,
+  "titolo": "Esclusione motivata: modulo di contatto e sue difese spostati dalla consegna 1 alla consegna 3",
+  "contesto": "Andrea divide la issue 4 in tre consegne (1 sito pubblico e contenuti; 2 registrazione, pagamento finto, contatore e tetto; 3 attivazione hosted e on-premise). Nella consegna 1 le pagine Hosted e On-premise sono complete e chiudono con «si attiva parlando con noi» e indirizzi dedicati hosted@ e onprem@ (rotabili se raccolti dagli spammer), non con un segnaposto «in arrivo», che sarebbe falso: le due modalità sono vendibili oggi parlando con noi.",
+  "alternative": [
+    {
+      "opzione": "modulo di contatto nella consegna 1",
+      "scartata_perche": "porta api/ in Go, limite per IP, campo IP in data-map.json e revisioni privacy e security dentro una consegna che deve restare solo site/"
+    },
+    {
+      "opzione": "pagine Hosted e On-premise con segnaposto «in arrivo»",
+      "scartata_perche": "affermazione falsa, e fa sembrare incomplete le due modalità che valgono di più (Andrea)"
+    },
+    {
+      "opzione": "link mailto personale",
+      "scartata_perche": "indirizzo non rotabile se finisce nelle liste degli spammer"
+    }
+  ],
+  "esclusione": {
+    "cosa": "modulo di contatto con le difese AC55..AC59: campo trappola, tempo di compilazione, limite di frequenza per IP, IP pseudonimizzato in contracts/data-map.json con finalità «prevenzione abusi» e base «legittimo interesse»",
+    "non_cancellata": "spostata nella consegna 3 insieme al modulo",
+    "scadenza": "si riapre all'apertura della issue della consegna 3, oppure prima se gli indirizzi hosted@/onprem@ ricevono spam o abusi tali da richiedere il modulo"
+  },
+  "evidenza": [
+    "risposta di Andrea in chat alla domanda sul modulo di contatto"
+  ],
+  "esito": "applicata al perimetro della consegna 1",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-13T17:08:00+02:00",
+  "agente": "orchestrator",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "gate",
+  "titolo": "La spec non integra il commento 5653974149: AC52 (anomalia su scritture/visitatori distinti) è ritirato da Andrea",
+  "contesto": "Leggendo i commenti della issue per contesto trovo un quinto commento di Andrea (14:46:12Z, 16:46 ora italiana) che ritira il criterio di anomalia basato sul rapporto fra scritture e visitatori distinti e lo sostituisce con due rilevamenti per sito senza identità: scostamento dalla propria linea di base (media mobile oraria su 14 giorni, N volte per M ore consecutive, N e M da tarare su dati reali) e forma temporale implausibile. spec.json elenca in risposte_integrate solo 5653909118, 5653921812 e 5653934414; le risposte sono state integrate alle 17:00:14, dopo il commento, ma il commento non c'è.",
+  "chi_ha_deciso": "orchestrator, applicando CLAUDE.md «si ferma se la misura contraddice la descrizione»; la decisione su come riscrivere AC52 resta a @product-spec e la lettura ad Andrea",
+  "cosa_serviva": "Una revisione di spec.json da parte di @product-spec che integri 5653974149 in AC52, AR-17, rischi, DV-6, segnaposto, perimetro, percorsi.operatore, DA-5a e risposte_integrate, prima dei lotti che toccano anomalia e confine di conteggio.",
+  "evidenza": [
+    "gh issue view 4: commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653974149, createdAt 2026-09-13T14:46:12Z",
+    "spec.json risposte_integrate: 3 URL, 5653974149 assente",
+    "grep «visitatori distinti» su spec.json: 11 righe, fra cui AC52, AR-17, rischi[6], DV-6, segnaposto, perimetro, percorsi.operatore",
+    "journal 1703-feature-decisione: la sessione principale ha accettato la spec senza rilevare il commento"
+  ],
+  "conseguenza": "Non fermo tutto il piano: il ritiro tocca solo AC52 e parte di cmp-api.md. Il piano apre con un lotto @product-spec (L00) che blocca la sezione anomalia di cmp-api.md, l'ADR sulla tensione «visitatori distinti» e i lotti di AC52. Gli altri lotti non ne dipendono.",
+  "esito": "registrato nel piano come lotto bloccante L00 e segnalato nel report",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "trascritta_dopo": false
+}

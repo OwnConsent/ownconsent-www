@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-13T17:17:16+02:00",
+  "agente": "orchestrator",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Prima stesura del piano: revisioni schedulate prima che la costruzione della tappa fosse finita",
+  "contesto": "Nella prima stesura ogni lotto di revisione dipendeva solo dai lotti che toccava per argomento (per esempio L28 accessibilità da L17, L19, L21). Lo script di validazione ha calcolato i livelli topologici: L28, L29, L30 e L32 cadevano al passo 3 della tappa B, prima dei test di accettazione L22 e L23 (passo 4) e prima di L16; in tappa C L55, L58 e L59 cadevano al passo 2, prima di L44.",
+  "tentativo": "Dipendenze per argomento, scritte a mano lotto per lotto",
+  "cosa_si_e_imparato": "Una dipendenza per argomento dice cosa una revisione legge, non quando il suo oggetto smette di cambiare. Con i rimandi dei test il codice rivisto al passo 3 può essere diverso da quello che va in PR, e il finding diventa inverificabile. Correzione: in B, C e D ogni revisione ed evidenza dipende da tutti i lotti di costruzione e di test della tappa. Costo: le revisioni slittano all'ultimo passo, ma girano tutte in parallelo.",
+  "evidenza": [
+    "valida_piano.py, prima esecuzione: tappa B passo 3 revisioni [L28, L29, L30, L32], passo 4 test [L22, L23]",
+    "tappa C passo 2 revisioni [L55, L58, L59], passo 3 costruzione [L44]",
+    "0 file sovrapposti, 0 cicli, 59/59 AC con implementazione e con test qa-test nella stessa esecuzione"
+  ],
+  "esito": "corretto nel piano con revisioni_dopo_costruzione.py e rivalidato",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "trascritta_dopo": false
+}

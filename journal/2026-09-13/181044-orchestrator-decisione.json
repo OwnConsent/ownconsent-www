@@ -1,0 +1,37 @@
+{
+  "ts": "2026-09-13T18:10:44+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "La consegna 1 tocca due contratti (design-tokens.json, perf-budgets.json) e un ADR di ratifica solo per perf-budgets",
+  "contesto": "DP-01: ogni contratto lo modifica il suo proprietario, @architect ratifica, ADR solo per i cambiamenti che vincolano più di un lotto. Perimetro solo site/, nessun dato personale, nessuna API, nessun evento.",
+  "alternative": [
+    {
+      "opzione": "ADR anche per design-tokens.json",
+      "scartata_perche": "che il file esista, chi lo possiede e chi lo consuma è già deciso e committato in contracts/README.md; i valori sono lavoro del proprietario. Il meccanismo con cui site/ consuma i token vincola più lotti e va nell'ADR sulla struttura di site/, non in un ADR sui valori"
+    },
+    {
+      "opzione": "perf-budgets.json senza ADR",
+      "scartata_perche": "separare soglie di laboratorio e p75 di campo cambia il significato del budget per L05, L06 e L07 e per l'area cliente della consegna 2: vincola più di un lotto"
+    },
+    {
+      "opzione": "aggiornare anche events.json (DV-3, DA-7)",
+      "scartata_perche": "DV-3 riguarda le registrazioni, cioè la consegna 2; AC12 è verificato dall'assenza di richieste, e il file dice già che senza consenso l'evento non parte"
+    },
+    {
+      "opzione": "aggiornare data-map.json con cookie o IP",
+      "scartata_perche": "il sito non raccoglie dati personali e non imposta cookie (AC9); gli indirizzi hosted@ e onprem@ sono caselle di ruolo, non dati di visitatori"
+    },
+    {
+      "opzione": "toccare cmp-api.md, db/collections.md, payments.md, openapi.yaml",
+      "scartata_perche": "nessuna API, nessun MongoDB, nessun pagamento in perimetro"
+    }
+  ],
+  "scelta": "L01 @performance su perf-budgets.json (soglie di laboratorio e metodo); L02 @design crea design-tokens.json e docs/design/**; L03 @architect scrive ADR-0001 (ratifica di L01) e ADR-0002 (struttura di site/: modalità di resa, file unico degli indirizzi N2, configurazione del listino e iniezione di configurazioni di prova, URL canonico segnaposto, consumo dei token, posizione degli strumenti di test).",
+  "dubbio_residuo": "ADR-0002 non modifica un file di contracts/: è una decisione tecnica che vincola più lotti, quindi rientra nella DoD di @architect. La numerazione 0001–0011 prevista dal piano della #4 non è mai stata scritta ed è da considerare nulla: la consegna 2 continuerà da 0003.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

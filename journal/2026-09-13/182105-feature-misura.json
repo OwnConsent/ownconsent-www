@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T18:21:05+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Stima dei token della consegna 1: 21 invocazioni attese (circa 3,2 M), 44 nel caso peggiore (circa 6,7 M)",
+  "contesto": "plan.json della issue 8: 11 lotti, 18 invocazioni attese e 41 nel caso peggiore, più 3 dell'orchestratore fuori dalla formula. Per la regola nuova ogni invocazione è un agente nuovo, quindi la base sono i soli giri nuovi misurati, non le riprese.",
+  "evidenza": [
+    "product-spec (issue 4, spec iniziale): 74037 token, 7 strumenti",
+    "orchestrator (issue 4, plan.json): 189216 token, 23 strumenti",
+    "orchestrator (issue 8, plan.json): 191784 token, 29 strumenti",
+    "media dei giri nuovi: 151679 token per invocazione",
+    "attese: (18 + 3) × 151679 = 3185259 token (circa 3.2 M)",
+    "caso peggiore: (41 + 3) × 151679 = 6673876 token (circa 6.7 M)",
+    "controllo indipendente sui turni: 6613 token per chiamata di strumento (orchestratore della issue 8); turni attesi 528 → circa 3.5 M; caso peggiore 984 → circa 6.5 M",
+    "confronto: piano unico della issue 4, 122 invocazioni → circa 24,0 M con la media di 5 giri"
+  ],
+  "limiti": [
+    "il significato di subagent_tokens non è verificato",
+    "campione di 3 giri nuovi, tutti su documenti: nessun lotto di codice, build o test misurato; L05, L06 e L07 hanno tetti di 50–70 turni",
+    "token per turno misurati su un solo giro; crescono con il contesto accumulato",
+    "esclusi i token della sessione principale"
+  ],
+  "esito": "stima consegnata ad Andrea prima dell'esecuzione",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null
+}

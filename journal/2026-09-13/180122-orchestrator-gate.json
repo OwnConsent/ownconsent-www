@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T18:01:22+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "gate",
+  "titolo": "guard-paths blocca la ricerca della skill cantiere:collaudo fuori dal progetto",
+  "contesto": "Per confrontare il costo in invocazioni fra la skill cantiere:collaudo e i lotti di revisione separati volevo leggerne la definizione. Ho lanciato una ricerca su tutto il filesystem ('find /'), che attraversa percorsi fuori dal repository.",
+  "chi_ha_deciso": "hook guard-paths.sh del plugin cantiere",
+  "cosa_serviva": "Il file della skill cantiere:collaudo, per contare quanti agenti lancia per PR. Non l'ho aggirato: il confronto usa solo la descrizione pubblicata della skill («revisione, test, sicurezza, privacy, performance e accessibilità in parallelo, con filtro avversariale dei finding»), cioè almeno sei revisori per PR, e il numero resta un'ipotesi non misurata.",
+  "evidenza": [
+    "messaggio: GATE: il percorso '/' porta fuori dal progetto (/) — fuori dal perimetro di questa sessione",
+    "comando bloccato per intero: nessuna lettura avvenuta"
+  ],
+  "esito": "confronto collaudo/lotti separati fatto sulla descrizione della skill, dichiarato come stima nel piano",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

@@ -1,0 +1,66 @@
+{
+  "ts": "2026-09-13T16:50:16+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Regole del tetto: sei punti in cui il testo di Andrea non basta a scrivere un test, risolti con scelte reversibili",
+  "contesto": "Il commento 5653909118 fissa: periodo ancorato alla data di attivazione; avvisi all'80% e al 100%; nessuna interruzione fino al 120%; oltre il 120% contatto immediato, per entità e non solo per ripetizione; sopra il 100% per due periodi consecutivi passaggio obbligato al piano superiore dal periodo successivo; nessun addebito automatico. Per scrivere test servono sei precisazioni che il testo non dà.",
+  "alternative": [
+    {
+      "punto": "giorno di ancoraggio che non esiste nel mese (29, 30, 31)",
+      "opzione": "primo giorno del mese successivo",
+      "scartata_perche": "sposta l'ancoraggio in avanti e trascina i periodi seguenti"
+    },
+    {
+      "punto": "giorno di ancoraggio che non esiste nel mese (29, 30, 31)",
+      "opzione": "periodi fissi di 30 giorni",
+      "scartata_perche": "contraddice «mese di fatturazione»; scelto: ultimo giorno del mese, date in ora italiana (AR-10)"
+    },
+    {
+      "punto": "110% ricorrente, «una conversazione tranquilla»",
+      "opzione": "emettere anche un segnale di contatto non urgente per la sola ricorrenza",
+      "scartata_perche": "il testo non chiede un segnale in più: sotto il 120% la conversazione coincide con l'avviso di passaggio obbligato dopo due periodi. Aggiungerlo sarebbe reinterpretare"
+    },
+    {
+      "punto": "entità che cresce nello stesso periodo (121% e poi 500%)",
+      "opzione": "avvisi a gradini di entità",
+      "scartata_perche": "i gradini non sono dati e andrebbero inventati; scelto: un avviso immediato al primo superamento del 120% con percentuale e ricorrenza, escalation successiva da definire (AR-13)"
+    },
+    {
+      "punto": "quando si verifica «due periodi consecutivi sopra il 100%»",
+      "opzione": "alla chiusura del secondo periodo",
+      "scartata_perche": "la decorrenza «dal periodo successivo» cadrebbe nello stesso istante dell'avviso, senza preavviso; scelto: al superamento del 100% nel secondo periodo, con il resto del periodo come preavviso (AR-14)"
+    },
+    {
+      "punto": "cliente già sul piano più alto",
+      "opzione": "riaprire una domanda bloccante",
+      "scartata_perche": "comportamento reversibile dietro il punto di variazione, senza addebiti e con pagamenti finti"
+    },
+    {
+      "punto": "cliente già sul piano più alto",
+      "opzione": "passaggio a «volumi su richiesta»",
+      "scartata_perche": "la sotto-domanda sul piano publisher non ha avuto risposta e servirebbe inventare un'offerta; scelto: nessun passaggio, avviso di contatto all'operatore (AR-11)"
+    },
+    {
+      "punto": "decorrenza del cambio piano chiesto dal cliente (sotto-domanda senza risposta)",
+      "opzione": "salita immediata",
+      "scartata_perche": "richiede un calcolo pro rata, cioè una decisione di prezzo; oltre il tetto nel periodo non succede nulla, quindi salire subito non protegge il cliente. Scelto: salita e discesa dal periodo successivo, come il passaggio obbligato (AR-12)"
+    },
+    {
+      "punto": "«eccedenza registrata»",
+      "opzione": "solo registrazione interna",
+      "scartata_perche": "non verificabile dall'esterno; scelto: eccedenza del periodo mostrata nello storico dell'area cliente (AR-15)"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118, sezione 1"
+  ],
+  "esito": "applicata nella copia di lavoro della spec come AR-10…AR-15, da confermare",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

@@ -1,0 +1,41 @@
+{
+  "ts": "2026-09-13T17:25:18+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "AC52 e AC60 con dati di prova indipendenti dalle ambiguità della linea di base; primi 14 giorni e ripetizione degli avvisi come segnaposto, non come assunzioni",
+  "contesto": "Il commento 5653974149 ritira il criterio sul rapporto fra scritture e visitatori distinti e lo sostituisce con due controlli del sito rispetto a sé stesso. Per scrivere test il testo lascia cinque punti aperti: (1) «media mobile delle scritture per ora su 14 giorni» può essere una media piatta di tutte le ore o una media per ora del giorno; (2) non dice se le ore in esame entrano nella media; (3) non dice cosa succede prima di 14 giorni di storico; (4) non dice quante volte si ripete l'avviso durante un episodio; (5) non dice come si misura «troppo regolari».",
+  "alternative": [
+    {
+      "opzione": "registrare la media piatta come assunzione reversibile",
+      "scartata_perche": "con dati di prova a scritture orarie costanti le due letture danno la stessa linea di base: per scrivere il test non serve scegliere"
+    },
+    {
+      "opzione": "assunzione nuova per i primi 14 giorni (per esempio nessuna valutazione)",
+      "scartata_perche": "sarebbe un comportamento inventato: il criterio vale per siti con almeno 14 giorni di storico, il resto diventa segnaposto dichiarato; il vuoto va in rischi, perché un sito difettoso fin dall'attivazione non ha una linea di base da cui scostarsi"
+    },
+    {
+      "opzione": "fissare una misura di regolarità (varianza, coefficiente di variazione)",
+      "scartata_perche": "è una soluzione tecnica e un parametro da tarare; i dati di prova usano estremi che qualunque misura ragionevole separa con parametri di prova: intervalli identici, intervalli tutti sotto il minimo, arrivi casuali indipendenti"
+    },
+    {
+      "opzione": "i due controlli in un solo AC52",
+      "scartata_perche": "condizioni e parametri diversi renderebbero il test ambiguo su quale controllo ha prodotto l'avviso; AC60 aggiunto senza rinumerare"
+    },
+    {
+      "opzione": "fissare margini numerici nei dati di prova",
+      "scartata_perche": "N e M non sono noti; il criterio chiede un margine sufficiente a restare sopra la soglia comunque si trattino le ore in esame, e lo sceglie chi scrive il test a partire dai parametri configurati"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653974149"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

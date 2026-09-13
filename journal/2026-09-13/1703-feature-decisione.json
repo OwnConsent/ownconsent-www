@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T17:03:24+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Spec accettata con domande_aperte vuoto; NO-1..NO-5 (limiti e degrado lato CMP) instradati ad @architect invece che riforzati come AC",
+  "contesto": "Avevo chiesto a product-spec di scrivere come criteri anche limite per tenant, lettura mai limitata, scrittura accodata, scala di degrado, banner intoccabile. Li ha messi in requisiti_non_osservabili_in_questa_consegna: banner, configurazione e registro vivono nella CMP, fuori da questo repository.",
+  "alternative": [
+    { "opzione": "rimandare a product-spec per forzarli in AC", "scartata_perche": "un AC non verificabile da questo repository viola la DoD di product-spec (AC osservabile dall'esterno); l'obiezione regge sul confine di CLAUDE.md" },
+    { "opzione": "fermarsi e chiedere ad Andrea", "scartata_perche": "è una domanda di confine tecnico con la CMP, che cmp-api.md assegna ad @architect con ADR; Andrea ha chiesto di riprendere dalla fase 2" }
+  ],
+  "evidenza": ["spec.json: 59 AC con id unici AC1..AC59, domande_aperte = [], 8 requisiti non osservabili, 18 assunzioni reversibili, 2 questioni_per_persona", "contracts/ senza modifiche rispetto a main"],
+  "esito": "applicata; da confermare ad Andrea nella PR insieme ad AR-10..AR-18",
+  "umano_coinvolto": false
+}

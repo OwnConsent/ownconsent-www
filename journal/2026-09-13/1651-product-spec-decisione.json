@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-13T16:51:35+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Divergenze per la fase 2: il p75 era già una delle quattro; quattro divergenze nuove dalle risposte",
+  "contesto": "Andrea scrive: «Oltre alle quattro divergenze già rilevate nei contratti: i budget LCP e CLS sono espressi al p75». Nella voce 1609 il p75 era già la quarta delle quattro (account, stati di subscriptions, events.json hosted/onprem, p75).",
+  "alternative": [
+    {
+      "opzione": "contare il p75 come quinta divergenza",
+      "scartata_perche": "sarebbe un doppio conteggio: la novità del commento è la risoluzione (sdoppiare, soglie di laboratorio ora e p75 quando c'è traffico), che aggiorna la voce esistente e AC39"
+    },
+    {
+      "opzione": "tacere il doppio conteggio",
+      "scartata_perche": "«suonano uguali»: due elenchi con numeri diversi finirebbero trattati come una lista sola senza verifica; lo segnalo nel report"
+    }
+  ],
+  "scelta": "Tengo le quattro divergenze e aggiorno il p75 con la risoluzione. Nuove: (a) ip_richiesta in data-map.json nel conteggio, in contrasto con «il contatore non ha bisogno di sapere chi è l'utente»; (b) cmp-api.md non prevede ciò che ora serve (tipo di scrittura, visitatori distinti, lacune del registro, collocazione del limite di frequenza); (c) plans in collections.md non ha un ordine che definisca il «piano superiore»; (d) il campo IP del modulo di contatto va aggiunto a data-map.json da @privacy.",
+  "evidenza": [
+    "journal/2026-09-13/1609-product-spec-decisione.json",
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118, sezione «Da correggere in fase 2»",
+    "contracts/data-map.json campo ip_richiesta",
+    "contracts/db/collections.md collezione plans"
+  ],
+  "esito": "applicata nella copia di lavoro della spec",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

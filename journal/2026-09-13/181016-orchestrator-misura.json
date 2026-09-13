@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T18:10:16+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Il collaudo automatico su PR (claude-pr-review.yml) oggi non produce copertura",
+  "contesto": "Il workflow esegue la skill collaudo all'apertura di ogni PR non in bozza. Se funzionasse, dei lotti di revisione in sessione duplicherebbero la copertura sulla PR del sito. Prima di scegliere fra collaudo e lotti separati ho misurato se gira.",
+  "evidenza": [
+    "gh run list --workflow claude-pr-review.yml: 2 run in totale (PR #1 e #2), conclusione failure entrambi",
+    "passo fallito in entrambi: «Ventaglio di revisione» (claude-code-action); causa non letta dai log",
+    "nessun run per le PR #3, #5, #6, #7, #9, tutte aperte non in bozza",
+    "gh pr list: 0 commenti su tutte le 7 PR, quindi nessun riepilogo di collaudo pubblicato"
+  ],
+  "esito": "Il piano non conta sul collaudo in CI come copertura. Perché non gira è una domanda per persona: il workflow usa un secret che da qui non si verifica, e non cerco di verificarlo.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

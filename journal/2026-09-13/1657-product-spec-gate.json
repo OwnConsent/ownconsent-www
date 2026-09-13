@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T16:57:42+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "guard-paths ha bloccato lo script di integrazione: una stringa concatenata letta come percorso fuori dal progetto",
+  "contesto": "Lo script che integra le risposte di Andrea nella spec componeva i percorsi dello scratchpad concatenando la cartella con stringhe che iniziano con una barra. L'hook ha letto una di quelle stringhe come percorso assoluto fuori dal perimetro e ha fermato tutto il comando prima dell'esecuzione: nessun file scritto o modificato.",
+  "chi_ha_deciso": "hook guard-paths.sh del plugin cantiere (perimetro della sessione)",
+  "cosa_serviva": "Nulla fuori dal perimetro: il percorso vero era lo scratchpad della sessione, già usato da comandi accettati. Serviva scrivere il comando senza letterali che somigliano a percorsi assoluti, componendo i percorsi con os.path.join.",
+  "evidenza": [
+    "messaggio dell'hook: il percorso «spec-pre-risposte.json» preceduto da una barra porta fuori dal progetto",
+    "comandi precedenti sulla stessa cartella di scratchpad accettati dall'hook"
+  ],
+  "conseguenza": "Script riscritto senza letterali che iniziano con una barra e rilanciato. Il controllo dell'hook non è stato disattivato né forzato, e nessun accesso fuori dal progetto è stato tentato. Il falso positivo va segnalato a chi mantiene l'hook: una barra dentro una stringa di codice non è un percorso.",
+  "esito": "superato riscrivendo il comando; segnalato nel report",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

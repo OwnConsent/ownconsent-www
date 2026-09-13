@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T17:59:17+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "02-piano",
+  "tipo": "correzione",
+  "corregge": "journal/2026-09-13/173708-feature-fallimento.json",
+  "titolo": "Correzione: la seconda aggiunta a L00 non era persa, è stata consegnata in ritardo",
+  "cosa_era_sbagliato": "173708 afferma che il messaggio accodato a product-spec (commento 5654224159) non è stato consegnato. È stato consegnato dopo la verifica: l'agente è ripartito e ha prodotto AC62..AC64 (364374 token, 1262 s).",
+  "cosa_vale": "Messaggio consegnato; lavoro prodotto e poi superato dal commento 5654262861. La lezione è in 174841-feature-fallimento.json.",
+  "evidenza": [
+    "173708 intatta, orario del file 17:37:08, mai modificata",
+    "174841-feature-fallimento.json ha registrato la stessa correzione con tipo fallimento, prima che la regola esistesse; resta com'è",
+    "spec.json di issue 4 contiene l'id 5654224159 dopo il giro successivo di product-spec"
+  ],
+  "nota_formato": "Tipo e campi (corregge, cosa_era_sbagliato, cosa_vale) sono provvisori: la regola di Andrea («una voce sbagliata non si modifica, se ne aggiunge una di tipo correzione che cita quella superata») non è ancora in docs/JOURNAL.md su main.",
+  "esito": "voce originale lasciata intatta; correzione aggiunta accanto",
+  "umano_coinvolto": true
+}

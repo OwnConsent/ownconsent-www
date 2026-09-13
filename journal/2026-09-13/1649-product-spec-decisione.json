@@ -1,0 +1,37 @@
+{
+  "ts": "2026-09-13T16:49:38+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Limite di frequenza, lettura e scrittura, scala di degrado e banner fuori dai criteri: in questa consegna non sono osservabili",
+  "contesto": "Il commento 5653909118 chiede tre cose: un limite di frequenza per tenant indipendente dal piano, letture di banner e configurazione mai limitate, scritture di consenso accodate e mai rifiutate; in più una scala di degrado in ordine fisso con il banner mai toccato. Banner, configurazione e registro dei consensi però appartengono alla CMP. CLAUDE.md dice che la CMP «raccoglie e conserva le scelte», collections.md non ha un registro dei consensi, e il commento stesso colloca il limite sul percorso di scrittura («è lì che vive il limite»). Questo progetto vede il conteggio solo tramite cmp-api.md, che non è ancora scritto.",
+  "alternative": [
+    {
+      "opzione": "scrivere criteri su lettura mai limitata, scrittura accodata, ordine di degrado e banner come se il sistema sotto test includesse la CMP",
+      "scartata_perche": "@qa-test non può verificarli da questo repository, e la spec descriverebbe il comportamento di un prodotto che vive altrove, attraversando il confine a naso"
+    },
+    {
+      "opzione": "ometterli dalla spec",
+      "scartata_perche": "sono regole di prodotto ratificate da Andrea: ometterle adesso vuol dire perderle"
+    },
+    {
+      "opzione": "chiedere a @architect prima di scrivere la spec",
+      "scartata_perche": "che banner e registro stiano nella CMP si ricava dal repository; dove sta il limite lo decide @architect scrivendo cmp-api.md, e la spec non ha bisogno di aspettarlo"
+    }
+  ],
+  "scelta": "Nei criteri entra la parte che questo progetto rende visibile: regole del tetto, definizione di richiesta, avviso di anomalia, comunicazione al cliente delle lacune del registro, divieto di presentare il limite di frequenza come caratteristica di un piano. Il resto va in requisiti_non_osservabili_in_questa_consegna, con proprietario e momento in cui diventa criterio.",
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118",
+    "CLAUDE.md: «Non è la CMP»",
+    "contracts/db/collections.md: nessuna collezione di registro dei consensi",
+    "contracts/cmp-api.md: Conteggio richieste da definire"
+  ],
+  "esito": "applicata nella copia di lavoro della spec",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

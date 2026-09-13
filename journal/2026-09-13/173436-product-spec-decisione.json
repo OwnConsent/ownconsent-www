@@ -1,0 +1,48 @@
+{
+  "ts": "2026-09-13T17:34:36+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Conferma per intervallo AR-15…AR-18: su AR-17 vale il ritiro precedente; AR-14 non confermata; testo pubblicato di AR-20 incompleto; nomi HHMMSS per tutte le voci",
+  "contesto": "Il commento 5654192623 (15:26Z) conferma «AR-10, AR-13, AR-15…AR-18» come assunzioni reversibili. AR-17 era già superata dal commento 5653974149 (14:46Z), che ritira il criterio sul rapporto fra scritture e visitatori distinti. Il commento 5654163437 pubblica AR-19 e AR-20.",
+  "alternative": [
+    {
+      "punto": "AR-17",
+      "opzione": "considerarla riattivata dalla conferma successiva",
+      "scartata_perche": "AR-17 parlava solo del criterio ritirato con motivazione esplicita; una conferma per intervallo, probabilmente copiata dall'elenco, non fa rivivere un criterio tolto. Vale il ritiro"
+    },
+    {
+      "punto": "AR-17",
+      "opzione": "estendere ai nuovi controlli la sua regola «al massimo una volta per periodo»",
+      "scartata_perche": "i nuovi controlli sono a episodi: un secondo episodio distinto nello stesso periodo resterebbe muto. La ripetizione degli avvisi resta segnaposto da segnalare ad Andrea"
+    },
+    {
+      "punto": "AR-14",
+      "opzione": "considerarla confermata insieme alle altre",
+      "scartata_perche": "non è nell'elenco (AR-10, AR-13, AR-15…AR-18); resta da confermare e va segnalata"
+    },
+    {
+      "punto": "AR-20 pubblicata senza l'ultima frase",
+      "opzione": "allineare la spec al testo pubblicato",
+      "scartata_perche": "il coordinatore aveva chiesto il testo esatto consegnato a me; la differenza va in una nota e nel report"
+    },
+    {
+      "punto": "nomi dei file",
+      "opzione": "HHMM e, solo in caso di collisione, HHMMSS",
+      "scartata_perche": "l'ultimo messaggio dice «nomi HHMMSS» senza condizione; da questo punto tutte le voci usano HHMMSS"
+    }
+  ],
+  "evidenza": [
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654192623",
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653974149",
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654163437"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

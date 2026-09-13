@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-13T17:17:49+02:00",
+  "agente": "orchestrator",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Quattro tappe con PR distinte e budget_turni 122 stimato per tappa, invece di una PR unica",
+  "contesto": "La spec ha 59 AC su due aree che non esistono ancora (site/, api/). Il piano validato conta 71 lotti: 10 nella tappa A (spec e contratti), 22 nella B, 20 nella C, 19 nella D. Senza tappe l'ultima revisione vedrebbe insieme contratti, impalcatura, registrazione, pagamenti e consumo, e l'occhio di Andrea dovrebbe coprire tutte le schermate in una volta.",
+  "alternative": [
+    {
+      "opzione": "una sola PR con tutti i lotti",
+      "scartata_perche": "diff non rivedibile in un collaudo; il gate umano sui contratti (ADR, AR-10…AR-18) arriverebbe dopo il codice che li presuppone, cioè si implementerebbe da artefatti non ratificati"
+    },
+    {
+      "opzione": "due PR: contratti, poi tutta la costruzione",
+      "scartata_perche": "rispetta l'ordine contratti → codice ma lascia una PR di costruzione da 61 lotti, con lo stesso problema di rivedibilità e di evidenza visiva"
+    },
+    {
+      "opzione": "una PR per area (site/ e api/)",
+      "scartata_perche": "i criteri attraversano le aree (AC13 registrazione, AC25 consumo): nessuna PR sarebbe verificabile end-to-end da sola"
+    },
+    {
+      "opzione": "budget unico senza tetto per tappa",
+      "scartata_perche": "uno sforamento nella tappa B consumerebbe in silenzio il budget di C e D; con un tetto per tappa l'orchestratore si ferma dove sfora"
+    }
+  ],
+  "scelta": "A spec e contratti; B fondamenta, pagine pubbliche, legali in bozza, contatto; C registrazione SaaS, pagamenti finti, accesso, abbonamento; D consumo, tetto, conteggio, lacune, anomalia. Budget in invocazioni di agente: A 16, B 38, C 35, D 33, totale 122; caso peggiore 213. È una decisione per persona (DP-16, DP-17).",
+  "dubbio_residuo": "Nessuna misura di consumo reale di questo progetto: i coefficienti di rimando (0,3 per contratto, 0,5 per costruzione, 0,5 per revisione) sono un'ipotesi da confrontare con i numeri reali a fine tappa A. HANDOFF.md non definisce l'unità di budget_turni e il suo esempio implica una scala di circa 20 per lotto.",
+  "evidenza": [
+    "valida_piano.py: 71 lotti, 0 file sovrapposti, 0 cicli, 59/59 AC con implementazione, 59/59 con test di qa-test",
+    "passi paralleli per tappa: A 6, B 5, C 5, D 5"
+  ],
+  "esito": "applicata nel piano, da confermare",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "trascritta_dopo": false
+}

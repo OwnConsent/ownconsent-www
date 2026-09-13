@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-13T18:10:43+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Un lotto @product-spec (L00) ricava .work/issue-8/spec.json dalla #8, prima dei contratti",
+  "contesto": "HANDOFF.md vuole una spec.json per issue; la procedura dell'orchestratore parte dal suo domande_aperte; la DoD di @qa-test vuole test «scritti dalla spec». Per la #8 non esiste. La spec della #4 contiene i 19 AC riusati, ma AC4, AC33, AC34 e AC49 hanno il testo precedente alle decisioni D1–D3, AC3, AC8, AC10, AC12 e AC39 non sono ristretti, e N1 e N2 mancano.",
+  "alternative": [
+    {
+      "opzione": "l'orchestratore copia il sottoinsieme dalla spec della #4",
+      "scartata_perche": "porterebbe i testi superati di AC4, AC33, AC34 e AC49 (per esempio «registrazione» per il SaaS e il modulo di contatto); inoltre la spec non è lavoro dell'orchestratore e il compito di questo giro lo esclude"
+    },
+    {
+      "opzione": "usare direttamente la issue come spec",
+      "scartata_perche": "HANDOFF.md: gli agenti si passano JSON, non prosa; il corpo della PR si genera da spec.json; @qa-test non avrebbe criteri in forma dato/quando/allora"
+    },
+    {
+      "opzione": "far partire i contratti in parallelo alla spec",
+      "scartata_perche": "se la spec trova una domanda aperta la catena si ferma, e le invocazioni dei contratti sarebbero spese su un perimetro non confermato; il costo in parallelismo è un solo passo"
+    }
+  ],
+  "scelta": "L00 @product-spec, tetto 25 turni, parte dalla #8 e usa la spec della #4 solo per la forma dato/quando/allora e per i dettagli (DV-4, segnaposto). D4 va in segnaposto_dichiarati e nel gate di pubblicazione, non in domande_aperte, perché Andrea l'ha dichiarata non bloccante per il piano. Costo: 1 invocazione, più 0,3 rimandi attesi.",
+  "dubbio_residuo": "Se @product-spec trova una domanda nuova e vera (per esempio quanti piani mostrare nel listino), la catena si ferma per regola: il piano non la può anticipare.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

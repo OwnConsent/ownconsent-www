@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T19:36:38+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L11",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Verifica della voce aggiunta a data-map.json: JSON valido, solo aggiunte, tre campi obbligatori non vuoti",
+  "contesto": "Prima del commit: provare che la voce nuova non tocca le voci esistenti e che ha finalità, base giuridica e retention.",
+  "evidenza": [
+    "$ python3 -m json.tool contracts/data-map.json > /dev/null && echo JSON_VALIDO -> JSON_VALIDO",
+    "$ git diff origin/main --numstat -- contracts/data-map.json -> 11\t0\tcontracts/data-map.json",
+    "$ python3 scratchpad/confronta.py (legge git show origin/main:contracts/data-map.json) -> voci campi: main 3 ramo 4; voci preesistenti identiche: True; altre chiavi identiche: True; finalita, base_giuridica, retention, destinatari non vuoti: True; chiavi nuova voce contenute in quelle gia usate: True; indirizzi email nel file: []",
+    "$ git config --get core.hooksPath -> /home/andreapernici/src/ownconsent/www/githooks",
+    "primo tentativo: un unico comando bash con cd, heredoc e redirect è stato rifiutato dall'isolamento della worktree (troppo composito da verificare); rifatto in comandi semplici separati"
+  ],
+  "esito": "voce conforme allo schema esistente, nessun campo esistente cambiato, nessun indirizzo reale",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

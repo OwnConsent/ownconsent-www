@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-13T19:37:16+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L11",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "L11 chiuso: data-map.json dichiara le email ricevute via mailto all'indirizzo di contatto",
+  "contesto": "DP-20. Una voce aggiunta in 'campi', nello schema esistente, senza cambiare campi. Commit sul ramo contracts/data-map-email-contatto, niente push e niente PR.",
+  "dod_soddisfatta": true,
+  "dod_dettaglio": [
+    "la voce nuova ha finalità (rispondere a una richiesta commerciale), base giuridica (misure precontrattuali), retention (12 mesi dall'ultimo messaggio scambiato, se non ne nasce un contratto) e destinatari",
+    "data map aggiornata; le voci e le chiavi preesistenti sono identiche a origin/main (voce 193638-privacy-misura.json)",
+    "titolare, casella e fornitore della casella sono segnaposto dichiarati; nessun indirizzo, nome o identità reale"
+  ],
+  "divergenze_viste_e_non_toccate": [
+    "ip_richiesta non ha 'destinatari': nella regola di @privacy manca uno dei quattro elementi. È della consegna 2",
+    "ip_richiesta ha la nota 'il conteggio potrebbe non richiedere l'IP' ancora aperta (tappa 05, consegna 2)",
+    "spec non_goal: il modulo escluso cita un 'IP pseudonimizzato in contracts/data-map.json' che nella data map non esiste; tornerà con la consegna 3",
+    "la voce 'email' e quella nuova hanno nomi simili ma sono dati diversi (account SaaS contro casella di contatto): non vanno unificate",
+    "CLAUDE.md regola 2 (contratti solo via @architect con ADR) contro contracts/README.md (data-map.json di @privacy) e il piano (ADR: nessuno): va chiarito da una persona",
+    "trasferimenti_extra_ue è vuoto, ma il fornitore della casella non è scelto: la valutazione è aperta",
+    ".work/.current-agent dice 'orchestrator' durante un lotto di @privacy (voce 193715-privacy-decisione.json)"
+  ],
+  "da_approvare_da_una_persona": [
+    "retention di 12 mesi (regola 7)",
+    "identità del titolare, nome e dominio della casella, fornitore della casella"
+  ],
+  "evidenza": [
+    "193511-privacy-decisione.json (retention e alternative scartate)",
+    "193638-privacy-misura.json (verifiche con i comandi)"
+  ],
+  "esito": "chiuso; turni usati: 9 su 15",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

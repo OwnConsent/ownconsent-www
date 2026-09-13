@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T19:37:15+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L11",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Firma del commit: il marcatore .work/.current-agent dice 'orchestrator', il lotto è di @privacy",
+  "contesto": "githooks/prepare-commit-msg firma con il contenuto di .work/.current-agent, a meno che Cantiere-Agent: sia già nel messaggio (riga 24). Il compito vieta di scrivere o cancellare il marcatore.",
+  "alternative": [
+    {
+      "opzione": "lasciare firmare l'hook",
+      "scartata_perche": "il commit risulterebbe di orchestrator: attribuzione falsa nel registro"
+    },
+    {
+      "opzione": "correggere .work/.current-agent in 'privacy'",
+      "scartata_perche": "vietato dal compito: il marcatore lo gestiscono gli hook"
+    }
+  ],
+  "evidenza": [
+    "$ cat .work/.current-agent -> orchestrator",
+    "$ git config --get core.hooksPath -> /home/andreapernici/src/ownconsent/www/githooks"
+  ],
+  "esito": "Cantiere-Agent: privacy scritto a mano nel messaggio di commit; l'hook lo trova e non aggiunge la sua firma. Da segnalare: con agenti in worktree il marcatore non riflette il ruolo del sotto-agente",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

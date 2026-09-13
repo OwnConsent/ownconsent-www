@@ -1,6 +1,7 @@
 # ADR-0001 — Budget delle pagine pubbliche: soglie di laboratorio ora, p75 di campo quando c'è traffico (ratifica di L01)
 
-- Stato: **proposta, con obiezione** (ratifica del 2026-09-13, giro R-L01). O2 è chiusa,
+- Stato: **accettata**, per decisione di Andrea su O1r (2026-09-13), chiusa da @performance nel commit `d5e8331`: vedi la sezione «Decisione di Andrea su O1r» in fondo.
+- Stato alla ratifica del giro R-L01: **proposta, con obiezione** (ratifica del 2026-09-13, giro R-L01). O2 è chiusa,
   O1 è chiusa sulla soglia; resta **O1r**, sull'etichetta del profilo di rete e sulla
   parola «peggiore» nella nota della soglia, da chiudere da @performance prima del merge
   di PR-2. Vedi la sezione «2026-09-13 — Ratifica della risposta di @performance».
@@ -325,3 +326,30 @@ sezione datata in questo ADR, senza toccare il contratto.
 | @devops (L12) | nessun cambiamento: un solo comparatore, quello del test |
 | @frontend (L05, L06) | non annotano la prima misura dei pesi JS e CSS finché N3 è aperta |
 | Consegna 2, area cliente | nessun cambiamento |
+
+## Decisione di Andrea su O1r — 2026-09-13
+
+Sezione aggiunta dalla sessione principale (`feature`) per registrare la decisione. Non è una ratifica: dopo tre giri sullo stesso contratto Andrea ha deciso direttamente e ha escluso un'ulteriore ratifica di @architect.
+
+> O1r: opzione (a). Togli il nome «Slow 4G» e tieni 150 ms / 1,6 Mbps / 750 kbps, soglia 2500 ms invariata. Adottare il profilo di DevTools costringerebbe a ri-derivare la soglia senza avere un sito da misurare: sarebbe dedurre, non misurare, e costerebbe due giri per un numero altrettanto arbitrario.
+>
+> Due condizioni, entrambe nel contratto:
+> 1. Dichiara la PROVENIENZA dei tre valori. Se sono stati scelti come base di laboratorio stabile e non come modello della realtà, scrivilo con quelle parole. Un numero senza provenienza è un numero magico, ed è lo stesso difetto del nome che mente.
+> 2. Esclusione con scadenza: quando il sito esiste e c'è una misura di campo, si adotta un profilo standard con il suo nome e la soglia si ri-deriva dai dati. Data di riapertura: la prima misura reale.
+>
+> @performance fa un giro solo. Niente ratifica ulteriore: la decisione è mia, non sua.
+
+La decisione è registrata anche come commento sulla PR #17.
+
+Chiusura nel contratto (giro R-L01b, commit `d5e8331`):
+- `$metodo_laboratorio_pagine_pubbliche.rete`:
+  - i tre valori CDP restano invariati, senza nome standard;
+  - la provenienza è dichiarata: valori a livello di pacchetto di `docs/throttling.md` di Lighthouse, «scelti come base di laboratorio stabile e non come modello della realtà»;
+  - è dichiarata la non equivalenza con i preset Slow 4G di Lighthouse e di Chrome DevTools;
+  - il motivo «fonte non verificata» è stato tolto.
+- `pagine_pubbliche.$nota_soglie_lab`: tolto «peggiore»; `lcp_ms_lab_mediana` resta 2500.
+- `pagine_pubbliche.$esclusione_profilo_standard`: esclusione con scadenza, che si riapre alla prima misura reale di campo.
+
+Restano aperte due note, che non bloccano il merge di questo ADR:
+- **N3**, come si pesano JS e CSS per pagina. Blocca il confronto sui pesi in L07 e le annotazioni in L05 e L06.
+- **N4**, quanto attendere prima di concludere la lettura del LCP.

@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-13T16:13:10+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "Pipeline ferma a 01: spec con domanda aperta bloccante DA-1 (superamento del tetto SaaS)",
+  "contesto": "product-spec ha prodotto .work/issue-4/spec.json con 41 criteri e 8 domande_aperte, 1 bloccante. La skill feature impone lo stop se domande_aperte non è vuoto.",
+  "chi_ha_deciso": "regola della skill cantiere:feature (stadio 1) + CLAUDE.md regola 8; la risposta spetta ad Andrea",
+  "cosa_serviva": "Decisione di prodotto su DA-1 (comportamento oltre il tetto, soglie di avviso, decorrenza cambio piano); conferma o correzione delle scelte provvisorie DA-2..DA-8",
+  "evidenza": [
+    "spec.json verificata con python json.load: 41 criteri_accettazione, 8 domande_aperte, 1 con bloccante=true",
+    "domande pubblicate: https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653795379"
+  ],
+  "note": "Durante lo stadio: hook guard-paths ha bloccato la lettura della cartella del plugin (non aggirato); il formato journal non era leggibile finché non è arrivato docs/JOURNAL.md con b362e4f, per cui le voci di product-spec sono trascritte dopo. Divergenza da riportare: spec redatta prima che docs/HANDOFF.md esistesse, riallineamento chiesto a product-spec.",
+  "esito": "fermo in attesa di risposta umana",
+  "umano_coinvolto": true
+}

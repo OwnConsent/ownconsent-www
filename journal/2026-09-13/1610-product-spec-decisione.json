@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-13T16:10:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "«Suonano uguali»: pannello della CMP diverso da area cliente; email dell'account diversa da email del contatto",
+  "contesto": "La issue dice «configura tutto dal nostro pannello» e chiede un'«area cliente» per consumo e abbonamento. data-map.json registra l'email dell'account; il modulo di contatto raccoglie un'altra email. Non esiste codice su cui verificare: verifica fatta sui contratti.",
+  "alternative": [
+    {
+      "opzione": "trattare pannello e area cliente come la stessa cosa, con la configurazione della CMP nell'area cliente",
+      "scartata_perche": "CLAUDE.md: questo progetto non è la CMP; la configurazione appartiene al prodotto separato"
+    },
+    {
+      "opzione": "un solo campo email per account e contatto",
+      "scartata_perche": "finalità, base giuridica e retention diverse (contratto contro misure precontrattuali)"
+    }
+  ],
+  "evidenza": [
+    "issue 4, sezione SaaS",
+    "CLAUDE.md «Non è la CMP»",
+    "contracts/data-map.json campo email, dove: account"
+  ],
+  "esito": "applicata: pannello CMP fra i non_goal, due voci email distinte in dati_personali",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

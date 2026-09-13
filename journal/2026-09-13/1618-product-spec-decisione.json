@@ -1,0 +1,40 @@
+{
+  "ts": "2026-09-13T16:18:32+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "spec.json riallineata a docs/HANDOFF.md: campi del protocollo in testa, estensioni conservate, criteri rinominati ACn",
+  "contesto": "La spec era stata scritta prima che docs/HANDOFF.md fosse leggibile. Richiesta: riallinearla senza cambiare il contenuto sostanziale (41 criteri, 8 domande). Le domande sono già pubblicate sulla issue.",
+  "alternative": [
+    {
+      "opzione": "tenere gli identificativi CA-nn",
+      "scartata_perche": "HANDOFF.md usa ACn; il commento pubblicato cita solo DA-1…DA-8, quindi la rinomina non rompe riferimenti esterni"
+    },
+    {
+      "opzione": "tenere solo i campi mostrati in HANDOFF.md e scartare gli altri (obiettivo, percorsi, requisiti non funzionali, vincoli, dipendenze, segnalazioni, assunzioni)",
+      "scartata_perche": "avrebbe cambiato il contenuto sostanziale e tolto a @qa-test e @architect informazioni già richieste dall'orchestratore"
+    },
+    {
+      "opzione": "raccogliere le estensioni in un oggetto annidato",
+      "scartata_perche": "nessun consumatore lo richiede e avrebbe cambiato i percorsi dei campi senza guadagno; restano al primo livello, dopo i campi del protocollo"
+    },
+    {
+      "opzione": "rinominare DA-n in un altro schema",
+      "scartata_perche": "il commento pubblicato sulla issue li cita"
+    }
+  ],
+  "evidenza": [
+    "83 riferimenti CA-nn rinominati ad ACn, zero residui fuori da nota_formato",
+    "asserzioni superate: 41 criteri con dato/quando/allora/area/fonte uguali salvo rinomina; domande_aperte uguali salvo rinomina; nessun campo perso",
+    "aggiunti problema e rischi (7 voci, 6 ricavate da contenuto esistente, 1 nuova: modulo di contatto senza captcha di terze parti)",
+    "copia pre-riallineamento conservata nello scratchpad di sessione, non nel repository"
+  ],
+  "esito": "applicata; la DoD di product-spec in docs/DEFINITION-OF-DONE.md resta non soddisfatta perché domande_aperte non è vuoto",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

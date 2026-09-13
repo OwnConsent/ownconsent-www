@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-13T16:08:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Il confine del provisioning Hosted va a @architect; ad Andrea solo il livello di intervento umano",
+  "contesto": "Dubbio: se «il provisioning sta in questo progetto o dietro l'API della CMP» sia una domanda per Andrea.",
+  "alternative": [
+    {
+      "opzione": "porre ad Andrea la domanda sul confine tecnico",
+      "scartata_perche": "cmp-api.md assegna il provisioning a @architect alla tappa 02 con ADR, e product-spec non propone soluzioni tecniche"
+    },
+    {
+      "opzione": "dedurre il confine dagli indizi del repository e scriverlo nella spec",
+      "scartata_perche": "CLAUDE.md (api/ fa provisioning) e collections.md (hosted_instances con namespace) sono indizi, non una decisione ratificata: scriverlo vorrebbe dire attraversare il confine a naso"
+    }
+  ],
+  "dubbio_residuo": "Se @architect mettesse il provisioning Hosted dietro l'API della CMP, hosted_instances in collections.md andrebbe rivista: da verificare alla tappa 02.",
+  "evidenza": [
+    "contracts/cmp-api.md sezione Provisioning",
+    "CLAUDE.md Stack",
+    "contracts/db/collections.md hosted_instances"
+  ],
+  "esito": "applicata: DA-3 chiede solo quanti passaggi restano a una persona",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

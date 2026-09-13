@@ -1,0 +1,38 @@
+{
+  "ts": "2026-09-13T16:09:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Divergenze fra contratti e spec: segnalate agli agenti proprietari, non risolte nella spec",
+  "contesto": "Quattro divergenze trovate: data-map.json parla di «account» ma collections.md non ha una collezione account; gli stati «pagamento ricevuto, attivazione in corso» e «in chiusura» mancano fra gli stati di subscriptions; events.json prevede registrazioni hosted e onprem che presuppongono un self-service assente; perf-budgets.json misura LCP e CLS al p75, dato di campo che prima del lancio non esiste.",
+  "alternative": [
+    {
+      "opzione": "risolverle nella spec proponendo modifiche (collezione account, nuovi stati, eventi rimossi)",
+      "scartata_perche": "sono soluzioni tecniche, e contracts/ si modifica solo via @architect con ADR"
+    },
+    {
+      "opzione": "porle come domande aperte ad Andrea",
+      "scartata_perche": "competono a @database, @architect, @data-analytics e @performance; avrebbero fermato la catena senza bisogno di una decisione umana"
+    },
+    {
+      "opzione": "ignorarle perché non bloccano i criteri",
+      "scartata_perche": "CLAUDE.md: le divergenze si segnalano, non si assorbono in silenzio"
+    }
+  ],
+  "evidenza": [
+    "contracts/data-map.json",
+    "contracts/db/collections.md",
+    "contracts/events.json",
+    "contracts/perf-budgets.json"
+  ],
+  "esito": "applicata: voci in segnalazioni e rischi di spec.json",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

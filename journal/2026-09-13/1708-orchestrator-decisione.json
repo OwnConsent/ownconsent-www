@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-13T17:08:17+02:00",
+  "agente": "orchestrator",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Stadio contratti: ogni file lo modifica il suo proprietario di contracts/README.md, @architect scrive l'ADR e ratifica",
+  "contesto": "La skill feature prevede per lo stadio contratti solo architect, database e design. contracts/README.md assegna data-map.json a @privacy, perf-budgets.json a @performance, events.json a @data-analytics; CLAUDE.md regola 2 vuole ogni modifica dei contratti «via @architect, con un ADR in docs/adr/». Le divergenze DV-3, DV-4, DV-5 e DV-8 cadono proprio su quei tre file.",
+  "alternative": [
+    {
+      "opzione": "@architect modifica da solo tutti i file di contracts/",
+      "scartata_perche": "scavalca i proprietari del README e la DoD di @privacy («data map aggiornata» è sua) e di @performance («budget dichiarati e misurati»); @architect finirebbe anche per ratificare con un ADR il proprio lavoro"
+    },
+    {
+      "opzione": "restare ai tre ruoli della skill e rinviare DV-3, DV-4, DV-5, DV-8 a dopo la costruzione",
+      "scartata_perche": "il vincolo del coordinatore chiede che contratti_da_aggiornare copra quelle divergenze prima di costruire; AC39, AC58 e AC59 non hanno contratto senza di esse"
+    },
+    {
+      "opzione": "i proprietari modificano i loro file senza ADR",
+      "scartata_perche": "viola CLAUDE.md regola 2"
+    }
+  ],
+  "scelta": "Lo stadio contratti si allarga esplicitamente a @privacy, @performance e @data-analytics, limitati al proprio file. «Via @architect» si legge come: ogni modifica ha un ADR scritto da @architect in un lotto di ratifica successivo alle modifiche dei proprietari. Per cmp-api.md e openapi.yaml, di cui @architect è proprietario, la revisione indipendente la fanno @privacy e @security. L'allargamento va confermato da una persona: è in decisioni_per_persona.",
+  "evidenza": [
+    "contracts/README.md tabella proprietari",
+    "CLAUDE.md Regole del cantiere, punto 2",
+    "docs/DEFINITION-OF-DONE.md righe @privacy, @performance, @data-analytics"
+  ],
+  "esito": "applicata nel piano, da confermare",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "trascritta_dopo": false
+}

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-13T16:49:38+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "Nelle dipendenze di spec.json la dismissione rimandava a DA-7 (banner) invece che a DA-6 (mancato rinnovo e dismissione)",
+  "contesto": "Trovato rileggendo le dipendenze per chiudere le domande dopo le risposte di Andrea. L'errore c'era dalla prima stesura ed è sopravvissuto al riallineamento a HANDOFF.md.",
+  "tentativo": "Riferimento incrociato scritto a mano nella prima stesura; riallineamento verificato con controlli di invarianza",
+  "cosa_si_e_imparato": "Il controllo di invarianza del riallineamento garantiva che il contenuto non cambiasse, quindi ha conservato fedelmente anche l'errore: verificava l'identità, non la coerenza. Nessun controllo confrontava un riferimento DA-n con l'argomento della domanda citata. I riferimenti incrociati vanno verificati per significato, non solo per esistenza dell'identificativo.",
+  "evidenza": [
+    "dipendenze: {da: contracts/cmp-api.md — Dismissione, per: AC30 e DA-7}",
+    "DA-7 riguarda banner e misurazione sul sito; DA-6 riguarda mancato pagamento e dismissione"
+  ],
+  "esito": "da correggere nella spec in questo giro",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

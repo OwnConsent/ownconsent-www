@@ -1,0 +1,37 @@
+{
+  "ts": "2026-09-13T17:25:28+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "AR-19 («per sito») e AR-20 («nessun dato dalla CMP») adottabili in modo reversibile: registrate con il testo esatto del coordinatore e una nota sulla premessa di AR-20",
+  "contesto": "Il coordinatore adotta due letture del commento 5653974149 e chiede di fermarsi se una delle due non è adottabile nemmeno in modo reversibile.",
+  "alternative": [
+    {
+      "opzione": "fermarsi su AR-19",
+      "scartata_perche": "«per sito» è testuale nel commento; la lettura lascia intatta DA-8 (consumo e fatturazione aggregati sull'account); se Andrea intendeva l'account, la dimensione sito si toglie senza toccare i criteri visibili al cliente"
+    },
+    {
+      "opzione": "fermarsi su AR-20",
+      "scartata_perche": "la lettura coincide con il testo («nessuno dei due richiede dati dalla CMP») e usa solo l'evento di scrittura, che il contatore deve ricevere comunque per contare"
+    },
+    {
+      "opzione": "riscrivere AR-20 correggendo la premessa «che il contatore riceve già»",
+      "scartata_perche": "il coordinatore ha chiesto il testo esatto; la correzione va in una nota separata, non nel testo"
+    }
+  ],
+  "nota_sulla_premessa": "Oggi «che il contatore riceve già» non è verificato. collections.md conta per tenant e non per sito: la dimensione sito è proprio la conseguenza di AR-19. cmp-api.md non dice ancora se il conteggio arriva come eventi con istante o come aggregati. Se arrivasse aggregato, il controllo 2 richiederebbe un dato in più dalla CMP, contro AR-20. Registrato nel rischio di fattibilità e in DV-6.",
+  "dubbio_residuo": "Testo esatto registrato senza la formattazione markdown del messaggio (grassetto e backtick).",
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653974149",
+    "contracts/db/collections.md: usage_periods e quota per tenant_id",
+    "contracts/cmp-api.md: Conteggio richieste da definire"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

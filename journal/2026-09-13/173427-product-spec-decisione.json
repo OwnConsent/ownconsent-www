@@ -1,0 +1,47 @@
+{
+  "ts": "2026-09-13T17:34:27+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "AC61 per la regola anomalia–escalation, con AR-21 per quattro punti non detti; «chi chiude l'anomalia» non blocca l'AC; rischio chiuso solo in parte",
+  "contesto": "Commento 5654192623: un'anomalia aperta sospende l'escalation commerciale; il passaggio obbligato riparte solo a anomalia chiusa, e il periodo in cui era aperta non conta fra i due consecutivi. Il coordinatore chiede di fermarsi se chi chiude l'anomalia, o un'anomalia aperta a tempo indeterminato, blocca l'AC.",
+  "alternative": [
+    {
+      "punto": "portata della sospensione",
+      "opzione": "solo il passaggio obbligato",
+      "scartata_perche": "il testo dice «escalation commerciale», che nella sezione sul tetto comprende contatto oltre il 120%, passaggio obbligato e, ora, trattativa; il contatto utile a sistemare l'integrazione lo porta già l'avviso di anomalia. Scelto: tutti e tre; avvisi 80% e 100% e avvisi di anomalia continuano (AR-21 a)"
+    },
+    {
+      "punto": "anomalia su un sito e account con più siti",
+      "opzione": "sospendere solo se tutti i siti sono in anomalia",
+      "scartata_perche": "piano ed escalation sono dell'account (DA-8) e un solo sito difettoso gonfia il consumo di tutto l'account (AR-21 b)"
+    },
+    {
+      "punto": "periodo aperto solo in parte e consecutività",
+      "opzione": "saltare il periodo con anomalia e considerare consecutivi quello prima e quello dopo",
+      "scartata_perche": "«riparte» si legge come ricominciare il conteggio, e il periodo precedente può essere già gonfiato dallo stesso difetto non ancora rilevato (AR-21 c e d)"
+    },
+    {
+      "punto": "chi chiude l'anomalia blocca AC61?",
+      "opzione": "fermarsi",
+      "scartata_perche": "AC61 tratta la chiusura come evento dato e resta verificabile. Chi chiude e cosa succede se non si chiude sono una scappatoia dall'escalation e un buco di implementazione per la tappa D, non un ostacolo a scrivere il test: segnaposto e rischio"
+    },
+    {
+      "punto": "rischio «regole non coordinate»",
+      "opzione": "chiuderlo per intero come chiesto",
+      "scartata_perche": "AC61 coordina le regole ma protegge solo se l'anomalia si apre: un sito difettoso dall'attivazione, i primi 14 giorni e la firma non rilevata da AC60 (misura di L00) lasciano procedere l'escalation. Chiudo la parte di coordinamento e tengo aperto il vuoto di rilevazione come rischio distinto"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654192623",
+    "journal/2026-09-13/1727-product-spec-misura.json"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

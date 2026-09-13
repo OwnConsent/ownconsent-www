@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T18:18:46+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "verifica_piano.py: piano pulito e 8 difetti inseriti su 8 rilevati",
+  "contesto": "Verifica del piano prima di chiuderlo: file non sovrapposti, niente cicli, ogni criterio coperto da costruzione e da un test di @qa-test separato, budget ricalcolato, nessun importo né indirizzo con dominio. I criteri sono estratti dalla issue #8 con gh e confrontati con quelli del piano.",
+  "evidenza": [
+    "plan.json: 11 lotti, 4 gate, 4 PR, 0 file sovrapposti, 0 cicli, 21 criteri estratti dalla issue, 21/21 con costruzione, 21/21 con test @qa-test separato, ac_scoperti []",
+    "budget ricalcolato: invocazioni atteso 17.7 (dichiarato 18), caso peggiore 41; turni prima passata 390, atteso 528, caso peggiore 984",
+    "inversione, exit 1 in ogni caso: file sovrapposto L05/L06; ciclo L05->L07->L05; N2 tolto da L07; AC49 tolto da L06; L09 assegnato a frontend; atteso dichiarato 12; «49 euro» in una nota; L06 messo in parallelo con L05",
+    "copia intatta: exit 0"
+  ],
+  "esito": "script valido per i controlli richiesti; il confronto fra glob è prudente (un prefisso comune fra due pattern basta a segnalarli)",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

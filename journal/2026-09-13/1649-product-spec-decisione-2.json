@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-13T16:49:57+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "La questione TCF / art. 7(1) GDPR non blocca questa consegna, nemmeno i criteri sulla lacuna del registro",
+  "contesto": "Andrea chiede di non risolverla qui: se la stringa TCF, che vive sul dispositivo dell'utente, basti da sola a dimostrare il consenso quando il registro lato server ha una lacuna. Il coordinatore chiede di fermarsi se blocca qualcosa della consegna.",
+  "alternative": [
+    {
+      "opzione": "fermarsi perché i criteri sulla lacuna del registro dipendono dalla risposta",
+      "scartata_perche": "la regola di Andrea chiede di scrivere ogni interruzione come lacuna esplicita con inizio e fine a prescindere dalla risposta: il criterio vale sia se la stringa basta sia se non basta"
+    },
+    {
+      "opzione": "scrivere nella spec che durante una lacuna la stringa TCF basta, o che non basta",
+      "scartata_perche": "è proprio la decisione che Andrea ha escluso: spetta a @privacy e a un parere legale"
+    },
+    {
+      "opzione": "tacere la questione nella spec",
+      "scartata_perche": "un testo dell'area cliente potrebbe rassicurare il cliente sulla prova del consenso durante una lacuna, anticipando la risposta"
+    }
+  ],
+  "scelta": "Registrata in questioni_per_persona con proprietario e motivo del non blocco. Al criterio sulla lacuna si aggiunge il divieto di affermare che i consensi del periodo di lacuna siano dimostrabili per altra via.",
+  "dubbio_residuo": "La questione blocca due cose fuori da questa consegna: l'uso consapevole del gradino 3 della scala di degrado (ridurre la registrazione) e qualunque testo commerciale che prometta la dimostrabilità del consenso.",
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118, sezione «Nuova domanda aperta»"
+  ],
+  "esito": "applicata nella copia di lavoro della spec",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

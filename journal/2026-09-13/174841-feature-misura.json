@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T17:48:41+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "lotto": null,
+  "titolo": "Sesta invocazione misurata: la quarta ripresa consecutiva dello stesso agente",
+  "contesto": "Aggiorna la serie delle riprese di product-spec sulla issue 4.",
+  "evidenza": [
+    "giri nuovi: product-spec 74037, orchestrator 189216 (media 131627)",
+    "riprese consecutive di product-spec: 136609 → 248369 → 334389 → 364374",
+    "totale 6 invocazioni: 1347004 token; media 224501"
+  ],
+  "esito": "serie registrata; la regola di non riprendere gli agenti va in docs/HANDOFF.md con questi numeri",
+  "umano_coinvolto": false
+}

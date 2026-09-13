@@ -1,0 +1,51 @@
+{
+  "ts": "2026-09-13T17:34:09+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "AR-11 e AR-12 decise da Andrea: spostate in decisioni_confermate; AC29 e AC47 riscritti; quattro segnaposto nuovi",
+  "contesto": "Commento 5654192623. AR-12: il differimento al periodo successivo vale solo per i passaggi imposti da noi; per quelli chiesti dal cliente salite immediate e discese dal periodo successivo. AR-11: sul piano più alto nessun passaggio obbligato, ma una trattativa su misura con un termine invece di un avviso all'operatore che resta lì.",
+  "alternative": [
+    {
+      "punto": "dove registrarle",
+      "opzione": "lasciarle in assunzioni_reversibili con stato aggiornato",
+      "scartata_perche": "ora sono decisioni di Andrea, non letture reversibili; restano in assunzioni come rimando, il valore sta in decisioni_confermate con il link"
+    },
+    {
+      "punto": "salita immediata e tetto del periodo corrente",
+      "opzione": "nuovo tetto solo dal periodo successivo, con piano cambiato subito",
+      "scartata_perche": "contraddice «chi chiede di salire vuole quota adesso»; scelto: nuovo tetto nel periodo corrente, percentuale ricalcolata"
+    },
+    {
+      "punto": "importo della salita a metà periodo",
+      "opzione": "calcolare un pro rata nella spec",
+      "scartata_perche": "è una decisione di prezzo (regola 7); segnaposto come i prezzi"
+    },
+    {
+      "punto": "avvisi all'80% e al 100% già inviati prima della salita",
+      "opzione": "riarmarli sul nuovo tetto",
+      "scartata_perche": "il testo non lo dice e sarebbe un comportamento inventato; segnaposto"
+    },
+    {
+      "punto": "trattativa: scadenza visibile",
+      "opzione": "trattativa senza data, solo segnalata all'operatore",
+      "scartata_perche": "è esattamente l'«avviso che resta lì» che Andrea esclude; AC47 chiede lo stato «trattativa» con la scadenza, calcolata dal termine configurato"
+    },
+    {
+      "punto": "esito alla scadenza del termine",
+      "opzione": "definire un esito (passaggio d'ufficio, chiusura, proroga)",
+      "scartata_perche": "non indicato; segnaposto e rischio, analogo all'anomalia che resta aperta"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654192623"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

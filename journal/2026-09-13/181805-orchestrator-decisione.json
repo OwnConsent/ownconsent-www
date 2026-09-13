@@ -1,0 +1,40 @@
+{
+  "ts": "2026-09-13T18:18:05+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "budget_invocazioni atteso 18, caso peggiore 41; tetti di turni per lotto da 15 a 70",
+  "contesto": "DP-17: budget_invocazioni per pianificare (delega, rimando, ritorno per finding), tetto_turni per lotto contro il giro che non converge, token misurati e non stimati. Il piano della #4 aveva stimato 38 invocazioni per la vecchia tappa B, che comprendeva anche api/ e il contatto.",
+  "alternative": [
+    {
+      "opzione": "tenere il moltiplicatore di margine ×1,15 del piano della #4",
+      "scartata_perche": "è un secondo coefficiente senza misura sopra coefficienti già senza misura; il caso peggiore è già il limite dichiarato"
+    },
+    {
+      "opzione": "contare un'invocazione di @qa-test per ogni ritorno da test fallito",
+      "scartata_perche": "i test li può rilanciare l'orchestratore con i comandi; @qa-test si invoca di nuovo solo se il difetto è nel test"
+    },
+    {
+      "opzione": "contare il collaudo come una sola invocazione",
+      "scartata_perche": "apre più agenti e ognuno consuma contesto; contarlo uno falserebbe il confronto con i lotti separati"
+    },
+    {
+      "opzione": "due lotti @qa-test in parallelo (HTML servito e browser/prestazioni)",
+      "scartata_perche": "tutti e due hanno bisogno delle stesse dipendenze di test alla radice: servirebbe un lotto di strumenti serializzato, cioè +1 invocazione senza guadagno di parallelismo"
+    },
+    {
+      "opzione": "un solo lotto @frontend per impalcatura e pagine",
+      "scartata_perche": "tetto intorno a 100 turni e nessun punto intermedio per verificare la DoD; il risparmio di un'invocazione non vale il rischio di un giro che non converge"
+    }
+  ],
+  "scelta": "Atteso = 11 + 0,3×4 + 0,5×4 + 3×0,5×(1+1) + 0,5 = 17,7 → 18. Caso peggiore = 11 + 2×8 + 2×3×2 + 2 = 41. Tetti: L00 25, L01 15, L02 40, L03 25, L04 20, L05 60, L06 50, L07 70, L08 25, L09 30, L10 30 (somma 390); rimando a metà tetto. Orchestratore fuori formula: 3 invocazioni attese.",
+  "dubbio_residuo": "Nessuna misura reale per coefficienti e tetti: da confrontare al G1 con i turni e i token registrati nel journal di L00–L03. Lo strumento Agent di questa sessione non ha un parametro per i turni, quindi il tetto sta nel prompt e si controlla a posteriori.",
+  "evidenza": [
+    "verifica_piano.py: atteso_calcolato 17.7, caso_peggiore_calcolato 41, budget_turni prima passata 390, atteso 528, caso peggiore 984"
+  ],
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

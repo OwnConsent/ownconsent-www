@@ -1,0 +1,45 @@
+{
+  "ts": "2026-09-13T18:17:22+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Quattro PR con un proprietario ciascuna; revisioni in sessione solo code-reviewer, accessibility ed evidenza, su PR-4",
+  "contesto": "DP-16: una PR, una ragione, un proprietario, salvo incoerenza fra un merge e l'altro. Mi è stato chiesto di valutare le revisioni lotto per lotto e il collaudo come alternativa. Il collaudo in CI oggi non gira (journal 181016).",
+  "alternative": [
+    {
+      "opzione": "PR separata per le bozze legali (@privacy)",
+      "scartata_perche": "se arriva dopo il sito, i link del footer (AC8) sono rotti su main; se arriva prima, diventa la prima PR che tocca site/ senza comandi da verificare nella tabella di CLAUDE.md. È incoerenza fra i merge, quindi eccezione: dentro PR-4"
+    },
+    {
+      "opzione": "PR separata per i test di @qa-test",
+      "scartata_perche": "la DoD per PR vuole i test di accettazione nella PR stessa; test senza sito sarebbero rossi e un sito senza test viola la DoD. Eccezione: dentro PR-4"
+    },
+    {
+      "opzione": "ADR-0001 in una PR di @architect separata dal contratto",
+      "scartata_perche": "main avrebbe un contratto cambiato senza ADR, oppure un ADR che ratifica una modifica assente. Eccezione: stessa PR di perf-budgets.json"
+    },
+    {
+      "opzione": "collaudo in sessione su PR-4 al posto dei lotti",
+      "scartata_perche": "almeno 4 revisori pertinenti più le confutazioni, contro 2 lotti necessari (code-reviewer, accessibility); l'evidenza di design serve comunque. Stima presa dalla descrizione della skill, perché la definizione non l'ho potuta leggere"
+    },
+    {
+      "opzione": "affidarsi al collaudo in CI all'apertura della PR",
+      "scartata_perche": "ha fallito 2 run su 2 e non è partito sulle PR #3–#9; in più, i finding arriverebbero dopo la chiusura della catena"
+    },
+    {
+      "opzione": "revisioni @privacy, @seo, @performance, @security su PR-4",
+      "scartata_perche": "AC9, AC10, AC12, AC1–AC3 e AC39 li verifica L07 a scatola chiusa; nessuna autenticazione, input o API; nessun «prima» per la performance. Ciascuna ha una scadenza nel piano"
+    },
+    {
+      "opzione": "CI di build dentro la consegna (@devops, ex L13)",
+      "scartata_perche": "la #8 non la chiede e sta fuori da site/; è una divergenza con perf-budgets.json da far decidere (DP-25), non da assorbire"
+    }
+  ],
+  "scelta": "PR-1 ADR-0002 (@architect), PR-2 perf-budgets.json + ADR-0001 (@performance), PR-3 design (@design), in parallelo e ratificate al G1; PR-4 sito (@frontend) con L04–L10, aperta in bozza (DP-24). Undici lotti.",
+  "dubbio_residuo": "PR-4 contiene due eccezioni a DP-16. Se Andrea preferisce ridurle, l'unica leva senza incoerenza sarebbe spostare le bozze legali fuori da site/ e farle leggere al sito: l'ho scartata perché è contorta e il contenuto del sito sta in site/.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

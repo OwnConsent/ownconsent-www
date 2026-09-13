@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-13T17:41:08+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "consegna",
+  "titolo": "L00 chiuso: spec.json riallineata alle risposte di Andrea fino al commento 5654224159; piano sospeso in attesa di una decisione di Andrea",
+  "contesto": "L00 ha integrato i commenti 5653974149 (anomalia per confronto del sito con sé stesso), 5654192623 (AR-11, AR-12, sospensione dell'escalation, condizione su NO-1…NO-5, conferme) e 5654224159 (ciclo di vita dell'anomalia). Criteri da 59 a 64, senza rinumerare: AC60–AC64 aggiunti in coda, modificati AC28, AC29, AC44, AC46, AC47, AC52 e AC61.",
+  "dod_soddisfatta": true,
+  "dod_dettaglio": [
+    "docs/DEFINITION-OF-DONE.md, product-spec: non_goal espliciti; domande_aperte vuoto",
+    "ogni AC in forma dato/quando/allora e verificabile dall'esterno, con due limiti dichiarati: AC13, AC24–AC28, AC42–AC52, AC54 e AC60–AC64 si verificano contro un sostituto di test della CMP finché cmp-api.md non ha l'ADR; AC59 si verifica ispezionando archivi e log",
+    "assunzioni reversibili ancora da confermare: AR-09, AR-14, AR-21, AR-22; AR-19 e AR-20 adottate dal coordinatore e da segnalare ad Andrea",
+    "misura di L00: la simulazione indica che il controllo 2 (AC60) è verificabile con dati di prova ma poco efficace sul caso che lo motiva; registrato in rischi, non assorbito nei parametri"
+  ],
+  "evidenza": [
+    "validazione di spec e journal eseguita subito dopo questa voce",
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654224159"
+  ],
+  "esito": "chiuso; nessun commit, nessuna modifica a contracts/, nessun commento sulla issue",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

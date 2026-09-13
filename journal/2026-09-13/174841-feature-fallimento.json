@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T17:48:41+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "lotto": "L00",
+  "titolo": "Correzione di 173708-feature-fallimento.json: il messaggio accodato è stato consegnato, e ha prodotto lavoro già superato",
+  "contesto": "Avevo registrato come non consegnata la seconda aggiunta a L00 (commento 5654224159), verificando spec.json subito dopo la notifica di fine. L'agente ha poi letto il messaggio accodato ed è ripartito da solo: nuovo giro concluso con AC62..AC64 sul ciclo di vita dell'anomalia.",
+  "evidenza": [
+    "giro successivo di product-spec: 364374 token, 1262 s",
+    "spec.json: 64 AC, include 5654224159",
+    "il commento 5654262861 (15:40Z) toglie il controllo 2 e rende il passaggio di piano sempre umano: AC60, AC61..AC64 e AR-21/AR-22 vanno rivisti nella consegna 2"
+  ],
+  "cosa_si_e_imparato": "Un messaggio accodato a un agente appena fermo lo riavvia quando viene consegnato: non è perso, è rinviato. La verifica sull'artefatto va fatta dopo l'ultima notifica, non dopo la prima. E un messaggio accodato è una ripresa: con la regola nuova non si accoda un compito nuovo a un agente, si apre un agente pulito.",
+  "esito": "voce 173708 superata da questa; 364374 token spesi su un perimetro poi cambiato",
+  "umano_coinvolto": false
+}

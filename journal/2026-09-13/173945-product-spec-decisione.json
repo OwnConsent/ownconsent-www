@@ -1,0 +1,61 @@
+{
+  "ts": "2026-09-13T17:39:45+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Ciclo di vita dell'anomalia: AC62–AC64 con le letture di AR-22; AR-21 rivista; rischio chiuso ma due residui restano aperti",
+  "contesto": "Il commento 5654224159 decide: l'anomalia è nostra da istruire; la sospensione dell'escalation dura al massimo un periodo; si chiude per rientro nel profilo per un periodo intero oppure con una persona che motiva; se resta aperta oltre il periodo si apre un caso a una persona con i dati raccolti, e il contatore dei due periodi consecutivi riparte da lì, non retroattivamente. Per scrivere test il testo lascia aperti alcuni punti.",
+  "alternative": [
+    {
+      "punto": "«al massimo un periodo»",
+      "opzione": "durata di un periodo dal momento di apertura",
+      "scartata_perche": "la finestra toccherebbe due periodi di fatturazione, e con la regola «il periodo in cui era aperta non conta» potrebbero non contare in due, contro «al massimo un periodo». Scelto: sospensione allineata al periodo in cui l'anomalia si apre, che finisce alla sua fine (AR-22 a)"
+    },
+    {
+      "punto": "«al massimo un periodo»",
+      "opzione": "fino alla fine del periodo successivo, per dare tempo all'istruttoria",
+      "scartata_perche": "arriva fino a due periodi; il testo insiste che la regola non diventi un modo per restare sotto quota"
+    },
+    {
+      "punto": "«riparte da lì»",
+      "opzione": "dal momento in cui si apre il caso, contando anche il resto del periodo",
+      "scartata_perche": "con i periodi allineati quel momento è la fine del periodo di sospensione: il conteggio riparte dal periodo successivo, anche con l'anomalia aperta, senza considerare i periodi precedenti (AR-22 b; AR-21 c rivista)"
+    },
+    {
+      "punto": "«rientra nel proprio profilo»",
+      "opzione": "confronto con la media mobile corrente degli ultimi 14 giorni",
+      "scartata_perche": "dopo 14 giorni un difetto persistente diventa il proprio profilo e l'anomalia si chiuderebbe da sola: è di nuovo la scappatoia. «Rientra» è letto come ritorno alla linea di base del momento di apertura; AC62 ha un caso negativo apposta (AR-22 c)"
+    },
+    {
+      "punto": "chiusura comunicata al cliente",
+      "opzione": "email al cliente alla chiusura",
+      "scartata_perche": "non richiesta dal testo; AC62 e AC63 la rendono visibile all'operatore"
+    },
+    {
+      "punto": "chi chiude",
+      "opzione": "registrare il nome della persona che chiude",
+      "scartata_perche": "il testo chiede una motivazione, non un autore; registrare il nome aggiungerebbe un dato personale del personale interno da portare a @privacy. La spec chiede motivazione e momento"
+    },
+    {
+      "punto": "fermarsi",
+      "opzione": "riaprire una domanda",
+      "scartata_perche": "tutte le letture sono reversibili e i criteri restano verificabili; domande_aperte resta vuoto"
+    },
+    {
+      "punto": "rischio del ciclo di vita",
+      "opzione": "chiuderlo per intero",
+      "scartata_perche": "nello stesso rischio c'era l'esito della trattativa alla scadenza, che il commento non tocca; e le anomalie ripetute (chiusa e riaperta sullo stesso sito) possono sospendere l'escalation un periodo sì e uno no. Chiudo il ciclo di vita e tengo aperti i due residui come rischi distinti"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654224159"
+  ],
+  "esito": "decisa, da applicare alla spec: ultimo passo di L00",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

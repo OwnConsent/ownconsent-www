@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-13T16:50:27+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Definizione di richiesta dalla correzione 5653934414; «visitatori distinti» registrata come tensione, non come contraddizione",
+  "contesto": "Il commento 5653921812 deduplicava i ricontatti per utente e per giorno; il 5653934414 sostituisce quella riga: si conta ogni scrittura di consenso, senza deduplicazione, perché «il contatore non ha bisogno di sapere chi è l'utente». Lo stesso commento chiede un avviso di anomalia sul rapporto fra scritture e visitatori distinti.",
+  "alternative": [
+    {
+      "opzione": "applicare la deduplicazione per utente e per giorno",
+      "scartata_perche": "sostituita esplicitamente dal commento 5653934414"
+    },
+    {
+      "opzione": "trattare «visitatori distinti» come contraddizione e riaprire una domanda bloccante",
+      "scartata_perche": "il principio riguarda contatore e fatturazione («nessuna identità entra nella fatturazione»). L'anomalia chiede un numero aggregato, che questo progetto può ricevere senza identità. Sarebbe contraddizione solo se quel numero dovesse nascere nel percorso del contatore o entrare nella fattura"
+    },
+    {
+      "opzione": "indicare nella spec da dove arriva il numero di visitatori distinti",
+      "scartata_perche": "soluzione tecnica: la provenienza è di @architect (cmp-api.md), dato e finalità sono di @privacy"
+    },
+    {
+      "opzione": "fissare finestra e soglia del rapporto",
+      "scartata_perche": "nessun valore dato; scelto: segnaposto configurabili, avviso al massimo una volta per periodo, nessun avviso se il numero di visitatori non è disponibile (AR-17)"
+    }
+  ],
+  "dubbio_residuo": "A monte, un numero di visitatori distinti richiede qualcosa che distingua i visitatori; usarlo per rilevare anomalie è una finalità ulteriore rispetto alla prova del consenso, da valutare con @privacy. Interazione non coperta dal testo: un'integrazione difettosa può far scattare il passaggio obbligato di piano dopo due periodi prima che l'anomalia venga notata o risolta.",
+  "evidenza": [
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653921812",
+    "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653934414"
+  ],
+  "esito": "applicata nella copia di lavoro della spec; tensione in rischi con proprietari @privacy e @architect",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

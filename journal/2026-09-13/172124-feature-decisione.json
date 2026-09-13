@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T17:21:24+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "DP-02 trattata come lettura esplicita (AR-19, AR-20) e non come domanda bloccante; esecuzione limitata alla tappa A",
+  "contesto": "Il piano (71 lotti, 4 tappe, budget 122) segnala che la spec non integra il commento 5653974149 e che il commento ha due punti ambigui: «per sito» contro DA-8 e «nessun dato dalla CMP» contro scritture che arrivano solo dalla CMP. Quasi tutta la tappa A dipende da L00.",
+  "alternative": [
+    { "opzione": "rimettere le due ambiguità in domande_aperte e fermare la catena", "scartata_perche": "blocca l'intera tappa A su due letture che il testo sostiene: DA-8 riguarda consumo e fatturazione mostrati, non il calcolo interno; il flusso delle scritture è per costruzione l'unico dato già in ingresso" },
+    { "opzione": "far partire L01 in parallelo a L00 con la definizione presa dal commento", "scartata_perche": "L01 deve derivare dalla spec, non da un commento remoto" },
+    { "opzione": "eseguire tutte e quattro le tappe fino alla PR unica prevista dalla skill", "scartata_perche": "DP-16 (tappe con PR separate) e DP-17 (unità del budget) sono decisioni per una persona e cambiano il costo di 60 lotti di costruzione; la tappa A coincide con lo stadio 2 della skill" }
+  ],
+  "evidenza": ["plan.json: 71 lotti, nessun file identico dichiarato da due lotti, nessuna sovrapposizione di glob per prefisso, dipendenze GA/GB/GC sono gate di tappa", "commento 5653974149 di andreapernici, permesso admin"],
+  "esito": "applicata; letture pubblicate sulla issue come non bloccanti, correggibili da Andrea",
+  "umano_coinvolto": false
+}

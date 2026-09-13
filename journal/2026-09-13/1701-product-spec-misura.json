@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-13T17:01:47+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "misura",
+  "titolo": "Esempi di periodo ancorato in AC42 verificati con il calendario, non a mente",
+  "contesto": "AC42 contiene esempi di date scritti a mano per la regola del periodo ancorato alla data di attivazione (AR-10). Nella prima stesura mentale l'esempio con attivazione il 31 gennaio dava 31 marzo–30 aprile, che è sbagliato perché aprile non ha il 31; corretto in 31 marzo–29 aprile prima della scrittura. Misurato per non consegnare a @qa-test esempi dedotti.",
+  "evidenza": [
+    "attivazione 15 marzo 2027, 2 periodi calcolati: 15 marzo–14 aprile; 15 aprile–14 maggio",
+    "attivazione 31 gennaio 2027 (anno non bisestile), 4 periodi calcolati: 31 gennaio–27 febbraio; 28 febbraio–30 marzo; 31 marzo–29 aprile; 30 aprile–30 maggio",
+    "esempi calcolati identici al testo di AC42: True",
+    "spec dopo l'integrazione: 59 criteri (41 + 18), 3 criteri esistenti modificati (AC25, AC28, AC39), 0 domande_aperte, 10 decisioni_confermate, 9 rischi, 2 questioni_per_persona"
+  ],
+  "esito": "confermati",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

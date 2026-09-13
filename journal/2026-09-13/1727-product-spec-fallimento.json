@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T17:27:33+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "Nel report precedente ho detto che le voci dei primi giri erano già committate senza verificare dove: sono nel commit 629f893 sul ramo issue-4-spec, non sul ramo di lavoro",
+  "contesto": "Nel giro precedente git status non mostrava più fra i non tracciati le voci 1600–1618, e ne ho dedotto che qualcuno le avesse committate, senza indicare il ramo. In questo giro git status mostra tutta la cartella del journal come non tracciata e git log sul ramo corrente non ha commit nuovi.",
+  "tentativo": "Dedurre lo stato dei file in git dal solo git status --short",
+  "cosa_si_e_imparato": "Che un file sparisca da git status non dice dove sia finito: può essere stato committato su un altro ramo e tolto dall'albero di lavoro. Prima di affermare dove si trova una cosa in git va verificato con git log --all e git branch --contains. Anche il ramo del contesto iniziale non vale più: oggi il ramo di lavoro è issue-4-feature.",
+  "evidenza": [
+    "git branch --show-current: issue-4-feature",
+    "git branch -a --contains 629f893: issue-4-spec e origin/issue-4-spec",
+    "629f893 contiene le voci product-spec da 1600 a 1618 e le voci feature 1613 e 1641"
+  ],
+  "esito": "corretto nel report di questo giro",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

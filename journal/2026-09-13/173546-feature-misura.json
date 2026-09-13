@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-13T17:35:46+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Proiezione token del piano: media per invocazione × 122 e × 213",
+  "contesto": "Richiesta di Andrea prima di eseguire il piano (71 lotti, budget 122 invocazioni, caso peggiore 213). Base: invocazioni di agente concluse oggi sulla issue 4.",
+  "evidenza": [
+    "product-spec — spec iniziale: 74037 token, 711 s",
+    "product-spec — journal + riallineamento HANDOFF (ripresa): 136609 token, 354 s",
+    "product-spec — integrazione risposte (ripresa): 248369 token, 1266 s",
+    "orchestrator — plan.json: 189216 token, 912 s",
+    "totale 648231 token su 4 invocazioni; media 162058 token/invocazione",
+    "× 122 = 19771046 token (~19.8 M)",
+    "× 213 = 34518301 token (~34.5 M)",
+    "sensibilità, solo invocazioni nuove (senza riprese): media 131626; × 122 = 16.1 M; × 213 = 28.0 M",
+    "durata media 811 s/invocazione; × 122 = 27.5 h, × 213 = 48.0 h di agente in sequenza",
+    "senza tappa D (budget 89, caso peggiore 156): ~14.4 M e ~25.3 M"
+  ],
+  "limiti": [
+    "valori = subagent_tokens riportati dall'harness a fine invocazione; semantica (input con cache sommato per richiesta o no) non verificata",
+    "le due riprese di product-spec possono includere contesto delle invocazioni precedenti",
+    "campione di 4 invocazioni tutte documentali: nessun lotto di codice, build o test misurato",
+    "esclusi i token della sessione principale e l'invocazione L00 ancora in corso"
+  ],
+  "esito": "proiezione registrata; esecuzione del piano sospesa in attesa della decisione di Andrea",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "note": "DP-01, DP-16, DP-17 risposte da Andrea in chat: proprietario modifica e architect ratifica (ADR solo per cambi che vincolano più lotti); quattro PR con controllo fra le tappe; tre unità (invocazioni per pianificare, turni come tetto per agente, token nel journal)."
+}

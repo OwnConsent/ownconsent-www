@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T17:37:08+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Seconda aggiunta a L00 (chiusura dell'anomalia, commento 5654224159) non consegnata",
+  "contesto": "Messaggio accodato a product-spec alle ~17:35 mentre stava lavorando; l'agente ha scritto spec.json alle 17:34:52 e si è fermato senza un altro giro di strumenti, quindi il messaggio non è stato letto.",
+  "evidenza": [
+    "spec.json non contiene l'id 5654224159",
+    "il report di product-spec tratta «chi chiude un'anomalia» come segnaposto e come scappatoia aperta"
+  ],
+  "cosa_si_e_imparato": "Un messaggio accodato arriva solo al giro di strumenti successivo: un agente vicino alla chiusura può non vederlo mai. Dopo ogni notifica di fine va verificato sull'artefatto che l'aggiunta sia entrata, non dedotto dall'invio riuscito.",
+  "esito": "non riavviato: Andrea ha chiesto di fermarsi prima di proseguire; da integrare come primo passo alla ripresa",
+  "umano_coinvolto": false
+}

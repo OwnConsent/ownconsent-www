@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-13T18:18:31+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Prima prova per inversione dello script di verifica bloccata da guard-paths",
+  "contesto": "verifica_piano.py è passato al primo colpo (0 sovrapposizioni, 0 cicli, 21/21). Un controllo che non ha mai fallito non dimostra di saper trovare un errore, quindi ho preparato copie del piano con difetti inseriti apposta. Lo script inline usava l'operatore '/' di pathlib (S / nome) e un 'rm -rf' sulla cartella di scratchpad.",
+  "cosa_si_e_imparato": "L'hook guard-paths legge un '/' isolato nel testo del comando come il percorso radice, anche dentro codice Python passato con un heredoc, e blocca il comando per intero. È un falso positivo per questo uso, ma non va aggirato: il comando si riscrive con os.path.join, senza token '/' isolati e senza rm.",
+  "evidenza": [
+    "messaggio: GATE: il percorso '/' porta fuori dal progetto (/)",
+    "nessuna copia creata, nessuna esecuzione avvenuta"
+  ],
+  "esito": "stesso test riscritto con os.path.join",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

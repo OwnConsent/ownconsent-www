@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T17:37:08+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Proiezione token aggiornata con la quinta invocazione (L00 concluso)",
+  "contesto": "Aggiorna 173546-feature-misura.json, che usava 4 invocazioni perché L00 era in corso. Nessuna modifica alla voce precedente.",
+  "evidenza": [
+    "product-spec — spec iniziale: 74037 token, 711 s",
+    "product-spec — journal + riallineamento HANDOFF (ripresa): 136609 token, 354 s",
+    "product-spec — integrazione risposte (ripresa): 248369 token, 1266 s",
+    "orchestrator — plan.json: 189216 token, 912 s",
+    "product-spec — L00 riallineamento anomalia e conferme (ripresa): 334389 token, 904 s",
+    "totale 982620 token su 5 invocazioni; media 196524 token/invocazione (era 162058)",
+    "× 122 = 23975928 token (~24.0 M)",
+    "× 213 = 41859612 token (~41.9 M)",
+    "senza tappa D: × 89 = ~17.5 M; × 156 = ~30.7 M",
+    "durata media 829 s/invocazione; × 122 = 28.1 h"
+  ],
+  "limiti": [
+    "stessi limiti della voce 173546: semantica di subagent_tokens non verificata, 3 riprese su 5 possono includere contesto precedente, nessun lotto di codice misurato, sessione principale esclusa",
+    "tendenza: le riprese di product-spec crescono (137k, 248k, 334k), coerente con contesto accumulato"
+  ],
+  "esito": "registrata; piano sospeso",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null
+}

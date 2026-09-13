@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-13T18:08:30+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "spec.json è ignorata da git, mentre HANDOFF.md dice che fa eccezione",
+  "contesto": "docs/HANDOFF.md: «Tutto sotto .work/<issue-id>/ (in .gitignore, tranne spec.json che va allegata alla PR)». Prima di decidere se il lotto @product-spec produca un artefatto committato, ho verificato il meccanismo.",
+  "evidenza": [
+    "git check-ignore -v .work/issue-8/spec.json -> .gitignore:1:.work/ (ignorato, exit 0)",
+    ".gitignore non contiene alcuna riga di eccezione '!.work/**/spec.json'",
+    "git ls-files: nessun file sotto .work/ è tracciato",
+    "perimetro #8 contato dal testo della issue: 21 criteri (AC1–AC10, AC12, AC33, AC34, AC37, AC39, AC40, AC41, AC49, AC53, N1, N2) e 8 pagine, nessuna pagina di contatto",
+    "site/ e api/ non esistono; docs/adr/ contiene solo 0000-template.md; .github/workflows/ ha solo i tre workflow claude-*.yml, nessuna CI di build"
+  ],
+  "esito": "Divergenza documento contro meccanismo: vale il meccanismo (spec.json non committata), la divergenza va segnalata. Nel piano la spec si allega al corpo della PR, come dice il testo di HANDOFF.md; se committarla o no è una decisione per persona.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

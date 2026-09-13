@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-13T17:34:44+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Condizione su NO-1…NO-5 registrata come vincolo: l'ADR produce una issue nel repository della CMP, preparata da @architect e aperta da una persona",
+  "contesto": "Il commento 5654192623 accetta di affidare NO-1…NO-5 a un ADR di @architect, a condizione che l'ADR produca una issue aperta nel repository della CMP. Questa sessione non può toccare quel repository: .cantiere-deny blocca il nome in qualunque comando.",
+  "alternative": [
+    {
+      "opzione": "scrivere nella spec il nome del repository della CMP",
+      "scartata_perche": "non serve al significato e renderebbe fragili i comandi di chi lavora sulla spec a valle; la spec dice «repository della CMP»"
+    },
+    {
+      "opzione": "far preparare e aprire la issue a un agente",
+      "scartata_perche": "nessun agente di questa sessione può toccare quel repository; il testo lo prepara @architect, la apre una persona"
+    },
+    {
+      "opzione": "trasformare la condizione in criterio di accettazione",
+      "scartata_perche": "l'apertura di una issue in un altro repository non è un comportamento osservabile di questo sistema; è un vincolo sulla presa in carico dei NO e una dipendenza"
+    }
+  ],
+  "evidenza": [
+    "commento https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654192623",
+    ".cantiere-deny"
+  ],
+  "esito": "decisa, da applicare alla spec in questo giro",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

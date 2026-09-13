@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-13T20:19:06+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "adr": "ADR-0001",
+  "ramo": "contracts/perf-budgets-laboratorio",
+  "titolo": "ADR-0001 consegnato per la PR-2 con stato «proposta, con obiezione»: il lotto L03 si ferma sul punto LCP e sul metodo di rete",
+  "commit": [
+    "91c514b docs(adr): ADR-0001, soglie di laboratorio delle pagine pubbliche (ratifica di L01, con obiezione)"
+  ],
+  "dod_soddisfatta": {
+    "adr_per_ogni_scelta_vincolante": "sì, con obiezione dichiarata: O1 (profilo di rete a livello di richiesta, da cui dipende lcp_ms_lab_mediana 2500 > p75 2000) e O2 (esecuzioni a freddo) bloccano il merge di PR-2 finché @performance non li chiude",
+    "contratti_aggiornati": "no, per vincolo: contracts/perf-budgets.json invariato ($ git diff --stat origin/contracts/perf-budgets-laboratorio HEAD -- contracts/ -> nessun output)",
+    "consumatori_impattati_per_agente": "performance (L01), qa-test (L07), devops (L12), frontend (L05, L06), area cliente della consegna 2",
+    "journal": "misura sulle fonti, fallimento sulle costanti di Lighthouse, gate dell'obiezione, decisione di ratifica separata"
+  },
+  "cosa_manca": "un'invocazione nuova di @performance su O1 e O2 (N1-N3 non bloccanti); poi ADR-0001 passa ad accettata, con una voce nuova e senza riscrivere la storia",
+  "turni_usati": 15,
+  "esito": "committato, nessun push, nessuna PR",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

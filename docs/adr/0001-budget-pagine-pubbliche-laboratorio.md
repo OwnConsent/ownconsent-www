@@ -1,8 +1,12 @@
 # ADR-0001 — Budget delle pagine pubbliche: soglie di laboratorio ora, p75 di campo quando c'è traffico (ratifica di L01)
 
-- Stato: **proposta, con obiezione**. Due punti del metodo vanno chiusi da @performance,
-  proprietario del contratto, prima del merge di PR-2 (vedi «Obiezione»). Il resto è
-  ratificato.
+- Stato: **proposta, con obiezione** (ratifica del 2026-09-13, giro R-L01). O2 è chiusa,
+  O1 è chiusa sulla soglia; resta **O1r**, sull'etichetta del profilo di rete e sulla
+  parola «peggiore» nella nota della soglia, da chiudere da @performance prima del merge
+  di PR-2. Vedi la sezione «2026-09-13 — Ratifica della risposta di @performance».
+- Stato alla prima stesura: proposta, con obiezione. Due punti del metodo (O1, O2) da
+  chiudere da @performance, proprietario del contratto, prima del merge di PR-2 (vedi
+  «Obiezione»). Il resto ratificato.
 - Data: 2026-09-13
 - Deciso da: @architect (lotto L03, issue #8). La modifica è di @performance (lotto L01)
 - Vincola: @qa-test (L07), @devops (L12), @frontend (L05, L06); l'area cliente della
@@ -186,3 +190,138 @@ significato di tutte le misure precedenti.
 | @devops (L12) | esegue il comando del test; nessun confronto proprio; p75 non letti |
 | @frontend (L05, L06) | annotano i pesi JS e CSS della build secondo N3, appena chiusa |
 | Consegna 2, area cliente | soglie di laboratorio da dichiarare con lo stesso schema |
+
+## 2026-09-13 — Ratifica della risposta di @performance (giro R-L01)
+
+Sezione aggiunta. Quella sopra è la prima stesura e resta com'è.
+
+Esito: **proposta, con obiezione.** O2 è chiusa. O1 è chiusa sulla soglia e su come la
+motiva, non sull'etichetta del profilo di rete: resta l'obiezione **O1r**, sotto. Da
+questo giro nulla è stato riscritto in `contracts/perf-budgets.json` (DP-01).
+
+### Cosa ho esaminato
+
+- Commit di @performance: `d0806d7` (voce `journal/2026-09-13/202805-performance-decisione.json`),
+  `2dbe9d4` (contratto), `e7a52da` (voce di fallimento sul sandbox).
+- `git diff 389ade6 HEAD -- contracts/perf-budgets.json`: cambiano i campi `strumento`,
+  `rete` e `$nota_soglie_lab`; si aggiunge `isolamento_esecuzioni`. Nessuna chiave è
+  rimossa o rinominata e nessun numero cambia (2500, 0.05, 60, 25, 2000, 0.05): nessun
+  percorso di deprecazione.
+
+### Nuova misura sulle fonti
+
+Nella prima stesura avevo dichiarato un limite: i moltiplicatori letti in un commit
+storico, il profilo corrente solo in un riassunto. In questo giro ho letto il sorgente
+corrente, ramo `main` al 2026-09-13.
+
+- Lighthouse `core/lib/lantern/lantern.js` non definisce le costanti: le riesporta da
+  `@paulirish/trace_engine/models/trace/lantern/lantern.js`.
+- devtools-frontend `front_end/models/trace/lantern/simulation/Constants.ts`:
+  `DEVTOOLS_RTT_ADJUSTMENT_FACTOR = 3.75`, `DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR = 0.9`.
+  `mobileSlow4G` ha `rttMs: 150`, `throughputKbps: 1.6 * 1024`,
+  `requestLatencyMs: 150 * DEVTOOLS_RTT_ADJUSTMENT_FACTOR`,
+  `downloadThroughputKbps: 1.6 * 1024 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR`,
+  `uploadThroughputKbps: 750 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR` e `cpuSlowdownMultiplier: 4`.
+- devtools-frontend `front_end/core/sdk/NetworkManager.ts`: `const slow4GTargetLatency = 150;`.
+  Nello stesso file, `Slow4GConditions` ha `download: 1.6 * 1000 * 1000 / 8 * .9`,
+  `upload: 750 * 1000 / 8 * .9`, `latency: slow4GTargetLatency * 3.75`. È il preset
+  «Slow 4G» di Chrome DevTools, applicato con la stessa emulazione di rete per richiesta.
+- Calcolo, `python3 -c "print(1.6*1000*1000/8*.9, 750*1000/8*.9, 150*3.75); print(1.6*1000*1000/8, 750*1000/8)"`:
+  `180000.0 84375.0 562.5` e `200000.0 93750.0`.
+
+Limiti della misura. Ho letto i file con WebFetch, che restituisce un estratto chiedendo
+il testo alla lettera, non con un clone git, e senza fissare un commit. Che il pacchetto
+`@paulirish/trace_engine` sia costruito da devtools-frontend lo deduco dal percorso
+d'importazione, non l'ho verificato. Il valore del preset di Chrome DevTools, invece, non
+dipende da quella deduzione.
+
+### Esito punto per punto
+
+| Punto | Esito | Motivo |
+|---|---|---|
+| O2, `isolamento_esecuzioni` | **chiusa** (`2dbe9d4`) | il campo dice esecuzione a freddo, un `browser.newContext()` nuovo per ciascuna delle 5 esecuzioni, nessuno storage, cookie o cache condivisi, cache HTTP vuota, nessun service worker, e il motivo (la cache calda salta la rete limitata). È quanto chiedeva O2. La parentesi sul service worker cita ADR-0002 D9, che su questo ramo non c'è (`ls docs/adr/` elenca solo 0000 e 0001): la dichiarazione vale anche senza quella parentesi |
+| O1, soglia `lcp_ms_lab_mediana` = 2500 | **ratificata** (`2dbe9d4`) | l'uscita scelta, profilo e soglia invariati e motivazione riscritta senza «condizioni più dure», è quella che la prima stesura dichiarava ammissibile. La nota rinuncia in modo esplicito a quella premessa e si regge sulla differenza di grandezza: mediana di una condizione fissata contro p75 di una popolazione. Non adottare i moltiplicatori è una scelta legittima |
+| O1, testo di `$nota_soglie_lab` | **non ratificato**, vedi O1r punto 3 | la frase «il laboratorio misura sempre la condizione peggiore fissata» rimette, con «peggiore», la stessa premessa di severità che la frase dopo dichiara non adottata. Con un profilo per richiesta 3,75 volte più leggero sulla latenza dei due «Slow 4G» pubblici, «peggiore» non è dimostrato |
+| O1, etichetta del campo `rete` | **non ratificata**, vedi O1r punti 1 e 2 | vedi «L'etichetta del profilo» |
+| N1, CLS come somma | **chiusa** (`2dbe9d4`) | il campo dice che la somma non è la definizione corrente di web.dev e perché la misura resta prudente |
+| N2, momento di lettura dell'LCP | **chiusa** (`2dbe9d4`) | ultima entry con `buffered: true`, letta dopo `load`. Resta non specificato per quanto tempo si aspetta prima di dire «non arrivano più entry»: nota **N4**, non bloccante, alla prossima revisione del file |
+| N3, peso di JS e CSS per pagina | **aperta; non blocca il merge di PR-2** | le chiavi `js_iniziale_gzip_kb` e `css_gzip_kb` vengono prima di L01, e PR-2 non ne cambia né il valore né il metodo: il merge non peggiora la lacuna. Blocca invece il lavoro che la userebbe: L07 non implementa il confronto sui pesi e L05/L06 non annotano la prima misura dei pesi finché N3 non è chiusa nel contratto, altrimenti ciascuno dedurrebbe insieme di file, livello di gzip e trattamento del codice in linea |
+
+### L'etichetta del profilo
+
+Il campo apre con «Profilo pubblico Slow 4G di Lighthouse» e poi applica, via
+`Network.emulateNetworkConditions`, `latency=150`, `downloadThroughput=200000`,
+`uploadThroughput=93750`, senza fattori di correzione. Ciò che si misura è quindi un
+rallentamento per richiesta di 150 ms. Nel sorgente corrente nessuno dei profili che
+portano quel nome applica questa condizione:
+
+| Profilo con il nome «Slow 4G» | Come agisce | Latenza | Giù | Su |
+|---|---|---|---|---|
+| Lighthouse `mobileSlow4G`, metodo `simulate` | simulazione a livello di pacchetto | 150 ms RTT | 1638,4 kbps | — |
+| Lighthouse `mobileSlow4G`, metodo `devtools` | per richiesta | 562,5 ms | 1474,56 kbps | 675 kbps |
+| Chrome DevTools `Slow4GConditions` | per richiesta, stessa emulazione CDP | 562,5 ms | 180000 B/s | 84375 B/s |
+| **Contratto, campo `rete`** | per richiesta, stessa emulazione CDP | **150 ms** | **200000 B/s** | **93750 B/s** |
+
+Il corpo del campo dichiara la differenza, e questo è corretto. L'etichetta però è la
+parte che si ripete nelle misure allegate alle PR e che chiunque confronta con Lighthouse
+o con DevTools, e nomina una condizione che la misura non riproduce. È il caso di
+«suonano uguali non vuol dire sono la stessa cosa» (`CLAUDE.md`). Inoltre il primo dei
+due motivi con cui il campo non adotta i moltiplicatori («la fonte del valore 3.75/0.9
+per la versione corrente di Lighthouse non è verificata nel sorgente attuale») non regge
+più dopo la misura qui sopra. Il secondo motivo basta da solo, e resta.
+
+### Obiezione residua
+
+**O1r.** Blocca il merge di PR-2. La chiude @performance in `contracts/perf-budgets.json`:
+per il punto 1 si sceglie un'opzione, i punti 2 e 3 si applicano come indicato.
+
+1. Campo `$metodo_laboratorio_pagine_pubbliche.rete`, una delle due opzioni.
+   - **(a) Valori invariati** (`latency=150`, `downloadThroughput=200000`,
+     `uploadThroughput=93750`). Il campo non usa più «Slow 4G», né «profilo/preset di
+     Lighthouse», come nome della condizione applicata. Dice, in quest'ordine: i tre
+     valori CDP; che sono i valori a livello di pacchetto del preset Slow 4G di
+     Lighthouse (`docs/throttling.md`), applicati per richiesta senza fattori di
+     correzione; che la condizione ottenuta non equivale al Slow 4G di Lighthouse né a
+     quello di Chrome DevTools, che per richiesta applicano 562,5 ms di latenza.
+   - **(b) Valori del preset «Slow 4G» di Chrome DevTools** (`latency=562.5`,
+     `downloadThroughput=180000`, `uploadThroughput=84375`), con la fonte
+     `front_end/core/sdk/NetworkManager.ts`, `Slow4GConditions`. In questo caso
+     l'etichetta «Slow 4G di Chrome DevTools» è corretta. Se con questa condizione 2500
+     va rivisto, lo decide @performance e lo motiva.
+2. Solo con (a): nello stesso campo si toglie il motivo «fonte non verificata nel
+   sorgente attuale», smentito dalla misura di questa sezione. Resta il motivo che la
+   soglia non ha bisogno di quella premessa. Con (b) il paragrafo sui moltiplicatori va
+   riscritto comunque, perché i moltiplicatori diventano adottati.
+3. Con entrambe le opzioni: in `pagine_pubbliche.$nota_soglie_lab` nessuna parola afferma
+   che la condizione di laboratorio sia peggiore, più dura o più severa di quelle di
+   campo. Nella frase «il laboratorio misura sempre la condizione peggiore fissata a ogni
+   esecuzione» si toglie «peggiore»; il resto dell'argomento non cambia.
+
+Il giro successivo di ratifica verifica solo O1r. Tutti gli altri punti di questo ADR
+sono ratificati e non si riaprono, salvo le scadenze già scritte.
+
+### Alternative scartate in questo giro
+
+| Alternativa | Perché no |
+|---|---|
+| «Accettata», con l'etichetta come nota non bloccante | l'etichetta è ciò che leggono L07, la CI e chi confronta le misure delle PR con Lighthouse o DevTools. Lo scarto è di 3,75 volte sulla latenza, sotto un nome che Chrome DevTools usa per la stessa chiamata CDP con altri valori. Una nota non bloccante resterebbe nel contratto per inerzia |
+| Correggere io l'etichetta o la nota | DP-01: ratificare non è riscrivere, il contratto è di @performance |
+| Chiedere di adottare i moltiplicatori | la prima stesura dichiarava ammissibile l'uscita senza moltiplicatori, e la soglia ora non ne dipende. L'opzione (b) resta una scelta di @performance, non una condizione |
+| Rendere N3 bloccante per il merge | PR-2 non tocca le chiavi dei pesi né il loro metodo. Il blocco va messo dove la lacuna farebbe danno: l'implementazione del confronto sui pesi e la loro annotazione |
+
+### Costo del ritorno di questo giro
+
+Tenere O1r costa un giro di @performance su tre frasi di un campo e una parola di una
+nota; nessun numero è contestato, salvo che @performance scelga (b). Se Andrea, che ha il
+gate del merge, ritiene l'etichetta accettabile così, la decisione si rovescia con una
+sezione datata in questo ADR, senza toccare il contratto.
+
+### Consumatori impattati, aggiornamento
+
+| Agente (lotto) | Impatto di questo giro |
+|---|---|
+| @performance (L01) | chiude O1r (punti 1–3); N3 e N4 alla prossima revisione del file, N3 prima che parta il confronto sui pesi |
+| @qa-test (L07) | può implementare isolamento delle esecuzioni, lettura di LCP e calcolo del CLS come scritti. I valori di rete aspettano O1r, perché con (b) cambiano. Non implementa il confronto sui pesi finché N3 è aperta |
+| @devops (L12) | nessun cambiamento: un solo comparatore, quello del test |
+| @frontend (L05, L06) | non annotano la prima misura dei pesi JS e CSS finché N3 è aperta |
+| Consegna 2, area cliente | nessun cambiamento |

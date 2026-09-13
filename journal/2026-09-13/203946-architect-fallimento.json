@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "titolo": "Le costanti di Lantern non stanno nel repository di Lighthouse: una richiesta a vuoto su lantern.js prima di trovarle in devtools-frontend",
+  "contesto": "Per verificare nel sorgente corrente il preset mobileSlow4G, che nella prima stesura avevo letto solo in un commit storico e in un riassunto, ho aperto core/lib/lantern/lantern.js di Lighthouse.",
+  "evidenza": [
+    "WebFetch https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/core/lib/lantern/lantern.js -> nessuna costante; solo export da '@paulirish/trace_engine/models/trace/lantern/lantern.js' e '@paulirish/trace_engine'",
+    "WebFetch https://raw.githubusercontent.com/ChromeDevTools/devtools-frontend/main/front_end/models/trace/lantern/simulation/Constants.ts -> costanti e profilo trovati (vedi 203946-architect-misura.json)",
+    "la prima lettura di NetworkManager.ts ha restituito le espressioni del preset senza il valore di slow4GTargetLatency: seconda richiesta sullo stesso file per leggerlo alla lettera"
+  ],
+  "cosa_si_e_imparato": "Lighthouse oggi non definisce più le costanti di throttling: vengono da un pacchetto npm il cui percorso rimanda a devtools-frontend. Per un valore di Lighthouse la fonte da leggere è quel percorso, non il repository di Lighthouse. Quando si chiede a WebFetch un valore, va chiesta nello stesso prompt anche la dichiarazione delle variabili usate nell'espressione, altrimenti serve una seconda richiesta. Costo: due richieste in più e un turno.",
+  "esito": "misura completata al turno 4 invece che al 3",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 5
+}

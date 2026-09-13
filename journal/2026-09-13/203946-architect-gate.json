@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "gate",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "titolo": "Merge di PR-2 ancora bloccato da O1r: il contratto chiama «Slow 4G di Lighthouse» una condizione che nessun profilo Slow 4G corrente applica",
+  "contesto": "O2 è chiusa e la soglia LCP 2500 è ratificata. Il campo rete però etichetta come «Profilo pubblico Slow 4G di Lighthouse» un rallentamento per richiesta di 150 ms, mentre Lighthouse (metodo devtools) e Chrome DevTools applicano 562,5 ms per richiesta con lo stesso nome. Il primo motivo per non adottare i moltiplicatori (fonte non verificata) è smentito dalla misura di questo giro; la nota della soglia dice ancora «condizione peggiore».",
+  "chi_ha_deciso": "architect: non modifico contracts/perf-budgets.json (DP-01, vincolo del giro) e lascio O1r a @performance con un'invocazione nuova; il merge di PR-2 resta ad Andrea (G1), che può rovesciare O1r con una sezione datata nell'ADR",
+  "cosa_serviva": "O1r, alla lettera in ADR-0001: (1) nel campo rete, (a) valori invariati senza usare «Slow 4G» o «profilo/preset di Lighthouse» come nome della condizione applicata, dicendo in ordine i tre valori CDP, che sono valori di pacchetto del preset Lighthouse applicati per richiesta senza correzione e che non equivalgono al Slow 4G di Lighthouse né di Chrome DevTools (562,5 ms per richiesta), oppure (b) latency=562.5, downloadThroughput=180000, uploadThroughput=84375 con la fonte Slow4GConditions di front_end/core/sdk/NetworkManager.ts; (2) solo con (a), togliere il motivo «fonte non verificata nel sorgente attuale»; (3) in ogni caso togliere «peggiore» da «il laboratorio misura sempre la condizione peggiore fissata a ogni esecuzione» in $nota_soglie_lab",
+  "esito": "ADR-0001 «proposta, con obiezione»; il prossimo giro di ratifica verifica solo O1r",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 6
+}

@@ -1,0 +1,45 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "titolo": "Ratifica di R-L01: O2, N1, N2 e la soglia 2500 ratificate; etichetta del profilo di rete e parola «peggiore» non ratificate (O1r); N3 non blocca il merge ma blocca il confronto sui pesi",
+  "contesto": "@performance ha risposto a O1 e O2 in 2dbe9d4: profilo e soglia invariati, motivazione senza «condizioni più dure», nuova chiave isolamento_esecuzioni, N1 e N2 chiuse, N3 aperta. Il compito era ratificare o no, senza riscrivere il contratto (DP-01).",
+  "alternative": [
+    {
+      "opzione": "ADR-0001 «accettata», con l'etichetta del profilo come nota non bloccante",
+      "scartata_perche": "la misura 203946-architect-misura.json mostra che il nome «Slow 4G» corrisponde, nel sorgente corrente di Lighthouse (devtools) e di Chrome DevTools, a 562,5 ms per richiesta con la stessa chiamata CDP, mentre il contratto ne applica 150. L'etichetta è ciò che si ripete nelle misure allegate alle PR; una nota non bloccante resterebbe nel contratto per inerzia"
+    },
+    {
+      "opzione": "correggere io l'etichetta del campo rete e la parola «peggiore» nella nota",
+      "scartata_perche": "DP-01 e vincolo del giro: ratificare non è riscrivere, il contratto è di @performance"
+    },
+    {
+      "opzione": "come condizione di ratifica, chiedere di adottare i moltiplicatori 3.75/0.9",
+      "scartata_perche": "la prima stesura dichiarava ammissibile l'uscita senza moltiplicatori e la soglia non ne dipende più; l'obiezione offre (a) etichetta descrittiva con valori invariati oppure (b) valori di Chrome DevTools, a scelta di @performance"
+    },
+    {
+      "opzione": "N3 bloccante per il merge di PR-2",
+      "scartata_perche": "js_iniziale_gzip_kb e css_gzip_kb vengono prima di L01 e PR-2 non ne cambia né valore né metodo; il blocco va messo dove la lacuna fa danno: L07 non implementa il confronto sui pesi e L05/L06 non annotano i pesi finché N3 è aperta"
+    },
+    {
+      "opzione": "O2 non ratificata perché la parentesi sul service worker cita ADR-0002 D9, assente su questo ramo",
+      "scartata_perche": "la dichiarazione «nessun service worker registrato» è esplicita e basta da sola a chiudere O2; la citazione è un rimando di contesto, non la garanzia"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md, sezione «2026-09-13 — Ratifica della risposta di @performance (giro R-L01)»",
+    "$ git diff 389ade6 HEAD -- contracts/perf-budgets.json (nessun numero cambiato, nessuna chiave rimossa)",
+    "nota_soglie_lab in 2dbe9d4: «il laboratorio misura sempre la condizione peggiore fissata a ogni esecuzione [...] non perche' il profilo di rete dichiarato sia piu' severo»: «peggiore» ripropone la premessa che la stessa frase dichiara non adottata",
+    "N2: il campo strumento non fissa per quanto tempo si aspetta prima di concludere che non arrivano più entry: aggiunta N4, non bloccante"
+  ],
+  "esito": "ADR-0001 resta «proposta, con obiezione» con la sola O1r; contracts/perf-budgets.json non modificato",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 6
+}

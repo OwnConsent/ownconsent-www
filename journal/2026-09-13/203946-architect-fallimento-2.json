@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "ts_nota": "ora dell'ultimo date -Iseconds misurato nel giro (turno 5); la voce è scritta al turno 9",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "titolo": "Commit rifiutato dal sandbox della worktree: un solo comando con cat, ciclo for, due git commit concatenati e grep in pipe è «troppo complesso»",
+  "contesto": "Al turno 8 ho messo in un unico comando di shell: lettura di .work/.current-agent, validazione JSON con ciclo for, git diff su contracts/, git add e commit dell'ADR, git add e commit del journal, git log e un conteggio con grep. Il prompt del giro avvertiva del rifiuto per heredoc e python con documento inline, non per git concatenato.",
+  "evidenza": [
+    "risposta del sandbox: «this command names git in a form too complex to verify that it stays inside the worktree. Refusing to run it [...] Split it into plain, separate commands»",
+    "nessun commit creato: il comando non è stato eseguito affatto"
+  ],
+  "cosa_si_e_imparato": "Nella worktree il verificatore rifiuta anche i comandi git concatenati, non solo heredoc e redirezioni. I comandi git vanno dati semplici, uno per chiamata, e le letture non git in chiamate separate e parallele. Con un tetto di turni, i due commit (ADR e journal) andavano pianificati come chiamate distinte fin dall'inizio. Costo: un turno, e il commit separato del journal, fuso in quello dell'ADR.",
+  "esito": "turno 9: controlli in chiamate separate; turno 10: git add dei file elencati per nome e un solo commit",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 9
+}

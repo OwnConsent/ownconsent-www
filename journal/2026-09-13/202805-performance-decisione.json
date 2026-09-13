@@ -1,0 +1,42 @@
+{
+  "ts": "2026-09-13T20:28:05+02:00",
+  "agente": "performance",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "R-L01: chiusura O1 e O2 di ADR-0001; N1 e N2 chiuse nello stesso file, N3 lasciata aperta",
+  "contesto": "ADR-0001 blocca il merge di PR-2 su due punti del metodo di laboratorio in contracts/perf-budgets.json: O1 sul profilo di rete (Network.emulateNetworkConditions rallenta per richiesta, non per pacchetto, mentre Lighthouse con lo stesso preset applica moltiplicatori RTT x3.75 e throughput x0.9), O2 sul fatto che il metodo non diceva se le 5 esecuzioni partono a cache vuota.",
+  "alternative": [
+    {
+      "opzione": "O1: adottare nel metodo i valori equivalenti a Lighthouse a livello di richiesta (RTT 562,5 ms, downlink 1474,56 kbps, upload 675 kbps) e tenere lcp_ms_lab_mediana a 2500",
+      "scartata_perche": "dipenderebbe dal fatto che il preset mobileSlow4G del Lighthouse corrente applichi ancora i moltiplicatori 3,75/0,9 trovati in un commit storico (8f500e0). Il limite e' dichiarato in journal/2026-09-13/201807-architect-fallimento.json: che il profilo corrente li usi ancora e' letto in un riassunto, non nel sorgente attuale. Costruire una soglia di contratto su un dato non verificato nel sorgente viola misura non dedurre di CLAUDE.md"
+    },
+    {
+      "opzione": "O1: tenere il profilo attuale (150 ms, 1,6 Mbps giu, 750 Kbps su, a livello di richiesta) e abbassare lcp_ms_lab_mediana per compensare",
+      "scartata_perche": "ADR-0001 accetta gia' 2500 in linea di principio, indipendentemente dal profilo di rete: una mediana di laboratorio nella condizione peggiore fissata a ogni esecuzione non e' la stessa grandezza di un p75 di campo che aggrega anche condizioni migliori. Cambiare il numero senza una misura di build che lo richieda sarebbe una soglia scelta a sensazione"
+    },
+    {
+      "opzione": "O1: tenere il profilo attuale, tenere 2500, riscrivere la motivazione senza appoggiarsi a condizioni piu' dure del campo",
+      "scelta_perche": "e' lopzione che ADR-0001 dichiara gia' sufficiente per ratificare. Largomento che regge da solo, gia' accettato in linea di principio dallADR, e' sulla natura della statistica: mediana di un worst-case fissato ripetuto 5 volte contro percentile 75 di popolazione mista con condizioni anche migliori. Non richiede alcun dato sui moltiplicatori interni di Lighthouse, quindi non eredita il limite dichiarato da architect sulla propria fonte"
+    },
+    {
+      "opzione": "O2: lasciare implicito che ogni esecuzione riparte a freddo, comportamento di default di un nuovo processo Playwright",
+      "scartata_perche": "non e' una garanzia contrattuale: se L07 riusasse un contesto o una pagina fra le 5 esecuzioni per velocita' di CI, la cache calda farebbe si' che le esecuzioni dalla seconda in poi non passino dalla rete limitata, e la mediana misurerebbe la cache invece del caricamento a freddo"
+    },
+    {
+      "opzione": "O2: dichiarare nel metodo che ogni esecuzione usa un browser.newContext() nuovo, cache HTTP vuota e nessun service worker",
+      "scelta_perche": "e' il testo richiesto letteralmente dallobiezione O2 di ADR-0001"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md, sezioni Il punto LCP e Obiezione (O1, O2)",
+    "journal/2026-09-13/201807-architect-fallimento.json sui moltiplicatori di Lighthouse letti da un commit storico, non dal sorgente corrente",
+    "comando: cat .work/.current-agent -> output: orchestrator (non performance): applico io la riga Cantiere-Agent: performance in fondo ai commit di questo giro"
+  ],
+  "esito": "O1 chiuso tenendo il profilo di rete dichiarato (150 ms di latenza, 200000 B/s in download, 93750 B/s in upload, a livello di richiesta, senza i moltiplicatori di Lighthouse) e riscrivendo la nota della soglia lcp_ms_lab_mediana=2500 perche' non dipenda piu' da condizioni piu' dure del campo, ma dalla differenza fra mediana di worst-case fissato e p75 di popolazione mista, gia' accettata da ADR-0001. O2 chiuso aggiungendo la chiave metodo.isolamento_esecuzioni. N1 e N2 chiuse nello stesso file, di competenza performance. N3 (pesatura JS/CSS per pagina) resta aperta: richiede una decisione autonoma su livello di gzip, insieme di file per pagina, e se contare stili/script in linea; il tetto di 8 turni di questo giro, gia' superato per attrito del sandbox sulla scrittura di file (stesso problema del giro precedente, vedi 195303-performance-fallimento.json), non lo permette in modo misurato: la dichiaro qui invece di chiuderla a naso.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "trascritta_dopo": false
+}

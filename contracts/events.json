@@ -1,0 +1,34 @@
+{
+  "$commento": "Ogni evento nasce da una domanda. Niente domanda, niente evento. Nessun dato personale nelle proprietà. Ogni evento dichiara la finalità di consenso a cui appartiene: se il consenso manca, l'evento non parte.",
+  "convenzione": "oggetto_azione al passato, minuscolo. Mai rinominare un evento esistente: se ne crea uno nuovo.",
+  "eventi": [
+    {
+      "nome": "modalita_confrontata",
+      "domanda": "Quale delle tre modalità di vendita attira di più, e quali vengono confrontate fra loro?",
+      "owner": "data-analytics",
+      "finalita_consenso": "misurazione",
+      "proprieta": { "modalita": "saas|hosted|onprem", "origine": "string" }
+    },
+    {
+      "nome": "registrazione_iniziata",
+      "domanda": "Dove si abbandona il percorso di registrazione?",
+      "owner": "data-analytics",
+      "finalita_consenso": "misurazione",
+      "proprieta": { "modalita": "saas|hosted|onprem", "piano": "string" }
+    },
+    {
+      "nome": "registrazione_completata",
+      "domanda": "Quanti arrivano in fondo, e con quale piano?",
+      "owner": "data-analytics",
+      "finalita_consenso": "misurazione",
+      "proprieta": { "modalita": "saas|hosted|onprem", "piano": "string" }
+    },
+    {
+      "nome": "tetto_richieste_avvicinato",
+      "domanda": "Il tetto avvisa in tempo utile o sorprende il cliente?",
+      "owner": "sre-observability",
+      "finalita_consenso": "necessario",
+      "proprieta": { "percentuale": "number", "piano": "string" }
+    }
+  ]
+}

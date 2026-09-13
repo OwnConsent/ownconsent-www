@@ -1,0 +1,18 @@
+{
+  "$commento": "Numeri, non aggettivi. La CI fallisce se un budget viene sforato. Rivedili con @performance alla tappa 05.",
+  "pagine_pubbliche": {
+    "js_iniziale_gzip_kb": 60,
+    "css_gzip_kb": 25,
+    "lcp_ms_p75": 2000,
+    "cls_p75": 0.05
+  },
+  "area_cliente": {
+    "js_iniziale_gzip_kb": 180,
+    "lcp_ms_p75": 2500
+  },
+  "api": {
+    "registrazione_p95_ms": 800,
+    "conteggio_richieste_p95_ms": 15,
+    "query_per_richiesta_max": 4
+  }
+}

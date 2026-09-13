@@ -1,0 +1,318 @@
+{
+  "id": "8",
+  "titolo": "Consegna 1 — sito pubblico e contenuti",
+  "problema": "Il sito pubblico di OwnConsent non esiste ancora: chi valuta il prodotto (web agency, publisher italiani) non trova spiegate le tre modalità di vendita, come si paga ciascuna, chi registra la CMP presso IAB Europe e come si attiva. Questa consegna mette online, solo in site/, le 8 pagine pubbliche con quei contenuti, rese lato server, senza cookie, storage o terze parti prima del consenso, senza prezzi inventati e con un solo indirizzo di contatto: nessun modulo, nessuna API, nessun dato personale raccolto dal sito.",
+  "criteri_accettazione": [
+    {
+      "id": "AC1",
+      "gruppo": "Resa lato server e SEO",
+      "dato": "il sito costruito e avviato",
+      "quando": "richiedo via HTTP GET, senza eseguire JavaScript, ciascuna delle 8 pagine indicizzabili di pagine_in_perimetro",
+      "allora": "la risposta è 200 e l'HTML servito contiene già l'h1, il testo principale della pagina e i link alle pagine SaaS, Hosted e On-premise"
+    },
+    {
+      "id": "AC2",
+      "gruppo": "Resa lato server e SEO",
+      "dato": "ciascuna delle 8 pagine indicizzabili",
+      "quando": "leggo l'HTML servito",
+      "allora": "l'elemento html ha l'attributo lang=\"it\"; il title e la meta description sono non vuoti e diversi da quelli di ognuna delle altre pagine; c'è un link canonical con URL assoluto che punta alla pagina stessa, cioè con il percorso della pagina richiesta e con il dominio configurato, che in questa consegna è il segnaposto dichiarato di dominio (DP-19)"
+    },
+    {
+      "id": "AC3",
+      "gruppo": "Resa lato server e SEO",
+      "dato": "il sito avviato",
+      "quando": "richiedo /sitemap.xml e /robots.txt",
+      "allora": "la sitemap elenca tutte e sole le 8 pagine indicizzabili, ciascuna con lo stesso URL assoluto del suo canonical (AC2), e robots.txt non contiene regole che escludano alcuna di esse",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC4",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "la pagina di confronto delle modalità e listino",
+      "quando": "leggo l'HTML servito",
+      "allora": "per ciascuna fra SaaS, Hosted e On-premise la pagina indica: (1) cosa riceve il cliente; (2) come paga: SaaS canone mensile per piani a volume di richieste, Hosted in base alla taglia di disco, memoria e CPU, On-premise licenza annuale; (3) chi registra la CMP presso IAB Europe: SaaS OwnConsent, On-premise il cliente a proprio nome, Hosted «in definizione»; (4) come si attiva: una sola riga della tabella, con una cella per modalità, e ognuna delle tre celle dice «scrivici»",
+      "nota": "Nella consegna 2 cambierà soltanto la cella SaaS della riga «come si attiva», che diventerà «registrati» (D1): non è verificato qui."
+    },
+    {
+      "id": "AC5",
+      "gruppo": "Prezzi, IAB, pagine legali",
+      "dato": "i prezzi non sono dichiarati definitivi, come in tutta questa consegna",
+      "quando": "apro ciascuna pagina che mostra prezzi secondo pagine_in_perimetro (SaaS, Hosted, On-premise, Confronto modalità e listino) a viewport 360×640 e a 1280×800",
+      "allora": "a entrambe le viewport la pagina contiene un contrassegno con le parole «pagina dimostrativa», visibile senza scorrere"
+    },
+    {
+      "id": "AC6",
+      "gruppo": "Prezzi, IAB, pagine legali",
+      "dato": "un piano SaaS o una taglia Hosted che non ha prezzo, tetto o dimensione configurati; in questa consegna la configurazione del listino non contiene alcun valore (DP-21)",
+      "quando": "leggo l'HTML servito di ogni pagina che lo mostra",
+      "allora": "al posto di ogni valore mancante compare «da definire», e nell'HTML servito non compare alcun importo in euro né alcun numero di richieste, GB, memoria o CPU che non provenga dalla configurazione"
+    },
+    {
+      "id": "AC7",
+      "gruppo": "Prezzi, IAB, pagine legali",
+      "dato": "ciascuna delle 8 pagine pubbliche",
+      "quando": "leggo l'HTML servito",
+      "allora": "non compare un identificativo CMP IAB, né l'affermazione che OwnConsent sia registrata, certificata o approvata da IAB Europe"
+    },
+    {
+      "id": "AC8",
+      "gruppo": "Prezzi, IAB, pagine legali",
+      "dato": "ciascuna delle 8 pagine pubbliche",
+      "quando": "leggo il footer nell'HTML servito, seguo i suoi link alle pagine legali e apro ciascuna delle tre a viewport 360×640 e a 1280×800",
+      "allora": "il footer contiene un link a Termini di servizio, Informativa privacy e Cookie policy, ogni link porta a una risposta 200, e ognuna delle tre pagine legali mostra un contrassegno con la parola «bozza», visibile senza scorrere a entrambe le viewport",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC9",
+      "gruppo": "Il sito rispetta la propria CMP",
+      "dato": "un browser con profilo pulito",
+      "quando": "apro ciascuna pagina pubblica, scorro fino in fondo e navigo fra le pagine con i link del sito, senza esprimere alcun consenso",
+      "allora": "nessun cookie viene impostato, e nulla viene scritto in localStorage, sessionStorage, IndexedDB o Cache Storage"
+    },
+    {
+      "id": "AC10",
+      "gruppo": "Il sito rispetta la propria CMP",
+      "dato": "lo stesso percorso di AC9",
+      "quando": "registro tutte le richieste di rete partite dal browser",
+      "allora": "nessuna richiesta parte verso origini diverse da quelle di OwnConsent, cioè, nella verifica, dall'origine che serve il sito: nessun font, CDN, pixel o video incorporato",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC12",
+      "gruppo": "Il sito rispetta la propria CMP",
+      "dato": "lo stesso percorso di AC9, che comprende la pagina di confronto delle modalità",
+      "quando": "registro tutte le richieste di rete partite dal browser, con URL e corpo",
+      "allora": "nessuna richiesta trasmette l'evento modalita_confrontata, né nell'URL né nel corpo",
+      "nota": "In questa consegna non si emettono eventi di misurazione (DA-7).",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC33",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "la pagina Hosted",
+      "quando": "leggo l'HTML servito",
+      "allora": "la pagina dice che l'istanza ha risorse dedicate e dati separati da quelli degli altri clienti; dice che il costo dipende dalla taglia di disco, memoria e CPU, con «da definire» per ogni valore non configurato; dice che chi registra la CMP presso IAB è «in definizione»; l'ultimo blocco del contenuto principale, prima del footer, contiene «si attiva parlando con noi» e un link mailto: all'indirizzo unico di contatto (N2) con oggetto precompilato Hosted (?subject=Hosted); nella pagina non ci sono moduli né la dicitura «in arrivo»",
+      "marcatura_issue": "modificato"
+    },
+    {
+      "id": "AC34",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "la pagina On-premise",
+      "quando": "leggo l'HTML servito",
+      "allora": "la pagina dice che il cliente installa sul proprio hardware; dice che paga una licenza annuale; dice che la registrazione della CMP presso IAB Europe la fa il cliente, a proprio nome; l'ultimo blocco del contenuto principale, prima del footer, contiene «si attiva parlando con noi» e un link mailto: all'indirizzo unico di contatto (N2) con oggetto precompilato On-premise (?subject=On-premise); nella pagina non ci sono moduli né la dicitura «in arrivo»",
+      "marcatura_issue": "modificato"
+    },
+    {
+      "id": "AC37",
+      "gruppo": "Mobile, prestazioni, accessibilità, lingua",
+      "dato": "una viewport di 360×640 CSS px con emulazione touch",
+      "quando": "apro ciascuna delle 8 pagine pubbliche",
+      "allora": "non c'è scorrimento orizzontale (la larghezza di scorrimento del documento non supera la larghezza della viewport); il testo del corpo ha una dimensione calcolata di almeno 16 px; ogni elemento interattivo misura almeno 24×24 CSS px oppure rispetta la spaziatura di WCAG 2.2, criterio 2.5.8"
+    },
+    {
+      "id": "AC39",
+      "gruppo": "Mobile, prestazioni, accessibilità, lingua",
+      "dato": "la build di produzione e contracts/perf-budgets.json come si trova al momento della verifica",
+      "quando": "misuro in laboratorio ciascuna pagina pubblica",
+      "allora": "ogni pagina sta entro js_iniziale_gzip_kb 60 e css_gzip_kb 25, e LCP e CLS stanno entro le soglie di laboratorio dichiarate in contracts/perf-budgets.json; i valori p75 di campo non si verificano (DV-4); se il file cambia, valgono i valori del file",
+      "nota": "Le soglie di laboratorio di LCP e CLS oggi non sono nel file (vedi segnaposto_dichiarati): le dichiara @performance nel lotto L01, ratificate da ADR-0001.",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC40",
+      "gruppo": "Mobile, prestazioni, accessibilità, lingua",
+      "dato": "ciascuna delle 8 pagine pubbliche, compresi i contrassegni «pagina dimostrativa» e «bozza» dove presenti",
+      "quando": "eseguo un controllo automatico con le regole WCAG 2.2 di livello A e AA",
+      "allora": "non risulta alcuna violazione"
+    },
+    {
+      "id": "AC41",
+      "gruppo": "Mobile, prestazioni, accessibilità, lingua",
+      "dato": "ciascuna delle 8 pagine pubbliche",
+      "quando": "leggo i testi dell'HTML servito",
+      "allora": "tutti i testi delle pagine sono in italiano, e ogni data è nel formato gg/mm/aaaa",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "AC49",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "la pagina SaaS e la pagina di confronto delle modalità e listino",
+      "quando": "leggo l'HTML servito di ciascuna delle due",
+      "allora": "ciascuna spiega che: una richiesta conteggiata è una scrittura di consenso, cioè la creazione o l'aggiornamento di una scelta registrata; i caricamenti del banner, le letture della configurazione e le risposte dalla cache non si contano; superare il tetto non interrompe il servizio; non ci sono addebiti automatici per l'eccedenza; il cliente viene avvisato prima che raggiunga il tetto; se il superamento si ripete, al cliente viene proposto un cambio di piano, deciso da una persona. In nessuna delle 8 pagine pubbliche compare una percentuale o una soglia di avviso, né il contatto oltre il 120%",
+      "marcatura_issue": "modificato"
+    },
+    {
+      "id": "AC53",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "ciascuna delle 8 pagine pubbliche",
+      "quando": "leggo l'HTML servito",
+      "allora": "nessuna pagina presenta un limite di frequenza delle richieste come caratteristica di un piano, differenzia i piani per limite di frequenza o offre di aumentarlo a pagamento",
+      "marcatura_issue": "ristretto"
+    },
+    {
+      "id": "N1",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "la pagina SaaS",
+      "quando": "leggo l'HTML servito",
+      "allora": "l'ultimo blocco del contenuto principale, prima del footer, contiene «scrivici e ti attiviamo noi» e un link mailto: all'indirizzo unico di contatto (N2) con oggetto precompilato SaaS (?subject=SaaS); la pagina non contiene moduli, date, liste d'attesa né la dicitura «in arrivo»",
+      "marcatura_issue": "nuovo"
+    },
+    {
+      "id": "N2",
+      "gruppo": "Contenuto delle modalità",
+      "dato": "il sorgente di site/ e la sua build di produzione, con l'indirizzo di contatto definito nel file di contenuto stabilito da ADR-0002",
+      "quando": "cerco l'indirizzo nei file sorgente di site/ e negli HTML serviti; poi cambio l'indirizzo in quel solo file, rifaccio la build e ripeto la ricerca",
+      "allora": "prima della modifica l'indirizzo compare in un solo file sorgente di site/, e ogni link di contatto di ogni pagina è un mailto: a quell'unico indirizzo, con la modalità nell'oggetto (?subject=SaaS, ?subject=Hosted, ?subject=On-premise) e non nell'indirizzo; dopo la modifica e la nuova build il nuovo indirizzo compare in ogni link di contatto, ognuno con il proprio oggetto, e il vecchio non compare in nessun HTML servito",
+      "marcatura_issue": "nuovo"
+    }
+  ],
+  "non_goal": [
+    "Tutto ciò che la #8 assegna alla consegna 2: registrazione SaaS, pagamento finto, accesso, area cliente, contatore delle richieste, tetto, anomalia, lacune del registro; criteri AC11, AC13–AC32, AC38, AC42–AC48, AC50–AC52, AC54, AC60–AC64. Compreso il cambio della cella SaaS di «come si attiva» in «registrati».",
+    "Tutto ciò che la #8 assegna alla consegna 3: attivazione di Hosted e On-premise oltre al link mailto; criteri AC35, AC36, AC55–AC59.",
+    "Modulo di contatto e pagina di contatto, con tutte le difese del modulo (campo trappola, tempo di compilazione, limite per IP, IP pseudonimizzato in contracts/data-map.json). Esclusione motivata, non cancellazione: in questa consegna il contatto passa da un link mailto e il sito non raccoglie dati. Scadenza: si riapre con la issue della consegna 3, o prima se l'indirizzo di contatto riceve abusi.",
+    "api/, MongoDB, Redis: nessun codice, nessuna chiamata, nessun dato lato server.",
+    "Eventi di misurazione, compreso modalita_confrontata, e modifiche a contracts/events.json (DA-7).",
+    "Banner della CMP sul sito (DA-7).",
+    "Testi definitivi di termini di servizio, informativa privacy e cookie policy, e la loro approvazione: solo bozze contrassegnate (regola 7).",
+    "Decidere prezzi, tetti dei piani, dimensioni delle taglie, numero e nomi di piani SaaS e taglie Hosted (DP-21).",
+    "Registrare OwnConsent presso IAB Europe o dichiararne la registrazione.",
+    "Scegliere dominio, nome della casella, hosting e identità del titolare, e pubblicare il sito: sono del gate di pubblicazione, fuori da questa consegna.",
+    "Verificare LCP e CLS al p75 di campo (DV-4).",
+    "Rendere pubblica la regola operativa del contatto oltre il 120% (D3).",
+    "Open Graph e dati strutturati: non sono criteri della #8.",
+    "Lingue diverse dall'italiano."
+  ],
+  "dati_personali": [
+    {
+      "campo": "contenuto dell'email che chi scrive invia con il link mailto: all'indirizzo unico di contatto (indirizzo del mittente e ciò che il mittente sceglie di scrivere: nome, azienda, testo)",
+      "dove": "casella di contatto, fuori dal sito; il sito non raccoglie, non memorizza e non trasmette alcun dato (AC9, AC10)",
+      "finalita": "rispondere a una richiesta commerciale",
+      "base_giuridica": "misure precontrattuali",
+      "retention": "da dichiarare in L11",
+      "nuovo": true,
+      "dichiarato_da": "@privacy in contracts/data-map.json, lotto L11 (PR-5), per DP-20; oggi data-map.json non ha questa voce",
+      "raccolto_dal_sito": false
+    }
+  ],
+  "rischi": [
+    "L'hosting sta fuori dal repository e può impostare cookie o iniettare script: AC9 e AC10 verificati in locale non provano che il sito pubblicato li rispetti (DP-19). Si verifica al gate di pubblicazione.",
+    "Le soglie di laboratorio di LCP e CLS non sono ancora in contracts/perf-budgets.json, che oggi ha solo lcp_ms_p75 e cls_p75 di campo: finché L01 e ADR-0001 non sono mergiati, la parte di AC39 su LCP e CLS non ha un valore contro cui verificare (DV-4).",
+    "Un segnaposto di dominio o di casella dimenticato in un canonical, nella sitemap o in un mailto porta in produzione link che non funzionano; un indirizzo reale che rimbalza è peggio di nessun indirizzo. Lo coprono N2 (un solo file) e il gate di pubblicazione.",
+    "DP-19 usa lo stesso segnaposto di dominio per l'indirizzo e per canonical e sitemap: se il dominio della casella comunicato da Andrea è diverso da quello del sito, al gate la sostituzione riguarda due valori, non uno.",
+    "L'indirizzo di contatto è in chiaro nell'HTML e può essere raccolto da chi invia spam. È accettato: il cambio è una modifica sola (N2) e l'esclusione del modulo si riapre prima della consegna 3 se arrivano abusi.",
+    "La pagina SaaS promette comportamenti (conteggio delle sole scritture di consenso, nessuna interruzione al tetto, avviso prima del tetto, proposta di cambio piano decisa da una persona) il cui meccanismo arriva con la consegna 2: fino ad allora, per i clienti SaaS attivati a mano, quelle promesse vanno mantenute a mano.",
+    "La cookie policy in bozza descrive un sito senza cookie né storage prima del consenso: la frase è vera solo finché AC9 passa.",
+    "AC4, AC33, AC34, AC41, AC49 e AC53 chiedono che la pagina dica o spieghi qualcosa: un controllo sulle stringhe li copre solo in parte, e la verifica completa richiede la lettura del testo."
+  ],
+  "domande_aperte": [],
+  "issue": "https://github.com/OwnConsent/ownconsent-www/issues/8",
+  "fonti": [
+    { "cosa": "corpo della issue #8, aggiornato con le risposte a D1–D4 (perimetro, pagine, criteri, fuori perimetro, gate di pubblicazione)", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8" },
+    { "cosa": "divisione della #4 in tre consegne", "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654317931" },
+    { "cosa": "risposte di Andrea a D1, D2, D3", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654353967" },
+    { "cosa": "aggiornamento della issue dopo D1–D3", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654370435" },
+    { "cosa": "risposta di Andrea a D4: un solo indirizzo, modalità nell'oggetto del mailto", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654387818" },
+    { "cosa": "aggiornamento della issue dopo D4", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654396051" },
+    { "cosa": "DV-4: sdoppiare i budget in soglie di laboratorio ora e p75 quando c'è traffico", "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118" },
+    { "cosa": "piano della consegna: lotto L00, gate G0 e G3, DP-18…DP-26 (decisioni di Andrea), correzioni; file scratch non committato", "percorso": ".work/issue-8/plan.json" },
+    { "cosa": "forma dato/quando/allora, DV-4 e segnaposto; i testi di AC3, AC4, AC8, AC10, AC12, AC33, AC34, AC39 e AC49 sono superati dalla #8", "percorso": ".work/issue-4/spec.json" },
+    { "cosa": "contratti letti, non modificati", "percorso": ["contracts/perf-budgets.json", "contracts/data-map.json", "contracts/events.json", "contracts/README.md"] },
+    { "cosa": "regole del progetto e formati", "percorso": ["CLAUDE.md", "docs/HANDOFF.md", "docs/DEFINITION-OF-DONE.md", "docs/JOURNAL.md"] }
+  ],
+  "pagine_in_perimetro": [
+    { "pagina": "Home", "indicizzabile": true, "mostra_prezzi": false },
+    { "pagina": "SaaS", "indicizzabile": true, "mostra_prezzi": true },
+    { "pagina": "Hosted", "indicizzabile": true, "mostra_prezzi": true },
+    { "pagina": "On-premise", "indicizzabile": true, "mostra_prezzi": true },
+    { "pagina": "Confronto modalità e listino", "indicizzabile": true, "mostra_prezzi": true },
+    { "pagina": "Termini di servizio (bozza)", "indicizzabile": true, "mostra_prezzi": false },
+    { "pagina": "Informativa privacy (bozza)", "indicizzabile": true, "mostra_prezzi": false },
+    { "pagina": "Cookie policy (bozza)", "indicizzabile": true, "mostra_prezzi": false }
+  ],
+  "segnaposto_dichiarati": [
+    {
+      "cosa": "dominio",
+      "fonte": "D2, DP-19",
+      "nel_frattempo": "un segnaposto dichiarato nel file di contenuto di N2; lo stesso segnaposto di dominio vale per l'indirizzo di contatto, per i canonical (AC2) e per la sitemap (AC3). Il valore lo sceglie ADR-0002 fra i domini riservati che non risolvono; nessun dominio reale."
+    },
+    {
+      "cosa": "nome della casella di contatto",
+      "fonte": "D2, D4, DP-19",
+      "nel_frattempo": "un segnaposto dichiarato nel file di contenuto di N2, unico per le tre modalità; nessun nome di casella reale né per modalità."
+    },
+    {
+      "cosa": "identità del titolare (ragione sociale, sede)",
+      "fonte": "DP-20",
+      "nel_frattempo": "segnaposto dichiarato ed elencato nelle bozze legali; nessuna identità inventata. La comunica Andrea."
+    },
+    {
+      "cosa": "prezzi di piani SaaS, taglie Hosted e licenza On-premise",
+      "fonte": "CLAUDE.md, AC5, AC6",
+      "nel_frattempo": "«da definire» al posto di ogni valore mancante e contrassegno «pagina dimostrativa» su ogni pagina che mostra prezzi; nessun importo."
+    },
+    {
+      "cosa": "tetti dei piani SaaS",
+      "fonte": "AC6",
+      "nel_frattempo": "«da definire»; nessun numero di richieste."
+    },
+    {
+      "cosa": "taglie Hosted: disco, memoria, CPU",
+      "fonte": "AC6, AC33",
+      "nel_frattempo": "«da definire»; nessun valore di GB, memoria o CPU."
+    },
+    {
+      "cosa": "numero e nomi dei piani SaaS e delle taglie Hosted",
+      "fonte": "DP-21",
+      "nel_frattempo": "le pagine mostrano solo la struttura (piani per volume di richieste, taglie per disco, memoria e CPU, licenza annuale), senza dire quanti piani o taglie ci sono e senza nomi di fantasia; la configurazione del listino non contiene piani né valori."
+    },
+    {
+      "cosa": "soglie di laboratorio di LCP e CLS delle pagine pubbliche",
+      "fonte": "DV-4",
+      "nel_frattempo": "nessun valore: contracts/perf-budgets.json ha solo lcp_ms_p75 e cls_p75 di campo, che non si verificano. Le dichiara @performance in L01, con ratifica in ADR-0001; AC39 legge il file."
+    },
+    {
+      "cosa": "retention dell'email ricevuta all'indirizzo di contatto",
+      "fonte": "DP-20",
+      "nel_frattempo": "da dichiarare in L11 da @privacy in contracts/data-map.json; nessun valore in questa spec."
+    }
+  ],
+  "gate_pubblicazione": {
+    "nota": "Non è un criterio di questa consegna e nessun lotto dipende da questo gate (G3). Il sito non si pubblica finché tutte le condizioni non sono vere.",
+    "chi": "Andrea",
+    "condizioni": [
+      "I segnaposto di dominio e di nome della casella sono stati sostituiti ovunque (file di contenuto di N2, canonical, sitemap, ogni link mailto) con i valori comunicati da Andrea, e nessun segnaposto di dominio o di casella compare più nell'HTML servito.",
+      "La casella di contatto riceve davvero: lo controlla una persona. Un indirizzo che rimbalza è peggio di nessun indirizzo.",
+      "Le bozze di termini di servizio, informativa privacy e cookie policy sono approvate da una persona competente (regola 7), con l'identità del titolare comunicata da Andrea al posto del segnaposto.",
+      "L'hosting scelto non imposta cookie e non inietta script o richieste verso terze parti: AC9 e AC10 valgono anche sul sito pubblicato (DP-19)."
+    ],
+    "non_blocca": "Prezzi, tetti e taglie possono restare «da definire» con il contrassegno «pagina dimostrativa»: è lo stato previsto da CLAUDE.md finché i prezzi non sono definiti."
+  },
+  "requisiti_non_funzionali": [
+    { "id": "RNF-01", "requisito": "resa lato server e indicizzabilità", "verificato_da": ["AC1", "AC2", "AC3"] },
+    { "id": "RNF-02", "requisito": "mobile da 360 px", "verificato_da": ["AC5", "AC8", "AC37"] },
+    { "id": "RNF-03", "requisito": "solo italiano", "verificato_da": ["AC2", "AC41"] },
+    { "id": "RNF-04", "requisito": "nessun cookie, storage o terza parte prima del consenso", "verificato_da": ["AC9", "AC10", "AC12"] },
+    { "id": "RNF-05", "requisito": "budget di contracts/perf-budgets.json, misurati prima e dopo", "verificato_da": ["AC39"] },
+    { "id": "RNF-06", "requisito": "WCAG 2.2 AA", "verificato_da": ["AC37", "AC40"] },
+    { "id": "RNF-09", "requisito": "nessun segreto nel repository", "verificato_da": [] }
+  ],
+  "rese_del_testo": [
+    { "criterio": "AC2, AC3", "testo_issue": "un link canonical assoluto che punta alla pagina stessa; la sitemap elenca tutte e sole le pagine indicizzabili", "resa": "canonical con il percorso della pagina e il dominio configurato (oggi il segnaposto, DP-19); la sitemap identifica le pagine con lo stesso URL del canonical", "perche": "con un dominio segnaposto il canonical non può coincidere con l'origine locale su cui si verifica" },
+    { "criterio": "AC4", "testo_issue": "cosa riceve il cliente", "resa": "la pagina lo indica per ciascuna modalità; il testo non è prescritto", "perche": "la #8 non dà il testo; la fonte naturale è la tabella delle modalità in CLAUDE.md, ma renderla vincolante sarebbe aggiungere un requisito" },
+    { "criterio": "AC5", "testo_issue": "ogni pagina che mostra prezzi", "resa": "le quattro pagine con «mostra prezzi: sì» nella tabella della #8", "perche": "la tabella delle pagine della #8 lo dichiara per pagina" },
+    { "criterio": "AC8", "testo_issue": "un contrassegno «bozza» visibile senza scorrere", "resa": "alle stesse viewport di AC5, 360×640 e 1280×800", "perche": "«senza scorrere» si osserva solo con una viewport; la #8 usa queste due per l'altro contrassegno" },
+    { "criterio": "AC10", "testo_issue": "origini diverse da quelle di OwnConsent", "resa": "nella verifica, l'origine che serve il sito", "perche": "prima della pubblicazione non esiste un'altra origine di OwnConsent" },
+    { "criterio": "AC12", "testo_issue": "nessuna richiesta di rete trasmette l'evento modalita_confrontata", "resa": "nel percorso di AC9, che apre anche la pagina di confronto; controllo su URL e corpo delle richieste", "perche": "la #8 non indica il percorso; AC10 usa quello di AC9" },
+    { "criterio": "AC33, AC34, N1", "testo_issue": "chiude con", "resa": "l'ultimo blocco del contenuto principale, prima del footer", "perche": "il footer è comune a tutte le pagine (AC8) e non fa parte della chiusura della pagina" },
+    { "criterio": "AC33, AC34, N1", "testo_issue": "l'indirizzo unico di contatto", "resa": "l'indirizzo del file di contenuto di N2", "perche": "N2 dice che tutte le pagine lo prendono da lì" },
+    { "criterio": "AC49", "testo_issue": "non compare nessuna percentuale o soglia di avviso", "resa": "nessuna percentuale o soglia riferita ad avvisi, consumo o tetto, in nessuna delle 8 pagine pubbliche; il 120% non compare", "perche": "la frase è sugli avvisi («si promette il comportamento, non il numero», D3); nessuna altra percentuale è prevista nei contenuti" },
+    { "criterio": "AC49", "testo_issue": "nelle pagine pubbliche", "resa": "le 8 pagine di pagine_in_perimetro", "perche": "sono tutte e sole le pagine pubbliche della consegna" },
+    { "criterio": "N2", "testo_issue": "un solo file di contenuto dentro site/", "resa": "nome e percorso li stabilisce ADR-0002 (lotto L03); l'indirizzo non compare in nessun altro file sorgente di site/", "perche": "il nome del file è una decisione di struttura, non di comportamento" },
+    { "criterio": "segnaposto_dichiarati", "testo_issue": "prezzi (licenza On-premise)", "resa": "nessun importo; «da definire» dove un valore di licenza compare", "perche": "AC6 nomina solo piani SaaS e taglie Hosted, ma il divieto di importi in euro dell'HTML servito vale per tutte le pagine" },
+    { "criterio": "non_goal", "testo_issue": "si riapre ... se gli indirizzi dedicati ricevono abusi", "resa": "se l'indirizzo di contatto riceve abusi", "perche": "dopo D4 l'indirizzo è uno solo" }
+  ],
+  "redatta_da": "product-spec",
+  "lotto": "L00",
+  "data": "2026-09-13",
+  "stato": "pronta per G0: 21 criteri con gli id della #8, domande_aperte vuoto; da committare con PR-0 (DP-23)"
+}

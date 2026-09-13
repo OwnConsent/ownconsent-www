@@ -9,11 +9,6 @@
       "command": "npx",
       "args": ["-y", "@playwright/mcp@latest"]
     },
-    "postgres": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@bytebase/dbhub", "--dsn", "${DATABASE_URL_READONLY}"]
-    },
     "figma": {
       "type": "stdio",
       "command": "npx",

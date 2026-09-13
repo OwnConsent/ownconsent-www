@@ -15,7 +15,7 @@
       "gruppo": "Resa lato server e SEO",
       "dato": "ciascuna delle 8 pagine indicizzabili",
       "quando": "leggo l'HTML servito",
-      "allora": "l'elemento html ha l'attributo lang=\"it\"; il title e la meta description sono non vuoti e diversi da quelli di ognuna delle altre pagine; c'è un link canonical con URL assoluto che punta alla pagina stessa, cioè con il percorso della pagina richiesta e con il dominio configurato, che in questa consegna è il segnaposto dichiarato di dominio (DP-19)"
+      "allora": "l'elemento html ha l'attributo lang=\"it\"; il title e la meta description sono non vuoti e diversi da quelli di ognuna delle altre pagine; c'è un link canonical con URL assoluto che punta alla pagina stessa, cioè con il percorso della pagina richiesta e con il dominio del sito configurato, che in questa consegna è il segnaposto dichiarato del dominio del sito, distinto da quello della casella (DP-19)"
     },
     {
       "id": "AC3",
@@ -198,42 +198,122 @@
     "L'hosting sta fuori dal repository e può impostare cookie o iniettare script: AC9 e AC10 verificati in locale non provano che il sito pubblicato li rispetti (DP-19). Si verifica al gate di pubblicazione.",
     "Le soglie di laboratorio di LCP e CLS non sono ancora in contracts/perf-budgets.json, che oggi ha solo lcp_ms_p75 e cls_p75 di campo: finché L01 e ADR-0001 non sono mergiati, la parte di AC39 su LCP e CLS non ha un valore contro cui verificare (DV-4).",
     "Un segnaposto di dominio o di casella dimenticato in un canonical, nella sitemap o in un mailto porta in produzione link che non funzionano; un indirizzo reale che rimbalza è peggio di nessun indirizzo. Lo coprono N2 (un solo file) e il gate di pubblicazione.",
-    "DP-19 usa lo stesso segnaposto di dominio per l'indirizzo e per canonical e sitemap: se il dominio della casella comunicato da Andrea è diverso da quello del sito, al gate la sostituzione riguarda due valori, non uno.",
+    "Dominio del sito e dominio della casella possono essere diversi e hanno due segnaposto distinti: dimenticarne la sostituzione di uno lascia canonical, sitemap o mailto rotti. Il gate di pubblicazione li verifica entrambi, separatamente.",
     "L'indirizzo di contatto è in chiaro nell'HTML e può essere raccolto da chi invia spam. È accettato: il cambio è una modifica sola (N2) e l'esclusione del modulo si riapre prima della consegna 3 se arrivano abusi.",
-    "La pagina SaaS promette comportamenti (conteggio delle sole scritture di consenso, nessuna interruzione al tetto, avviso prima del tetto, proposta di cambio piano decisa da una persona) il cui meccanismo arriva con la consegna 2: fino ad allora, per i clienti SaaS attivati a mano, quelle promesse vanno mantenute a mano.",
+    "La pagina SaaS promette comportamenti (conteggio delle sole scritture di consenso, nessuna interruzione al tetto, avviso prima del tetto, proposta di cambio piano decisa da una persona) il cui meccanismo arriva con la consegna 2: fino ad allora, per i clienti SaaS attivati a mano, quelle promesse vanno mantenute a mano. Non resta un'assunzione: è l'obbligo manuale dichiarato in obblighi_manuali, con responsabile e scadenza.",
     "La cookie policy in bozza descrive un sito senza cookie né storage prima del consenso: la frase è vera solo finché AC9 passa.",
     "AC4, AC33, AC34, AC41, AC49 e AC53 chiedono che la pagina dica o spieghi qualcosa: un controllo sulle stringhe li copre solo in parte, e la verifica completa richiede la lettura del testo."
   ],
   "domande_aperte": [],
   "issue": "https://github.com/OwnConsent/ownconsent-www/issues/8",
   "fonti": [
-    { "cosa": "corpo della issue #8, aggiornato con le risposte a D1–D4 (perimetro, pagine, criteri, fuori perimetro, gate di pubblicazione)", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8" },
-    { "cosa": "divisione della #4 in tre consegne", "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654317931" },
-    { "cosa": "risposte di Andrea a D1, D2, D3", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654353967" },
-    { "cosa": "aggiornamento della issue dopo D1–D3", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654370435" },
-    { "cosa": "risposta di Andrea a D4: un solo indirizzo, modalità nell'oggetto del mailto", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654387818" },
-    { "cosa": "aggiornamento della issue dopo D4", "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654396051" },
-    { "cosa": "DV-4: sdoppiare i budget in soglie di laboratorio ora e p75 quando c'è traffico", "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118" },
-    { "cosa": "piano della consegna: lotto L00, gate G0 e G3, DP-18…DP-26 (decisioni di Andrea), correzioni; file scratch non committato", "percorso": ".work/issue-8/plan.json" },
-    { "cosa": "forma dato/quando/allora, DV-4 e segnaposto; i testi di AC3, AC4, AC8, AC10, AC12, AC33, AC34, AC39 e AC49 sono superati dalla #8", "percorso": ".work/issue-4/spec.json" },
-    { "cosa": "contratti letti, non modificati", "percorso": ["contracts/perf-budgets.json", "contracts/data-map.json", "contracts/events.json", "contracts/README.md"] },
-    { "cosa": "regole del progetto e formati", "percorso": ["CLAUDE.md", "docs/HANDOFF.md", "docs/DEFINITION-OF-DONE.md", "docs/JOURNAL.md"] }
+    {
+      "cosa": "corpo della issue #8, aggiornato con le risposte a D1–D4 (perimetro, pagine, criteri, fuori perimetro, gate di pubblicazione)",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/8"
+    },
+    {
+      "cosa": "divisione della #4 in tre consegne",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5654317931"
+    },
+    {
+      "cosa": "risposte di Andrea a D1, D2, D3",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654353967"
+    },
+    {
+      "cosa": "aggiornamento della issue dopo D1–D3",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654370435"
+    },
+    {
+      "cosa": "risposta di Andrea a D4: un solo indirizzo, modalità nell'oggetto del mailto",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654387818"
+    },
+    {
+      "cosa": "aggiornamento della issue dopo D4",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5654396051"
+    },
+    {
+      "cosa": "DV-4: sdoppiare i budget in soglie di laboratorio ora e p75 quando c'è traffico",
+      "url": "https://github.com/OwnConsent/ownconsent-www/issues/4#issuecomment-5653909118"
+    },
+    {
+      "cosa": "piano della consegna: lotto L00, gate G0 e G3, DP-18…DP-26 (decisioni di Andrea), correzioni; file scratch non committato",
+      "percorso": ".work/issue-8/plan.json"
+    },
+    {
+      "cosa": "forma dato/quando/allora, DV-4 e segnaposto; i testi di AC3, AC4, AC8, AC10, AC12, AC33, AC34, AC39 e AC49 sono superati dalla #8",
+      "percorso": ".work/issue-4/spec.json"
+    },
+    {
+      "cosa": "contratti letti, non modificati",
+      "percorso": [
+        "contracts/perf-budgets.json",
+        "contracts/data-map.json",
+        "contracts/events.json",
+        "contracts/README.md"
+      ]
+    },
+    {
+      "cosa": "regole del progetto e formati",
+      "percorso": [
+        "CLAUDE.md",
+        "docs/HANDOFF.md",
+        "docs/DEFINITION-OF-DONE.md",
+        "docs/JOURNAL.md"
+      ]
+    }
   ],
   "pagine_in_perimetro": [
-    { "pagina": "Home", "indicizzabile": true, "mostra_prezzi": false },
-    { "pagina": "SaaS", "indicizzabile": true, "mostra_prezzi": true },
-    { "pagina": "Hosted", "indicizzabile": true, "mostra_prezzi": true },
-    { "pagina": "On-premise", "indicizzabile": true, "mostra_prezzi": true },
-    { "pagina": "Confronto modalità e listino", "indicizzabile": true, "mostra_prezzi": true },
-    { "pagina": "Termini di servizio (bozza)", "indicizzabile": true, "mostra_prezzi": false },
-    { "pagina": "Informativa privacy (bozza)", "indicizzabile": true, "mostra_prezzi": false },
-    { "pagina": "Cookie policy (bozza)", "indicizzabile": true, "mostra_prezzi": false }
+    {
+      "pagina": "Home",
+      "indicizzabile": true,
+      "mostra_prezzi": false
+    },
+    {
+      "pagina": "SaaS",
+      "indicizzabile": true,
+      "mostra_prezzi": true
+    },
+    {
+      "pagina": "Hosted",
+      "indicizzabile": true,
+      "mostra_prezzi": true
+    },
+    {
+      "pagina": "On-premise",
+      "indicizzabile": true,
+      "mostra_prezzi": true
+    },
+    {
+      "pagina": "Confronto modalità e listino",
+      "indicizzabile": true,
+      "mostra_prezzi": true
+    },
+    {
+      "pagina": "Termini di servizio (bozza)",
+      "indicizzabile": true,
+      "mostra_prezzi": false
+    },
+    {
+      "pagina": "Informativa privacy (bozza)",
+      "indicizzabile": true,
+      "mostra_prezzi": false
+    },
+    {
+      "pagina": "Cookie policy (bozza)",
+      "indicizzabile": true,
+      "mostra_prezzi": false
+    }
   ],
   "segnaposto_dichiarati": [
     {
-      "cosa": "dominio",
-      "fonte": "D2, DP-19",
-      "nel_frattempo": "un segnaposto dichiarato nel file di contenuto di N2; lo stesso segnaposto di dominio vale per l'indirizzo di contatto, per i canonical (AC2) e per la sitemap (AC3). Il valore lo sceglie ADR-0002 fra i domini riservati che non risolvono; nessun dominio reale."
+      "cosa": "dominio del sito",
+      "fonte": "D2, DP-19; decisione di Andrea in chat, dopo l'apertura di #13",
+      "nel_frattempo": "un segnaposto dichiarato, in un solo punto di configurazione, usato per i canonical (AC2) e per la sitemap (AC3). È distinto dal dominio della casella: i due possono essere diversi. Il valore lo sceglie ADR-0002 fra i domini riservati che non risolvono; nessun dominio reale."
+    },
+    {
+      "cosa": "dominio della casella di contatto",
+      "fonte": "D2, D4, DP-19; decisione di Andrea in chat, dopo l'apertura di #13",
+      "nel_frattempo": "un segnaposto dichiarato nel file di contenuto di N2, distinto da quello del dominio del sito, usato nell'indirizzo di ogni link mailto:. Il valore lo sceglie ADR-0002 fra i domini riservati che non risolvono, diverso da quello del sito; nessun dominio reale."
     },
     {
       "cosa": "nome della casella di contatto",
@@ -274,45 +354,176 @@
       "cosa": "retention dell'email ricevuta all'indirizzo di contatto",
       "fonte": "DP-20",
       "nel_frattempo": "da dichiarare in L11 da @privacy in contracts/data-map.json; nessun valore in questa spec."
+    },
+    {
+      "cosa": "nome della persona responsabile dell'obbligo manuale sulle promesse SaaS",
+      "fonte": "decisione di Andrea in chat, dopo l'apertura di #13",
+      "nel_frattempo": "segnaposto dichiarato in obblighi_manuali; lo indica Andrea. Nessun nome inventato."
     }
   ],
   "gate_pubblicazione": {
     "nota": "Non è un criterio di questa consegna e nessun lotto dipende da questo gate (G3). Il sito non si pubblica finché tutte le condizioni non sono vere.",
     "chi": "Andrea",
     "condizioni": [
-      "I segnaposto di dominio e di nome della casella sono stati sostituiti ovunque (file di contenuto di N2, canonical, sitemap, ogni link mailto) con i valori comunicati da Andrea, e nessun segnaposto di dominio o di casella compare più nell'HTML servito.",
+      "I tre segnaposto (dominio del sito, dominio della casella, nome della casella) sono stati sostituiti ovunque con i valori comunicati da Andrea: il dominio del sito nei canonical e nella sitemap, dominio e nome della casella nel file di contenuto di N2 e in ogni link mailto. Si verificano entrambi i domini, separatamente, e nessun segnaposto compare più nell'HTML servito.",
       "La casella di contatto riceve davvero: lo controlla una persona. Un indirizzo che rimbalza è peggio di nessun indirizzo.",
       "Le bozze di termini di servizio, informativa privacy e cookie policy sono approvate da una persona competente (regola 7), con l'identità del titolare comunicata da Andrea al posto del segnaposto.",
-      "L'hosting scelto non imposta cookie e non inietta script o richieste verso terze parti: AC9 e AC10 valgono anche sul sito pubblicato (DP-19)."
+      "L'hosting scelto non imposta cookie e non inietta script o richieste verso terze parti: AC9 e AC10 valgono anche sul sito pubblicato (DP-19).",
+      "L'obbligo manuale sulle promesse della pagina SaaS (obblighi_manuali) ha una persona nominata al posto del segnaposto: senza un responsabile la promessa non si pubblica."
     ],
     "non_blocca": "Prezzi, tetti e taglie possono restare «da definire» con il contrassegno «pagina dimostrativa»: è lo stato previsto da CLAUDE.md finché i prezzi non sono definiti."
   },
   "requisiti_non_funzionali": [
-    { "id": "RNF-01", "requisito": "resa lato server e indicizzabilità", "verificato_da": ["AC1", "AC2", "AC3"] },
-    { "id": "RNF-02", "requisito": "mobile da 360 px", "verificato_da": ["AC5", "AC8", "AC37"] },
-    { "id": "RNF-03", "requisito": "solo italiano", "verificato_da": ["AC2", "AC41"] },
-    { "id": "RNF-04", "requisito": "nessun cookie, storage o terza parte prima del consenso", "verificato_da": ["AC9", "AC10", "AC12"] },
-    { "id": "RNF-05", "requisito": "budget di contracts/perf-budgets.json, misurati prima e dopo", "verificato_da": ["AC39"] },
-    { "id": "RNF-06", "requisito": "WCAG 2.2 AA", "verificato_da": ["AC37", "AC40"] },
-    { "id": "RNF-09", "requisito": "nessun segreto nel repository", "verificato_da": [] }
+    {
+      "id": "RNF-01",
+      "requisito": "resa lato server e indicizzabilità",
+      "verificato_da": [
+        "AC1",
+        "AC2",
+        "AC3"
+      ]
+    },
+    {
+      "id": "RNF-02",
+      "requisito": "mobile da 360 px",
+      "verificato_da": [
+        "AC5",
+        "AC8",
+        "AC37"
+      ]
+    },
+    {
+      "id": "RNF-03",
+      "requisito": "solo italiano",
+      "verificato_da": [
+        "AC2",
+        "AC41"
+      ]
+    },
+    {
+      "id": "RNF-04",
+      "requisito": "nessun cookie, storage o terza parte prima del consenso",
+      "verificato_da": [
+        "AC9",
+        "AC10",
+        "AC12"
+      ]
+    },
+    {
+      "id": "RNF-05",
+      "requisito": "budget di contracts/perf-budgets.json, misurati prima e dopo",
+      "verificato_da": [
+        "AC39"
+      ]
+    },
+    {
+      "id": "RNF-06",
+      "requisito": "WCAG 2.2 AA",
+      "verificato_da": [
+        "AC37",
+        "AC40"
+      ]
+    },
+    {
+      "id": "RNF-09",
+      "requisito": "nessun segreto nel repository",
+      "verificato_da": []
+    }
   ],
   "rese_del_testo": [
-    { "criterio": "AC2, AC3", "testo_issue": "un link canonical assoluto che punta alla pagina stessa; la sitemap elenca tutte e sole le pagine indicizzabili", "resa": "canonical con il percorso della pagina e il dominio configurato (oggi il segnaposto, DP-19); la sitemap identifica le pagine con lo stesso URL del canonical", "perche": "con un dominio segnaposto il canonical non può coincidere con l'origine locale su cui si verifica" },
-    { "criterio": "AC4", "testo_issue": "cosa riceve il cliente", "resa": "la pagina lo indica per ciascuna modalità; il testo non è prescritto", "perche": "la #8 non dà il testo; la fonte naturale è la tabella delle modalità in CLAUDE.md, ma renderla vincolante sarebbe aggiungere un requisito" },
-    { "criterio": "AC5", "testo_issue": "ogni pagina che mostra prezzi", "resa": "le quattro pagine con «mostra prezzi: sì» nella tabella della #8", "perche": "la tabella delle pagine della #8 lo dichiara per pagina" },
-    { "criterio": "AC8", "testo_issue": "un contrassegno «bozza» visibile senza scorrere", "resa": "alle stesse viewport di AC5, 360×640 e 1280×800", "perche": "«senza scorrere» si osserva solo con una viewport; la #8 usa queste due per l'altro contrassegno" },
-    { "criterio": "AC10", "testo_issue": "origini diverse da quelle di OwnConsent", "resa": "nella verifica, l'origine che serve il sito", "perche": "prima della pubblicazione non esiste un'altra origine di OwnConsent" },
-    { "criterio": "AC12", "testo_issue": "nessuna richiesta di rete trasmette l'evento modalita_confrontata", "resa": "nel percorso di AC9, che apre anche la pagina di confronto; controllo su URL e corpo delle richieste", "perche": "la #8 non indica il percorso; AC10 usa quello di AC9" },
-    { "criterio": "AC33, AC34, N1", "testo_issue": "chiude con", "resa": "l'ultimo blocco del contenuto principale, prima del footer", "perche": "il footer è comune a tutte le pagine (AC8) e non fa parte della chiusura della pagina" },
-    { "criterio": "AC33, AC34, N1", "testo_issue": "l'indirizzo unico di contatto", "resa": "l'indirizzo del file di contenuto di N2", "perche": "N2 dice che tutte le pagine lo prendono da lì" },
-    { "criterio": "AC49", "testo_issue": "non compare nessuna percentuale o soglia di avviso", "resa": "nessuna percentuale o soglia riferita ad avvisi, consumo o tetto, in nessuna delle 8 pagine pubbliche; il 120% non compare", "perche": "la frase è sugli avvisi («si promette il comportamento, non il numero», D3); nessuna altra percentuale è prevista nei contenuti" },
-    { "criterio": "AC49", "testo_issue": "nelle pagine pubbliche", "resa": "le 8 pagine di pagine_in_perimetro", "perche": "sono tutte e sole le pagine pubbliche della consegna" },
-    { "criterio": "N2", "testo_issue": "un solo file di contenuto dentro site/", "resa": "nome e percorso li stabilisce ADR-0002 (lotto L03); l'indirizzo non compare in nessun altro file sorgente di site/", "perche": "il nome del file è una decisione di struttura, non di comportamento" },
-    { "criterio": "segnaposto_dichiarati", "testo_issue": "prezzi (licenza On-premise)", "resa": "nessun importo; «da definire» dove un valore di licenza compare", "perche": "AC6 nomina solo piani SaaS e taglie Hosted, ma il divieto di importi in euro dell'HTML servito vale per tutte le pagine" },
-    { "criterio": "non_goal", "testo_issue": "si riapre ... se gli indirizzi dedicati ricevono abusi", "resa": "se l'indirizzo di contatto riceve abusi", "perche": "dopo D4 l'indirizzo è uno solo" }
+    {
+      "criterio": "AC2, AC3",
+      "testo_issue": "un link canonical assoluto che punta alla pagina stessa; la sitemap elenca tutte e sole le pagine indicizzabili",
+      "resa": "canonical con il percorso della pagina e il dominio configurato (oggi il segnaposto, DP-19); la sitemap identifica le pagine con lo stesso URL del canonical",
+      "perche": "con un dominio segnaposto il canonical non può coincidere con l'origine locale su cui si verifica"
+    },
+    {
+      "criterio": "AC4",
+      "testo_issue": "cosa riceve il cliente",
+      "resa": "la pagina lo indica per ciascuna modalità; il testo non è prescritto",
+      "perche": "la #8 non dà il testo; la fonte naturale è la tabella delle modalità in CLAUDE.md, ma renderla vincolante sarebbe aggiungere un requisito"
+    },
+    {
+      "criterio": "AC5",
+      "testo_issue": "ogni pagina che mostra prezzi",
+      "resa": "le quattro pagine con «mostra prezzi: sì» nella tabella della #8",
+      "perche": "la tabella delle pagine della #8 lo dichiara per pagina"
+    },
+    {
+      "criterio": "AC8",
+      "testo_issue": "un contrassegno «bozza» visibile senza scorrere",
+      "resa": "alle stesse viewport di AC5, 360×640 e 1280×800",
+      "perche": "«senza scorrere» si osserva solo con una viewport; la #8 usa queste due per l'altro contrassegno"
+    },
+    {
+      "criterio": "AC10",
+      "testo_issue": "origini diverse da quelle di OwnConsent",
+      "resa": "nella verifica, l'origine che serve il sito",
+      "perche": "prima della pubblicazione non esiste un'altra origine di OwnConsent"
+    },
+    {
+      "criterio": "AC12",
+      "testo_issue": "nessuna richiesta di rete trasmette l'evento modalita_confrontata",
+      "resa": "nel percorso di AC9, che apre anche la pagina di confronto; controllo su URL e corpo delle richieste",
+      "perche": "la #8 non indica il percorso; AC10 usa quello di AC9"
+    },
+    {
+      "criterio": "AC33, AC34, N1",
+      "testo_issue": "chiude con",
+      "resa": "l'ultimo blocco del contenuto principale, prima del footer",
+      "perche": "il footer è comune a tutte le pagine (AC8) e non fa parte della chiusura della pagina"
+    },
+    {
+      "criterio": "AC33, AC34, N1",
+      "testo_issue": "l'indirizzo unico di contatto",
+      "resa": "l'indirizzo del file di contenuto di N2",
+      "perche": "N2 dice che tutte le pagine lo prendono da lì"
+    },
+    {
+      "criterio": "AC49",
+      "testo_issue": "non compare nessuna percentuale o soglia di avviso",
+      "resa": "nessuna percentuale o soglia riferita ad avvisi, consumo o tetto, in nessuna delle 8 pagine pubbliche; il 120% non compare",
+      "perche": "la frase è sugli avvisi («si promette il comportamento, non il numero», D3); nessuna altra percentuale è prevista nei contenuti",
+      "confermata": "Andrea: la lettura è giusta — vieta percentuali dichiarate come soglia di avviso o di tetto, non il simbolo % (ammesso, per esempio, «riduce del 40% il tempo di configurazione»). Il criterio resta com'è."
+    },
+    {
+      "criterio": "AC49",
+      "testo_issue": "nelle pagine pubbliche",
+      "resa": "le 8 pagine di pagine_in_perimetro",
+      "perche": "sono tutte e sole le pagine pubbliche della consegna"
+    },
+    {
+      "criterio": "N2",
+      "testo_issue": "un solo file di contenuto dentro site/",
+      "resa": "nome e percorso li stabilisce ADR-0002 (lotto L03); l'indirizzo non compare in nessun altro file sorgente di site/",
+      "perche": "il nome del file è una decisione di struttura, non di comportamento"
+    },
+    {
+      "criterio": "segnaposto_dichiarati",
+      "testo_issue": "prezzi (licenza On-premise)",
+      "resa": "nessun importo; «da definire» dove un valore di licenza compare",
+      "perche": "AC6 nomina solo piani SaaS e taglie Hosted, ma il divieto di importi in euro dell'HTML servito vale per tutte le pagine"
+    },
+    {
+      "criterio": "non_goal",
+      "testo_issue": "si riapre ... se gli indirizzi dedicati ricevono abusi",
+      "resa": "se l'indirizzo di contatto riceve abusi",
+      "perche": "dopo D4 l'indirizzo è uno solo"
+    }
   ],
   "redatta_da": "product-spec",
   "lotto": "L00",
   "data": "2026-09-13",
-  "stato": "pronta per G0: 21 criteri con gli id della #8, domande_aperte vuoto; da committare con PR-0 (DP-23)"
+  "stato": "pronta per G0: 21 criteri con gli id della #8, domande_aperte vuoto; da committare con PR-0 (DP-23)",
+  "obblighi_manuali": [
+    {
+      "id": "OM-1",
+      "cosa": "Avvisare il cliente SaaS prima che raggiunga il tetto, e proporgli un cambio di piano quando il superamento si ripete: sono le promesse pubbliche di AC49 sulla pagina SaaS e sul confronto.",
+      "perche": "Fino alla consegna 2 non esiste un meccanismo che le mantenga (niente contatore, niente area cliente). Una promessa pubblica senza meccanismo e senza responsabile è un debito che nessuno sa di avere.",
+      "a_carico_di": "segnaposto: persona da nominare, la indica Andrea",
+      "scadenza": "la consegna 2 (registrazione, pagamento finto, contatore e tetto): quando il meccanismo è in produzione l'obbligo manuale decade e si registra la chiusura",
+      "verifica": "al gate di pubblicazione il responsabile è nominato; durante la validità, ogni cliente SaaS attivato a mano è noto al responsabile",
+      "fonte": "decisione di Andrea in chat, dopo l'apertura di #13"
+    }
+  ]
 }

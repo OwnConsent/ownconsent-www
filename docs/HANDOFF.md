@@ -1,7 +1,10 @@
 # Protocollo di handoff
 
-Gli agenti si passano JSON, non prosa. Tutto sotto `.work/<issue-id>/` (in `.gitignore`,
-tranne `spec.json` che va allegata alla PR).
+Gli agenti si passano JSON, non prosa. Lo scratch sta sotto `.work/<issue-id>/`, in `.gitignore`:
+`plan.json`, `findings.json`, prove ed evidenze.
+
+La specifica **non è scratch**: è il contratto della consegna, e chi rivede deve poterla
+leggere. Sta in `docs/spec/issue-<id>.json` ed è committata.
 
 ## Regola: non si riprende un agente per un compito nuovo
 
@@ -19,7 +22,7 @@ Se al giro successivo manca un'informazione che non è nell'artefatto, il difett
 dell'artefatto: si corregge il file, non si riprende l'agente. Se il contesto viaggia
 nell'agente invece che nel file, il protocollo non serve a niente.
 
-## spec.json — prodotto da @product-spec
+## docs/spec/issue-<id>.json — prodotto da @product-spec
 ```json
 {
   "id": "123",

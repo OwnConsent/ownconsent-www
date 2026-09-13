@@ -3,6 +3,22 @@
 Gli agenti si passano JSON, non prosa. Tutto sotto `.work/<issue-id>/` (in `.gitignore`,
 tranne `spec.json` che va allegata alla PR).
 
+## Regola: non si riprende un agente per un compito nuovo
+
+Un agente che ha finito si chiude. L'esito si scrive nell'artefatto di handoff
+(`spec.json`, `plan.json`, `findings.json`) e il compito successivo lo fa un agente
+**nuovo** che legge quell'artefatto. Vale anche per un messaggio accodato a un agente
+appena fermo: quando viene consegnato lo riavvia, ed è una ripresa.
+
+Perché: un agente ripreso si trascina il contesto dei giri precedenti e costa ogni volta
+di più. Misura sulla issue #4 (2026-09-13), riprese consecutive dello stesso
+`@product-spec`: **137k → 248k → 334k → 364k token**. I due giri nuovi della stessa issue
+sono costati 74k e 189k.
+
+Se al giro successivo manca un'informazione che non è nell'artefatto, il difetto è
+dell'artefatto: si corregge il file, non si riprende l'agente. Se il contesto viaggia
+nell'agente invece che nel file, il protocollo non serve a niente.
+
 ## spec.json — prodotto da @product-spec
 ```json
 {

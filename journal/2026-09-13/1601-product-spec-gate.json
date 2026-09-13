@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-13T16:01:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "hook guard-paths ha bloccato la ricerca dei formati di journal e handoff fuori dal progetto",
+  "contesto": "CLAUDE.md indicava il formato del journal in docs/JOURNAL.md del plugin e il ruolo citava docs/HANDOFF.md; nessuno dei due era nel repository. Tentata una find a partire da / per trovarli.",
+  "chi_ha_deciso": "hook guard-paths.sh del plugin cantiere (perimetro della sessione); il messaggio chiede di rivolgersi a una persona invece di aggirarlo",
+  "cosa_serviva": "Formati di journal e handoff leggibili dentro il repository. Fornito da Andrea con b362e4f (docs/JOURNAL.md, docs/HANDOFF.md, docs/DEFINITION-OF-DONE.md).",
+  "evidenza": [
+    "messaggio dell'hook: il percorso / porta fuori dal progetto",
+    "grep di journal e handoff nel repository: solo riferimenti in CLAUDE.md e README.md, nessun formato"
+  ],
+  "conseguenza": "Nessun aggiramento, né con find né leggendo il plugin con altri strumenti. spec.json scritta con struttura dichiarata provvisoria in nota_formato; nessuna voce di journal scritta finché il formato non è stato leggibile.",
+  "esito": "fermo parziale: spec prodotta, journal rimandato",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

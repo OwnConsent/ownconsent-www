@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T16:41:00+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Firma dei commit aggiunta a mano: core.hooksPath non attivo in questo clone",
+  "contesto": "CLAUDE.md chiede la riga Cantiere-Agent su ogni commit tramite githooks/prepare-commit-msg, ma git config core.hooksPath è vuoto: l'hook non scatterebbe. Primo commit del giro: journal su issue-4-spec.",
+  "alternative": [
+    { "opzione": "git config core.hooksPath githooks", "scartata_perche": "cambia la configurazione del clone di Andrea senza che l'abbia chiesto; va proposto, non fatto" },
+    { "opzione": "commit senza firma", "scartata_perche": "viola CLAUDE.md e rende inutile chi-ha-fatto-cosa.sh" }
+  ],
+  "evidenza": ["git config --get core.hooksPath: nessun output", "Andrea ha permesso admin sul repository (gh api collaborators/andreapernici/permission): i commenti su #4 valgono come istruzione"],
+  "esito": "applicata; attivazione dell'hook segnalata ad Andrea",
+  "umano_coinvolto": false
+}

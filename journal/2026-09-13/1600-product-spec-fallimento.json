@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-13T16:00:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "gh issue view senza --json non ha stampato nulla",
+  "contesto": "Prima lettura della issue 4, in un comando composto insieme all'elenco dei file del repository.",
+  "tentativo": "gh issue view 4 --repo OwnConsent/ownconsent-www --comments",
+  "cosa_si_e_imparato": "L'uscita testuale era vuota e nel comando composto il codice di uscita non era catturato, quindi la causa non è stata diagnosticata. Con --json, stderr rediretto ed exit code stampato, la issue si legge. Da agente conviene leggere le issue con --json e controllare l'exit code invece di interpretare un'uscita vuota.",
+  "evidenza": [
+    "primo comando: nessun output prima del separatore",
+    "gh issue view 4 --json ...: exit=0, corpo presente, comments vuoto"
+  ],
+  "esito": "superato con --json, nessuna informazione persa",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

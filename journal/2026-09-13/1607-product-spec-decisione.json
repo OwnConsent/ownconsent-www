@@ -1,0 +1,36 @@
+{
+  "ts": "2026-09-13T16:07:00+02:00",
+  "agente": "product-spec",
+  "issue": "4",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Hosted e On-premise solo con richiesta di contatto in questa consegna (AR-01)",
+  "contesto": "La issue chiede «almeno un modo di farsi contattare; se riusciamo a renderli self-service, meglio», e per Hosted un provisioning «almeno semi-automatico». cmp-api.md vieta di implementare provisioning e licenze prima dell'ADR della tappa 02.",
+  "alternative": [
+    {
+      "opzione": "self-service On-premise già ora (acquisto licenza)",
+      "scartata_perche": "richiede l'emissione delle licenze, sezione di cmp-api.md non scritta"
+    },
+    {
+      "opzione": "self-service Hosted già ora",
+      "scartata_perche": "richiede il provisioning, stessa dipendenza, e il significato di «semi-automatico» non è definito"
+    },
+    {
+      "opzione": "rendere bloccante la scelta contatto o self-service",
+      "scartata_perche": "la issue fissa il contatto come minimo accettabile: scelta ragionevole e reversibile"
+    }
+  ],
+  "evidenza": [
+    "issue 4, sezione «Cosa serve dal sito»",
+    "contracts/cmp-api.md: nessuna delle quattro voci si implementa prima dell'ADR"
+  ],
+  "esito": "applicata come AR-01; confermabile o ribaltabile con DA-2 (non bloccante)",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": true,
+  "ts_trascrizione": "2026-09-13T16:16:40+02:00",
+  "nota_trascrizione": "Registrata durante il lavoro dello stadio 01 come voce grezza nel report e trascritta nel formato di docs/JOURNAL.md solo ora, perché il formato non era leggibile dal repository fino al commit b362e4f. Il campo ts è approssimato: l'ordine delle voci è quello reale, il minuto no. La finestra reale va da circa 15:59 (avvio del ruolo) a 16:11 (scrittura di .work/issue-4/spec.json)."
+}

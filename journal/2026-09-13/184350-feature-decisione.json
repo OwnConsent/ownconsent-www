@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T18:43:50+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Collaudo in CI (claude-pr-review.yml) spento di proposito da Andrea, non guasto; si riaccende alla PR-4",
+  "contesto": "Il piano della issue 8 (DP-24) lo segnalava come rotto: 2 run su 2 falliti (PR #1 e #2), nessun run dalla #3 alla #9. Andrea chiarisce che falliva per il segreto mancante, che ora è configurato, e che l'ha disattivato deliberatamente finché non c'è codice da collaudare.",
+  "alternative": [
+    {
+      "opzione": "ripararlo ora",
+      "scartata_perche": "non è rotto; senza codice da collaudare, lasciarlo acceso consuma senza verificare nulla"
+    },
+    {
+      "opzione": "lasciarlo spento senza dirlo",
+      "scartata_perche": "fra un mese qualcuno lo ritroverebbe spento pensando che sia guasto"
+    }
+  ],
+  "evidenza": [
+    "gh run list: due soli run, 2026-09-13T13:19Z e 13:21Z, entrambi failure",
+    "decisione di Andrea in chat, risposta a DP-24"
+  ],
+  "esclusione": {
+    "cosa": "collaudo agentico automatico sulle PR",
+    "scadenza": "si riaccende all'apertura della PR-4 della consegna 1 (primo codice in site/)"
+  },
+  "esito": "registrata; nessuna modifica al workflow in questo giro",
+  "umano_coinvolto": true
+}

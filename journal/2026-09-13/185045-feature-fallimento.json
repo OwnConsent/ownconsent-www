@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T18:50:45+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "fallimento",
+  "titolo": "Verifica di plan.json fallita dopo le correzioni: L11 e L12 fuori da ordine_e_parallelismo, budget_turni non aggiornato",
+  "contesto": "Correzioni applicate con uno script (voce 184945, «verifica a seguire»). Aggiunti L11 e L12 a lotti, PR e gate, ma non ai passi di ordine_e_parallelismo, e il campo budget_turni è rimasto 390.",
+  "evidenza": [
+    "comando: python3 .work/issue-8/verifica_piano.py",
+    "output: exit=1; errori: «passo 4: L04 parte prima di ['L11']», «passo 5: L06 parte prima di ['L11']», «passo 7: L08 parte prima di ['L12', 'L11']», «lotti fuori dall'ordine o ripetuti: ['L11', 'L12']», «budget_turni 390 diverso dalla somma dei tetti 425»"
+  ],
+  "cosa_si_e_imparato": "Un piano ha più viste dello stesso fatto (lotti, PR, gate, ordine, budget): aggiungere un lotto richiede di toccarle tutte. Lo script di verifica le ha trovate tutte in un colpo, per questo si esegue dopo ogni modifica e non si deduce dal fatto che la modifica sia stata scritta.",
+  "esito": "da correggere in ordine_e_parallelismo e budget_turni, con voci aggiunte a correzioni, poi nuova verifica",
+  "umano_coinvolto": false
+}

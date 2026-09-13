@@ -1,0 +1,12 @@
+{
+  "ts": "2026-09-13T18:50:45+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "4",
+  "lotto": "L00",
+  "stadio": "02-piano",
+  "tipo": "correzione",
+  "corregge": "2026-09-13/175917-feature-correzione.json",
+  "cosa_era_sbagliato": "La voce usa campi provvisori (corregge con prefisso journal/, cosa_vale, nota_formato) scritti prima che il formato esistesse nel repository; manca come_lo_so.",
+  "come_lo_so": "comando: git diff 5c96347 origin/main -- docs/JOURNAL.md; output: la sezione «Le correzioni si aggiungono, non si sovrascrivono» (PR #10) definisce tipo, corregge nella forma «2026-09-13/<file>.json», cosa_era_sbagliato, come_lo_so, esito.",
+  "esito": "la voce 175917 resta com'è; questa la allinea al formato. Il fatto corretto da 175917 (messaggio consegnato in ritardo, non perso) resta valido."
+}

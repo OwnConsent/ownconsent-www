@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T18:58:01+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false,
+  "titolo": "dati_personali: l'email che arriva via mailto dichiarata con retention «da dichiarare in L11»",
+  "contesto": "Il sito non raccoglie dati (AC9, AC10), ma DP-20 stabilisce che il link mailto porta nella casella dati personali, da dichiarare da @privacy in contracts/data-map.json (L11). data-map.json oggi non ha la voce.",
+  "alternative": [
+    {
+      "opzione": "lista vuota esplicita",
+      "scartata_perche": "contraddice DP-20: il trattamento esiste, anche se avviene fuori dal sito"
+    },
+    {
+      "opzione": "riprendere la retention proposta nella spec della #4 per il modulo di contatto (12 mesi dall'ultimo scambio)",
+      "scartata_perche": "era una proposta per un modulo che non c'è; la retention la dichiara @privacy e l'incarico vieta di inventarla"
+    }
+  ],
+  "evidenza": [
+    "contracts/data-map.json letto: nessuna voce per email di contatto",
+    "DP-20 stato decisa"
+  ],
+  "esito": "applicata"
+}

@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-13T18:58:01+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false,
+  "titolo": "Resa osservabile dei punti della #8 che non dicono dove o come si osserva, senza cambiare il testo",
+  "contesto": "Alcuni testi della #8 sono osservabili ma lasciano un parametro implicito: viewport del contrassegno «bozza» (AC8), significato di «chiude con» (AC33, AC34, N1), dominio del canonical con segnaposto (AC2, AC3, DP-19), percorso di navigazione di AC12, «nessuna percentuale o soglia di avviso» (AC49), contenuto di «cosa riceve il cliente» (AC4). Nessuno cambia il comportamento richiesto.",
+  "alternative": [
+    {
+      "opzione": "fermarsi con domande_aperte (G0)",
+      "scartata_perche": "ogni resa riprende un parametro già presente nella #8 o nel piano (viewport di AC5, percorso di AC9, DP-19) ed è reversibile; nessuna è un'informazione mancante che cambia il comportamento"
+    },
+    {
+      "opzione": "aggiungere criteri separati (per esempio AC8 diviso in due)",
+      "scartata_perche": "gli id devono essere esattamente i 21 della issue (G0)"
+    },
+    {
+      "opzione": "lasciare i testi come nella issue senza precisare",
+      "scartata_perche": "@qa-test dovrebbe scegliere viewport e percorso guardando l'implementazione"
+    }
+  ],
+  "evidenza": [
+    "ogni resa è elencata con la motivazione in rese_del_testo di docs/spec/issue-8.json"
+  ],
+  "esito": "applicata; da riportare nel report finale"
+}

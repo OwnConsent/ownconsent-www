@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-13T18:49:45+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "plan.json corretto a mano: D4 superata e risposte DP-18…DP-25 applicate, con il campo correzioni",
+  "contesto": "L'orchestratore della issue 8 è partito prima della risposta a D4; Andrea ha poi deciso DP-19…DP-25. Nove testi citavano hosted@/onprem@ o D4 aperta; le decisioni aggiungono L11 (@privacy, data map), L12 (@devops, CI), PR-0 (spec committata), PR-5 e il checkpoint GL05. Primo tentativo di script interrotto da un errore su un campo lista, prima di scrivere: plan.json non toccato.",
+  "alternative": [
+    {
+      "opzione": "orchestratore nuovo che rilegge e riscrive plan.json",
+      "scartata_perche": "circa 190 mila token per sostituzioni e aggiunte meccaniche; Andrea: «rilanciare un orchestrator per otto sostituzioni sarebbe assurdo»"
+    },
+    {
+      "opzione": "riprendere l'orchestratore che ha scritto il piano",
+      "scartata_perche": "vietato dalla regola sulle riprese (docs/HANDOFF.md)"
+    }
+  ],
+  "evidenza": [
+    "40 voci nel campo correzioni di .work/issue-8/plan.json, ognuna con prima, dopo, motivo e fonte",
+    "budget: 21 + 4 orchestratori = 25 invocazioni attese, 51 nel caso peggiore",
+    "token stimati con 151679 per invocazione: 3791975 attesi, 7735629 nel caso peggiore",
+    "GL05: atteso 1744308 token fino a L05, soglia di stop 3488617"
+  ],
+  "esito": "applicata; verifica con verifica_piano.py a seguire",
+  "umano_coinvolto": true
+}

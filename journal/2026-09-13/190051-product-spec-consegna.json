@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-13T19:00:51+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "consegna",
+  "titolo": "L00 chiuso: docs/spec/issue-8.json con 21 criteri, segnaposto dichiarati e gate di pubblicazione",
+  "contesto": "Spec della consegna 1 scritta dalla #8 (D1–D4) e dal plan (DP-18…DP-26, G0, G3). Non committata: il commit e PR-0 li fa la sessione principale.",
+  "dod_soddisfatta": true,
+  "dod_dettaglio": [
+    "21 criteri con gli stessi id della #8, in forma dato/quando/allora, osservabili dall'esterno",
+    "non_goal espliciti (14), compresa l'esclusione motivata del modulo di contatto con scadenza",
+    "domande_aperte vuoto: nessuna informazione mancante che cambi il comportamento",
+    "13 rese di testo dichiarate in rese_del_testo, nessun testo della issue cambiato",
+    "dati_personali: email via mailto con finalità e base di DP-20, retention «da dichiarare in L11»",
+    "nessuna modifica a contracts/, nessun commento sulla issue, nessun commit"
+  ],
+  "evidenza": [
+    "voce di misura 190051-product-spec-misura.json"
+  ],
+  "esito": "chiuso; turni usati: 14 su 25",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-13T18:58:01+02:00",
+  "agente": "product-spec",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false,
+  "titolo": "Due letture bloccate da guard-paths: il percorso con «cd <dir>;» è stato letto come percorso fuori progetto",
+  "contesto": "Primo giro di letture di plan.json, HANDOFF.md, contracts/ e spec della #4, con comandi nella forma «cd /home/andreapernici/src/ownconsent/www; cat ...».",
+  "evidenza": [
+    "output dell'hook: «GATE: il percorso '/home/andreapernici/src/ownconsent/www;' porta fuori dal progetto (/home/andreapernici/src/ownconsent/www;)»",
+    "2 chiamate su 2 respinte, prima delle 18:55:08"
+  ],
+  "cosa_si_e_imparato": "L'hook prende il punto e virgola come parte del percorso. Ripetuto con percorsi assoluti in una variabile e «&&»: letture riuscite. Nessun tentativo di aggirare il gate, solo una forma diversa di comando dentro il progetto.",
+  "esito": "superato riformulando il comando; costo: 1 turno"
+}

@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-13T19:39:07+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L11",
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "2026-09-13/193716-privacy-consegna.json",
+  "cosa_era_sbagliato": "L'esito dice «turni usati: 9 su 15». Il numero l'ho stimato mentre scrivevo la voce, prima del commit, e non l'ho contato.",
+  "come_lo_so": "Contati a posteriori: 1 ramo, 2 letture, 3 esempio di journal/ADR/ora, 4 voce di decisione e modifica della data map, 5 comando rifiutato dall'isolamento della worktree, 6 verifiche separate, 7 confronto/ora/hook, 8 marcatore e voce di misura, 9 ora e ruolo nel marcatore, 10 voci di firma e consegna, 11 validazioni e stage, 12 commit b400b42, 13 hash/firma/stato, 14 questo script, 15 esecuzione e commit. Totale 15 su 15: il tetto è raggiunto con questa voce.",
+  "esito": "la voce superata resta, questa la corregge; turni usati: 15 su 15; nulla del lotto resta aperto",
+  "umano_coinvolto": false,
+  "trascritta_dopo": false
+}

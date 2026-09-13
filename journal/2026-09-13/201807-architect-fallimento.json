@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-13T20:18:07+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "adr": "ADR-0001",
+  "titolo": "Le costanti di rete di Lighthouse non si leggono più dove le cercavo: due richieste a vuoto prima di trovarle in un commit storico",
+  "contesto": "Per esaminare il profilo di rete di L01 cercavo DEVTOOLS_RTT_ADJUSTMENT_FACTOR e il profilo mobileSlow4G nel sorgente di Lighthouse.",
+  "evidenza": [
+    "WebFetch https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/core/config/constants.js -> il file importa throttling da '../lib/lantern/lantern.js' e non definisce i moltiplicatori in linea",
+    "WebFetch https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/core/lib/lantern/constants.js -> HTTP 404",
+    "WebFetch del constants.js al commit 8f500e0 (trovato con una ricerca) -> moltiplicatori 3.75 e 0.9 presenti; profilo chiamato mobile3G"
+  ],
+  "cosa_si_e_imparato": "Una fonte citata come «preset pubblico» va letta nel punto in cui il preset viene applicato, non solo dove è descritto: docs/throttling.md dà i valori di pacchetto e rimanda ai moltiplicatori senza scriverli. Per le costanti di Lighthouse, il sorgente corrente è spezzato fra config e Lantern; un commit storico con il valore esplicito è una prova, ma va dichiarato che non è il sorgente corrente. Costo: 2 richieste e un turno in più.",
+  "esito": "limite dichiarato in ADR-0001 e nella voce di misura",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 8
+}

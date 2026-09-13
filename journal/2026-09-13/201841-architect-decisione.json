@@ -1,0 +1,38 @@
+{
+  "ts": "2026-09-13T20:18:41+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "adr": "ADR-0001",
+  "titolo": "Ratifica separata dall'obiezione: chiavi, strumento, CPU, cinque esecuzioni con mediana, CLS 0.05 e lettura della CI ratificati; rete ed esecuzioni a freddo lasciate a @performance",
+  "contesto": "DP-01 non compare fra le decisioni_per_persona del piano della #8 (id presenti: DP-18…DP-26, misurato con python3 sul plan.json). Il piano lo cita in contratti_da_aggiornare come «ADR solo per cambi che vincolano più lotti», e L03 dice di ratificare senza riscrivere. La modifica di L01 vincola L05, L06, L07 e L12.",
+  "alternative": [
+    {
+      "opzione": "una sola decisione (ratifica o obiezione) per tutto il file",
+      "scartata_perche": "i punti non contestati servono comunque a L07 e L12; un'obiezione globale bloccherebbe anche quelli"
+    },
+    {
+      "opzione": "$lettura_ci con un comparatore nella CI e uno nel test",
+      "scartata_perche": "due implementazioni della stessa regola divergono; il test di AC39 deve fallire da solo, e la CI lo esegue"
+    },
+    {
+      "opzione": "respingere il calcolo del CLS come somma",
+      "scartata_perche": "la somma è sempre maggiore o uguale alla finestra di sessione più grande: la misura è prudente, basta correggere la frase (N1)"
+    },
+    {
+      "opzione": "definire io come si pesano JS e CSS per pagina",
+      "scartata_perche": "è metodo di @performance: resta nota N3, non bloccante"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md, tabella di esame punto per punto",
+    "voce misura 201807-architect-misura.json (fonti CLS e Lighthouse)"
+  ],
+  "esito": "ADR-0001 scritto con stato «proposta, con obiezione», per PR-2",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 12
+}

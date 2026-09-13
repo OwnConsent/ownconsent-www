@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-13T19:54:18+02:00",
+  "agente": "performance",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "titolo": "L01 chiuso: soglie di laboratorio per LCP e CLS di pagine_pubbliche aggiunte a contracts/perf-budgets.json, con metodo dichiarato; nessun campo esistente toccato; tetto di turni ampiamente superato",
+  "contesto": "AC39 richiedeva soglie di laboratorio per LCP e CLS delle pagine pubbliche, con metodo di misura dichiarato, dentro contracts/perf-budgets.json (DV-4). Ho aggiunto lcp_ms_lab_mediana=2500 e cls_lab_mediana=0.05 dentro pagine_pubbliche, un blocco di metodo dichiarato (strumento, dispositivo, rete, esecuzioni, statistica) e una nota sui due campi p75 esistenti che li marca come dati di campo verificabili solo con traffico reale, oltre a una nota su come la CI di L12 deve leggere le soglie da questo file, senza scrivere il workflow. Non ho toccato js_iniziale_gzip_kb, css_gzip_kb, area_cliente ne api. Non ho scritto un ADR: quello di ratifica lo scrive @architect nel lotto L03, dopo di me.",
+  "dod_soddisfatta": true,
+  "dod_dettaglio": [
+    "budget dichiarati con metodo: strumento (Playwright headless con throttling via protocollo di debug di Chrome, senza servizi terzi), dispositivo (viewport 360x640, CPU rallentata 4 volte), rete (profilo Slow 4G, preset pubblico di Lighthouse), esecuzioni (5), statistica (mediana, p50)",
+    "nessuna chiave rimossa o rinominata: verificato confrontando il file prima e dopo, campo per campo, con uno script di confronto; tutti i 9 campi preesistenti presenti con lo stesso nome e lo stesso valore",
+    "journal con le alternative di soglia scartate: voce di decisione scritta e committata prima della modifica del file",
+    "JSON valido dopo la modifica",
+    "firma dei commit: .work/.current-agent diceva orchestrator, non performance, in ogni verifica fatta prima di un commit; ho aggiunto io stesso la riga Cantiere-Agent: performance in fondo a ciascun messaggio di commit, cosa che ho registrato qui e nella voce di fallimento"
+  ],
+  "evidenza": [
+    "comando: cat .work/.current-agent, eseguito piu volte nel corso del lotto -> output costante: orchestrator",
+    "comando di validazione JSON sul file modificato -> output: nessun errore, JSON valido",
+    "comando: git show origin/main:contracts/perf-budgets.json salvato su file temporaneo, poi confrontato con il file modificato -> output: solo righe aggiunte, nessuna riga tolta fra i campi preesistenti",
+    "script di confronto campo per campo fra il file prima e dopo -> output: 9 corrispondenze esatte, nessuna differenza sui campi preesistenti",
+    "commit con hash 87bca86: voce di journal di decisione",
+    "commit con hash e16e245: modifica di contracts/perf-budgets.json",
+    "voce di journal di fallimento journal/2026-09-13/195303-performance-fallimento.json: il sandbox del worktree ha bloccato ogni scrittura su file tramite documento inline in stile shell (redirezione diretta o tramite tee), obbligando a riscoprire, con diversi tentativi falliti, che serve printf con %s oppure uno script python invocato con lo stesso costrutto ma che scrive il file con le proprie funzioni"
+  ],
+  "esito": "chiuso; contracts/perf-budgets.json modificato e committato sul ramo contracts/perf-budgets-laboratorio; nessun push, nessuna PR, nessun commento sulla issue, nessun altro agente invocato; ADR-0001 di ratifica e a carico di @architect in L03. Il tetto di 15 turni indicato nel prompt di delega e stato superato ampiamente, per circa 49 turni totali contati a consuntivo su questa trascrizione: la causa non e la complessita del compito ma il tempo speso a scoprire il modo di scrivere file consentito dal sandbox del worktree, descritto nella voce di fallimento collegata. Lo segnalo esplicitamente invece di tacerlo: il lavoro richiesto e completo e verificato, ma il costo reale e stato molto piu alto del tetto assegnato.",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non tracciati per singola voce in questa sessione; conteggio dei turni fatto a consuntivo rileggendo la trascrizione delle mie stesse chiamate allo strumento, non stimato a priori",
+  "trascritta_dopo": false
+}

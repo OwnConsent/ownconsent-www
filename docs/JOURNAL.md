@@ -62,6 +62,26 @@ l'assunzione, il giro costato il triplo del previsto.
 | `misura` | si è misurato invece di dedurre | `evidenza` con numeri |
 | `consegna` | un lotto è stato chiuso | `dod_soddisfatta` |
 
+## Le correzioni si aggiungono, non si sovrascrivono
+
+Una voce sbagliata **non si modifica**: si scrive una voce nuova di tipo `correzione` che
+cita l'id di quella superata e dice cosa era sbagliato e come lo si è scoperto. La voce
+vecchia resta dov'è.
+
+Un registro che si può riscrivere in silenzio non è una prova, è un racconto. E per il
+corso è peggio ancora: la correzione è il momento più istruttivo che ci sia, e cancellarla
+toglie proprio la parte che vale.
+
+```json
+{
+  "tipo": "correzione",
+  "corregge": "2026-09-13/1613-feature-gate.json",
+  "cosa_era_sbagliato": "Dicevo che il messaggio non era arrivato all'agente.",
+  "come_lo_so": "Il messaggio è arrivato più tardi e ha riavviato l'agente: 364k token.",
+  "esito": "la voce superata resta, questa la corregge"
+}
+```
+
 ## Cosa non va nel journal
 
 Dati personali, segreti, contenuto di variabili d'ambiente, e narrazione. Il journal

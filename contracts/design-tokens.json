@@ -1,0 +1,171 @@
+{
+  "$schema_nota": "Non è uno schema JSON formale: è la forma che @frontend legge per generare CSS (variabili custom o simile) senza scrivere valori a mano. Il meccanismo di trasformazione lo decide ADR-0002 (lotto L03), non questo file.",
+  "meta": {
+    "versione": "1.0.0",
+    "proprietario": "design",
+    "consumatori": ["frontend", "accessibility"],
+    "issue": "8",
+    "lotto": "L02",
+    "descrizione": "Token del sistema visivo delle pagine pubbliche di OwnConsent: nasce con questo lotto, non deriva da un file Figma (nessuno esiste nel repository, vedi journal/2026-09-13/194600-design-decisione.json).",
+    "verifica_contrasto": {
+      "script": "docs/design/contrast-check.py",
+      "comando": "python3 docs/design/contrast-check.py",
+      "nota": "Ricalcola il rapporto di contrasto (formula di luminanza relativa WCAG) per ogni coppia testo/sfondo e componente UI elencata nello script, leggendo i valori esadecimali da questo file. Va eseguito ad ogni modifica di color.semantic."
+    },
+    "regola_font": "Solo pile di font di sistema già installati sul dispositivo: nessuna richiesta di rete verso un'origine diversa da quella del sito (AC10), nessun peso aggiuntivo sul budget di contracts/perf-budgets.json."
+  },
+  "color": {
+    "primitive": {
+      "_nota": "Scala neutra + un'unica tinta di brand + due accenti per i due contrassegni testuali (dimostrativa/bozza), che portano significati distinti e non vanno confusi. Nessun altro colore: un token nuovo qui richiede un consumatore reale in questa consegna.",
+      "gray": {
+        "0": "#FFFFFF",
+        "50": "#F6F7F8",
+        "100": "#E9EBED",
+        "200": "#D3D7DB",
+        "300": "#B4BAC1",
+        "400": "#8A929B",
+        "500": "#6B737C",
+        "600": "#545B63",
+        "700": "#3D434A",
+        "800": "#282C31",
+        "900": "#17191C",
+        "950": "#0E0F11"
+      },
+      "blue": {
+        "_uso": "brand: link, blocco di chiusura/CTA mailto, focus non serve qui (vedi amber)",
+        "50": "#EAF2FC",
+        "100": "#CFE3F8",
+        "200": "#9FC7F1",
+        "300": "#6BA8E8",
+        "400": "#3D8ADC",
+        "500": "#1E6FC4",
+        "600": "#175A9E",
+        "700": "#124577",
+        "800": "#0C2F52",
+        "900": "#071B2E"
+      },
+      "amber": {
+        "_uso": "contrassegno «pagina dimostrativa» e colore del focus ring, per essere visibile e distinto dal brand blu",
+        "100": "#FFE3AD",
+        "300": "#F0AA2E",
+        "700": "#7A4B00",
+        "900": "#4A2C00"
+      },
+      "violet": {
+        "_uso": "contrassegno «bozza» sulle pagine legali, distinto dal contrassegno «pagina dimostrativa»",
+        "100": "#DFC9F5",
+        "900": "#331755"
+      }
+    },
+    "semantic": {
+      "_nota": "Alias che i componenti consumano; mai un valore esadecimale scritto a mano fuori da color.primitive. Tema chiaro e scuro definiti insieme, con gli stessi nomi di alias, cosicché nessuno dei due possa restare indietro.",
+      "light": {
+        "bg-canvas": { "value": "#FFFFFF", "primitivo": "gray.0", "uso": "sfondo di pagina" },
+        "bg-surface": { "value": "#F6F7F8", "primitivo": "gray.50", "uso": "sfondo di sezioni alternate, intestazione tabella di confronto, blocco di chiusura" },
+        "bg-surface-raised": { "value": "#FFFFFF", "primitivo": "gray.0", "uso": "carte modalità (SaaS/Hosted/On-premise) sopra bg-surface, delimitate da border-default" },
+        "bg-inverse": { "value": "#17191C", "primitivo": "gray.900", "uso": "sfondo del footer" },
+        "text-primary": { "value": "#17191C", "primitivo": "gray.900", "uso": "titoli e corpo del testo" },
+        "text-secondary": { "value": "#3D434A", "primitivo": "gray.700", "uso": "testo di supporto, descrizioni sotto i titoli" },
+        "text-muted": { "value": "#545B63", "primitivo": "gray.600", "uso": "valori «da definire», metadati, didascalie" },
+        "text-link": { "value": "#124577", "primitivo": "blue.700", "uso": "link testuali in corpo di pagina" },
+        "text-on-brand": { "value": "#FFFFFF", "primitivo": "gray.0", "uso": "testo sopra brand-bg (link mailto in stile bottone)" },
+        "text-on-inverse": { "value": "#F6F7F8", "primitivo": "gray.50", "uso": "testo e link del footer su bg-inverse" },
+        "border-default": { "value": "#8A929B", "primitivo": "gray.400", "uso": "bordi di carte, tabella, separatori" },
+        "border-strong": { "value": "#6B737C", "primitivo": "gray.500", "uso": "bordo della riga «come si attiva» e di elementi che devono risaltare" },
+        "brand-bg": { "value": "#175A9E", "primitivo": "blue.600", "uso": "sfondo del link mailto in stile bottone (default)" },
+        "brand-bg-hover": { "value": "#124577", "primitivo": "blue.700", "uso": "hover del link mailto in stile bottone" },
+        "brand-bg-active": { "value": "#0C2F52", "primitivo": "blue.800", "uso": "active/pressed del link mailto in stile bottone" },
+        "badge-demo-bg": { "value": "#FFE3AD", "primitivo": "amber.100", "uso": "sfondo del contrassegno «pagina dimostrativa»" },
+        "badge-demo-text": { "value": "#4A2C00", "primitivo": "amber.900", "uso": "testo del contrassegno «pagina dimostrativa»" },
+        "badge-draft-bg": { "value": "#DFC9F5", "primitivo": "violet.100", "uso": "sfondo del contrassegno «bozza»" },
+        "badge-draft-text": { "value": "#331755", "primitivo": "violet.900", "uso": "testo del contrassegno «bozza»" },
+        "focus-ring": { "value": "#7A4B00", "primitivo": "amber.700", "uso": "anello di focus visibile su ogni elemento interattivo" }
+      },
+      "dark": {
+        "bg-canvas": { "value": "#0E0F11", "primitivo": "gray.950", "uso": "sfondo di pagina" },
+        "bg-surface": { "value": "#17191C", "primitivo": "gray.900", "uso": "sfondo di sezioni alternate, intestazione tabella di confronto, blocco di chiusura" },
+        "bg-surface-raised": { "value": "#282C31", "primitivo": "gray.800", "uso": "carte modalità (SaaS/Hosted/On-premise) sopra bg-surface, delimitate da border-default" },
+        "bg-inverse": { "value": "#F6F7F8", "primitivo": "gray.50", "uso": "sfondo del footer" },
+        "text-primary": { "value": "#F6F7F8", "primitivo": "gray.50", "uso": "titoli e corpo del testo" },
+        "text-secondary": { "value": "#B4BAC1", "primitivo": "gray.300", "uso": "testo di supporto, descrizioni sotto i titoli" },
+        "text-muted": { "value": "#8A929B", "primitivo": "gray.400", "uso": "valori «da definire», metadati, didascalie" },
+        "text-link": { "value": "#6BA8E8", "primitivo": "blue.300", "uso": "link testuali in corpo di pagina" },
+        "text-on-brand": { "value": "#0E0F11", "primitivo": "gray.950", "uso": "testo sopra brand-bg (link mailto in stile bottone)" },
+        "text-on-inverse": { "value": "#17191C", "primitivo": "gray.900", "uso": "testo e link del footer su bg-inverse" },
+        "border-default": { "value": "#6B737C", "primitivo": "gray.500", "uso": "bordi di carte, tabella, separatori" },
+        "border-strong": { "value": "#8A929B", "primitivo": "gray.400", "uso": "bordo della riga «come si attiva» e di elementi che devono risaltare" },
+        "brand-bg": { "value": "#3D8ADC", "primitivo": "blue.400", "uso": "sfondo del link mailto in stile bottone (default)" },
+        "brand-bg-hover": { "value": "#6BA8E8", "primitivo": "blue.300", "uso": "hover del link mailto in stile bottone" },
+        "brand-bg-active": { "value": "#9FC7F1", "primitivo": "blue.200", "uso": "active/pressed del link mailto in stile bottone" },
+        "badge-demo-bg": { "value": "#4A2C00", "primitivo": "amber.900", "uso": "sfondo del contrassegno «pagina dimostrativa»" },
+        "badge-demo-text": { "value": "#FFE3AD", "primitivo": "amber.100", "uso": "testo del contrassegno «pagina dimostrativa»" },
+        "badge-draft-bg": { "value": "#331755", "primitivo": "violet.900", "uso": "sfondo del contrassegno «bozza»" },
+        "badge-draft-text": { "value": "#DFC9F5", "primitivo": "violet.100", "uso": "testo del contrassegno «bozza»" },
+        "focus-ring": { "value": "#F0AA2E", "primitivo": "amber.300", "uso": "anello di focus visibile su ogni elemento interattivo" }
+      }
+    }
+  },
+  "typography": {
+    "font-family-base": {
+      "value": "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, \"Apple Color Emoji\", \"Segoe UI Emoji\", sans-serif",
+      "uso": "unica famiglia usata in tutto il sito: nessun font esterno (AC10)"
+    },
+    "font-size": {
+      "100": { "value": "1rem", "px_riferimento": 16, "uso": "corpo del testo (minimo richiesto da AC37); anche didascalie e metadati, mai più piccolo" },
+      "200": { "value": "1.125rem", "px_riferimento": 18, "uso": "paragrafo introduttivo (lead), h5" },
+      "300": { "value": "1.25rem", "px_riferimento": 20, "uso": "h4, intestazioni di carta" },
+      "400": { "value": "1.5rem", "px_riferimento": 24, "uso": "h3" },
+      "500": { "value": "1.875rem", "px_riferimento": 30, "uso": "h2" },
+      "600": { "value": "2.25rem", "px_riferimento": 36, "uso": "h1 sotto il breakpoint md (mobile/tablet)" },
+      "700": { "value": "3rem", "px_riferimento": 48, "uso": "h1 dal breakpoint md in su (desktop)" }
+    },
+    "line-height": {
+      "tight": { "value": 1.2, "uso": "titoli h1-h3" },
+      "snug": { "value": 1.35, "uso": "titoli h4-h5, lead" },
+      "normal": { "value": 1.5, "uso": "corpo del testo, liste, celle di tabella" }
+    },
+    "font-weight": {
+      "regular": { "value": 400, "uso": "corpo del testo" },
+      "semibold": { "value": 600, "uso": "etichette, intestazioni di carta, intestazioni di tabella" },
+      "bold": { "value": 700, "uso": "titoli h1-h3" }
+    }
+  },
+  "spacing": {
+    "_nota": "Scala a base 4px, in CSS px. Un solo asse di spaziatura per margini, padding e gap: nessuna scala parallela.",
+    "1": { "value": "4px" },
+    "2": { "value": "8px" },
+    "3": { "value": "12px" },
+    "4": { "value": "16px" },
+    "5": { "value": "20px" },
+    "6": { "value": "24px" },
+    "8": { "value": "32px" },
+    "10": { "value": "40px" },
+    "12": { "value": "48px" },
+    "16": { "value": "64px" },
+    "20": { "value": "80px" },
+    "24": { "value": "96px" }
+  },
+  "radius": {
+    "sm": { "value": "4px", "uso": "badge, celle evidenziate" },
+    "md": { "value": "8px", "uso": "carte modalità, link mailto in stile bottone" },
+    "lg": { "value": "16px", "uso": "blocco di chiusura, sezioni con sfondo alternato" },
+    "full": { "value": "9999px", "uso": "contrassegni «pagina dimostrativa» e «bozza» (forma a pillola)" }
+  },
+  "breakpoint": {
+    "_nota": "min-width, CSS px. Base a 360px (il più stretto verificato da AC37); nessun breakpoint sotto i 360px: sotto quella soglia si applica comunque il layout di base, mai scorrimento orizzontale.",
+    "base": { "value": "360px", "uso": "layout a colonna singola: nav a elenco verticale, carte impilate, tabella di confronto letta come blocchi ripetuti (vedi docs/design/componenti/tabella-confronto.md)" },
+    "md": { "value": "768px", "uso": "nav orizzontale, carte modalità affiancate a due per riga dove previsto" },
+    "lg": { "value": "1280px", "uso": "layout desktop pieno, tabella di confronto come tabella reale a colonne, larghezza massima del contenuto" }
+  },
+  "touch-target": {
+    "_nota": "WCAG 2.2, criterio 2.5.8 (Target Size Minimum, AA).",
+    "min-size": { "value": "24px", "uso": "dimensione minima di ogni elemento interattivo (link, voce di nav, link mailto in stile bottone)" },
+    "min-undisturbed-space": { "value": "24px", "uso": "in alternativa alla dimensione minima: diametro dello spazio indisturbato richiesto attorno a un bersaglio più piccolo di 24×24, non sovrapposto allo spazio di un altro bersaglio (eccezione di 2.5.8). In questo sistema non è usata: ogni elemento interattivo rispetta già min-size" }
+  },
+  "focus": {
+    "_nota": "Il focus deve essere visibile su ogni elemento interattivo (WCAG 2.2, 2.4.7 e 2.4.11); colore in color.semantic.<tema>.focus-ring, verificato ≥3:1 contro gli sfondi in cui compare.",
+    "ring-width": { "value": "2px" },
+    "ring-offset": { "value": "2px" },
+    "ring-style": { "value": "solid" }
+  }
+}

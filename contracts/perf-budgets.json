@@ -1,10 +1,23 @@
 {
   "$commento": "Numeri, non aggettivi. La CI fallisce se un budget viene sforato. Rivedili con @performance alla tappa 05.",
+  "$metodo_laboratorio_pagine_pubbliche": {
+    "scopo": "Metodo di misura per lcp_ms_lab_mediana e cls_lab_mediana di pagine_pubbliche (AC39, DV-4). Non riguarda js_iniziale_gzip_kb e css_gzip_kb, misurati direttamente sull'artefatto della build, ne' lcp_ms_p75 e cls_p75, dati di campo.",
+    "strumento": "Playwright, Chromium headless, contro la build di produzione servita in locale (astro preview). Nessun servizio terzo (no PageSpeed Insights, no WebPageTest). LCP e CLS letti con PerformanceObserver nativo del browser: entry largest-contentful-paint per LCP; somma dei value delle entry layout-shift con hadRecentInput=false per CLS, come da definizione standard della metrica.",
+    "dispositivo": "Viewport 360x640 CSS px (lo stesso profilo mobile usato per AC37), CPU throttling 4x applicato via CDP Emulation.setCPUThrottlingRate(4) - preset mobile di riferimento di Lighthouse.",
+    "rete": "Profilo 'Slow 4G' applicato via CDP Network.emulateNetworkConditions: RTT 150 ms, downlink 1.6 Mbps, uplink 750 Kbps - preset pubblico di Lighthouse, non un valore inventato.",
+    "esecuzioni": 5,
+    "statistica": "mediana delle 5 esecuzioni (p50); pratica raccomandata da Lighthouse/web.dev per ridurre il rumore di singola misura (eseguire almeno 3 volte, idealmente 5, e usare la mediana).",
+    "chi_esegue": "L07 (tests/perf/**), sulla build di produzione. Non e' un dato di campo (RUM): e' una misura di laboratorio, ripetibile senza traffico reale."
+  },
   "pagine_pubbliche": {
     "js_iniziale_gzip_kb": 60,
     "css_gzip_kb": 25,
     "lcp_ms_p75": 2000,
-    "cls_p75": 0.05
+    "cls_p75": 0.05,
+    "$nota_dati_di_campo": "lcp_ms_p75 e cls_p75 sono dati di campo (RUM, 75 percentile su traffico reale): non esistono e non si verificano prima del lancio (DV-4). Restano come obiettivo per quando ci sara' traffico; non sono rimossi ne' rinominati (contracts/README.md).",
+    "lcp_ms_lab_mediana": 2500,
+    "cls_lab_mediana": 0.05,
+    "$nota_soglie_lab": "Soglie di laboratorio per AC39/DV-4, verificabili oggi senza traffico reale. Metodo in $metodo_laboratorio_pagine_pubbliche. LCP allineato alla soglia 'good' di Core Web Vitals (2500 ms); CLS allineato al target di campo (0.05), perche' il CLS non risente del throttling di rete/CPU come il LCP e queste pagine non hanno contenuto dinamico iniettato. Motivazione estesa in journal/2026-09-13/194653-performance-decisione.json."
   },
   "area_cliente": {
     "js_iniziale_gzip_kb": 180,
@@ -14,5 +27,6 @@
     "registrazione_p95_ms": 800,
     "conteggio_richieste_p95_ms": 15,
     "query_per_richiesta_max": 4
-  }
+  },
+  "$lettura_ci": "La CI (L12, .github/workflows/site-ci.yml) legge le soglie per chiave da questo file e le confronta con l'output del test di laboratorio di L07 (tests/perf/**), che riporta i valori misurati con le stesse chiavi: pagine_pubbliche.js_iniziale_gzip_kb e pagine_pubbliche.css_gzip_kb dal peso della build; pagine_pubbliche.lcp_ms_lab_mediana e pagine_pubbliche.cls_lab_mediana dalla mediana di 5 esecuzioni con il metodo in $metodo_laboratorio_pagine_pubbliche. Il job fallisce se un valore misurato supera la soglia corrispondente. Le chiavi lcp_ms_p75 e cls_p75 non sono lette dalla CI in questa consegna: sono dati di campo non verificabili senza traffico reale (DV-4)."
 }

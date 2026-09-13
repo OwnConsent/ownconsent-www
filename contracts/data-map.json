@@ -7,7 +7,9 @@
       "finalita": "erogazione del servizio e comunicazioni di servizio",
       "base_giuridica": "contratto",
       "retention": "durata del rapporto + 12 mesi",
-      "destinatari": ["fornitore email transazionali"]
+      "destinatari": [
+        "fornitore email transazionali"
+      ]
     },
     {
       "campo": "ragione_sociale, p_iva, indirizzo_fatturazione",
@@ -15,7 +17,11 @@
       "finalita": "fatturazione",
       "base_giuridica": "obbligo di legge",
       "retention": "10 anni",
-      "destinatari": ["fornitore di pagamento", "commercialista"]
+      "destinatari": [
+        "fornitore di pagamento",
+        "commercialista"
+      ],
+      "note": "Raccolti alla sottoscrizione; nessun dato di pagamento li accompagna."
     },
     {
       "campo": "ip_richiesta",
@@ -29,5 +35,9 @@
   "trasferimenti_extra_ue": [],
   "da_decidere": [
     "In modalità hosted, chi è titolare e chi responsabile del trattamento dei consensi raccolti dall'istanza del cliente."
+  ],
+  "esclusioni_deliberate": [
+    "Dati di pagamento: non raccolti, non salvati, non registrati nei log. L'adattatore finto non produce nemmeno dati che somiglino a carte.",
+    "Fatturazione elettronica (SDI): fuori da questo repository, resta allo strumento esistente."
   ]
 }

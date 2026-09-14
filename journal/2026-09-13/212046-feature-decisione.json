@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-13T21:20:46+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "ADR-0001 annotato come accettato per decisione di Andrea, dalla sessione principale e non da @architect",
+  "contesto": "Dopo R-L01b ADR-0001 diceva ancora «proposta, con obiezione». Andrea ha escluso una ratifica ulteriore; un ADR mergiato con un'obiezione che non esiste più sarebbe falso.",
+  "alternative": [
+    {
+      "opzione": "un altro giro di @architect per aggiornare lo stato",
+      "scartata_perche": "escluso da Andrea («niente ratifica ulteriore») e sarebbe il terzo rimando sullo stesso documento"
+    },
+    {
+      "opzione": "lasciare l'ADR com'è e registrare la decisione solo sulla PR",
+      "scartata_perche": "l'ADR su main affermerebbe un'obiezione aperta; annunciato ad Andrea come comportamento predefinito, senza obiezioni ricevute"
+    }
+  ],
+  "evidenza": [
+    "riga di stato aggiornata mantenendo lo stato precedente come storia",
+    "sezione «Decisione di Andrea su O1r — 2026-09-13» con la decisione alla lettera e il riferimento al commit d5e8331"
+  ],
+  "esito": "applicata sul ramo contracts/perf-budgets-laboratorio; revocabile se Andrea preferisce l'ADR invariato",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-13T21:20:46+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "R-L01b: O1r chiusa (opzione a), tetto di turni superato per la terza volta (circa 18 contro 8)",
+  "contesto": "Giro unico di @performance deciso da Andrea. L'agente dichiara lo sforamento nel report ma non ha scritto la voce di journal per non consumare altri turni: la scrive la sessione principale.",
+  "evidenza": [
+    "token R-L01b: 96041; turni: circa 18 contro tetto 8 (report dell'agente: 7 di lettura, 1 scrittura rifiutata dal sandbox, il resto scrittura, validazione e commit)",
+    "verifica della sessione principale: campi di main invariati, 'Slow 4G' una occorrenza nella frase di non equivalenza, nessun 'peggiore', lcp_ms_lab_mediana 2500, esclusione presente",
+    "consumo misurato verso GL05: 816243 + 96041 = 912284 token",
+    "costo del contratto delle soglie: L01 140930, R-L01 95648, ratifica 75869, R-L01b 96041 = 408488 token, più la parte di L03"
+  ],
+  "cosa_si_e_imparato": "Anche con l'istruzione esplicita di usare lo strumento di scrittura, un giro con tetto 8 ne ha usati 18: il tetto nel prompt è un auspicio, non un limite. Serve un limite applicato dall'ambiente, oppure tetti realistici per gli agenti che leggono molto contesto prima di scrivere.",
+  "esito": "PR-2 pronta per la revisione",
+  "umano_coinvolto": false
+}

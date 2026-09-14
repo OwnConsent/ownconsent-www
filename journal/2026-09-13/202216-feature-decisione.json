@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T20:22:16+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Dopo L03: PR-2 in bozza con obiezioni, due rimandi (R-L01, R-L02), DP-27 su #8, plan.json allineato ad ADR-0002",
+  "contesto": "L03 ha scritto ADR-0002 e ADR-0001; ADR-0001 è «proposta, con obiezione» sul punto LCP; ha trovato l'anello di focus del footer sotto 3:1, un conflitto fra N2 e le pagine legali, e un prerequisito di Node. Il piano citava un solo segnaposto di dominio e non assegnava .gitignore.",
+  "alternative": [
+    {
+      "opzione": "far correggere il contratto a @architect",
+      "scartata_perche": "DP-01: ratificare non è riscrivere, il contratto è di @performance"
+    },
+    {
+      "opzione": "rimando di @design subito",
+      "scartata_perche": "la sezione Contatti dei Termini dipende da DP-27: due giri di @design costerebbero un'invocazione in più"
+    },
+    {
+      "opzione": "aprire PR-2 pronta",
+      "scartata_perche": "con un ADR «con obiezione» il merge non è possibile; in bozza non parte nulla per errore"
+    }
+  ],
+  "evidenza": [
+    "consumo misurato verso GL05: L00 115622 + L11 54182 + L01 140930 + L02 150453 + L03 183539 = 644726 token (prime esecuzioni fallite di L01 e L02 non incluse)",
+    "correzioni a .work/issue-8/plan.json: vedi campo correzioni"
+  ],
+  "esito": "R-L01 da avviare subito; R-L02 dopo la risposta a DP-27; L05 bloccato da DP-28 se la misura conferma Node < 22.12",
+  "umano_coinvolto": false
+}

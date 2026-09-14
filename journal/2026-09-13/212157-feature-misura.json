@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T21:21:57+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Dopo R-L01b: provenienza scritta «realta» senza accento, e firma di d5e8331 non leggibile come trailer",
+  "contesto": "Nel comando di annotazione di ADR-0001 il controllo della provenienza ha stampato False senza fermare il comando (non era fra le condizioni che lo interrompono). Il commento di chiusura su #17 e la sezione di ADR-0001 citavano la frase con l'accento. Il controllo delle firme mostrava firme vuote su d5e8331.",
+  "evidenza": [
+    "$ git show contracts/perf-budgets-laboratorio:contracts/perf-budgets.json | python3 … → ascii(segmento): 'base di laboratorio stabile e non come modello della realta:'",
+    "$ git show -s --format='%(trailers:key=Cantiere-Agent)' d5e8331 → (nessun output); cat -A mostra «Cantiere-Agent: performance» seguito da una riga vuota e dal blocco Co-Authored-By/Claude-Session",
+    "$ git show -s --format='%(trailers:key=Cantiere-Agent)' c603e99 → Cantiere-Agent: orchestrator"
+  ],
+  "cosa_si_e_imparato": "Un controllo che stampa False senza fermare il comando è decorazione: le condizioni che contano vanno nell'assert, oppure l'output va letto prima di pubblicare. Ho pubblicato una citazione dopo che il mio stesso controllo l'aveva smentita.",
+  "esito": "correzione pubblicata come commento aggiuntivo su #17; accento da decidere al merge; storia dei commit non riscritta",
+  "umano_coinvolto": true
+}

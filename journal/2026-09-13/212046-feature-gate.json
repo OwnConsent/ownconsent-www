@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T21:20:46+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "gate",
+  "titolo": "guard-paths blocca il comando di annotazione di ADR-0001 per una barra isolata nella decisione citata alla lettera",
+  "contesto": "Il comando conteneva, in un heredoc, la decisione di Andrea con «150 ms», barra isolata, «1,6 Mbps», barra isolata, «750 kbps». Il testo non è un percorso. Bloccato per intero: nulla eseguito.",
+  "chi_ha_deciso": "hook guard-paths.sh del plugin",
+  "cosa_serviva": "Scrivere testo in prosa in un ADR dentro il progetto",
+  "evidenza": [
+    "PreToolUse:Bash hook error: [/home/andreapernici/src/ownconsent/cantiere/plugins/cantiere/hooks/guard-paths.sh]: GATE: il percorso '/' porta fuori dal progetto (/) — fuori dal perimetro di questa sessione. Se ti serve davvero, chiedilo a una persona invece di aggirarlo.",
+    "comando esatto salvato in scratchpad come comando-bloccato-adr0001.sh"
+  ],
+  "esito": "riformulato secondo la regola di Andrea sul cambio di strumento: falso positivo spiegabile, stessa azione, stesso perimetro. Testi scritti in file con lo strumento di scrittura e letti dal comando; citazione della decisione mantenuta alla lettera",
+  "umano_coinvolto": true
+}

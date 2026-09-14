@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T20:36:38+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "R-L01 chiuso: O1 con motivazione alternativa, O2 dichiarata, N3 aperta; tetto di turni superato ancora (circa 20 contro 8)",
+  "contesto": "Giro nuovo di @performance sulle obiezioni di ADR-0001. Il ramo è stato verificato, inviato e liberato per il giro di ratifica di @architect. Il primo comando di verifica della sessione principale è stato bloccato da guard-paths per una riga di ripiego sbagliata con una risalita verso uno script inesistente: errore della sessione principale, blocco corretto, riga tolta.",
+  "evidenza": [
+    "token R-L01: 95648; consumo misurato verso GL05: 644726 + 95648 = 740374 token",
+    "turni R-L01: circa 20 contro tetto 8 (voce 204000-performance-fallimento.json): nel sandbox della worktree è stato rifiutato anche un heredoc Python da solo",
+    "tetti di turni superati finora: L01 circa 49 su 15, R-L01 circa 20 su 8; rispettati: L00 14 su 25, L02 31 su 40, L03 15 su 25, L11 15 su 15"
+  ],
+  "cosa_si_e_imparato": "Il tetto di turni scritto nel prompt non regge quando l'ambiente rifiuta i modi abituali di scrivere file: va detto nei prompt dei lotti di costruzione, prima di L05, di scrivere i file con lo strumento di scrittura.",
+  "esito": "ramo inviato, commento su #17, worktree rimossa; prossimo: giro di ratifica di @architect su ADR-0001",
+  "umano_coinvolto": false
+}

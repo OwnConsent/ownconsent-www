@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-13T21:08:43+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Decisioni di Andrea: O1r opzione (a), DP-27 indirizzo nelle legali, DP-28 requisito di Node nel repository; due regole nuove",
+  "contesto": "Risposte alle quattro domande dopo la ratifica di ADR-0001 e L03. O1r era una scelta fra (a) valori invariati senza nome e (b) preset DevTools con soglia da rivedere.",
+  "alternative": [
+    {
+      "opzione": "O1r (b), preset Slow 4G di DevTools",
+      "scartata_perche": "Andrea: ri-derivare la soglia senza un sito da misurare sarebbe dedurre, e costerebbe due giri per un numero altrettanto arbitrario"
+    },
+    {
+      "opzione": "DP-27, nessun indirizzo nelle legali (ADR-0002 D7)",
+      "scartata_perche": "art. 13: l'informativa deve identificare il titolare e dare un recapito"
+    },
+    {
+      "opzione": "DP-28, solo installazione sulla macchina",
+      "scartata_perche": "il prossimo che clona sbatte contro lo stesso muro: il requisito va in .nvmrc, engines e tabella dei comandi"
+    }
+  ],
+  "evidenza": [
+    "commento su #17 con la decisione O1r alla lettera",
+    "plan.json: DP-27 e DP-28 decise, DP-29 aperta (oggetto del mailto nelle legali), R-L01b, regola dei giri di ratifica, due regole da aggiungere a docs/HANDOFF.md"
+  ],
+  "regole_nuove": [
+    "cambio di strumento dopo un blocco: lecito solo se l'azione è la stessa, resta nel perimetro e si sa dire perché il blocco era un falso positivo; altrimenti ci si ferma e si chiede",
+    "giri di ratifica: più di due rimandi fra due ruoli sullo stesso documento, il terzo non si fa e si chiede ad Andrea"
+  ],
+  "esito": "R-L01b avviato; R-L02, N2 e ADR-0002 D7 in attesa di DP-29",
+  "umano_coinvolto": true
+}

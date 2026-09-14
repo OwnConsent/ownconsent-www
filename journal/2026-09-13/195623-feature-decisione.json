@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-13T19:56:23+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "L03 parte dopo L02, non subito dopo L01: ADR-0002 decide come i token diventano CSS",
+  "contesto": "Il piano (passo 3) fa partire L03 alla chiusura di L01 anche con L02 in corso. Fra le cose che ADR-0002 deve decidere c'è «come i token di contracts/design-tokens.json diventano CSS senza valori scritti a mano», e quel file lo sta scrivendo L02. L01 è chiuso; L02 no.",
+  "alternative": [
+    {
+      "opzione": "L03 subito, come da piano",
+      "scartata_perche": "ADR-0002 deciderebbe su un formato di token che non esiste ancora: rischio di un secondo giro di @architect (un'invocazione in più, circa 150 mila token)"
+    },
+    {
+      "opzione": "due invocazioni di L03: ADR-0001 ora, ADR-0002 dopo L02",
+      "scartata_perche": "un'invocazione in più per guadagnare solo tempo; PR-2 resta comunque ferma a G1 fino al merge"
+    }
+  ],
+  "evidenza": [
+    "lotto L03 in .work/issue-8/plan.json: adr_previsti[1].deve_decidere contiene la trasformazione token→CSS",
+    "consumo misurato verso GL05: L00 115622, L11 54182, L01 (seconda esecuzione) 140930 = 310734 token; prime esecuzioni di L01 e L02 fallite senza token riportati",
+    "L01: circa 49 turni contro tetto 15 (voce 195303-performance-fallimento.json), token entro la media di 151679 per invocazione"
+  ],
+  "esito": "L03 in attesa della chiusura di L02; PR-2 si apre dopo ADR-0001",
+  "umano_coinvolto": false
+}

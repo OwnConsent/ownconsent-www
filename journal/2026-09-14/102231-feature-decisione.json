@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-14T10:22:31+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L02, L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "DP-29 decisa: nessun oggetto precompilato nel mailto delle pagine legali; due regole di metodo confermate",
+  "contesto": "Dopo DP-27 (indirizzo nelle pagine legali, art. 13) restava l'oggetto del mailto. Andrea ha deciso, e ha confermato le regole sui giri di ratifica e sul commit del journal della sessione principale.",
+  "alternative": [
+    {
+      "opzione": "oggetto fisso nelle pagine legali (per esempio Privacy)",
+      "scartata_perche": "Andrea: il recapito è del titolare per le richieste sui dati, un oggetto commerciale su una richiesta privacy è fuori luogo"
+    },
+    {
+      "opzione": "stesso oggetto per modalità anche sulle legali",
+      "scartata_perche": "le pagine legali non hanno una modalità"
+    }
+  ],
+  "evidenza": [
+    "decisione in chat, registrata come commento su #8",
+    "R-L02 avviato con DP-27 e DP-29 alla lettera",
+    "hook corretti da Andrea: trailer nell'ultimo paragrafo; -m, --body e --title non letti come percorsi; .claude/* in .gitignore"
+  ],
+  "regole_confermate": [
+    "più di due rimandi fra due ruoli sullo stesso documento: il terzo giro non si fa, ci si ferma e si chiede ad Andrea (quattro giri sulle soglie sono costati 408488 token)",
+    "le voci di journal della sessione principale si committano con la prossima PR, non alla fine"
+  ],
+  "esito": "R-L02 in corso; N2 della spec e ADR-0002 D7 da allineare con una PR dedicata",
+  "umano_coinvolto": true
+}

@@ -73,6 +73,20 @@ IVA e dati di pagamento restano fuori, deliberatamente.
 | Build API | `cd api && go build ./...` |
 | E2E | `pnpm exec playwright test` |
 
+**Toolchain, misurata il 14/09 su WSL2:**
+
+    node -v   ->  v22.23.2
+    pnpm -v   ->  12.4.1
+
+`.nvmrc` porta la versione esatta. Il minimo del progetto e' Node >= 22.12: sotto quella
+Astro 5 non parte. Quando `@frontend` crea `site/package.json`, ci mette anche:
+
+    "engines":        { "node": ">=22.12.0", "pnpm": ">=12" }
+    "packageManager": "pnpm@12.4.1"
+
+Il secondo campo non e' decorativo: corepack lo legge e blocca chi arriva con un pnpm
+diverso, invece di lasciargli rigenerare il lockfile.
+
 ## Metodo — non negoziabile
 
 Queste regole vengono da sei settimane sul prodotto. Sono state pagate una volta.

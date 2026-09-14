@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-13T20:17:14+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "gate",
+  "adr": "ADR-0002",
+  "titolo": "Anello di focus nel footer sotto 3:1 anche con lo scarto di 2 px: serve un valore di colore di @design prima di L05",
+  "contesto": "ADR-0002 D6 garantisce lo scarto focus.ring-offset su ogni elemento focalizzabile con un @layer e !important. Lo scarto fa toccare all'anello lo sfondo del genitore. Nel footer, che ha tre link focalizzabili, lo sfondo è bg-inverse: la verifica dei contrasti di L02 controlla l'anello solo contro bg-canvas e bg-surface.",
+  "evidenza": [
+    "output del calcolo WCAG (voce misura 200922-architect-misura-2.json): light ring/inverse(footer) 2.38, dark ring/inverse 1.87",
+    "docs/design/00-sistema-e-componenti.md sul ramo design/token-pagine-pubbliche: focus-ring «calcolato ≥3:1 contro bg-canvas e bg-surface»"
+  ],
+  "chi_ha_deciso": "architect: il gate non ferma questo lotto, perché la struttura non può correggere un colore. Ferma L05 sul footer finché @design non dà un valore, e decide la sessione principale con Andrea",
+  "cosa_serviva": "un token o una regola di @design per l'anello di focus su bg-inverse con contrasto >= 3:1 in entrambi i temi (WCAG 1.4.11), in contracts/design-tokens.json. Divergenza di classe 2 di CLAUDE.md",
+  "esito": "riportato nel report e in ADR-0002 D6 come vincolo aperto; design-tokens.json non toccato",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 7
+}

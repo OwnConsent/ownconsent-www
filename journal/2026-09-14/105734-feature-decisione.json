@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-14T10:57:34+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Regole portate in docs/HANDOFF.md: rami da origin/main, cambio di strumento, due giri di ratifica, turni solo misurati",
+  "contesto": "Andrea ha deciso che nessun agente lavora su un ramo che non discende da origin/main aggiornato (verifica con git merge-base --is-ancestor, rifiuto se falso) e che i turni non si riportano mai stimati. Le altre due regole erano in sospeso in plan.json fino al primo lotto che toccasse HANDOFF.md.",
+  "alternative": [
+    {
+      "opzione": "controllo della sessione principale prima di ogni giro",
+      "scartata_perche": "Andrea: non si risolve con un controllo personale ma con una regola del protocollo che vale per tutti"
+    },
+    {
+      "opzione": "regole solo in plan.json e nel journal",
+      "scartata_perche": "il journal registra, non governa; plan.json vale solo per la consegna 1"
+    }
+  ],
+  "evidenza": [
+    "git diff --stat origin/main design/token-pagine-pubbliche -- githooks → githooks/prepare-commit-msg | 14 +-------------",
+    "R-L02: 81 chiamate di strumento dichiarate come «circa 15-16 turni»",
+    "giri sulle soglie: 408488 token"
+  ],
+  "esito": "PR su docs/HANDOFF.md; rimosse da da_aggiungere_a_handoff in plan.json",
+  "umano_coinvolto": true
+}

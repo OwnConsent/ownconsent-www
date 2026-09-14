@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-14T10:31:44+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Le worktree su rami nati prima di d03b5b4 usano il prepare-commit-msg vecchio: firme scritte a mano non lette",
+  "contesto": "core.hooksPath=githooks è relativo: in una worktree git esegue l'hook della versione del ramo in checkout, non quella di main. Il ramo design/token-pagine-pubbliche è nato da 32272db, prima della correzione delle firme.",
+  "evidenza": [
+    "$ git diff --stat origin/main design/token-pagine-pubbliche -- githooks → githooks/prepare-commit-msg | 14 +-------------",
+    "$ git log --oneline -1 origin/main -- githooks/prepare-commit-msg → d03b5b4 fix(signature): normalise the message so trailers land in the last paragraph (#18)",
+    "firma di 04d7718 vuota; commit di journal di R-L02 firmati orchestrator, con .work/.current-agent che diceva orchestrator durante il lavoro di @design"
+  ],
+  "cosa_si_e_imparato": "Un giro su un ramo esistente eredita gli strumenti di quel ramo, hook compresi: prima di delegare su un ramo vecchio va controllato se githooks/ è indietro rispetto a main. Il marcatore del ruolo nelle worktree resta un problema separato, da riportare a chi mantiene gli hook.",
+  "esito": "misura pubblicata su #15; nessuna correzione della storia",
+  "umano_coinvolto": false
+}

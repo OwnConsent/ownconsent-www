@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-14T10:31:11+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "R-L02 verificato: contrasti del footer a 8,80:1 e 6,91:1, legali senza oggetto; firme non leggibili o come orchestrator; turni dichiarati non credibili",
+  "contesto": "Giro nuovo di @design sulla PR #15 dopo L03, DP-27 e DP-29.",
+  "evidenza": [
+    "token R-L02: 152893; tool_uses riportati dall'harness: 81; l'agente dichiara «stimati circa 15-16 turni», incompatibile con 81 chiamate di strumento",
+    "contrast-check.py rieseguito dalla sessione principale: TUTTE LE COPPIE OBBLIGATORIE PASSANO; footer chiaro #F0AA2E su #17191C 8.80:1, scuro #7A4B00 su #F6F7F8 6.91:1",
+    "01-pagine.md: 3 mailto con oggetto (SaaS, Hosted, On-premise), gli altri senza; nessun ownconsent.example; nessun URL senza barra finale",
+    "firme: 04d7718 vuota (riga scritta a mano, contro l'istruzione), commit di journal firmati orchestrator",
+    "consumo misurato verso GL05: 912284 + 152893 = 1065177 token"
+  ],
+  "esito": "ramo inviato, commento su #15, worktree rimossa; causa delle firme da confrontare con la versione di githooks sul ramo",
+  "umano_coinvolto": false
+}

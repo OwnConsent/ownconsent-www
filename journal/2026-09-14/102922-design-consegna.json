@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-14T10:29:22+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "R-L02",
+  "tipo": "consegna",
+  "titolo": "Giro R-L02 chiuso: 5 correzioni applicate su design-tokens.json e docs/design/**",
+  "contesto": "Compito ristretto a cinque correzioni sul ramo design/token-pagine-pubbliche (issue #8, PR #15), partendo dal commit e9fc6a9. Nessuna altra modifica.",
+  "dod_soddisfatta": [
+    "1. Anello di focus nel footer: nuovo alias focus-ring-on-inverse (amber.300 in chiaro, amber.700 in scuro), aggiunto fra le coppie obbligatorie di contrast-check.py, entrambe PASS (8.80:1 chiaro, 6.91:1 scuro contro 3:1 richiesto).",
+    "2. border.width (1px) aggiunto in contracts/design-tokens.json e usato in 00-sistema-e-componenti.md ovunque la spec parlava di bordi (carta modalità, tabella di confronto, righe/blocchi sotto 400px).",
+    "3. 01-pagine.md allineato ad ADR-0002 D2 (barra finale su tutti gli URL delle 8 rotte) e D3 (indirizzo di contatto sul segnaposto della casella .invalid, dominio del sito su segnaposto .example distinto, citato dove si parla di canonical/sitemap).",
+    "4. Pagine legali: informativa privacy e sezione Contatti dei Termini identificano il titolare (segnaposto 'ragione sociale e sede da definire') e danno lo stesso recapito di N2 con mailto senza ?subject= (DP-27, DP-29); l'oggetto precompilato resta solo su SaaS/Hosted/On-premise; annotata come previsione non applicata l'ipotesi di un recapito DPO distinto.",
+    "5. Nota di contrast-check.py sulla coppia focus-ring/brand-bg riscritta per citare ADR-0002 D6 come garanzia strutturale; non aggiunta fra le coppie obbligatorie, come richiesto.",
+    "JSON valido: python3 -c \"import json; json.load(open('contracts/design-tokens.json'))\" -> OK.",
+    "python3 docs/design/contrast-check.py -> TUTTE LE COPPIE OBBLIGATORIE PASSANO (37 coppie, incluse le 2 nuove).",
+    "Zero occorrenze di 'ownconsent.example' e zero URL delle 8 pagine senza barra finale in 01-pagine.md, verificato con script (non a occhio).",
+    "mailto: 3 con ?subject= (SaaS, Hosted, On-premise), 3 senza (Termini, Informativa privacy, Cookie policy)."
+  ],
+  "evidenza": [
+    "commit 04d7718: le cinque correzioni",
+    "commit e8e62bf, ffda5ea: registrazione di un mio errore di processo (vedi 102821-design-fallimento.json e 102853-design-misura.json) — ho scritto a mano la riga Cantiere-Agent nel primo commit, contro l'istruzione esplicita del giro; la verifica sui commit successivi (senza riga scritta a mano) mostra che il hook la firma con 'orchestrator', non 'design' — non corretto, come richiesto dal giro in questo caso"
+  ],
+  "esito": "chiusa",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": 420
+}

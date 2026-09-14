@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-13T19:46:00+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Nessun Figma nel repository: il sistema visivo nasce in L02, primitive neutre + brand con alias semantici, tema chiaro e scuro insieme, solo font di sistema",
+  "contesto": "Cercato un riferimento a un artefatto di design esistente prima di disegnare: `grep -ril figma` nel repository trova solo la configurazione del server MCP figma (.mcp.json, con FIGMA_API_KEY da variabile d'ambiente non impostata in questo ambiente) e nessun file .fig, screenshot o link committato altrove (docs/spec/issue-8.json, plan.json, CLAUDE.md). Non esiste site/ né docs/design/: nessun sistema visivo precedente da riusare. Il lotto L02 del piano prevede esplicitamente questo caso: 'se non esiste, il documento nasce qui'.",
+  "alternative": [
+    { "opzione": "fermarsi e aprire una domanda in attesa di un file Figma", "scartata_perche": "il piano non lo richiede come precondizione di L02 e bloccherebbe il lotto entro il tetto di turni senza motivo: la nota del lotto ammette esplicitamente l'assenza di Figma" },
+    { "opzione": "usare una palette e una tipografia prese di peso da un framework esistente (es. i valori di default di un framework CSS diffuso) senza calcolo proprio dei contrasti", "scartata_perche": "viola 'misura, non dedurre': userei rapporti di contrasto altrui, calcolati per usi diversi dai miei (badge, link su sfondo brand, focus ring), senza garanzia che reggano qui" },
+    { "opzione": "caratteri esterni (es. un webfont self-hosted) per un look più caratterizzato", "scartata_perche": "AC10 vieta richieste verso origini diverse da quella del sito, e un file di font aumenta il peso della pagina contro i budget di contracts/perf-budgets.json; pile di font di sistema soddisfano entrambi senza compromessi visibili su un sito di contenuto" },
+    { "opzione": "definire prima il tema chiaro e rimandare lo scuro a un lotto successivo", "scartata_perche": "la definizione chiaro+scuro insieme evita la deriva dei contrasti che si scopre solo quando si aggiunge il secondo tema più tardi; i due temi nascono nello stesso file con gli stessi alias semantici, anche se la messa in produzione della commutazione tema è una scelta di ADR-0002/L05 fuori dal mio perimetro" },
+    { "opzione": "token di colore per componente (es. un colore dedicato alla tabella di confronto, uno al blocco di chiusura, uno ai badge)", "scartata_perche": "proliferazione di token: uso una scala primitiva neutra (gray) più un'unica tinta di brand (blue), con alias semantici (bg-canvas, text-primary, brand-bg, ...) che i componenti condividono; due colori di accento distinti solo per i due contrassegni testuali (amber per «pagina dimostrativa», violet per «bozza»), perché portano un significato diverso e non vanno confusi" },
+    { "opzione": "token di errore/danger nella prima versione", "scartata_perche": "nessun componente di questa consegna ha uno stato di errore (niente moduli, niente form; il modulo di contatto è un non-goal di questa consegna): un token senza consumatore in questa consegna violerebbe la stessa regola anti-proliferazione. Si aggiunge quando la pagina di contatto (consegna 3) ne avrà bisogno." }
+  ],
+  "evidenza": [
+    "comando: grep -ril figma /home/andreapernici/src/ownconsent/www --include=*.md --include=*.json",
+    "esito: solo .mcp.json (configurazione del server, nessun artefatto di design)",
+    "comando: ls site/ docs/design/ docs/adr/",
+    "esito: site/ non esiste, docs/design/ non esiste, docs/adr/ contiene solo il template"
+  ],
+  "esito": "applicata: procedo a definire contracts/design-tokens.json da zero con scala neutra + brand, contrasti calcolati con script, entrambi i temi insieme, solo font di sistema",
+  "umano_coinvolto": false,
+  "turni_contati_fin_qui": 10
+}

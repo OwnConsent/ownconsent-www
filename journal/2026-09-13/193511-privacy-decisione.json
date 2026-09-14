@@ -1,0 +1,43 @@
+{
+  "ts": "2026-09-13T19:35:11+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L11",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Retention proposta per le email ricevute via mailto: 12 mesi dall'ultimo messaggio scambiato, se non ne nasce un contratto",
+  "contesto": "DP-20: il mailto porta nella casella di contatto l'indirizzo del mittente e ciò che sceglie di scrivere. Finalità e base giuridica sono decise (rispondere a una richiesta commerciale; misure precontrattuali); la retention la propone @privacy e la approva una persona. Schema di data-map.json: 'dove' è testo libero, quindi il trattamento fuori dal sito entra senza cambiare campi; accesso interno e titolare non hanno un campo e vanno in 'note', campo facoltativo già usato. Nessun gate di schema.",
+  "alternative": [
+    {
+      "opzione": "6 mesi dall'ultimo messaggio",
+      "scartata_perche": "i clienti sono web agency e publisher, che spesso decidono sul budget dell'anno: una trattativa ferma per un trimestre o due può ripartire, e cancellare a 6 mesi toglierebbe il contesto proprio mentre la misura precontrattuale serve ancora"
+    },
+    {
+      "opzione": "24 mesi dall'ultimo messaggio",
+      "scartata_perche": "oltre un ciclo di budget la trattativa non è più in corso: tenere i dati servirebbe a ricontattare, cioè a una finalità diversa (marketing) con un'altra base giuridica, che non è dichiarata"
+    },
+    {
+      "opzione": "10 anni (prescrizione ordinaria), per difendersi in giudizio",
+      "scartata_perche": "difendere un diritto in giudizio è un'altra finalità, con base nel legittimo interesse. Non la si dichiara nascosta dentro questa voce: se serve, si apre una voce a parte, limitata ai messaggi che la giustificano"
+    },
+    {
+      "opzione": "nessuna scadenza: resta finché resta la casella",
+      "scartata_perche": "viola la limitazione della conservazione (art. 5.1.e GDPR); una casella senza regola di cancellazione è di fatto una conservazione illimitata"
+    },
+    {
+      "opzione": "retention legata a quella della voce 'email' (durata del rapporto + 12 mesi)",
+      "scartata_perche": "i nomi suonano uguali ma i dati sono diversi: quella è l'email dell'account SaaS, con base contrattuale. Chi scrive al contatto spesso non diventa cliente, e per Hosted e On-premise l'account nemmeno esiste"
+    }
+  ],
+  "evidenza": [
+    "contracts/data-map.json su origin/main: 3 voci in 'campi', schema campo/dove/finalita/base_giuridica/retention/destinatari/note",
+    "docs/adr/ contiene solo 0000-template.md: ADR-0002, che sceglie il segnaposto della casella, non esiste ancora",
+    "docs/spec/issue-8.json segnaposto_dichiarati: identità del titolare e retention della casella senza valore"
+  ],
+  "esito": "proposta, da approvare da una persona (regola 7). Se ne nasce un contratto, la corrispondenza utile passa alla retention del rapporto, da dichiarare quando esiste (consegna 3). La cancellazione sta fuori dal sito, quindi non si verifica dal repository: serve una regola nella casella o un controllo manuale periodico",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non misurati per singola voce",
+  "trascritta_dopo": false
+}

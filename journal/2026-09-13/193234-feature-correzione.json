@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T19:32:34+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "correzione",
+  "corregge": "2026-09-13/185801-product-spec-fallimento.json",
+  "cosa_era_sbagliato": "La voce riassume i comandi bloccati («cd /home/andreapernici/src/ownconsent/www; cat ...») invece di copiarli: l'argomento è omesso e non si possono rifare. La regola di CLAUDE.md chiede il comando e il suo output, non la descrizione.",
+  "come_lo_so": "Andrea ha chiesto i due comandi esatti copiati dal journal e la voce non li conteneva. I comandi originali di L00 sono solo nella trascrizione dell'agente e non sono stati ricostruiti. Al loro posto, riproduzione dalla sessione principale con un comando esatto della stessa forma, dentro il progetto, e output dell'hook copiato alla lettera.",
+  "evidenza": [
+    "$ cd /home/andreapernici/src/ownconsent/www; cat CLAUDE.md | head -1",
+    "PreToolUse:Bash hook error: [/home/andreapernici/src/ownconsent/cantiere/plugins/cantiere/hooks/guard-paths.sh]: GATE: il percorso '/home/andreapernici/src/ownconsent/www;' porta fuori dal progetto (/home/andreapernici/src/ownconsent/www;) — fuori dal perimetro di questa sessione. Se ti serve davvero, chiedilo a una persona invece di aggirarlo.",
+    "riproduzione del 2026-09-13 intorno alle 19:20 +02:00, prima della correzione dell'hook"
+  ],
+  "esito": "la voce 185801 resta com'è; questa aggiunge il comando esatto riprodotto e l'output. guard-paths è stato poi corretto da Andrea (segmenta sui separatori di shell prima di tokenizzare; suite a 38 casi)."
+}

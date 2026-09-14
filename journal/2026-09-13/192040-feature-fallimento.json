@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-13T19:20:40+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L00",
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "Due commit su spec/issue-8 senza firma Cantiere-Agent: marcatore cancellato a mano in precedenza",
+  "contesto": "Prima del commit della spec avevo scritto e poi cancellato .work/.current-agent attorno ai miei commit. Il file lo gestiscono gli hook (session-start scrive orchestrator, SubagentStart il ruolo, SubagentStop orchestrator, Stop lo cancella). Dopo la cancellazione nessun hook lo ha riscritto prima dei commit successivi, e prepare-commit-msg non firma senza marcatore.",
+  "evidenza": [
+    "$ git log --format='%h %s | %(trailers:key=Cantiere-Agent,valueonly,separator=)' -2",
+    "17ced57 docs(journal): aggiornamento della spec della consegna 1 su #13 | ",
+    "642e8d5 docs(spec): due domini distinti e obbligo manuale sulle promesse SaaS | ",
+    "commit già inviati su origin/spec/issue-8 (PR #13)"
+  ],
+  "cosa_si_e_imparato": "Gestire a mano un file che gli hook gestiscono non corregge un problema: ne crea uno nuovo più tardi. Il marcatore non si scrive e non si cancella dalla sessione; se una firma manca, si segnala invece di riparare a mano.",
+  "esito": "non corretto: nessun amend su commit inviati; segnalato ad Andrea prima del merge di #13",
+  "umano_coinvolto": true
+}

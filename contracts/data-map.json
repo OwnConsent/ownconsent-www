@@ -30,6 +30,17 @@
       "base_giuridica": "legittimo interesse",
       "retention": "30 giorni in forma pseudonimizzata",
       "note": "Da valutare con @privacy alla tappa 05: il conteggio potrebbe non richiedere l'IP."
+    },
+    {
+      "campo": "indirizzo email del mittente e contenuto del messaggio (ciò che chi scrive sceglie di mettere: nome, azienda, testo)",
+      "dove": "casella di contatto [SEGNAPOSTO_CASELLA_CONTATTO], fuori dal sito: il sito non raccoglie, non memorizza e non trasmette alcun dato, il link mailto: apre il client di posta di chi scrive",
+      "finalita": "rispondere a una richiesta commerciale",
+      "base_giuridica": "misure precontrattuali",
+      "retention": "12 mesi dall'ultimo messaggio scambiato, se non ne nasce un contratto",
+      "destinatari": [
+        "fornitore della casella di posta [SEGNAPOSTO_FORNITORE_CASELLA]"
+      ],
+      "note": "Lotto L11, DP-20. Retention proposta da @privacy, da approvare da una persona. Perché 12 mesi: copre un ciclo di budget annuale di agency e publisher, così una trattativa ferma può ripartire; oltre quel tempo tenere i dati servirebbe a ricontattare, che è un'altra finalità e non è dichiarata. Se ne nasce un contratto, la corrispondenza utile passa alla retention del rapporto, da dichiarare quando esiste. Difendersi in giudizio non rientra in questa voce: se serve, è una voce a parte. Titolare: [SEGNAPOSTO_TITOLARE — ragione sociale e sede, le comunica Andrea]. Accesso: solo chi gestisce le richieste commerciali per conto del titolare. Nome e dominio della casella sono segnaposto dichiarati nella spec (valore stabilito da ADR-0002). Il fornitore della casella non è scelto: se tratta i dati fuori UE, va aggiunto a trasferimenti_extra_ue. Categorie particolari di dati non sono richieste: se chi scrive le include, non si usano. La cancellazione avviene fuori dal sito e non si verifica dal repository: serve una regola nella casella o un controllo manuale periodico."
     }
   ],
   "trasferimenti_extra_ue": [],

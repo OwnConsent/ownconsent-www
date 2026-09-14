@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-14T10:24:29+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "R-L02",
+  "tipo": "misura",
+  "titolo": "python3 docs/design/contrast-check.py dopo l'aggiunta di focus-ring-on-inverse e border.width",
+  "contesto": "Verifica che le due nuove coppie obbligatorie del footer (focus-ring-on-inverse/bg-inverse, chiaro e scuro) passino la soglia 3:1 di WCAG 1.4.11, e che nessuna coppia esistente sia stata rotta dall'aggiunta del token border.width.",
+  "evidenza": [
+    "comando: python3 docs/design/contrast-check.py",
+    "output rilevante: 'chiaro: focus ring su inverse (componente UI, footer)  #F0AA2E / #17191C   8.80:1   3.0:1  PASS'",
+    "output rilevante: 'scuro: focus ring su inverse (componente UI, footer)   #7A4B00 / #F6F7F8   6.91:1   3.0:1  PASS'",
+    "riga finale: 'TUTTE LE COPPIE OBBLIGATORIE PASSANO'",
+    "37 coppie totali verificate (35 preesistenti + 2 nuove), tutte PASS"
+  ],
+  "esito": "conferma",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

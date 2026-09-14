@@ -99,7 +99,7 @@ principale di una pagina legale non li cita nel testo.
 |---|---|
 | default | `text-on-inverse`, sottolineato (su sfondo scuro la sottolineatura è il segnale primario, il colore da solo non basta) |
 | hover | colore `text-link` alla stessa luminosità del tema attivo, sottolineatura mantenuta |
-| focus | anello visibile, stesso token del resto del sito |
+| focus | anello visibile, colore `focus-ring-on-inverse` (non `focus-ring`): qui l'elemento accanto all'anello è sempre `bg-inverse`, e `focus-ring` da solo scende sotto 3:1 contro quello sfondo (2,38:1 in chiaro, 1,87:1 in scuro) — vedi `docs/design/contrast-check.py` |
 | active | invariato rispetto a default salvo pressione visiva (leggero spostamento non necessario: nessuna animazione) |
 | disabled / loading / error | non applicabile, come per la navigazione |
 
@@ -194,8 +194,8 @@ d'esempio che assomigli a un prezzo.
 concettuale delle sezioni di SaaS/Hosted/On-premise.
 
 ### Anatomia
-- Contenitore `bg-surface-raised`, bordo `border-default`, `radius.md`, padding
-  `spacing.6`.
+- Contenitore `bg-surface-raised`, bordo `border.width` `border-default`, `radius.md`,
+  padding `spacing.6`.
 - Titolo (`h3`, `font-size.400`): nome della modalità.
 - Tre righe etichetta/valore: «Cosa ricevi», «Come paghi», «Chi registra la CMP presso
   IAB Europe».
@@ -205,8 +205,8 @@ concettuale delle sezioni di SaaS/Hosted/On-premise.
 ### Stati
 | Stato | Comportamento |
 |---|---|
-| default | bordo `border-default` |
-| hover (sulla carta intera, se l'intera carta è cliccabile in Home) | bordo `border-strong`, nessuno spostamento |
+| default | bordo `border.width` `border-default` |
+| hover (sulla carta intera, se l'intera carta è cliccabile in Home) | bordo `border.width` `border-strong`, nessuno spostamento |
 | focus (sul link «Scopri di più» dentro la carta) | anello visibile sul link, non sulla carta: la carta stessa non è un elemento interattivo, lo è solo il link al suo interno |
 | active | invariato salvo il link, che passa a `text-on-brand`/`brand-bg-active` se reso come bottone, oppure a `text-link` se reso come link testuale |
 | disabled | non applicabile |
@@ -259,12 +259,12 @@ tabellare a un layout a blocchi con solo CSS, mantenendo il markup `<table>` int
 - Ogni `td` porta un attributo `data-etichetta` col nome di colonna (SaaS, Hosted,
   On-premise), scritto nel markup e non aggiunto da JavaScript, mostrato con
   `::before { content: attr(data-etichetta) }`.
-- Ogni riga della tabella diventa un blocco con bordo `border-default`, `radius.md`,
-  padding `spacing.4`, distanza `spacing.6` dal blocco successivo.
+- Ogni riga della tabella diventa un blocco con bordo `border.width` `border-default`,
+  `radius.md`, padding `spacing.4`, distanza `spacing.6` dal blocco successivo.
 
 ### Responsive — da `breakpoint.lg` (1280px)
 Tabella resa come tabella: colonna delle etichette a sinistra (`bg-surface`), tre colonne
-di valori, righe separate da `border-default`.
+di valori, righe separate da un bordo `border.width` `border-default`.
 
 ### Contenuto reale d'esempio
 ```

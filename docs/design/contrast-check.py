@@ -64,6 +64,7 @@ PAIRS = [
     ("chiaro: bordo forte su canvas (componente UI)", "border-strong", "bg-canvas", 3.0),
     ("chiaro: focus ring su canvas (componente UI)", "focus-ring", "bg-canvas", 3.0),
     ("chiaro: focus ring su surface (componente UI)", "focus-ring", "bg-surface", 3.0),
+    ("chiaro: focus ring su inverse (componente UI, footer)", "focus-ring-on-inverse", "bg-inverse", 3.0),
     ("chiaro: sfondo brand su canvas (componente UI, bottone)", "brand-bg", "bg-canvas", 3.0),
     # --- tema scuro ---
     ("scuro: testo primario su canvas", "text-primary", "bg-canvas", 4.5),
@@ -82,15 +83,20 @@ PAIRS = [
     ("scuro: bordo forte su canvas (componente UI)", "border-strong", "bg-canvas", 3.0),
     ("scuro: focus ring su canvas (componente UI)", "focus-ring", "bg-canvas", 3.0),
     ("scuro: focus ring su surface (componente UI)", "focus-ring", "bg-surface", 3.0),
+    ("scuro: focus ring su inverse (componente UI, footer)", "focus-ring-on-inverse", "bg-inverse", 3.0),
     ("scuro: sfondo brand su canvas (componente UI, bottone)", "brand-bg", "bg-canvas", 3.0),
 ]
 
-# Nota sul focus ring: non si verifica la coppia focus-ring/brand-bg. Il token
-# focus.ring-offset (2px, in contracts/design-tokens.json) allontana sempre
-# l'anello dal riempimento colorato dell'elemento: il colore adiacente
-# all'anello, sia dentro sia fuori, è sempre bg-canvas o bg-surface (già
-# verificati sopra), mai il riempimento del bottone stesso. Nessun componente
-# di questa consegna disegna il focus ring senza quell'offset.
+# Nota sul focus ring: non si verifica la coppia focus-ring/brand-bg, e non è
+# fra le coppie obbligatorie sopra. La garanzia non è di colore ma strutturale:
+# ADR-0002 D6 impone lo scarto (focus.ring-offset, 2px) dentro un `@layer`
+# dichiarato prima di ogni altro stile, così l'anello del bottone tocca sempre
+# bg-canvas o bg-surface (già verificati sopra), mai brand-bg direttamente.
+# Nessun componente di questa consegna può disegnare quel focus ring senza
+# quello scarto: per questo qui non c'è un valore di colore da controllare.
+# Il footer è il solo caso reale in cui l'anello è adiacente a uno sfondo di
+# superficie diverso da canvas/surface (bg-inverse), e per quello la coppia
+# sopra (focus-ring-on-inverse/bg-inverse) è obbligatoria.
 
 
 def main() -> int:

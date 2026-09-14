@@ -79,7 +79,8 @@
         "badge-demo-text": { "value": "#4A2C00", "primitivo": "amber.900", "uso": "testo del contrassegno «pagina dimostrativa»" },
         "badge-draft-bg": { "value": "#DFC9F5", "primitivo": "violet.100", "uso": "sfondo del contrassegno «bozza»" },
         "badge-draft-text": { "value": "#331755", "primitivo": "violet.900", "uso": "testo del contrassegno «bozza»" },
-        "focus-ring": { "value": "#7A4B00", "primitivo": "amber.700", "uso": "anello di focus visibile su ogni elemento interattivo" }
+        "focus-ring": { "value": "#7A4B00", "primitivo": "amber.700", "uso": "anello di focus visibile su ogni elemento interattivo" },
+        "focus-ring-on-inverse": { "value": "#F0AA2E", "primitivo": "amber.300", "uso": "anello di focus sopra bg-inverse (footer): focus-ring da solo scende a 2,38:1 contro bg-inverse, sotto il 3:1 di WCAG 1.4.11 perché lì il colore adiacente all'anello è proprio bg-inverse (ADR-0002 D6); questo alias riusa il primitivo amber.300, già nel sistema come focus-ring del tema scuro, invece di introdurne uno nuovo" }
       },
       "dark": {
         "bg-canvas": { "value": "#0E0F11", "primitivo": "gray.950", "uso": "sfondo di pagina" },
@@ -101,7 +102,8 @@
         "badge-demo-text": { "value": "#FFE3AD", "primitivo": "amber.100", "uso": "testo del contrassegno «pagina dimostrativa»" },
         "badge-draft-bg": { "value": "#331755", "primitivo": "violet.900", "uso": "sfondo del contrassegno «bozza»" },
         "badge-draft-text": { "value": "#DFC9F5", "primitivo": "violet.100", "uso": "testo del contrassegno «bozza»" },
-        "focus-ring": { "value": "#F0AA2E", "primitivo": "amber.300", "uso": "anello di focus visibile su ogni elemento interattivo" }
+        "focus-ring": { "value": "#F0AA2E", "primitivo": "amber.300", "uso": "anello di focus visibile su ogni elemento interattivo" },
+        "focus-ring-on-inverse": { "value": "#7A4B00", "primitivo": "amber.700", "uso": "anello di focus sopra bg-inverse (footer): focus-ring da solo scende a 1,87:1 contro bg-inverse, sotto il 3:1 di WCAG 1.4.11 perché lì il colore adiacente all'anello è proprio bg-inverse (ADR-0002 D6); questo alias riusa il primitivo amber.700, già nel sistema come focus-ring del tema chiaro, invece di introdurne uno nuovo" }
       }
     }
   },
@@ -150,6 +152,10 @@
     "md": { "value": "8px", "uso": "carte modalità, link mailto in stile bottone" },
     "lg": { "value": "16px", "uso": "blocco di chiusura, sezioni con sfondo alternato" },
     "full": { "value": "9999px", "uso": "contrassegni «pagina dimostrativa» e «bozza» (forma a pillola)" }
+  },
+  "border": {
+    "_nota": "Un solo spessore per ogni bordo dichiarato dai componenti: la differenza fra default e forte è di colore (border-default/border-strong in color.semantic), non di spessore.",
+    "width": { "value": "1px", "uso": "spessore di ogni bordo: carte modalità, tabella di confronto (righe e blocchi sotto 400px), separatori" }
   },
   "breakpoint": {
     "_nota": "min-width, CSS px. Base a 360px (il più stretto verificato da AC37); nessun breakpoint sotto i 360px: sotto quella soglia si applica comunque il layout di base, mai scorrimento orizzontale.",

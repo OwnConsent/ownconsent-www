@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-14T10:22:45+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "R-L02",
+  "tipo": "decisione",
+  "titolo": "Nuovo token semantico focus-ring-on-inverse per l'anello di focus del footer, riusando i primitivi amber già esistenti",
+  "contesto": "ADR-0002 D6 (letto da origin/main) documenta che lo scarto di 2px del focus ring è garantito strutturalmente dal layer @layer focus di @frontend, ma segnala un vincolo aperto per @design: sul footer (bg-inverse) il colore accanto all'anello è proprio bg-inverse, quindi lo scarto da solo non basta a garantire il 3:1 di WCAG 1.4.11. Misura riportata dallo stesso ADR: focus-ring su bg-inverse = 2,38:1 (chiaro), 1,87:1 (scuro), sotto soglia. focus-ring su brand-bg non è nella lista perche' l'offset lo tiene sempre adiacente a bg-canvas/bg-surface (nota gia' in contrast-check.py), quindi footer e' l'unico caso reale da correggere qui.",
+  "alternative": [
+    {
+      "opzione": "aumentare ring-width per il footer soltanto",
+      "scartata_perche": "il compito dice esplicitamente che lo scarto di 2px non basta perche' il problema e' il colore, non lo spessore; introdurrebbe un'eccezione di misura in un token che oggi e' unico per tutto il sito (focus.ring-width)"
+    },
+    {
+      "opzione": "nuovo primitivo di colore dedicato al focus su superfici inverse",
+      "scartata_perche": "proliferazione di token vietata da CLAUDE.md: amber.300 e amber.700 gia' esistono e, verificati con contrast-check locale, danno rispettivamente 8.80:1 e 6.91:1 contro bg-inverse nei due temi, ben sopra 3:1 — nessun bisogno di un valore esadecimale nuovo"
+    },
+    {
+      "opzione": "usare lo stesso primitivo amber.300/amber.700 ma senza un token semantico dedicato, scegliendolo nel CSS del componente footer",
+      "scartata_perche": "violerebbe la regola del sistema (00-sistema-e-componenti.md): i componenti consumano solo alias semantici, mai un primitivo direttamente; un domani il footer diventerebbe l'unico componente con un'eccezione difficile da individuare in revisione"
+    }
+  ],
+  "decisione": "Aggiungo color.semantic.<tema>.focus-ring-on-inverse: nel tema chiaro vale amber.300 (#F0AA2E, lo stesso primitivo gia' usato come focus-ring di default nel tema scuro); nel tema scuro vale amber.700 (#7A4B00, lo stesso primitivo gia' usato come focus-ring di default nel tema chiaro). E' uno scambio incrociato fra due colori gia' nel sistema, non un colore nuovo. Il componente footer in 00-sistema-e-componenti.md verra' aggiornato per usare questo alias al posto di focus-ring generico. Le due nuove coppie (focus-ring-on-inverse/bg-inverse, chiaro e scuro) entrano fra le coppie obbligatorie di contrast-check.py.",
+  "evidenza": [
+    "calcolo locale (script temporaneo, formula WCAG di contrast-check.py): amber.300 (#F0AA2E) su bg-inverse chiaro (#17191C) = 8.80:1",
+    "calcolo locale: amber.700 (#7A4B00) su bg-inverse scuro (#F6F7F8) = 6.91:1",
+    "ADR-0002 D6, sezione 'Vincolo aperto, fuori dalla struttura': valori pre-esistenti 2,38:1 (chiaro) e 1,87:1 (scuro) sotto soglia, citati testualmente"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

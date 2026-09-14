@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-14T10:27:12+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "R-L02",
+  "tipo": "decisione",
+  "titolo": "01-pagine.md allineato a ADR-0002 D2/D3 e alle decisioni DP-27/DP-29 sul recapito delle pagine legali",
+  "contesto": "01-pagine.md (scritto prima di ADR-0002) usava URL senza barra finale (/saas, /hosted, /on-premise, /confronto) e un indirizzo illustrativo sullo stesso TLD del dominio del sito (contatto@ownconsent.example). ADR-0002 D2 (origin/main, ratificato) impone trailingSlash sempre e directory-format; D3 sceglie due segnaposto distinti e non sovrapponibili: dominio del sito https://segnaposto-dominio-sito.example (usato solo per canonical/sitemap) e indirizzo di contatto segnaposto-nome-casella@segnaposto-dominio-casella.invalid (file unico di N2). Il vecchio esempio del documento avrebbe reso la ricerca di N2 ambigua (stesso TLD .example per sito e casella, esplicitamente scartato da D3). In parallelo, Andrea ha dato DP-27 (l'informativa privacy deve identificare il titolare e dare un recapito, art. 13; la sezione Contatti dei Termini fa lo stesso; se un domani si nomina un DPO le pagine legali avranno un recapito distinto, solo annotato come previsione) e DP-29 (nessun oggetto precompilato nelle pagine legali: l'oggetto resta solo sulle tre pagine di vendita).",
+  "alternative": [
+    {
+      "opzione": "lasciare l'indirizzo generico contatto@ownconsent.example come prima, aggiungendo solo una nota che rimanda ad ADR-0002",
+      "scartata_perche": "il compito chiede esplicitamente che l'indirizzo illustrativo diventi il segnaposto di D3, non un doppio riferimento; e la regola 'suonano uguali non vuol dire sono la stessa cosa' di CLAUDE.md vieta di trattare i due indirizzi come intercambiabili quando D3 li ha resi deliberatamente distinti (stesso TLD del sito sarebbe stato un problema per la ricerca di N2)"
+    },
+    {
+      "opzione": "dare alle pagine legali lo stesso mailto con ?subject= usato dalle pagine di vendita, per uniformità",
+      "scartata_perche": "DP-29 lo vieta esplicitamente: un oggetto commerciale su una richiesta privacy è fuori luogo; l'oggetto precompilato resta solo sulle tre pagine di vendita"
+    },
+    {
+      "opzione": "aggiungere già ora un campo per il recapito del DPO nella struttura delle pagine legali",
+      "scartata_perche": "DP-27 chiede esplicitamente di annotarlo come previsione, non di farlo ora: nessun DPO è stato nominato in questo lotto"
+    }
+  ],
+  "evidenza": [
+    "git show origin/main:docs/adr/0002-struttura-site.md, sezioni D2 (rotte con barra finale) e D3 (tre segnaposto distinti, tabella con dominio del sito .example e dominio della casella .invalid)",
+    "git show origin/main:docs/spec/issue-8.json, segnaposto_dichiarati: dominio del sito e dominio della casella dichiarati come segnaposto distinti",
+    "grep su docs/design/01-pagine.md dopo la modifica: zero occorrenze di 'ownconsent.example'; zero URL delle 8 pagine senza barra finale (verificato con script Python, non con deduzione)",
+    "mailto: 3 occorrenze con ?subject= (SaaS, Hosted, On-premise), 3 occorrenze senza ?subject= (Termini, Informativa privacy, Cookie policy)"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

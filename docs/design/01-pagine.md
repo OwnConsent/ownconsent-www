@@ -6,11 +6,17 @@ pagina — struttura, blocchi, ordine, testi segnaposto, contrassegni, comportam
 360×640 e 1280×800, e le variazioni all'ordine di focus quando servono.
 
 Nessun prezzo, nessun nome di piano, nessun dominio o indirizzo reale in questo
-documento: l'indirizzo di contatto è scritto come `contatto@ownconsent.example`, che usa
-il dominio riservato `.example` (RFC 2606, garantito non risolvibile) **solo per
-illustrare come appare il testo**; il dominio e la casella definitivi li sceglie
-ADR-0002 (L03) e li comunica Andrea al gate di pubblicazione (G3, DP-19). Lo stesso vale
-per «ragione sociale da definire» nel footer.
+documento. Gli URL delle pagine hanno sempre la barra finale (ADR-0002 D2, ratificato su
+`origin/main`): `/saas/`, `/hosted/`, `/on-premise/`, `/confronto/`,
+`/legale/termini-di-servizio/`, `/legale/informativa-privacy/`, `/legale/cookie-policy/`.
+L'indirizzo di contatto è scritto come
+`segnaposto-nome-casella@segnaposto-dominio-casella.invalid`, il segnaposto di nome e
+dominio della casella stabilito da ADR-0002 D3 (dominio riservato `.invalid`, RFC 2606,
+garantito non risolvibile) — **solo per illustrare come appare il testo**. Dove si parla
+del dominio del sito (canonical, sitemap) il segnaposto è distinto:
+`https://segnaposto-dominio-sito.example` (ADR-0002 D3, dominio `.example`). I valori
+definitivi dei due domini e della casella li comunica Andrea al gate di pubblicazione
+(G3, DP-19). Lo stesso vale per «ragione sociale da definire» nel footer.
 
 ---
 
@@ -35,10 +41,10 @@ per «ragione sociale da definire» nel footer.
    Audiweb/Audicom.»
 5. Sezione «Tre modi di avere OwnConsent» (`h2`): tre carte modalità di sintesi (vedi
    componente «carta modalità»), in ordine SaaS, Hosted, On-premise, ciascuna con link
-   «Scopri di più» verso `/saas`, `/hosted`, `/on-premise`. **Questo soddisfa AC1**: i
+   «Scopri di più» verso `/saas/`, `/hosted/`, `/on-premise/`. **Questo soddisfa AC1**: i
    link alle tre pagine sono nel corpo, non solo nella nav.
 6. Sezione «Confronta le tre modalità» (`h2`), un paragrafo breve e un link verso
-   `/confronto` («Vedi il confronto completo e il listino →»).
+   `/confronto/` («Vedi il confronto completo e il listino →»).
 7. Footer (condiviso).
 
 ### Contrassegni
@@ -93,8 +99,9 @@ Soddisfa AC4 (colonna SaaS), AC49, N1.
    per conto tuo: nessun passaggio amministrativo a tuo carico.»
 10. Blocco di chiusura (componente condiviso): titolo «Pronto ad attivare SaaS?»,
     paragrafo con il testo esatto richiesto da N1: «Scrivici e ti attiviamo noi.», link
-    mailto in stile bottone `mailto:contatto@ownconsent.example?subject=SaaS` con testo
-    visibile «Scrivici e ti attiviamo noi».
+    mailto in stile bottone
+    `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=SaaS` con
+    testo visibile «Scrivici e ti attiviamo noi».
 11. Footer.
 
 ### Vincoli di contenuto (N1, AC49, AC53)
@@ -141,7 +148,8 @@ Soddisfa AC4 (colonna Hosted), AC33.
    per le istanze Hosted è in definizione.» (testo esatto richiesto da AC33)
 9. Blocco di chiusura: titolo «Pronto ad attivare Hosted?», paragrafo con il testo
    esatto richiesto da AC33: «Si attiva parlando con noi.», link mailto in stile bottone
-   `mailto:contatto@ownconsent.example?subject=Hosted` con lo stesso testo visibile.
+   `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=Hosted` con
+   lo stesso testo visibile.
 10. Footer.
 
 ### Vincoli di contenuto (AC33)
@@ -180,7 +188,8 @@ Soddisfa AC4 (colonna On-premise), AC34.
    la fa il cliente, a proprio nome.» (testo richiesto da AC34)
 9. Blocco di chiusura: titolo «Pronto ad attivare On-premise?», paragrafo con il testo
    esatto richiesto da AC34: «Si attiva parlando con noi.», link mailto in stile bottone
-   `mailto:contatto@ownconsent.example?subject=On-premise` con lo stesso testo visibile.
+   `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=On-premise`
+   con lo stesso testo visibile.
 10. Footer.
 
 ### Vincoli di contenuto (AC34)
@@ -264,11 +273,20 @@ dimostrativa». Soddisfa AC7, AC8, AC41.
    completi li scrive `@privacy` in un lotto successivo, questo documento fissa solo
    l'ordine e le sezioni): «Oggetto del servizio», «Le tre modalità di fornitura» (SaaS,
    Hosted, On-premise, ciascuna con un rimando alla propria pagina — **soddisfa AC1**),
-   «Modifiche ai termini», «Legge applicabile e foro competente», «Contatti» (con lo
-   stesso indirizzo unico, senza modulo).
+   «Modifiche ai termini», «Legge applicabile e foro competente», «Contatti» (identifica
+   il titolare — segnaposto «ragione sociale e sede da definire» — e dà lo stesso
+   recapito dell'informativa privacy, DP-27: l'indirizzo unico di contatto del file di
+   N2, come link `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid`
+   **senza `?subject=`** — l'oggetto precompilato resta solo sulle pagine SaaS, Hosted e
+   On-premise, DP-29; nessun modulo).
 7. Ogni data citata nel testo (es. data di ultima modifica) nel formato gg/mm/aaaa
    (AC41): esempio segnaposto «Ultima modifica: 13/09/2026».
 8. Footer.
+
+### Previsione, non applicata in questo lotto (DP-27)
+Se in futuro OwnConsent nominerà un DPO, la sezione «Contatti» di questa pagina prenderà
+un recapito distinto da quello commerciale delle pagine di vendita. Non è una decisione
+di questo lotto: nessun campo o testo per il DPO esiste oggi in questo documento.
 
 ### Comportamento a 360×640 / 1280×800
 Contrassegno «bozza» e h1 visibili senza scorrere, alle due viewport.
@@ -295,18 +313,27 @@ AC41.
 3. Contrassegno «bozza».
 4. `<h1>`: «Informativa privacy».
 5. Paragrafo di avviso, identico nella forma a quello dei Termini.
-6. Struttura dei paragrafi previsti: «Titolare del trattamento» (segnaposto: «ragione
-   sociale e sede da definire»), «Quali dati trattiamo» (il contenuto dell'email che chi
+6. Struttura dei paragrafi previsti: «Titolare del trattamento» (identifica il titolare
+   — segnaposto «ragione sociale e sede da definire» — e dà il recapito richiesto
+   dall'art. 13: lo stesso indirizzo unico di contatto del file di N2, come link
+   `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid` **senza
+   `?subject=`**, DP-27/DP-29), «Quali dati trattiamo» (il contenuto dell'email che chi
    scrive invia all'indirizzo di contatto: indirizzo del mittente e ciò che sceglie di
    scrivere — **il sito stesso non raccoglie, non memorizza e non trasmette alcun dato**,
    AC9/AC10), «Finalità e base giuridica» (rispondere a una richiesta commerciale;
    misure precontrattuali), «Per quanto tempo conserviamo i dati» (segnaposto «da
    definire», dichiarato da `@privacy` in `contracts/data-map.json`, lotto L11),
-   «Diritti dell'interessato», «Contatti».
+   «Diritti dell'interessato», «Contatti» (ripete lo stesso recapito della sezione
+   «Titolare del trattamento», stesso mailto senza oggetto precompilato).
 7. Nessuna affermazione di registrazione, certificazione o approvazione da parte di IAB
    Europe (AC7).
 8. Date nel formato gg/mm/aaaa dove presenti.
 9. Footer.
+
+### Previsione, non applicata in questo lotto (DP-27)
+Se in futuro OwnConsent nominerà un DPO, questa pagina prenderà un recapito distinto da
+quello commerciale delle pagine di vendita. Non è una decisione di questo lotto: nessun
+campo o testo per il DPO esiste oggi in questo documento.
 
 ### Comportamento a 360×640 / 1280×800
 Come Termini di servizio.
@@ -340,7 +367,10 @@ AC9, AC41.
    localStorage, sessionStorage, IndexedDB o Cache Storage prima di alcuna tua scelta.
    Non ci sono banner di consenso su queste pagine perché non c'è nulla da consentire.»,
    «Se in futuro verranno introdotti cookie tecnici» (segnaposto per quando la consegna
-   2 introdurrà l'area cliente, fuori perimetro qui), «Contatti».
+   2 introdurrà l'area cliente, fuori perimetro qui), «Contatti» (lo stesso recapito
+   delle altre due pagine legali: indirizzo unico di contatto del file di N2, link
+   `mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid` **senza
+   `?subject=`**, DP-29).
 7. Nessuna affermazione di registrazione IAB (AC7).
 8. Footer.
 

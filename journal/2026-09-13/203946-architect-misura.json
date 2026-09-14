@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "titolo": "Nel sorgente corrente «Slow 4G» applicato per richiesta vale 562,5 ms sia in Lighthouse sia in Chrome DevTools; il contratto applica 150 ms con la stessa chiamata CDP",
+  "contesto": "Il campo $metodo_laboratorio_pagine_pubbliche.rete, riscritto da @performance in 2dbe9d4, presenta il profilo come «Profilo pubblico Slow 4G di Lighthouse» e applica 150 ms, 200000 B/s, 93750 B/s senza moltiplicatori. Come primo motivo per non adottarli dà che il valore 3.75/0.9 non è verificato nel sorgente corrente (limite dichiarato nella mia voce 201807-architect-misura.json). Ho verificato l'etichetta e quel motivo sul sorgente corrente, invece di dedurli.",
+  "evidenza": [
+    "$ git fetch origin && git switch contracts/perf-budgets-laboratorio && git merge --ff-only origin/contracts/perf-budgets-laboratorio; git log --oneline -4 -> e7a52da, 2dbe9d4, d0806d7, 389ade6 (atteso e7a52da: corrisponde)",
+    "$ git diff 389ade6 HEAD -- contracts/perf-budgets.json -> cambiano strumento, rete, $nota_soglie_lab; aggiunto isolamento_esecuzioni; nessuna chiave rimossa o rinominata; nessun numero cambiato",
+    "WebFetch https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/core/lib/lantern/lantern.js -> solo riesportazioni da '@paulirish/trace_engine/models/trace/lantern/lantern.js', nessuna costante",
+    "WebFetch https://raw.githubusercontent.com/ChromeDevTools/devtools-frontend/main/front_end/models/trace/lantern/simulation/Constants.ts -> DEVTOOLS_RTT_ADJUSTMENT_FACTOR = 3.75; DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR = 0.9; mobileSlow4G: rttMs 150, throughputKbps 1.6 * 1024, requestLatencyMs 150 * DEVTOOLS_RTT_ADJUSTMENT_FACTOR, downloadThroughputKbps 1.6 * 1024 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR, uploadThroughputKbps 750 * DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR, cpuSlowdownMultiplier 4",
+    "WebFetch https://raw.githubusercontent.com/ChromeDevTools/devtools-frontend/main/front_end/core/sdk/NetworkManager.ts -> const slow4GTargetLatency = 150; Slow4GConditions: download 1.6 * 1000 * 1000 / 8 * .9, upload 750 * 1000 / 8 * .9, latency slow4GTargetLatency * 3.75",
+    "$ python3 -c \"print('devtools_slow4g_B_s', 1.6*1000*1000/8*.9, 750*1000/8*.9, 'latency', 150*3.75); print('contratto_B_s', 1.6*1000*1000/8, 750*1000/8); print('lh_kbps', 1.6*1024, 1.6*1024*.9, 750*.9)\" -> devtools_slow4g_B_s 180000.0 84375.0 latency 562.5 / contratto_B_s 200000.0 93750.0 / lh_kbps 1638.4 1474.5600000000002 675.0",
+    "latenza per richiesta: 562.5 / 150 = 3.75 volte quella applicata dal contratto",
+    "$ ls docs/adr/ -> 0000-template.md, 0001-budget-pagine-pubbliche-laboratorio.md: ADR-0002, citato per D9 in isolamento_esecuzioni, non è su questo ramo",
+    "$ cat githooks/prepare-commit-msg -> la firma scrive il contenuto di .work/.current-agent così com'è; $ cat .work/.current-agent -> cantiere:architect, che produrrebbe «Cantiere-Agent: cantiere:architect»",
+    "$ date -Iseconds -> 2026-09-13T20:39:46+02:00, prima del ts 20:40:00 dichiarato nella voce 204000-performance-fallimento.json (committata in e7a52da alle 20:34:38): quel ts non è misurato. Lo segnalo, non lo correggo: la voce non è mia"
+  ],
+  "limite_della_misura": "File letti con WebFetch (estratto testuale chiesto alla lettera a un modello), non con un clone e senza fissare un commit: ramo main al 2026-09-13. Che @paulirish/trace_engine sia costruito da devtools-frontend lo deduco dal percorso di importazione; il valore del preset Slow4GConditions di Chrome DevTools non dipende da questa deduzione.",
+  "esito": "base dell'obiezione residua O1r in ADR-0001; il limite dichiarato nella prima stesura (201807-architect-misura.json) è superato da questa misura, e la voce vecchia resta dov'è",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 5
+}

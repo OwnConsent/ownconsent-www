@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-13T20:18:07+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0001",
+  "titolo": "Metodo di L01 confrontato con le fonti che cita: CLS non è più una somma; il preset Slow 4G applicato via CDP a livello di richiesta è circa 3,75 volte più leggero sulla latenza di quello di Lighthouse",
+  "contesto": "Il file di L01 dice che il profilo di rete è il «preset pubblico di Lighthouse» applicato con Network.emulateNetworkConditions, e che il CLS è la somma degli spostamenti «come da definizione standard». Sono affermazioni verificabili: le ho verificate invece di assumerle.",
+  "evidenza": [
+    "$ git diff origin/main contracts/perf-budgets-laboratorio -- contracts/perf-budgets.json -> solo aggiunte; unica riga tolta \"cls_p75\": 0.05, riscritta identica con la virgola",
+    "WebFetch https://web.dev/articles/cls -> «the largest burst of layout shift scores»; finestra: «less than 1-second in between each shift and a maximum of 5 seconds»; «Previously CLS measured the sum total»",
+    "WebFetch https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/docs/throttling.md -> preset mobile «Latency: 150ms», «1.6Mbps down / 750 Kbps up»; limitazione per richiesta meno accurata, con moltiplicatori di correzione in Lighthouse (valori non riportati nel documento)",
+    "WebFetch https://github.com/GoogleChrome/lighthouse/blob/8f500e00243e07ef0a80b39334bedcc8ddc8d3d0/lighthouse-core/config/constants.js -> const DEVTOOLS_RTT_ADJUSTMENT_FACTOR = 3.75; const DEVTOOLS_THROUGHPUT_ADJUSTMENT_FACTOR = 0.9; il profilo in quel commit si chiama mobile3G",
+    "WebSearch «lighthouse DEVTOOLS_RTT_ADJUSTMENT_FACTOR 3.75 requestLatencyMs mobileSlow4G constants» -> riassunto: mobileSlow4G con requestLatencyMs 150 * 3.75, downloadThroughputKbps 1.6 * 1024 * 0.9, uploadThroughputKbps 750 * 0.9 (riassunto del motore di ricerca, non sorgente corrente letto)",
+    "calcolo: 150 * 3.75 = 562.5 ms; 1.6 * 1024 * 0.9 = 1474.56 kbps; 750 * 0.9 = 675 kbps"
+  ],
+  "limite_della_misura": "Il nome e i valori correnti di mobileSlow4G non li ho letti nel sorgente corrente (vedi voce di fallimento): i moltiplicatori sì, in un commit storico.",
+  "esito": "base di O1 e N1 in ADR-0001",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 8
+}

@@ -1,0 +1,15 @@
+{
+  "ts": "2026-09-13T21:12:15+02:00",
+  "agente": "performance",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "correzione",
+  "corregge": "2026-09-13/204000-performance-fallimento.json",
+  "cosa_era_sbagliato": "Il campo ts della voce dichiara 2026-09-13T20:40:00+02:00, un orario arrotondato e non misurato con date -Iseconds nel momento in cui la voce e stata scritta.",
+  "come_lo_so": "journal/2026-09-13/203946-architect-misura.json riporta il comando $ date -Iseconds -> 2026-09-13T20:39:46+02:00, eseguito dopo il commit e7a52da delle 20:34:38 che contiene la voce 204000-performance-fallimento.json; 20:39:46 precede il ts dichiarato 20:40:00 e non coincide con esso, quindi 20:40:00 non e il risultato di quel comando ma una stima arrotondata al minuto",
+  "esito": "la voce 2026-09-13/204000-performance-fallimento.json resta invariata; questa voce la accompagna, come previsto da docs/JOURNAL.md",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

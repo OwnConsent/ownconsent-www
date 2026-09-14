@@ -1,0 +1,76 @@
+{
+  "ts": "2026-09-13T19:46:53+02:00",
+  "agente": "performance",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Soglie di laboratorio per LCP e CLS di pagine_pubbliche, con metodo dichiarato; lcp_ms_p75 e cls_p75 restano come dati di campo",
+  "contesto": "AC39 (docs/spec/issue-8.json) chiede soglie di laboratorio per LCP e CLS delle pagine pubbliche, con metodo di misura dichiarato: strumento, profilo di dispositivo e di rete, numero di esecuzioni, statistica usata. Oggi contracts/perf-budgets.json ha solo lcp_ms_p75=2000 e cls_p75=0.05, dati di campo (RUM) che secondo DV-4 non esistono prima del lancio. contracts/README.md dice che rimuovere o rinominare un campo esistente senza percorso di deprecazione dichiarato in un ADR e da considerare un gate. Il piano (adr_previsti, ADR-0001) prevede che questa scelta sia ratificata da @architect nel lotto L03, dopo di me.",
+  "alternative": [
+    {
+      "opzione": "Strumento: Lighthouse CLI in locale",
+      "scartata_perche": "aggiungerebbe una seconda toolchain di misura oltre a Playwright, gia deciso come stack di test per L07 (tests/perf/**, playwright.config.ts alla radice); piu dipendenze da gestire per lo stesso risultato, a parita di assenza di servizi terzi"
+    },
+    {
+      "opzione": "Strumento: PageSpeed Insights o WebPageTest online",
+      "scartata_perche": "sono servizi di terze parti: il piano chiede esplicitamente uno strumento senza servizi terzi, e una CI che dipende da una chiamata di rete esterna introduce un punto di fragilita non necessario"
+    },
+    {
+      "opzione": "Playwright, Chromium headless, con throttling via Chrome DevTools Protocol e lettura nativa di PerformanceObserver per gli entry largest-contentful-paint e layout-shift",
+      "scelta_perche": "riusa lo stack E2E gia deciso per L07 (Playwright), nessuna dipendenza nuova nel sito, nessun servizio terzo, throttling di rete e CPU riproducibili tramite CDP con parametri pubblici presi dai preset di Lighthouse, metriche lette con le API standard del browser senza librerie aggiuntive"
+    },
+    {
+      "opzione": "Soglia di laboratorio per LCP identica al p75 di campo, cioe 2000 ms",
+      "scartata_perche": "il p75 di campo e un percentile aggregato su una popolazione reale che include condizioni di rete e dispositivo migliori della media; il laboratorio misura invece sempre nella condizione peggiore fissata (rete Slow 4G, CPU rallentata 4 volte) a ogni singola esecuzione. Imporre lo stesso numero renderebbe il budget di laboratorio sistematicamente piu severo del suo omologo di campo, senza alcuna build ne misura oggi a sostegno di quella severita"
+    },
+    {
+      "opzione": "Soglia di laboratorio per LCP pari alla soglia needs-improvement di Google Core Web Vitals, cioe 4000 ms",
+      "scartata_perche": "troppo permissiva per pagine pubbliche statiche rese lato server, con budget di peso JS e CSS gia stretto, 60 piu 25 kB gzip; non farebbe da gate utile"
+    },
+    {
+      "opzione": "Soglia di laboratorio per LCP pari alla soglia good di Google Core Web Vitals, cioe 2500 ms",
+      "scelta_perche": "riferimento pubblico, documentato e riproducibile ovunque; raggiungibile per pagine statiche leggere entro i budget di peso gia dichiarati; piu realistico del p75 di campo per una misura a esecuzione singola in condizioni di rete fissate al caso peggiore"
+    },
+    {
+      "opzione": "Soglia di laboratorio per CLS pari alla soglia good di Google Core Web Vitals, cioe 0.1",
+      "scartata_perche": "piu permissiva del p75 di campo, 0.05, senza una ragione tecnica per allentarla: il CLS misura la stabilita del layout ed e in gran parte indipendente dal throttling di rete e CPU applicato in laboratorio, a differenza del LCP; le pagine pubbliche sono contenuto statico senza inserzioni, iframe o contenuto iniettato dinamicamente, cioe senza le cause tipiche di un grande scarto fra laboratorio e campo per questa metrica"
+    },
+    {
+      "opzione": "Soglia di laboratorio per CLS pari a 0.01, piu severa del p75 di campo",
+      "scartata_perche": "arbitraria: nessuna build ne misura oggi la sostiene, e nessun riferimento pubblico la usa come soglia standard"
+    },
+    {
+      "opzione": "Soglia di laboratorio per CLS uguale al p75 di campo, cioe 0.05",
+      "scelta_perche": "coerente con il target di campo gia dichiarato, raggiungibile su pagine senza contenuto dinamico iniettato, e il CLS non soffre dello stesso scarto laboratorio-campo del LCP"
+    },
+    {
+      "opzione": "Una sola esecuzione per misura",
+      "scartata_perche": "rumore troppo alto per una singola pagina servita in locale; nessuna statistica robusta e possibile con un solo dato"
+    },
+    {
+      "opzione": "Dieci esecuzioni, con la media come statistica",
+      "scartata_perche": "costo di CI piu alto senza un guadagno significativo di attendibilita rispetto a cinque esecuzioni con mediana; la mediana e gia meno sensibile agli outlier della media"
+    },
+    {
+      "opzione": "Cinque esecuzioni, statistica mediana, cioe p50",
+      "scelta_perche": "pratica raccomandata da Lighthouse e da web.dev per ridurre il rumore di una singola misura di performance in laboratorio: eseguire almeno tre volte, idealmente cinque, e usare la mediana"
+    },
+    {
+      "opzione": "Rinominare o sostituire lcp_ms_p75 e cls_p75 con le nuove soglie di laboratorio",
+      "scartata_perche": "contracts/README.md dice che rimuovere o rinominare un campo esistente senza un percorso di deprecazione dichiarato in un ADR e un gate. Nessun ADR di deprecazione esiste per questi due campi: restano con lo stesso nome e lo stesso valore, con una nota accanto che dice che sono verificabili solo con traffico reale"
+    }
+  ],
+  "evidenza": [
+    "git show origin/main:contracts/perf-budgets.json, prima della modifica: solo lcp_ms_p75=2000 e cls_p75=0.05 dentro pagine_pubbliche, nessuna soglia di laboratorio, nessun metodo dichiarato",
+    "docs/spec/issue-8.json, criterio AC39: ogni pagina pubblica sta entro i pesi dichiarati e LCP e CLS di pagine pubbliche e area cliente stanno entro le soglie di laboratorio dichiarate in contracts/perf-budgets.json",
+    "docs/spec/issue-8.json, segnaposto_dichiarati, voce soglie di laboratorio di LCP e CLS delle pagine pubbliche: nessun valore oggi, le dichiara @performance nel lotto L01 con ratifica in ADR-0001",
+    "file di piano in sola lettura, lotto L01: aggiunge soglie di laboratorio e metodo, strumento senza servizi terzi, profilo di dispositivo e di rete, esecuzioni, statistica, per pagine_pubbliche; non cambia js_iniziale_gzip_kb 60 e css_gzip_kb 25; i p75 restano come soglie di campo non verificate prima del traffico; area_cliente e api non si toccano; nessuna rimozione di chiavi senza deprecazione"
+  ],
+  "esito": "procedo ad aggiungere lcp_ms_lab_mediana=2500 e cls_lab_mediana=0.05 dentro pagine_pubbliche, con un blocco di metodo dichiarato e una nota sui due campi p75 esistenti; nessuna chiave rimossa o rinominata; area_cliente e api non toccati; lADR-0001 che ratifica questa scelta lo scrive @architect nel lotto L03, non io",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "nota_misure": "costo in token e durata non tracciati per singola voce in questa sessione",
+  "trascritta_dopo": false
+}

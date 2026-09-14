@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-13T20:18:07+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "gate",
+  "adr": "ADR-0001",
+  "titolo": "ADR-0001 proposto con obiezione: soglia LCP di laboratorio (2500 > p75 2000) ratificata solo con il profilo di rete di Lighthouse a livello di richiesta; esecuzioni a freddo non dichiarate",
+  "contesto": "Il prompt di delega chiede di esaminare esplicitamente lcp_ms_lab_mediana = 2500, più larga di lcp_ms_p75 = 2000, motivata da @performance con condizioni di laboratorio più dure. La misura sulle fonti (voce misura di ADR-0001) mostra che il profilo applicato via CDP con 150 ms a livello di richiesta è più leggero del preset di Lighthouse applicato con la stessa chiamata (562,5 ms). La premessa della motivazione non è dimostrata.",
+  "chi_ha_deciso": "architect: non modifico contracts/perf-budgets.json (competenza di @performance, piano L03, prompt di delega) e mi fermo su questo punto; la chiusura spetta a @performance con un'invocazione nuova, il merge di PR-2 ad Andrea (G1)",
+  "cosa_serviva": "O1: valori di rete passati a Network.emulateNetworkConditions dichiarati con o senza i moltiplicatori di Lighthouse, e conferma o revisione di lcp_ms_lab_mediana con la sua nota. O2: dichiarazione che ognuna delle 5 esecuzioni parte a freddo (contesto nuovo, cache vuota, nessun service worker)",
+  "alternative": [
+    {
+      "opzione": "accettare 2500 con la motivazione di L01",
+      "scartata_perche": "la motivazione regge su condizioni più dure che il metodo, così scritto, non applica"
+    },
+    {
+      "opzione": "respingere 2500 e proporre 2000",
+      "scartata_perche": "sarebbe scegliere io la soglia; accetto il principio lab diverso da campo, contesto solo la premessa sul profilo"
+    },
+    {
+      "opzione": "correggere i valori di rete nel file",
+      "scartata_perche": "vietato: il contratto è di @performance"
+    }
+  ],
+  "esito": "ADR-0001 con stato «proposta, con obiezione»; i punti non contestati sono ratificati; contracts/perf-budgets.json invariato",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null,
+  "turni_usati_finora": 8
+}

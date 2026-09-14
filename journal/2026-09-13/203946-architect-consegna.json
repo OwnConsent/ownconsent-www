@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-13T20:39:46+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "adr": "ADR-0001",
+  "giro": "ratifica di R-L01",
+  "ramo": "contracts/perf-budgets-laboratorio",
+  "titolo": "Ratifica di R-L01 consegnata: ADR-0001 resta «proposta, con obiezione» con la sola O1r",
+  "commit": [
+    "docs(adr): ADR-0001, ratifica di R-L01 — O2 chiusa, obiezione residua O1r; con le voci di journal del giro (un solo commit, hash in git log e7a52da..HEAD)"
+  ],
+  "nota_commit": "previsti due commit separati (ADR e journal); dopo il rifiuto del sandbox al turno 8 (203946-architect-fallimento-2.json) il tetto di 10 turni lascia un solo turno per git: ADR e journal vanno nello stesso commit",
+  "dod_soddisfatta": {
+    "adr_per_ogni_scelta_vincolante": "sì: sezione datata in ADR-0001 con esito su O1, O2, N1-N4 e obiezione residua O1r scritta con opzioni chiuse",
+    "contratti_aggiornati": "no, per vincolo del giro (DP-01): contracts/perf-budgets.json non modificato",
+    "consumatori_impattati_per_agente": "performance (L01), qa-test (L07), devops (L12, nessun cambiamento), frontend (L05, L06), area cliente della consegna 2 (nessun cambiamento)",
+    "journal": "misura sulle fonti correnti, fallimento su lantern.js, decisione di ratifica, gate su O1r, questa consegna"
+  },
+  "firma": "cat .work/.current-agent -> cantiere:architect, non architect: la riga Cantiere-Agent: architect è scritta a mano in fondo ai messaggi; il hook trova la riga e non aggiunge la sua",
+  "cosa_manca": "un'invocazione nuova di @performance su O1r; poi un giro di ratifica che verifica solo O1r e porta ADR-0001 ad accettata con una sezione datata. N3 va chiusa prima che L07 implementi il confronto sui pesi e che L05/L06 li annotino; N4 alla prossima revisione del file",
+  "turni_usati": 8,
+  "esito": "committato sul ramo, nessun push, nessuna PR, nessun commento",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

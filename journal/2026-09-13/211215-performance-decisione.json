@@ -1,0 +1,36 @@
+{
+  "ts": "2026-09-13T21:12:15+02:00",
+  "agente": "performance",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "adr": "ADR-0001",
+  "giro": "R-L01b",
+  "titolo": "O1r chiusa con l opzione (a) indicata da Andrea: valori CDP invariati, nessun nome di preset come etichetta della condizione applicata, provenienza dichiarata",
+  "contesto": "ADR-0001 (journal/2026-09-13/203946-architect-gate.json, campo cosa_serviva) lasciava O1r aperta su $metodo_laboratorio_pagine_pubbliche.rete con due opzioni: (a) valori invariati (latency=150, downloadThroughput=200000, uploadThroughput=93750) senza usare Slow 4G come nome della condizione applicata, oppure (b) i valori del preset Slow 4G di Chrome DevTools (latency=562.5, downloadThroughput=180000, uploadThroughput=84375). La scelta fra le due non e di questo agente ne di @architect: e di Andrea Pernici, riportata alla lettera nel prompt di questo giro (R-L01b) e come commento sulla PR #17 (issue #8). Andrea ha scelto (a), con due condizioni: dichiarare la provenienza dei tre valori con le parole esatte se la ragione e una base di laboratorio stabile, e una esclusione con scadenza per una futura adozione di un profilo standard, riaperta alla prima misura reale di campo.",
+  "alternative": [
+    {
+      "opzione": "(b) valori del preset Slow 4G di Chrome DevTools (latency=562.5, downloadThroughput=180000, uploadThroughput=84375)",
+      "scartata_perche": "scartata da Andrea, non da questo agente: adottare il profilo di DevTools costringerebbe a ri-derivare la soglia lcp_ms_lab_mediana senza avere un sito pubblicato da misurare, quindi sarebbe dedurre la soglia e non misurarla, al costo di un altro giro per un numero comunque arbitrario"
+    },
+    {
+      "opzione": "lasciare la provenienza implicita, solo il rimando a docs/throttling.md senza dichiarare perche i tre valori restano senza fattori di correzione",
+      "scartata_perche": "un numero senza provenienza dichiarata e un numero magico quanto un nome che mente (testo della decisione di Andrea): la provenienza va scritta con le parole della ragione vera, non solo con la fonte"
+    },
+    {
+      "opzione": "non aggiungere un campo di esclusione con scadenza, lasciando la scelta (a) come definitiva senza condizione di riapertura",
+      "scartata_perche": "la decisione di Andrea chiede esplicitamente una condizione di riapertura legata alla prima misura reale di campo: senza quel campo la scelta (a) resterebbe per inerzia, il difetto che CLAUDE.md chiede di evitare per le esclusioni motivate"
+    }
+  ],
+  "evidenza": [
+    "testo della decisione di Andrea, riportato alla lettera nel prompt del giro R-L01b e come commento sulla PR #17 (issue #8)",
+    "journal/2026-09-13/203946-architect-gate.json, campo cosa_serviva: testo esatto delle due opzioni di O1r",
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md, sezione Obiezione residua, punti 1(a), 2 e 3",
+    "$ git rev-parse --abbrev-ref HEAD -> contracts/perf-budgets-laboratorio; $ git log --oneline -1 -> 77619cd (atteso, corrisponde)"
+  ],
+  "esito": "contracts/perf-budgets.json modificato: $metodo_laboratorio_pagine_pubbliche.rete riscritto con provenienza dichiarata e senza il nome Slow 4G come etichetta della condizione applicata (compare una sola volta, nella frase di non equivalenza); pagine_pubbliche.$nota_soglie_lab riscritta senza peggiore ne altre parole di confronto di severita; aggiunto pagine_pubbliche.$esclusione_profilo_standard con la scadenza alla prima misura reale di campo. ADR-0001 non toccato in questo giro: nessuna ratifica ulteriore prevista, la decisione e di Andrea",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null
+}

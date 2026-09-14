@@ -6,3 +6,9 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Claude Code: impostazioni locali e alberi di lavoro degli agenti.
+# I worktree sono checkout completi: se finiscono in un git add -A si committa
+# un repository dentro il repository.
+.claude/*
+!.claude/settings.json

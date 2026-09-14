@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-14T10:56:59+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Tutti gli accenti e gli apostrofi mancanti corretti in contracts/perf-budgets.json (24 sostituzioni esatte)",
+  "contesto": "Andrea: correggere tutti gli accenti del contratto prima del merge di #20, non solo «realtà», perché gli agenti lo citeranno. Una ricerca su un elenco fisso di parole (piu, puo, perche, finche, cioe) non trovava «ne'» e «ne» per «né», «e'» e «e» per «è», «sara'», né gli apostrofi mancanti «levento» e «laltro»: le forme sono state trovate leggendo tutte le stringhe del file.",
+  "alternative": [
+    {
+      "opzione": "correggere solo le cinque parole elencate",
+      "scartata_perche": "lasciava altre 16 forme sbagliate, la stessa divergenza fra citazione e file che Andrea vuole evitare"
+    },
+    {
+      "opzione": "sostituzioni con espressioni regolari su tutto il file",
+      "scartata_perche": "«e» congiunzione e «è» verbo non si distinguono con una regola: sostituzioni esatte, ognuna con conteggio atteso uguale a 1"
+    }
+  ],
+  "evidenza": [
+    "24 sostituzioni esatte con controllo di conteggio; nessun campo non testuale cambiato; JSON valido",
+    "ramo reso discendente da origin/main con un merge prima del commit (merge-base --is-ancestor: 1 prima, 0 dopo)"
+  ],
+  "esito": "applicata sul ramo contracts/perf-budgets-accento (#20)",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,49 @@
+{
+  "ts": "2026-09-13T19:59:00+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "titolo": "L02 chiuso: contracts/design-tokens.json e docs/design/** committati su design/token-pagine-pubbliche",
+  "contesto": "Lotto eseguito da zero (il tentativo precedente era stato scartato senza commit né journal, vedi journal/2026-09-13/194301-feature-fallimento.json della sessione principale). Nessun file Figma nel repository: sistema visivo nuovo, decisione in journal/2026-09-13/194600-design-decisione.json.",
+  "file_prodotti": [
+    "contracts/design-tokens.json",
+    "docs/design/contrast-check.py",
+    "docs/design/00-sistema-e-componenti.md",
+    "docs/design/01-pagine.md",
+    "journal/2026-09-13/194600-design-decisione.json",
+    "journal/2026-09-13/195400-design-misura.json",
+    "journal/2026-09-13/195900-design-consegna.json"
+  ],
+  "commit": [
+    "0f398fd journal(design): decisione sul sistema visivo di L02, nessun Figma nel repo",
+    "ecfbec5 feat(design): token del sistema visivo con contrasti WCAG AA calcolati",
+    "98d7b99 docs(design): specifica dei componenti condivisi e delle 8 pagine pubbliche"
+  ],
+  "dod_soddisfatta": [
+    "contracts/design-tokens.json esiste, è JSON valido, dichiara proprietario @design e consumatori @frontend/@accessibility come da contracts/README.md",
+    "ogni coppia colore testo/sfondo e componente UI dichiarata ha un contrasto calcolato (non dedotto) con docs/design/contrast-check.py: 34/34 coppie obbligatorie passano (>=4.5:1 testo normale, >=3:1 testo grande/componenti UI); comando `python3 docs/design/contrast-check.py`, esito 'TUTTE LE COPPIE OBBLIGATORIE PASSANO', minimo osservato 3.15:1, massimo 17.88:1",
+    "corpo del testo definito a 16px minimo (typography.font-size.100), mai più piccolo in nessun token",
+    "solo pile di font di sistema, nessun font esterno (regola_font in meta di design-tokens.json)",
+    "bersaglio touch minimo 24x24 CSS px dichiarato (touch-target.min-size), con l'alternativa di spaziatura di WCAG 2.5.8 documentata anche se non usata in questa consegna",
+    "spaziature, raggi e breakpoint definiti, breakpoint di base a 360px",
+    "focus visibile dichiarato per ogni componente interattivo, con motivazione esplicita di perché la coppia focus-ring/brand-bg non richiede verifica (l'offset di 2px la rende sempre adiacente a bg-canvas o bg-surface)",
+    "tema chiaro e tema scuro definiti insieme, stessi alias semantici, nessuno dei due rimandato",
+    "le 8 pagine di pagine_in_perimetro (docs/spec/issue-8.json) hanno tutte una specifica in docs/design/01-pagine.md: struttura, blocchi, ordine, testi segnaposto reali (mai lorem ipsum), contrassegni, comportamento a 360x640 e 1280x800, ordine di focus",
+    "ogni componente nuovo (header/nav, footer, contrassegno demo, contrassegno bozza, valore da-definire, carta modalità, tabella di confronto, link mailto CTA, blocco di chiusura) ha anatomia, i sette stati richiesti (dichiarati non applicabili dove il componente non è interattivo, con motivazione) e comportamento sotto 400px",
+    "grep su docs/design/**: nessun simbolo euro, nessun dominio reale (solo contatto@ownconsent.example, RFC 2606), nessun nome di piano o taglia di fantasia",
+    "nessun modulo, banner di consenso o elemento che richiede JavaScript per mostrare contenuto: verificato per lettura, non esiste ancora site/ da misurare via HTTP (arriverà con L05/L06)"
+  ],
+  "divergenze_dichiarate": [],
+  "obblighi_lasciati_ad_altri_lotti": [
+    "il meccanismo di trasformazione dei token in CSS: ADR-0002, lotto L03, fuori dal mio perimetro",
+    "l'implementazione reale delle 8 pagine e dei componenti: L05/L06 (@frontend), che consumano questo contratto",
+    "l'evidenza documento-contro-prodotto (computed style dal documento servito via HTTP): L10, dopo che site/ esiste",
+    "la revisione di accessibilità oltre il controllo automatico: L09, sullo stesso PR-4 dove finirà il codice"
+  ],
+  "turni_usati": 31,
+  "tetto_turni_lotto": 40,
+  "esito": "chiuso entro il tetto",
+  "umano_coinvolto": false
+}

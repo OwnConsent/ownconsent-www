@@ -424,3 +424,16 @@ URL senza barra: configurazione più redirect se il sito è già pubblicato.
 | @devops (L12) | Node ≥ 22.12, corepack, due lockfile per la cache, `ASTRO_TELEMETRY_DISABLED=1` (D8, D9) |
 | @design (L02, L10) | gate sul contrasto dell'anello nel footer (D6); gli URL senza barra e l'indirizzo `@ownconsent.example` di `01-pagine.md` sono superati da D2 e D3 |
 | @code-reviewer (L08), @accessibility (L09) | comandi di verifica di D3, D5 e D6 |
+
+## Aggiornamento del 2026-09-14 — D7 superata da DP-27 e DP-29
+
+Sezione aggiunta dalla sessione principale (`feature`) per registrare due decisioni di Andrea. Non è una nuova decisione architetturale, e il testo originale di D7 qui sopra resta com'è.
+
+- **DP-27.** L'indirizzo di contatto va nelle pagine legali: l'informativa deve identificare il titolare e dare un recapito (art. 13 GDPR). Stesso indirizzo, dallo stesso file di contenuto (`site/src/dati/contatto.json`, D3). Se verrà nominato un DPO, le pagine legali avranno un recapito distinto: è una previsione, non va fatta ora.
+- **DP-29** (https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5661111399). Nelle pagine legali il link `mailto:` non ha oggetto precompilato. L'oggetto per modalità resta solo sulle pagine SaaS, Hosted e On-premise.
+
+Cosa cambia rispetto a D7:
+- la frase «nessun indirizzo nelle bozze» non vale più: le bozze legali leggono l'indirizzo da `contatto.json` e non lo scrivono a mano;
+- lo schema del frontmatter (`titolo`, `descrizione`, `bozza`) resta invariato;
+- la spec registra la modifica in N2 (ristretta) e nel nuovo criterio N3.
+

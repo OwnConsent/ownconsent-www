@@ -162,8 +162,17 @@
       "gruppo": "Contenuto delle modalità",
       "dato": "il sorgente di site/ e la sua build di produzione, con l'indirizzo di contatto definito nel file di contenuto stabilito da ADR-0002",
       "quando": "cerco l'indirizzo nei file sorgente di site/ e negli HTML serviti; poi cambio l'indirizzo in quel solo file, rifaccio la build e ripeto la ricerca",
-      "allora": "prima della modifica l'indirizzo compare in un solo file sorgente di site/, e ogni link di contatto di ogni pagina è un mailto: a quell'unico indirizzo, con la modalità nell'oggetto (?subject=SaaS, ?subject=Hosted, ?subject=On-premise) e non nell'indirizzo; dopo la modifica e la nuova build il nuovo indirizzo compare in ogni link di contatto, ognuno con il proprio oggetto, e il vecchio non compare in nessun HTML servito",
+      "allora": "prima della modifica l'indirizzo compare in un solo file sorgente di site/, e ogni link di contatto di ogni pagina è un mailto: a quell'unico indirizzo; sulle pagine SaaS, Hosted e On-premise con la modalità nell'oggetto (?subject=SaaS, ?subject=Hosted, ?subject=On-premise) e non nell'indirizzo, sulle pagine legali senza oggetto precompilato (DP-29); dopo la modifica e la nuova build il nuovo indirizzo compare in ogni link di contatto, ognuno con il proprio oggetto dove previsto, e il vecchio non compare in nessun HTML servito",
       "marcatura_issue": "nuovo"
+    },
+    {
+      "id": "N3",
+      "gruppo": "Prezzi, IAB, pagine legali",
+      "dato": "la bozza dell'informativa privacy e le altre due pagine legali (termini di servizio, cookie policy)",
+      "quando": "leggo l'HTML servito di ciascuna",
+      "allora": "l'informativa privacy identifica il titolare del trattamento con il segnaposto dichiarato dell'identità del titolare e contiene un link mailto: all'unico indirizzo di contatto (N2) senza oggetto precompilato; in nessuna delle tre pagine legali un link mailto: ha un oggetto precompilato (nessun ?subject=) e nessuna contiene un recapito diverso da quell'indirizzo",
+      "marcatura_issue": "nuovo",
+      "fonte": "DP-27 (art. 13: identificare il titolare e dare un recapito; stesso indirizzo, stesso file di contenuto) e DP-29 (https://github.com/OwnConsent/ownconsent-www/issues/8#issuecomment-5661111399)"
     }
   ],
   "non_goal": [
@@ -524,6 +533,22 @@
       "scadenza": "la consegna 2 (registrazione, pagamento finto, contatore e tetto): quando il meccanismo è in produzione l'obbligo manuale decade e si registra la chiusura",
       "verifica": "al gate di pubblicazione il responsabile è nominato; durante la validità, ogni cliente SaaS attivato a mano è noto al responsabile",
       "fonte": "decisione di Andrea in chat, dopo l'apertura di #13"
+    }
+  ],
+  "previsioni": [
+    {
+      "cosa": "recapito del DPO distinto nelle pagine legali",
+      "quando": "solo se verrà nominato un DPO",
+      "fonte": "DP-27",
+      "stato": "non fatto: previsione"
+    }
+  ],
+  "modifiche": [
+    {
+      "data": "2026-09-14",
+      "cosa": "N2 ristretta (oggetto del mailto solo sulle pagine di vendita, legali senza oggetto) e nuovo criterio N3 (titolare e recapito nell'informativa)",
+      "fonte": "DP-27, DP-29",
+      "autore": "feature (sessione principale), registrazione di decisioni di Andrea"
     }
   ]
 }

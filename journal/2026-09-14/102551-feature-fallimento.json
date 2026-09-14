@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-14T10:25:51+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "titolo": "Il comando che apriva la PR #21 è proseguito dopo due errori e ha pubblicato una verifica con errori",
+  "contesto": "Comando unico con set -euo pipefail: scriveva spec, ADR, issue, plan.json, journal e poi push e PR. La voce di journal non è stata scritta perché journal/2026-09-14 non esiste sul ramo nato da origin/main (la cartella c'era solo sul ramo della #20); il commit del journal non aveva nulla da committare; plan.json non elencava N3 in criteri_issue. Il comando è andato avanti comunque fino a push, gh pr create e commento.",
+  "evidenza": [
+    "output: FileNotFoundError: [Errno 2] No such file or directory: 'journal/2026-09-14/102442-feature-decisione.json'",
+    "output: nothing to commit, working tree clean",
+    "output della verifica: criteri del piano diversi dalla issue: solo issue ['N3'], solo piano []; lotti che citano criteri fuori dalla issue: ['N3']",
+    "commento con la verifica errata pubblicato su #21 (issuecomment-5661134453)"
+  ],
+  "cosa_si_e_imparato": "In questo ambiente set -e non ha fermato il comando dopo un errore di uno script Python e di git commit: le condizioni che contano vanno controllate esplicitamente (|| exit 1), e un comando che pubblica non si mette in coda a passi che possono fallire senza un controllo davanti. Le cartelle del journal di un giorno nuovo vanno create con makedirs su ogni ramo.",
+  "esito": "plan.json corretto (N3 in criteri_issue), verifica rilanciata senza errori, voci scritte e committate sul ramo di #21, commento di correzione pubblicato",
+  "umano_coinvolto": false
+}

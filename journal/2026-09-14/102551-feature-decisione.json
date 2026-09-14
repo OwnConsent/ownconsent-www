@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-14T10:25:51+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L00, L03",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "DP-27 e DP-29 registrate nella spec (N2 ristretta, nuovo N3), nella issue #8 e in ADR-0002 (D7 superata)",
+  "contesto": "Dopo le decisioni di Andrea la spec mergiata diceva ancora che ogni link di contatto porta la modalità nell'oggetto, e ADR-0002 D7 escludeva l'indirizzo dalle bozze legali. Senza un criterio, l'obbligo dell'art. 13 non avrebbe avuto un test. Voce scritta ora: il primo tentativo è fallito (vedi la voce di fallimento accanto).",
+  "alternative": [
+    {
+      "opzione": "un agente product-spec e uno architect nuovi",
+      "scartata_perche": "modifiche di registrazione dettate da Andrea, due invocazioni da circa 100-180 mila token"
+    },
+    {
+      "opzione": "restringere N2 senza aggiungere N3",
+      "scartata_perche": "l'obbligo di identificare il titolare e dare un recapito resterebbe senza criterio né test; N3 è da confermare da Andrea nella PR #21"
+    }
+  ],
+  "evidenza": [
+    "commit 9e7433f (spec: N2 ristretta, N3, previsioni, modifiche) e 5e66ed5 (ADR-0002, sezione datata; D7 originale invariata), firmati orchestrator",
+    "corpo della issue #8 aggiornato con N2 e N3",
+    "plan.json: N3 in criteri_issue e nei criteri di L04 e L07"
+  ],
+  "esito": "PR #21 aperta; N3 da confermare da Andrea",
+  "umano_coinvolto": true
+}

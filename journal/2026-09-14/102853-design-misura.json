@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-14T10:28:53+02:00",
+  "agente": "design",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "R-L02",
+  "tipo": "misura",
+  "titolo": "Il commit e8e62bf, senza riga scritta a mano, viene firmato dal hook con Cantiere-Agent: orchestrator, non design",
+  "contesto": "Dopo aver registrato l'errore del commit precedente (102821-design-fallimento.json), ho committato quella stessa voce senza scrivere alcuna riga Cantiere-Agent a mano, lasciando fare a githooks/prepare-commit-msg com'era richiesto dal giro.",
+  "evidenza": [
+    "comando: git show -s --format='%(trailers:key=Cantiere-Agent,valueonly)' HEAD -> 'orchestrator'",
+    "comando: git show -s --format='%B' HEAD -> corpo con in coda 'Cantiere-Agent: orchestrator' e 'Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>', aggiunti dal hook",
+    "comando: cat .work/.current-agent -> 'orchestrator' (nessuno spazio finale, nessun newline)",
+    "comando: ls -la .work/ -> il file .current-agent ha mtime successivo all'avvio della sessione (10:28, sessione avviata alle 10:21); non l'ho creato né modificato io, come da istruzione di non toccarlo"
+  ],
+  "esito": "il giro chiede: 'Se non stampa design, scrivilo nel journal senza correggerlo' — registrato qui, nessuna azione su .work/.current-agent né sul commit",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

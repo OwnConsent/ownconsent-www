@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-14T10:58:11+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Commit della sessione principale in una propria worktree senza firma: il marcatore è cercato con percorso relativo",
+  "contesto": "PR #22 preparata in .claude/worktrees/handoff-regole, creata da origin/main aggiornato, con commit fatti via git -C. prepare-commit-msg legge .work/.current-agent relativo alla radice della worktree, dove il file non esiste; senza marcatore l'hook non firma. Diverso dal caso di R-L02, dove l'hook era la versione vecchia del ramo.",
+  "evidenza": [
+    "$ git log --format='%h %s | %(trailers:key=Cantiere-Agent,valueonly)' origin/main..HEAD (nella worktree) → b3dcc26 … | (vuoto); cb481f5 … | (vuoto)",
+    "commit f86d81c nella working tree principale, stesso momento: firmato orchestrator"
+  ],
+  "cosa_si_e_imparato": "Il marcatore del ruolo vive nella working tree principale: ogni commit fatto da un'altra worktree, della sessione o di un agente, non trova il marcatore corretto. È un limite del disegno degli hook con le worktree, da riportare a chi li mantiene; la sessione non lo aggira scrivendo il marcatore a mano.",
+  "esito": "riportato su #22; storia non riscritta",
+  "umano_coinvolto": false
+}

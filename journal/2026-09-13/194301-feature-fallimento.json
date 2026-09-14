@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-13T19:43:01+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01, L02",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "titolo": "L01 e L02 interrotti dal limite di sessione dell'account (HTTP 429); lavoro parziale salvato come patch e scartato, lotti da rilanciare da zero",
+  "contesto": "I tre lotti del passo 2 sono partiti in parallelo. L01 (@performance) e L02 (@design) hanno ricevuto «You've hit your session limit · resets 7:40pm (Europe/Rome)», error type rate_limit, HTTP 429; L11 (@privacy) ha finito. Lo stesso account serve allo sviluppo della CMP, che ha la precedenza.",
+  "alternative": [
+    {
+      "opzione": "riprendere gli agenti interrotti",
+      "scartata_perche": "vietato dalla regola di docs/HANDOFF.md sulle riprese"
+    },
+    {
+      "opzione": "passare il diff parziale a un agente nuovo come punto di partenza",
+      "scartata_perche": "lavoro senza journal né motivazione: l'agente nuovo lo adotterebbe senza sapere perché esiste (per esempio le soglie di L01)"
+    }
+  ],
+  "evidenza": [
+    "notifiche di fine: status failed, rate_limit HTTP 429, modello claude-sonnet-5, per L01 e L02",
+    "L01: nessun commit, contracts/perf-budgets.json modificato (16 righe aggiunte, 2 tolte), nessuna voce di journal",
+    "patch salvate in .work/issue-8/parziali/L01-parziale.patch e L02-parziale.patch prima di rimuovere worktree e rami",
+    "token di L01 e L02 non riportati dall'harness per le invocazioni fallite"
+  ],
+  "cosa_si_e_imparato": "Tre agenti in parallelo consumano il limite di sessione dell'account in pochi minuti, e l'interruzione lascia worktree sporche senza journal. Il parallelismo va pesato anche sul limite condiviso, non solo sui file disgiunti; e un agente dovrebbe scrivere la voce di journal della decisione prima di modificare il file, non alla fine.",
+  "esito": "worktree e rami di L01 e L02 rimossi dopo il salvataggio; rilancio con agenti nuovi",
+  "umano_coinvolto": true
+}

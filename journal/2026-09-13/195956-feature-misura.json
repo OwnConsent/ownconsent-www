@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-13T19:59:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L02",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Verifica di L02: la coppia focus-ring/brand-bg tolta dai controlli ha contrasto 1,06:1 (chiaro) e 1,79:1 (scuro)",
+  "contesto": "@design ha rimosso dai controlli obbligatori la coppia che falliva, motivando con lo scarto di 2 px dell'anello di focus. Una verifica tolta dopo un fallimento va misurata, non accettata sulla motivazione.",
+  "evidenza": [
+    "$ python3 docs/design/contrast-check.py | tail -1 → TUTTE LE COPPIE OBBLIGATORIE PASSANO",
+    "calcolo WCAG della sessione principale sui token: light focus-ring #7A4B00 vs brand-bg #175A9E -> 1.06:1; dark focus-ring #F0AA2E vs brand-bg #3D8ADC -> 1.79:1; soglia 3.0:1",
+    "consumo misurato verso GL05: L00 115622 + L11 54182 + L01 140930 + L02 150453 = 461187 token"
+  ],
+  "esito": "PR-3 aperta con il rischio in evidenza; proposta: vincolo di struttura in ADR-0002 e misura sul sito reso in L09",
+  "umano_coinvolto": false
+}

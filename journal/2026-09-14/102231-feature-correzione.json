@@ -1,0 +1,12 @@
+{
+  "ts": "2026-09-14T10:22:31+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01",
+  "stadio": "02-contratti",
+  "tipo": "correzione",
+  "corregge": "2026-09-13/212157-feature-misura.json",
+  "cosa_era_sbagliato": "La voce attribuiva l'errore alla citazione («Ho pubblicato una citazione dopo che il mio stesso controllo l'aveva smentita») e lasciava l'accento «da decidere al merge». La citazione con «realtà» era giusta: sbagliato era il contratto, scritto «realta».",
+  "come_lo_so": "Decisione di Andrea: «correggi realta in realtà nel contratto. La tua citazione era giusta, il file era sbagliato». Misura: ascii(segmento) del campo rete → 'base di laboratorio stabile e non come modello della realta:'.",
+  "esito": "accento corretto nel contratto con il commit b4fec37 sul ramo contracts/perf-budgets-accento; la voce 212157 resta. Altre parole senza accento trovate nel file e non corrette: 5:piu\n5:puo\n5:piu\n5:piu\n5:piu\n5:puo\n7:realta\n21:perche\n21:puo\n21:piu\n21:perche\n22:finche\n22:cioe"
+}

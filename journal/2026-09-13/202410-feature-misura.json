@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-13T20:24:10+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L03",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Prerequisiti della macchina per ADR-0002 e contrasto del focus nel footer",
+  "contesto": "L03 riporta Node 20 senza pnpm, mentre ADR-0002 richiede Node >= 22.12, e l'anello di focus sotto 3:1 su bg-inverse. Misurati dalla sessione principale invece di riportare il report.",
+  "evidenza": [
+    "$ node --version → v20.20.2",
+    "$ pnpm --version → /bin/bash: line 68: pnpm: command not found\n(comando non trovato)",
+    "light: focus-ring #7A4B00 vs bg-inverse #17191C -> 2.38:1 (soglia 3.0:1)",
+    "dark: focus-ring #F0AA2E vs bg-inverse #F6F7F8 -> 1.87:1 (soglia 3.0:1)"
+  ],
+  "esito": "DP-28 e R-L02 confermati dalle misure",
+  "umano_coinvolto": false
+}

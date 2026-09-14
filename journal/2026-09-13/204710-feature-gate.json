@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-13T20:47:10+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L01, L03",
+  "stadio": "02-contratti",
+  "tipo": "gate",
+  "titolo": "ADR-0001 non ratificato dopo R-L01: obiezione residua O1r sul nome del profilo di rete; mi fermo prima di un secondo rimando",
+  "contesto": "Terzo scambio fra @performance e @architect sullo stesso contratto (L01, ADR-0001, R-L01, ratifica). L'obiezione residua è una scelta fra due opzioni, non una correzione di testo: (a) valori invariati senza il nome Slow 4G, (b) preset Slow 4G di DevTools con possibile revisione della soglia.",
+  "chi_ha_deciso": "sessione principale (limite di due rimandi per lotto, costo per giro misurato)",
+  "cosa_serviva": "Decisione di Andrea fra (a) e (b), oppure mandato a @performance di scegliere in un giro R-L01b",
+  "evidenza": [
+    "ratifica di @architect: 75869 token, 10 turni su 10, commit 77619cd (solo ADR-0001 e journal, contratto invariato)",
+    "costo dei giri su questo contratto: L01 140930, R-L01 95648, parte di L03 (183539 condiviso con ADR-0002), ratifica 75869",
+    "consumo misurato verso GL05: 740374 + 75869 = 816243 token",
+    "@architect segnala che 204000-performance-fallimento.json dichiara un orario (20:40:00) non misurato"
+  ],
+  "esito": "ramo inviato, O1r riportata su #17, worktree rimossa; nessun nuovo giro senza decisione",
+  "umano_coinvolto": true
+}

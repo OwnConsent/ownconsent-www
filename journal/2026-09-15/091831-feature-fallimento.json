@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T09:18:31+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "CI1 (secondo giro) fermo al limite di 30 turni senza commit e senza report",
+  "contesto": "Il prompt chiedeva lettura di ADR e spec, workflow e script, cinque famiglie di verifiche locali (YAML, bash -n, shellcheck, area.sh su 4 repository di prova, actionlint via docker), journal e commit con amend del trailer, senza un tetto di turni né un punto di arresto. Il limite di 30 turni dell'agente non era noto alla sessione.",
+  "evidenza": [
+    "notifica di fine task: «stopped at its 30-turn limit», tool_uses=31, subagent_tokens=122192, duration_ms=337844, nessun SubagentHandback",
+    "$ git -C .claude/worktrees/ci1 log --oneline 5bd39b6..HEAD → nessun commit",
+    "$ git -C .claude/worktrees/ci1 status --porcelain --untracked-files=all → ?? .github/ci/area.sh, ?? .github/workflows/ci.yml, 4 voci devops",
+    "lettura della sessione di ci.yml e area.sh: coerenti con ADR-0003 D1, D4, D5, D6; dubbio aperto su version-file di golangci-lint-action con working-directory api contro api/.golangci-lint-version di D5"
+  ],
+  "cosa_si_e_imparato": "Un lotto con molte verifiche va dato con un tetto esplicito e un punto di arresto che produce comunque un report (fermati a N-3 e riporta). Il lavoro non è andato perso perché stava nei file della worktree, non nel contesto dell'agente: la regola di HANDOFF sul non riprendere ha retto, il giro successivo è un agente nuovo con tetto 20 e arresto a 17.",
+  "esito": "lanciato un @devops nuovo per chiudere il dubbio su version-file, ripetere le verifiche essenziali e committare",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,13 @@
+{
+  "ts": "2026-09-15T08:39:44+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "correzione",
+  "corregge": "2026-09-15/083847-feature-decisione.json",
+  "cosa_era_sbagliato": "In alternative[0].scartata_perche manca il nome del contesto: il testo dice «una frase che rimanda a , nessun comando da togliere» e doveva dire «una frase che rimanda a `ci`, nessun comando da togliere».",
+  "come_lo_so": "La voce è stata scritta con un heredoc non quotato (<<EOF): bash ha eseguito `ci` come sostituzione di comando e ha stampato «/bin/bash: line 44: ci: command not found». $ grep -n 'AC20' 083847-feature-decisione.json → riga 11 con «rimanda a , nessun». python3 -m json.tool su tutte le voci feature del giorno: tutte valide; nessun'altra conteneva backtick da espandere.",
+  "cosa_si_e_imparato": "Le voci di journal si scrivono con heredoc quotato (<<'EOF') e i valori dinamici si sostituiscono dopo; il JSON valido non prova che il contenuto sia quello voluto.",
+  "esito": "la voce superata resta, questa la corregge"
+}

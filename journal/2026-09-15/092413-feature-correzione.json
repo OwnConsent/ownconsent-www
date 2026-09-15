@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-15T09:24:13+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "correzione",
+  "corregge": "2026-09-15/084309-orchestrator-decisione.json, 2026-09-15/084310-orchestrator-decisione.json, 2026-09-15/084311-orchestrator-gate.json, 2026-09-15/084312-orchestrator-decisione.json, 2026-09-15/082433-feature-gate.json, 2026-09-15/082433-feature-misura.json",
+  "cosa_era_sbagliato": "I ts delle quattro voci di @orchestrator (08:43:09, 08:43:10, 08:43:11, 08:43:12) non sono l'ora di scrittura: sono a un secondo esatto l'uno dall'altro, mentre i file sono stati scritti fra 08:45:34 e 08:46:06 a 10-13 secondi di distanza; sono stati generati in sequenza, non letti da date al momento. Le due voci 082433 della sessione principale portano l'ora di un date eseguito in un comando precedente (08:24:33), non quella della scrittura (08:25:01).",
+  "come_lo_so": "Controllo prima del commit su tutte le voci non tracciate: python3 legge ts e os.path.getmtime. Output: 084309-orchestrator-decisione ts 08:43:09 mtime 08:45:34; 084310 ts 08:43:10 mtime 08:45:44; 084311 ts 08:43:11 mtime 08:45:53; 084312 ts 08:43:12 mtime 08:46:06; 082433-feature-gate e -misura ts 08:24:33 mtime 08:25:01. Tutte le altre 19 voci: ts uguale alla mtime al secondo, oppure (084218-orchestrator-misura) 22 s prima.",
+  "cosa_si_e_imparato": "Il controllo ts contro mtime va fatto su ogni voce prima del commit, anche su quelle della sessione: il difetto era sia negli agenti sia qui. Uno scarto di secondi con ts letto da date poco prima è rumore; ts equispaziati di un secondo su file scritti a minuti di distanza sono numeri inventati.",
+  "esito": "le voci superate restano, questa le corregge; il controllo è citato nella PR",
+  "umano_coinvolto": false
+}

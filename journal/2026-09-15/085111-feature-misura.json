@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-15T08:51:11+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Marcatore di ruolo letto prima del lancio di @architect",
+  "contesto": "Dopo il fallimento 083847 si legge il marcatore prima di ogni giro che committa. @orchestrator ha riportato il file assente verso le 08:41 e presente alle 08:42 con mtime 08:40:12: qualcosa lo cancella e lo riscrive durante i giri.",
+  "evidenza": [
+    "$ ls -l --time-style=full-iso .git/cantiere-current-agent → 12 byte, mtime 2026-09-15 08:49:51.895508587 +0200",
+    "$ cat .git/cantiere-current-agent → orchestrator",
+    "mtime osservate finora: 08:36:59, 08:40:12, 08:49:51; contenuto sempre 'orchestrator', anche durante il giro di @product-spec"
+  ],
+  "esito": "all'architect è chiesto di leggerlo prima e dopo il proprio commit",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T08:51:11+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "decisione",
+  "titolo": "Piano accettato dopo verifica: stadio contratti ridotto al solo ADR-0003, nessun lavoro per @database e @design",
+  "contesto": "La skill feature prevede che architect, database e design aggiornino contracts/ prima della costruzione. Il piano di @orchestrator dichiara lavoro solo per @architect (ADR, non contracts/) e motiva il nessuno per gli altri due.",
+  "alternative": [
+    { "opzione": "lanciare comunque @database e @design per coprire lo stadio come scritto nella skill", "scartata_perche": "la CI non ha schema, query né interfaccia visibile; due giri senza oggetto costano token e produrrebbero lavoro inventato" },
+    { "opzione": "far partire CI1 e CI2 in parallelo con CI0", "scartata_perche": "si implementa solo da artefatti committati: il workflow dipende da D1-D8, che esistono solo quando l'ADR è nel ramo" }
+  ],
+  "evidenza": [
+    "python3 su .work/issue-25/plan.json: lotti CI0 architect [docs/adr/0003-contesto-ci.md], CI1 devops [.github/workflows/ci.yml, .github/ci/**], CI2 docs-writer [docs/DEFINITION-OF-DONE.md], CI3 qa-test [tests/ci/**, .work/issue-25/prove/**]",
+    "overlap di file fra lotti: []; AC non coperti: ['AC21'] (gate umano)",
+    "$ command -v actionlint act gh node pnpm go golangci-lint (misura di @orchestrator): actionlint, act, golangci-lint assenti; node v20.20.2, sotto il minimo 22.12 dichiarato in CLAUDE.md"
+  ],
+  "esito": "lanciato @architect su CI0",
+  "umano_coinvolto": false
+}

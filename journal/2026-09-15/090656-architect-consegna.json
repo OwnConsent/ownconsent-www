@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-15T09:06:56+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "consegna",
+  "adr": "ADR-0003",
+  "titolo": "ADR-0003 committato su ci/issue-25: D1, D2, D5, D6, D8 decisi; D3 in parte rinviato; D4 cache rinviata; D7 rinviato; tutte le scadenze scritte",
+  "commit": "5bd39b6",
+  "dod_soddisfatta": {
+    "adr_per_ogni_scelta_vincolante": "sì: docs/adr/0003-contesto-ci.md, D1-D8",
+    "contratti_aggiornati": "nessuno per scelta: contracts/ è un non_goal della spec; divergenze da ratificare elencate nell'ADR (contracts/perf-budgets.json:33, ADR-0001, ADR-0002 riga 424, CLAUDE.md Comandi, definizione di area nella spec)",
+    "consumatori_impattati_per_agente": "sì: tabella finale dell'ADR (devops CI1 e L12, qa-test CI3, docs-writer CI2, frontend L05, backend prima PR di api/, database, performance, code-reviewer, security)"
+  },
+  "evidenza": [
+    "$ git show --stat HEAD -> 7 files changed, 641 insertions(+): docs/adr/0003-contesto-ci.md e 6 voci architect di journal/2026-09-15",
+    "$ git log -1 --format='%(trailers)' -> Cantiere-Agent: orchestrator; Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>; Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>",
+    "$ ls -l --time-style=full-iso .git/cantiere-current-agent (prima e subito dopo il commit) -> 12 byte, mtime 2026-09-15 09:06:17.763969931 +0200; cat -> orchestrator"
+  ],
+  "cosa_non_torna": "Il commit porta la firma Cantiere-Agent: orchestrator, non architect: il marcatore conteneva orchestrator e non è stato modificato (vincolo del lotto). L'autore del lotto è questo journal.",
+  "esito": "consegnato; voce scritta dopo il commit, non tracciata",
+  "umano_coinvolto": false
+}

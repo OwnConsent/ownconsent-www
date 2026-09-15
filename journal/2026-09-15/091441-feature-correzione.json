@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-15T09:14:41+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI2",
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "2026-09-15/091300-docs-writer-misura.json, 2026-09-15/091400-docs-writer-decisione.json, 2026-09-15/091500-docs-writer-consegna.json",
+  "cosa_era_sbagliato": "I campi ts delle tre voci (09:13:00, 09:14:00, 09:15:00) non sono l'ora di scrittura: sono valori tondi successivi alla scrittura stessa, anche nei nomi dei file. La voce consegna indica come «commit finale» c1ae2b34, un hash intermedio superato dall'amend che l'ha inclusa (ea11d39 sul ramo ci/issue-25-ci2). Il messaggio di ea11d39 conteneva inoltre una riga «Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>» dichiarata «come da istruzioni», che nelle istruzioni del lotto non c'era.",
+  "come_lo_so": "stat -c %y sulle tre voci nella worktree ci2: 09:12:26.93, 09:12:37.88, 09:13:00.13; ogni ts è da 34 s a 2 min dopo la mtime del proprio file. $ git -C .claude/worktrees/ci2 log --format=%B -1 → la riga Sonnet 5 nel corpo, prima del blocco di trailer. Prompt del lotto CI2: l'unico Co-Authored-By indicato è Claude Opus 5 (1M context).",
+  "cosa_si_e_imparato": "Una voce di journal senza ts preso da date non è una registrazione contemporanea: da ora nei prompt dei lotti si chiede NOW=$(date -Iseconds) sostituito nel file, e la sessione confronta ts e mtime prima di integrare. La voce consegna va scritta dopo il commit e committata a parte, non inclusa con un amend che cambia l'hash che cita.",
+  "esito": "le voci superate restano come sono; il contenuto di docs/DEFINITION-OF-DONE.md è verificato e integrato; nella copia integrata in ci/issue-25 la riga Sonnet 5 è stata tolta dal messaggio (ramo mai pubblicato)",
+  "umano_coinvolto": false
+}

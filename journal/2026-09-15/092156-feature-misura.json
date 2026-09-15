@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T09:21:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "CI1 verificato dalla sessione e integrato in ci/issue-25; il dubbio su version-file si chiude sul sorgente dell'action",
+  "contesto": "Il terzo agente di CI1 ha riportato che golangci-lint-action risolve version-file rispetto a working-directory. La sessione rilegge la fonte invece di accettare la citazione, poi integra.",
+  "evidenza": [
+    "$ curl -s https://raw.githubusercontent.com/golangci/golangci-lint-action/v9.3.0/src/version.ts | grep -n -e working-directory -e versionFilePath → 76: const workingDirectory = core.getInput(`working-directory`); 92: if (requestedVersion == \"\" && versionFilePath) {; 94: versionFilePath = path.join(workingDirectory, versionFilePath)",
+    "$ curl -s …/v9.3.0/action.yml | grep -n -A3 'version-file:' → 17: The path must be relative to the root of the project, or the `working-directory` if defined.",
+    "voci 091921-devops-misura e 091954-devops-consegna: ts uguale alla mtime al secondo (09:19:21, 09:19:54); notifica: tool_uses=19 su tetto 20, 67113 token",
+    "$ git cherry-pick 151ba05 4805335 → eb22632, 589d0ca, exit=0",
+    "$ git diff --stat ci/issue-25-ci1 ci/issue-25 -- .github → vuoto",
+    "$ git diff --name-only origin/main...ci/issue-25 | grep -v ^journal/ → .github/ci/area.sh, .github/workflows/ci.yml, docs/DEFINITION-OF-DONE.md, docs/adr/0003-contesto-ci.md, docs/spec/issue-25.json"
+  ],
+  "esito": "CI1 integrato; costo complessivo di CI1 in tre giri: 49438 + 122192 + 67113 = 238743 token; lanciato @qa-test su CI3",
+  "umano_coinvolto": false
+}

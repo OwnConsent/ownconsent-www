@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-15T08:42:18+02:00",
+  "agente": "orchestrator",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Strumenti disponibili per verificare ci in locale: niente actionlint, act, golangci-lint; Node della shell sotto il minimo",
+  "contesto": "Il piano deve separare le verifiche locali da quelle che richiedono PR di prova. Prima di assegnarle si misura quali strumenti ci sono, invece di darli per disponibili.",
+  "evidenza": [
+    "$ command -v actionlint act gh node pnpm go golangci-lint; echo exit=$? -> /usr/bin/gh, /home/andreapernici/.nvm/versions/node/v20.20.2/bin/node, /usr/bin/pnpm, /home/andreapernici/.local/bin/go; exit=0 (actionlint, act, golangci-lint non stampano nulla)",
+    "$ node -v -> v20.20.2 (shell non interattiva degli agenti; CLAUDE.md riporta v22.23.2 misurata il 14/09: sotto 22.12 Astro 5 non parte)",
+    "$ pnpm -v -> 12.4.1",
+    "$ go version -> go version go1.25.7 linux/amd64",
+    "$ python3 -c 'import yaml; print(yaml.__version__)' -> pyyaml 6.0.1",
+    "$ docker info --format '{{.ServerVersion}}' -> 29.8.0 (demone raggiungibile; nessuna immagine di actionlint o act misurata, scaricarla è un accesso di rete)",
+    "$ gh auth status -> Logged in to github.com account andreapernici, token admin: ogni scrittura via gh è un'azione verso l'esterno",
+    "$ ls ~/.nvm/versions/node/ -> bloccato da guard-paths.sh (fuori dal perimetro): non so se Node 22 è installato via nvm",
+    "$ grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md; echo exit=$? -> nessuna riga, exit=1",
+    "$ git merge-base --is-ancestor origin/main HEAD; echo $? -> 0",
+    "$ cat .git/cantiere-current-agent (08:41 circa) -> 'No such file or directory'; alle 08:42 ls -la .git mostra il file, 12 byte, mtime 08:40: lo stato del marcatore cambia durante il giro, non lo tocco"
+  ],
+  "esito": "in locale: lettura statica del workflow con python3+pyyaml, esecuzione degli script di area su commit finti con git, build e test del modulo Go di prova con go 1.25.7; non in locale: golangci-lint, astro check con Node 22, esecuzione del workflow (niente act)",
+  "umano_coinvolto": false
+}

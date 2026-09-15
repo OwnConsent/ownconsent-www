@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T08:43:10+02:00",
+  "agente": "orchestrator",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Contratti: lavoro solo per @architect (ADR-0003); @database e @design dichiarati senza lavoro",
+  "contesto": "La procedura chiede di aggiornare prima i contratti con @architect, @database e @design. La CI non ha schema dati, query né interfaccia visibile; la spec esclude contracts/ (non_goal), badge, servizi MongoDB e Redis.",
+  "alternative": [
+    { "opzione": "@database per preparare i servizi MongoDB (replica set) e Redis nel job", "scartata_perche": "non_goal con scadenza della spec: api/ non esiste e nessun test li richiede; la decisione si riapre con la PR del primo test di api/ che ne ha bisogno" },
+    { "opzione": "@design per un badge di stato o una pagina di stato", "scartata_perche": "non_goal esplicito della spec (nessun badge); nulla di visibile cambia" },
+    { "opzione": "@architect aggiorna subito $lettura_ci in contracts/perf-budgets.json, che nomina site-ci.yml", "scartata_perche": "non_goal: nessuna modifica a contracts/ in questa issue; ADR-0003 registra la divergenza con una scadenza (il giro di L12)" }
+  ],
+  "evidenza": [
+    "docs/spec/issue-25.json: dati_personali [], non_goal «Nessuna modifica ai tre workflow agentici esistenti né a contracts/», «Nessun servizio MongoDB o Redis nel job … Scadenza: la PR che introduce il primo test di api/ che ha bisogno di MongoDB»",
+    "$ ls contracts/db -> collections.md (non toccato)"
+  ],
+  "esito": "contratti_da_aggiornare del piano: architect docs/adr/0003-*.md; database nessuno; design nessuno; contracts/ nessuno",
+  "umano_coinvolto": false
+}

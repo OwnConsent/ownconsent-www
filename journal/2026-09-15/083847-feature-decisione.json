@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T08:38:47+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "La catena prosegue nonostante la premessa del criterio 9 sia smentita dalla misura",
+  "contesto": "Il criterio 9 presuppone che docs/DEFINITION-OF-DONE.md elenchi i comandi; non li elenca, sono in CLAUDE.md righe 64-75 e 160. CLAUDE.md dice di fermarsi quando la misura contraddice la descrizione; HANDOFF.md ferma la catena solo se domande_aperte non è vuoto, e la spec lo ha vuoto.",
+  "alternative": [
+    { "opzione": "fermare la catena e chiedere sulla issue se il bersaglio era CLAUDE.md", "scartata_perche": "la resa letterale della spec (AC20: una frase che rimanda a , nessun comando da togliere) non costruisce nulla di irreversibile e non tocca CLAUDE.md; la domanda si pone lo stesso, nella PR, senza bloccare gli altri 20 AC" },
+    { "opzione": "far togliere i comandi da CLAUDE.md", "scartata_perche": "è indovinare l'intenzione della issue e modificare le istruzioni di tutti gli agenti senza una persona" }
+  ],
+  "evidenza": [
+    "$ grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md → nessun output, exit=1",
+    "$ grep -n -e 'go test' -e 'pnpm lint' CLAUDE.md → 70, 71, 160",
+    "spec docs/spec/issue-25.json (7fb4c77): domande_aperte=[], 21 AC"
+  ],
+  "esito": "si prosegue allo stadio 02; la divergenza va fra le decisioni per una persona nella PR",
+  "umano_coinvolto": false
+}

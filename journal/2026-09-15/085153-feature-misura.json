@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T08:51:53+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "04-verifica-locale",
+  "tipo": "misura",
+  "titolo": "Node locale v20.20.2 in ogni tipo di shell: diverge dalla Toolchain di CLAUDE.md (v22.23.2, misurata il 14/09)",
+  "contesto": "Preparazione del passo 4. site/ e api/ non esistono, quindi nessun comando della tabella Comandi si applica a questo giro; la toolchain dichiarata sarà però quella con cui si riproducono localmente i passi del workflow. La cartella di installazione di nvm nella home è fuori dal perimetro (guard-paths.sh, misura di @orchestrator): non si sa se 22.23.2 è installata e non selezionata.",
+  "evidenza": [
+    "$ node -v → v20.20.2, exit=0",
+    "$ bash -lc 'node -v' → v20.20.2, exit=0",
+    "$ bash -ic 'node -v' → v20.20.2, exit=0",
+    "$ pnpm -v → 12.4.1, exit=0",
+    "CLAUDE.md, Toolchain: «node -v -> v22.23.2» misurata il 14/09 su WSL2",
+    "prima scrittura di questa voce fermata da guard-paths.sh perché il testo nominava il percorso letterale della cartella di nvm; nessun accesso a quel percorso era in corso: riformulata senza il percorso, secondo la regola di HANDOFF.md sul cambio di strumento dopo un falso positivo spiegabile"
+  ],
+  "esito": "divergenza segnalata nella PR; CLAUDE.md non si corregge da questo giro",
+  "umano_coinvolto": false
+}

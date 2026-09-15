@@ -1,0 +1,15 @@
+{
+  "ts": "2026-09-15T08:37:40+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "guard-paths.sh blocca la lettura del plugin cantiere per capire chi scrive .git/cantiere-current-agent",
+  "contesto": "Il commit 7fb4c77 di @product-spec è firmato 'orchestrator': il marcatore contiene 'orchestrator' (mtime 08:36:59). Volevo leggere nel plugin quale hook lo scrive; il grep sul percorso del plugin è stato fermato dall'hook.",
+  "evidenza": ["PreToolUse:Bash guard-paths.sh: GATE: il percorso '/home/andreapernici/src/ownconsent/cantiere/plugins/cantiere' porta fuori dal progetto"],
+  "chi_ha_deciso": "hook guard-paths.sh (perimetro voluto)",
+  "cosa_serviva": "Una persona che guardi nel plugin come viene aggiornato il marcatore di ruolo all'avvio di un subagente",
+  "esito": "non aggirato; la firma sbagliata si segnala nella PR, la storia non si riscrive",
+  "umano_coinvolto": true
+}

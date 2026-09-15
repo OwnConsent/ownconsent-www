@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:10:02+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "La worktree isolata dell'Agent parte da origin/main, non dal ramo attivo: CI1 fermo prima di scrivere",
+  "contesto": "CI1 lanciato con isolation: worktree assumendo che la worktree nascesse dal HEAD della working tree principale (ci/issue-25, 5bd39b6). Assunzione non misurata. Il prompt imponeva il controllo di ascendenza dell'ADR come primo passo, e il controllo ha fermato il lotto.",
+  "evidenza": [
+    "@devops, nella worktree .claude/worktrees/agent-…: $ git log --oneline -3 → 0e079fc, 29fd594, bd0ab74",
+    "@devops: $ git merge-base --is-ancestor 5bd39b6 HEAD → exit 1",
+    "notifica di fine task: tool_uses=5, subagent_tokens=49438, duration_ms=38293; nessun file scritto, nessun ramo creato"
+  ],
+  "cosa_si_e_imparato": "La base dell'isolamento automatico è il ramo di default remoto: un lotto che dipende da commit locali non ancora su origin non può usarla. Il controllo di ascendenza scritto come primo passo del prompt ha trasformato un lotto costruito sul contratto sbagliato in un fermo da 49k token. Si creano a mano le worktree dal ramo della feature con git worktree add e si passa il percorso all'agente.",
+  "esito": "CI1 da rilanciare in una worktree creata dalla sessione; CI2 probabilmente fermo per la stessa causa, in attesa del suo report",
+  "umano_coinvolto": false
+}

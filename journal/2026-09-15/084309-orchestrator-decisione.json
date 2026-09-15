@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-15T08:43:09+02:00",
+  "agente": "orchestrator",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "L-CI diviso in quattro lotti: ADR (architect), workflow (devops), frase della DoD (docs-writer), test di accettazione (qa-test)",
+  "contesto": "La spec ha 21 AC; AC21 è un gate umano. Il workflow è di @devops, i test non possono essere suoi (regola 3), AC20 va assegnato a un ruolo. Tre lotti futuri (L05, L12, api/) e la protezione di main dipenderanno dal nome `ci`, e contracts/perf-budgets.json ($lettura_ci) nomina già un altro file, .github/workflows/site-ci.yml, per la CI di L12.",
+  "alternative": [
+    { "opzione": "un solo lotto @devops con workflow, frase della DoD e test", "scartata_perche": "regola 3 del cantiere: chi scrive il workflow non scrive i test di accettazione; e @devops scriverebbe nella tabella che l'orchestratore usa per giudicare la sua DoD" },
+    { "opzione": "nessun ADR: il nome `ci` fissato solo dalla spec", "scartata_perche": "la scelta vincola più lotti (L05, L12, api/) e un required check: DoD di @architect. In più $lettura_ci e ADR-0002 (righe 386, 424) assegnano a L12 vincoli (telemetria, cache dei lockfile, file site-ci.yml) che ci eredita o rifiuta: va deciso per iscritto, non assorbito nel workflow" },
+    { "opzione": "frase di AC20 dentro il lotto @devops", "scartata_perche": "costa un'invocazione in meno, ma @devops modificherebbe il documento che definisce la propria DoD; la frase è un solo file, lotto piccolo e parallelo" },
+    { "opzione": "@qa-test in parallelo a @devops subito dopo l'ADR", "scartata_perche": "la DoD di @qa-test chiede test eseguiti; i controlli statici di AC12 e AC16 hanno bisogno del file del workflow, che prima di CI1 non esiste. Si serializza CI3 dopo CI1 invece di pagare una seconda invocazione di qa per l'esecuzione" },
+    { "opzione": "decidere nel piano se ci usa una cache", "scartata_perche": "vincola L12 (ADR-0002 riga 424 chiede la cache dei due lockfile) e cambia l'applicabilità di AC17 e AC18: è una decisione di ADR-0003, non dell'orchestratore" }
+  ],
+  "evidenza": [
+    "$ grep -n -i -e cache -e TELEMETRY -e L12 docs/adr/0002-struttura-site.md contracts/perf-budgets.json -> perf-budgets.json:33 «La CI (L12, .github/workflows/site-ci.yml) legge le soglie…»; 0002:386 «L12 imposta ASTRO_TELEMETRY_DISABLED=1»; 0002:424 «@devops (L12) | Node ≥ 22.12, corepack, due lockfile per la cache»",
+    "$ sed -n 135,150p docs/adr/0001-budget-pagine-pubbliche-laboratorio.md -> «la CI di L12 esegue quel comando e fallisce quando il test fallisce. Non reimplementa il confronto»",
+    "file posseduti senza sovrapposizioni: docs/adr/0003-*.md; .github/workflows/ci.yml e .github/ci/**; docs/DEFINITION-OF-DONE.md; tests/ci/** e .work/issue-25/prove/**"
+  ],
+  "esito": "piano proposto in .work/issue-25/plan.json; nessun lotto avviato",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-15T08:24:33+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "gate",
+  "titolo": "La branch protection non la modifica nessun agente di questo giro",
+  "contesto": "Il criterio chiede che `ci` diventi required status check, il non-goal vieta all'agente di toccare la protezione. La sessione ha un token admin che tecnicamente lo permetterebbe.",
+  "chi_ha_deciso": "Andrea, nel non-goal della issue #25 e nella regola 4 del cantiere",
+  "cosa_serviva": "Una persona che, dopo aver visto `ci` riportare verde su una PR che tocca solo docs/, aggiunga `ci` ai required status checks di main",
+  "esito": "la PR lo elenca fra le decisioni per una persona",
+  "umano_coinvolto": true
+}

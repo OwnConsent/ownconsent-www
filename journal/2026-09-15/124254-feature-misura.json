@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-15T12:42:54+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "SHA di commit delle quattro action di ci.yml, letti dai repository delle action",
+  "contesto": "Richiesta di Andrea sulla PR #26: fissare ogni action al suo SHA completo, con la versione in commento, prendendo gli SHA dal repository dell'action e non dalla memoria. Per il tag annotato di golangci-lint-action si usa il commit puntato (riga ^{}), non l'oggetto tag.",
+  "evidenza": [
+    "$ git ls-remote --tags https://github.com/actions/checkout | grep -E 'refs/tags/v4(\\^\\{\\})?$' → 11d5960a326750d5838078e36cf38b85af677262 refs/tags/v4",
+    "$ git ls-remote --tags https://github.com/actions/checkout | grep ^11d5960a326750d5838078e36cf38b85af677262 → refs/tags/v4, refs/tags/v4.4.0",
+    "$ git ls-remote --tags https://github.com/actions/setup-node | grep -E 'refs/tags/v7(\\^\\{\\})?$' → 820762786026740c76f36085b0efc47a31fe5020 refs/tags/v7",
+    "$ git ls-remote --tags https://github.com/actions/setup-node | grep ^820762786026740c76f36085b0efc47a31fe5020 → refs/tags/v7, refs/tags/v7.0.0",
+    "$ git ls-remote --tags https://github.com/actions/setup-go | grep -E 'refs/tags/v5(\\^\\{\\})?$' → 40f1582b2485089dde7abd97c1529aa768e1baff refs/tags/v5",
+    "$ git ls-remote --tags https://github.com/actions/setup-go | grep ^40f1582b2485089dde7abd97c1529aa768e1baff → refs/tags/v5, refs/tags/v5.6.0",
+    "$ git ls-remote --tags https://github.com/golangci/golangci-lint-action | grep -E 'refs/tags/v9(\\^\\{\\})?$' → db9de0fc1a667e1a49d2291a1a042dff081d78f6 refs/tags/v9; ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a refs/tags/v9^{}",
+    "$ git ls-remote --tags https://github.com/golangci/golangci-lint-action | grep ^ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a → refs/tags/v9^{}, refs/tags/v9.3.0^{}",
+    "controllo incrociato: log di ci del run 34942254235, [Set up job]: Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262); 'actions/setup-node@v7' (SHA:820762786026740c76f36085b0efc47a31fe5020)"
+  ],
+  "esito": "ci.yml: checkout@11d5960… # v4.4.0, setup-node@8207627… # v7.0.0, setup-go@40f1582… # v5.6.0, golangci-lint-action@ba0d7d2… # v9.3.0",
+  "umano_coinvolto": true
+}

@@ -21,12 +21,30 @@
     {
       "termine": "area site/",
       "significato": "presente: il commit contiene site/package.json. Assente: il commit non contiene alcun percorso sotto site/. Incompleta: il commit contiene file sotto site/ ma non site/package.json",
-      "come_si_osserva": "git ls-tree -r --name-only <sha> -- site/"
+      "come_si_osserva": "git ls-tree -r --name-only <sha> -- site/",
+      "correzione": {
+        "data": "2026-09-15",
+        "deciso_da": "Andrea",
+        "significato": "«il commit» è il SHA su cui ci fa il checkout: per gli eventi di PR il merge commit che GitHub costruisce fra la testa della PR e main (GITHUB_SHA), non lo SHA di testa; per i push su main, il commit di main. Presente, assente e incompleta restano definiti come sopra (site/package.json).",
+        "come_si_osserva": "lo SHA stampato dal passo «SHA verificato» nel log di ci, poi git ls-tree -r --name-only <quello SHA> -- site/",
+        "perche": "ciò che deve risultare verde è quello che finirà su main",
+        "sostituisce": "l'uso della testa della PR, ereditato dal «SHA osservato» della definizione «contesto ci», per stabilire lo stato dell'area. Il check run resta sullo SHA di testa.",
+        "rif": "DESIGN-AMENDMENTS.md A01; ADR-0003 D6"
+      }
     },
     {
       "termine": "area api/",
       "significato": "presente: il commit contiene api/go.mod. Assente: il commit non contiene alcun percorso sotto api/. Incompleta: il commit contiene file sotto api/ ma non api/go.mod",
-      "come_si_osserva": "git ls-tree -r --name-only <sha> -- api/"
+      "come_si_osserva": "git ls-tree -r --name-only <sha> -- api/",
+      "correzione": {
+        "data": "2026-09-15",
+        "deciso_da": "Andrea",
+        "significato": "«il commit» è il SHA su cui ci fa il checkout: per gli eventi di PR il merge commit che GitHub costruisce fra la testa della PR e main (GITHUB_SHA), non lo SHA di testa; per i push su main, il commit di main. Presente, assente e incompleta restano definiti come sopra (api/go.mod).",
+        "come_si_osserva": "lo SHA stampato dal passo «SHA verificato» nel log di ci, poi git ls-tree -r --name-only <quello SHA> -- api/",
+        "perche": "ciò che deve risultare verde è quello che finirà su main",
+        "sostituisce": "l'uso della testa della PR, ereditato dal «SHA osservato» della definizione «contesto ci», per stabilire lo stato dell'area. Il check run resta sullo SHA di testa.",
+        "rif": "DESIGN-AMENDMENTS.md A01; ADR-0003 D6"
+      }
     },
     {
       "termine": "PR di prova",

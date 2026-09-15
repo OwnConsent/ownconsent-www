@@ -73,6 +73,9 @@ IVA e dati di pagamento restano fuori, deliberatamente.
 | Build API | `cd api && go build ./...` |
 | E2E | `pnpm exec playwright test` |
 
+> La tabella serve a chi lavora in locale. Il verdetto che conta su una PR è il
+> contesto `ci`: se la tabella e `ci` divergono, è la tabella a essere sbagliata.
+
 **Toolchain, misurata il 14/09 su WSL2:**
 
     node -v   ->  v22.23.2

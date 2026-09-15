@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:19:54+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "commit del lotto CI1 sul ramo ci/issue-25-ci1, dopo aver chiuso il dubbio su version-file lasciato aperto dalla sessione precedente",
+  "contesto": "ripresa del lavoro lasciato non committato dalla sessione precedente (misurato con git status --porcelain --untracked-files=all sui sette file: .github/ci/area.sh, .github/workflows/ci.yml e quattro voci di journal esistenti). Chiuso il dubbio aperto su come golangci-lint-action@v9 (v9.3.0) risolve l'input version-file rispetto a working-directory, con fonte nel sorgente dell'action (vedi voce misura precedente): nessuna correzione necessaria, ci.yml e ADR-0003 D5 sono coerenti.",
+  "cosa_si_e_imparato": "ripetute le cinque verifiche della sessione precedente, stesso esito: python3 -c 'import yaml; yaml.safe_load(open(\".github/workflows/ci.yml\"))' senza errori; bash -n .github/ci/area.sh senza errori; bash .github/ci/area.sh site -> 'area site/: assente', exit=0; bash .github/ci/area.sh api -> 'area api/: assente', exit=0 (ne' site/ ne' api/ esistono ancora in questa worktree, coerente con ADR-0003 D4); docker run rhysd/actionlint:latest -color .github/workflows/ci.yml -> nessun output, exit=0.",
+  "evidenza": [
+    "git status --porcelain --untracked-files=all prima del commit -> i sette file attesi, nessun altro",
+    "git add per percorso esplicito (mai -A), git status successivo -> tutti e sette in stato A, nessuna sorpresa",
+    "commit 151ba05: 'ci: contesto ci — build, lint, typecheck e test su ogni PR verso main (#25)', poi amend via git interpret-trailers per aggiungere il trailer Co-Authored-By richiesto"
+  ],
+  "esito": "lotto CI1 committato sul ramo ci/issue-25-ci1, HEAD 151ba05; nessun push, nessuna PR aperta",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,334 @@
+{
+  "id": "25",
+  "titolo": "L-CI — Integrazione continua e required status checks su main",
+  "problema": "La Definition of Done chiede build, lint, typecheck e go test -race puliti, ma oggi nessuno li esegue: li dichiara l'agente che ha scritto il codice. Su main c'è una protezione senza required status checks, e nessuno dei tre workflow esistenti esegue build, lint o test. Prima che L05 crei site/ serve un controllo, sempre presente e di nome ci, che esegue le verifiche delle aree che esistono, dichiara nel log quelle che mancano e può diventare un required status check di main per decisione di una persona.",
+  "definizioni": [
+    {
+      "termine": "contesto ci",
+      "significato": "il check run di nome esattamente `ci`, creato dall'app GitHub Actions (app.slug = github-actions), sul SHA osservato: la testa della PR per gli eventi di PR, il commit di main per i push su main",
+      "come_si_osserva": "gh api 'repos/OwnConsent/ownconsent-www/commits/<sha>/check-runs?filter=latest' --jq '[.check_runs[] | select(.name==\"ci\") | {id, status, conclusion, app: .app.slug}]'"
+    },
+    {
+      "termine": "esecuzione e log di ci",
+      "significato": "il workflow run che contiene il job ci sul SHA osservato, e il log di quel job",
+      "come_si_osserva": "gh api 'repos/OwnConsent/ownconsent-www/actions/runs?head_sha=<sha>' --jq '.workflow_runs[] | {id, event, path}'; poi gh api repos/OwnConsent/ownconsent-www/actions/runs/<run_id>/jobs --jq '.jobs[] | select(.name==\"ci\") | .id'; poi gh run view <run_id> --job <job_id> --log"
+    },
+    {
+      "termine": "file del workflow di ci",
+      "significato": "il file indicato dal campo path dell'esecuzione di ci. Chi verifica lo trova da lì, senza sapere prima come si chiama",
+      "come_si_osserva": "campo path di gh api repos/OwnConsent/ownconsent-www/actions/runs/<run_id>"
+    },
+    {
+      "termine": "area site/",
+      "significato": "presente: il commit contiene site/package.json. Assente: il commit non contiene alcun percorso sotto site/. Incompleta: il commit contiene file sotto site/ ma non site/package.json",
+      "come_si_osserva": "git ls-tree -r --name-only <sha> -- site/"
+    },
+    {
+      "termine": "area api/",
+      "significato": "presente: il commit contiene api/go.mod. Assente: il commit non contiene alcun percorso sotto api/. Incompleta: il commit contiene file sotto api/ ma non api/go.mod",
+      "come_si_osserva": "git ls-tree -r --name-only <sha> -- api/"
+    },
+    {
+      "termine": "PR di prova",
+      "significato": "una PR verso main aperta solo per verificare un criterio. Non si mergia, si chiude a verifica finita e il suo ramo si cancella. Le fixture che contiene (site/ o api/ minimi, file che falliscono di proposito, cache avvelenata) non arrivano mai su main",
+      "come_si_osserva": "gh pr view <n> --json state,mergedAt -> state CLOSED, mergedAt null"
+    }
+  ],
+  "criteri_accettazione": [
+    {
+      "id": "AC1",
+      "criterio_issue": "1",
+      "dato": "una PR verso main il cui diff tocca solo file sotto docs/",
+      "quando": "la PR viene aperta e il workflow ha finito",
+      "allora": "sul SHA di testa della PR c'è esattamente un contesto ci, con status completed e conclusion success",
+      "come_si_osserva": "query di «contesto ci» sul SHA di testa: la lista ha lunghezza 1, status \"completed\", conclusion \"success\", app \"github-actions\". È la verifica chiesta dalla nota sul punto 1 della issue",
+      "esercitabile": "subito, con una PR di prova"
+    },
+    {
+      "id": "AC2",
+      "criterio_issue": "1",
+      "dato": "la PR di AC1, messa in bozza (draft)",
+      "quando": "sul suo ramo si pubblica un nuovo commit che tocca solo docs/",
+      "allora": "sul nuovo SHA di testa c'è esattamente un contesto ci, con status completed e conclusion success",
+      "come_si_osserva": "stessa query di AC1 sul nuovo SHA; gh pr view <n> --json isDraft -> true al momento del push",
+      "esercitabile": "subito, con una PR di prova"
+    },
+    {
+      "id": "AC3",
+      "criterio_issue": "1",
+      "dato": "una PR verso main che viene mergiata",
+      "quando": "il commit risultante arriva su main",
+      "allora": "su quel commit di main c'è esattamente un contesto ci, con status completed e conclusion success, e l'esecuzione che lo contiene ha event push",
+      "come_si_osserva": "query di «contesto ci» sul SHA di main; campo event dell'esecuzione = \"push\"",
+      "esercitabile": "dopo il merge della PR che introduce ci (la prima occasione è il merge stesso)"
+    },
+    {
+      "id": "AC4",
+      "criterio_issue": "2",
+      "dato": "un commit in cui le aree site/ e api/ sono entrambe assenti (lo stato di main a 0e079fc)",
+      "quando": "ci gira",
+      "allora": "il contesto ci termina con conclusion success, non skipped e non neutral; il log contiene una riga con il testo `site/` e la parola «assente», e un'altra riga con il testo `api/` e la parola «assente»",
+      "come_si_osserva": "query di «contesto ci»; gh run view <run_id> --job <job_id> --log | grep -E 'site/.*assente' e | grep -E 'api/.*assente', ciascuno con almeno una riga",
+      "esercitabile": "subito: è lo stato attuale del repository"
+    },
+    {
+      "id": "AC5",
+      "criterio_issue": "2 (default dichiarato per le aree incomplete)",
+      "dato": "un commit con l'area site/ incompleta (per esempio solo site/README.md), oppure con l'area api/ incompleta (per esempio solo api/README.md)",
+      "quando": "ci gira",
+      "allora": "il contesto ci termina con conclusion failure, e il log contiene una riga che nomina il file mancante (`site/package.json` oppure `api/go.mod`)",
+      "come_si_osserva": "PR di prova con due commit, uno per area; query di «contesto ci» e grep del file mancante nel log",
+      "esercitabile": "subito, con una PR di prova"
+    },
+    {
+      "id": "AC6",
+      "criterio_issue": "3",
+      "dato": "un commit con l'area site/ presente: progetto Astro valido, site/pnpm-lock.yaml allineato a site/package.json, script build e lint che riescono, astro check senza errori",
+      "quando": "ci gira",
+      "allora": "il contesto ci termina con conclusion success, e il log mostra che sono stati eseguiti, nell'ordine, l'installazione delle dipendenze di site/, la build, il lint e astro check",
+      "come_si_osserva": "query di «contesto ci»; nel log compaiono l'invocazione e l'output di ciascuno dei quattro comandi. I comandi di riferimento sono quelli della tabella Comandi di CLAUDE.md",
+      "esercitabile": "con la prima PR di L05, oppure con una PR di prova che contiene un progetto Astro minimo"
+    },
+    {
+      "id": "AC7",
+      "criterio_issue": "3",
+      "dato": "una PR di prova con l'area site/ presente e valida come in AC6, a cui si aggiungono quattro commit, ognuno dei quali rompe uno solo dei quattro passi: (a) installazione: site/package.json dichiara una dipendenza che manca in site/pnpm-lock.yaml, cioè un lockfile non allineato, oppure site/pnpm-lock.yaml non c'è; (b) build: lo script build esce con codice 1; (c) lint: lo script lint esce con codice 1; (d) astro check: un file .astro con un errore di tipo, mentre build e lint restano verdi",
+      "quando": "ci gira su ciascuno dei quattro commit",
+      "allora": "su ciascuno dei quattro SHA il contesto ci termina con conclusion failure, e il log mostra che il passo che ha fallito è quello rotto da quel commit. Nel caso (a) site/pnpm-lock.yaml non viene riscritto per far passare l'installazione",
+      "come_si_osserva": "query di «contesto ci» su ogni SHA; nel log, l'errore del passo rotto (per (a) l'errore di lockfile non allineato o assente)",
+      "esercitabile": "con una PR di prova; il caso (d) richiede un progetto Astro minimo"
+    },
+    {
+      "id": "AC8",
+      "criterio_issue": "4",
+      "dato": "un commit con l'area api/ presente: modulo Go che compila, senza segnalazioni di golangci-lint, con almeno un test che passa, in almeno due pacchetti",
+      "quando": "ci gira",
+      "allora": "il contesto ci termina con conclusion success; il log mostra l'esecuzione di go build ./..., di golangci-lint run e di go test con -race su ./...; la riga di comando di go test contiene -race e non contiene né `-p 1` né `-p=1`",
+      "come_si_osserva": "query di «contesto ci»; grep nel log della riga di comando di go test e del suo output per pacchetto",
+      "esercitabile": "con la prima PR che crea api/, oppure con una PR di prova che contiene un modulo minimo"
+    },
+    {
+      "id": "AC9",
+      "criterio_issue": "4",
+      "dato": "una PR di prova con l'area api/ presente e valida come in AC8, a cui si aggiungono commit che rompono una cosa sola ciascuno: (a) build: errore di compilazione in un file non di test; (b) lint: un valore di errore restituito e ignorato, che compila e passa i test ma è segnalato da golangci-lint con la configurazione del repository; (c) test: un test che chiama t.Fatal; (d) race: un test con una data race, che passa senza -race",
+      "quando": "ci gira su ciascun commit",
+      "allora": "su ciascun SHA il contesto ci termina con conclusion failure; nel caso (d) il log contiene «WARNING: DATA RACE»",
+      "come_si_osserva": "query di «contesto ci» su ogni SHA; grep nel log dell'errore del passo rotto",
+      "esercitabile": "con una PR di prova"
+    },
+    {
+      "id": "AC10",
+      "criterio_issue": "5",
+      "dato": ".nvmrc contiene 22.23.2",
+      "quando": "ci gira, anche su un commit con le aree site/ e api/ assenti",
+      "allora": "il log contiene la versione di Node in uso, ed è v22.23.2",
+      "come_si_osserva": "grep 'v22.23.2' nel log; la riga è quella che stampa la versione di Node in uso, non una citazione del file .nvmrc",
+      "esercitabile": "subito"
+    },
+    {
+      "id": "AC11",
+      "criterio_issue": "5",
+      "dato": "una PR di prova che cambia solo .nvmrc: prima in un'altra versione esistente della linea 22 non inferiore a 22.12 (per esempio 22.12.0), poi in una versione che non esiste (per esempio 22.99.99)",
+      "quando": "ci gira su ciascuno dei due commit",
+      "allora": "sul primo commit il log riporta v22.12.0 come versione di Node in uso, senza che il file del workflow sia cambiato; sul secondo il contesto ci termina con conclusion failure, senza ripiegare sul Node già installato sul runner",
+      "come_si_osserva": "git diff --name-only origin/main...<sha> elenca solo .nvmrc; grep della versione nel log; query di «contesto ci»",
+      "esercitabile": "subito, con una PR di prova"
+    },
+    {
+      "id": "AC12",
+      "criterio_issue": "5",
+      "dato": "il file del workflow di ci, su main dopo il merge",
+      "quando": "lo si legge",
+      "allora": "non contiene alcun numero di versione di Node, né 22.23.2 né altri; la versione arriva solo da .nvmrc, come prova il comportamento di AC11",
+      "come_si_osserva": "grep -nE '22\\.[0-9]+' <path> non stampa nulla; nessuna chiave con una versione letterale di Node",
+      "esercitabile": "subito"
+    },
+    {
+      "id": "AC13",
+      "criterio_issue": "6",
+      "dato": "un commit con l'area site/ presente e site/package.json con \"packageManager\": \"pnpm@12.4.1\"",
+      "quando": "ci gira",
+      "allora": "il log contiene la versione di pnpm in uso, ed è 12.4.1",
+      "come_si_osserva": "grep nel log della riga con la versione di pnpm in uso",
+      "esercitabile": "con la prima PR di L05, oppure con una PR di prova"
+    },
+    {
+      "id": "AC14",
+      "criterio_issue": "6",
+      "dato": "una PR di prova come AC13 che cambia solo il campo packageManager di site/package.json: prima in un'altra versione esistente di pnpm, poi in una versione che non esiste",
+      "quando": "ci gira su ciascuno dei due commit",
+      "allora": "sul primo commit il log riporta come versione di pnpm in uso quella dichiarata, senza che il file del workflow sia cambiato; sul secondo il contesto ci termina con conclusion failure, senza ripiegare su un altro pnpm",
+      "come_si_osserva": "git diff origin/main...<sha> tocca solo il campo packageManager; grep della versione nel log; query di «contesto ci»",
+      "esercitabile": "con una PR di prova; attenzione: se la versione alternativa richiede un lockfile di formato diverso, il primo commit può fallire all'installazione. Conta la versione riportata nel log, non la conclusion"
+    },
+    {
+      "id": "AC15",
+      "criterio_issue": "7",
+      "dato": "un'esecuzione di ci su una PR e una su main",
+      "quando": "si legge la sezione «GITHUB_TOKEN Permissions» nel passo di preparazione del job ci",
+      "allora": "la sezione elenca solo permessi fra Contents: read e Metadata: read; nessuna voce ha write",
+      "come_si_osserva": "gh run view <run_id> --job <job_id> --log | grep -A15 'GITHUB_TOKEN Permissions'",
+      "esercitabile": "subito"
+    },
+    {
+      "id": "AC16",
+      "criterio_issue": "7",
+      "dato": "il file del workflow di ci e le sue esecuzioni",
+      "quando": "li si legge",
+      "allora": "il file dichiara esplicitamente la chiave permissions, a livello di workflow o sul job ci, e nessun valore è write o write-all; il file non contiene alcuna espressione `secrets.`; le esecuzioni sulle PR hanno event pull_request, mai pull_request_target",
+      "come_si_osserva": "grep -n '^permissions:\\|^    permissions:' <path> ha almeno una riga; grep -n 'write' e grep -n 'secrets\\.' non stampano nulla; campo event delle esecuzioni di AC1 e AC2 = \"pull_request\"",
+      "esercitabile": "subito"
+    },
+    {
+      "id": "AC17",
+      "criterio_issue": "8",
+      "dato": "un commit con almeno un'area presente, su cui ci è già girato con conclusion C, e il log di quell'esecuzione mostra il ripristino di una cache",
+      "quando": "si cancellano tutte le cache del repository e si rilancia ci sullo stesso commit",
+      "allora": "la nuova esecuzione termina con la stessa conclusion C, e il suo log mostra eseguiti gli stessi passi di verifica di AC6 e AC8 per le aree presenti: nessun passo di verifica compare solo in una delle due esecuzioni",
+      "come_si_osserva": "gh cache list, poi gh cache delete --all, poi gh run rerun <run_id>; confronto delle conclusion e dei passi eseguiti nei due log",
+      "esercitabile": "solo se il workflow usa una cache («se presente»); se nessun log mostra il ripristino di una cache, AC17 e AC18 sono non applicabili, e chi verifica lo dichiara"
+    },
+    {
+      "id": "AC18",
+      "criterio_issue": "8",
+      "dato": "una PR di prova con un'area presente, e una cache di ci corrotta: un commit della PR salva, con la stessa chiave che ci ripristina (letta dal log di un'esecuzione precedente), un contenuto in cui un file di una dipendenza è troncato o alterato",
+      "quando": "un commit successivo riporta il file del workflow identico a quello di main, e ci gira ripristinando la cache corrotta",
+      "allora": "il contesto ci termina con conclusion failure; non termina con success saltando passi, e non termina con success ignorando la cache corrotta",
+      "come_si_osserva": "nel log, il ripristino dalla chiave avvelenata; git diff origin/main...<sha> -- .github/ vuoto; query di «contesto ci» -> failure",
+      "esercitabile": "solo se il workflow usa una cache, vedi AC17"
+    },
+    {
+      "id": "AC19",
+      "criterio_issue": "8 (default dichiarato)",
+      "dato": "un commit con l'area api/ presente, su cui ci è già girato una volta",
+      "quando": "ci gira di nuovo sullo stesso commit",
+      "allora": "nell'output di go test nessun pacchetto è riportato come (cached): ogni pacchetto con test mostra un tempo di esecuzione",
+      "come_si_osserva": "gh run rerun <run_id>; nel log della seconda esecuzione, grep '(cached)' non stampa nulla",
+      "esercitabile": "con la PR di prova di AC8"
+    },
+    {
+      "id": "AC20",
+      "criterio_issue": "9",
+      "dato": "docs/DEFINITION-OF-DONE.md su main dopo il merge",
+      "quando": "lo si legge",
+      "allora": "contiene il nome del contesto scritto `ci`, fra backtick, in una frase che dice che build, lint, typecheck e test di una PR sono quelli verificati da quel contesto; non contiene nessuna di queste stringhe: pnpm install, pnpm build, pnpm lint, astro check, go build, go test, golangci-lint",
+      "come_si_osserva": "grep -n '`ci`' docs/DEFINITION-OF-DONE.md ha almeno una riga; grep -n -e 'pnpm install' -e 'pnpm build' -e 'pnpm lint' -e 'astro check' -e 'go build' -e 'go test' -e 'golangci-lint' docs/DEFINITION-OF-DONE.md non stampa nulla",
+      "esercitabile": "subito"
+    },
+    {
+      "id": "AC21",
+      "criterio_issue": "«Cosa si fa»: diventa un required status check",
+      "a_carico_di": "una persona (Andrea), non il lotto: è un non-goal per gli agenti (gate umano, journal/2026-09-15/082433-feature-gate.json)",
+      "dato": "AC1 e AC4 verificati su una PR che tocca solo docs/, e la protezione di main configurata dalla persona",
+      "quando": "si legge la protezione di main e si apre una PR di prova il cui contesto ci termina con failure (per esempio il caso AC5)",
+      "allora": "required_status_checks.checks contiene il contesto \"ci\" legato all'app GitHub Actions, non a qualsiasi sorgente; la PR di prova ha mergeStateStatus BLOCKED; una PR che tocca solo docs/ con ci success non resta in attesa di un esito",
+      "come_si_osserva": "gh api repos/OwnConsent/ownconsent-www/branches/main/protection --jq '.required_status_checks.checks'; gh pr view <n> --json mergeStateStatus,statusCheckRollup",
+      "esercitabile": "dopo il merge del lotto e dopo il gate umano; il lotto non lo verifica"
+    }
+  ],
+  "non_goal": [
+    "Nessun deploy, nessun ambiente, nessuna promozione: solo verifica (issue).",
+    "Nessun test end-to-end: Playwright arriva quando c'è una pagina (issue). Rientrano qui il progetto pnpm alla radice per gli strumenti di test (ADR-0002 D8, L07) e il test di laboratorio sui budget che la CI di L12 dovrà eseguire (ADR-0001, «Come la CI legge le soglie»): ci non li installa e non li esegue in questo lotto.",
+    "Nessuna matrice di sistemi operativi o di versioni: un solo runner Linux e una sola versione di Node, quella di .nvmrc (issue).",
+    "Nessuna modifica della branch protection da parte di un agente: aggiungere ci ai required status checks è un gate umano (issue, AC21).",
+    "Nessuna modifica a CLAUDE.md: il criterio 9 riguarda solo docs/DEFINITION-OF-DONE.md. Le sezioni Comandi e Definition of Done per PR di CLAUDE.md restano come sono (vedi rischi).",
+    "Nessun servizio MongoDB o Redis nel job. Esclusione motivata: api/ non esiste e nessun test li richiede. Scadenza: la PR che introduce il primo test di api/ che ha bisogno di MongoDB (replica set) o di Redis riapre la decisione. Fino ad allora quel test fa diventare ci rosso, e non va saltato.",
+    "Nessuna modifica ai tre workflow agentici esistenti né a contracts/.",
+    "Nessuna protezione dei file sotto .github/ (CODEOWNERS o simili) e nessun badge di stato.",
+    "Nessuna regola sul comportamento di ci quando site/package.json non ha il campo packageManager: CLAUDE.md e ADR-0002 D8 lo rendono obbligatorio per chi crea il file (L05); questa spec verifica solo il caso in cui il campo esiste (AC13, AC14)."
+  ],
+  "dati_personali": [],
+  "rischi": [
+    "Contesto richiesto che non riporta mai: se ci diventa required e non parte, il merge resta bloccato in «Expected — Waiting for status to be reported». Con enforce_admins=true (misurato) non lo scavalca neanche un amministratore. Cause concrete: filtri paths o branches sul trigger; una condizione if sul job; [skip ci] o simili nel messaggio del commit di testa; YAML non valido; Actions disabilitate; PR ritargettata su main senza un nuovo push; PR da fork di un contributore alla prima PR, che resta in attesa di approvazione (approval_policy=first_time_contributors, misurato). AC1, AC2 e AC4 coprono le prime due cause; le altre non si possono controllare dal workflow.",
+    "Il nome del contesto è quello del job (o del suo name:), non quello del workflow. Rinominare il job cambia il contesto e rompe il required check senza che nulla fallisca. Una matrice aggiunge un suffisso («ci (…)») e fa lo stesso effetto. Anche rinominare il workflow non cambia il contesto: chi lo prova dal nome del workflow guarda nel posto sbagliato.",
+    "Due contesti ci sullo stesso SHA: succede con push non limitato a main più pull_request (un commit di testa di una PR riceve due esecuzioni), oppure con un altro workflow che ha un job chiamato ci. AC1 conta i check run per nome proprio per questo.",
+    "Un required check non legato all'app GitHub Actions si soddisfa con uno status «ci» pubblicato da qualunque integrazione con permesso sugli status. AC21 chiede che la persona lo leghi all'app.",
+    "Con pull_request gira la versione del workflow presente sul ramo della PR: una PR può indebolire ci e farsi verde da sola. Nessun criterio lo impedisce; lo intercetta solo la revisione umana delle modifiche a .github/.",
+    "I criteri 3, 4 e 6 (AC6–AC9, AC13, AC14, AC19), e il criterio 8 quando c'è una cache, non si possono esercitare sul repository reale finché site/ e api/ non esistono: si verificano con PR di prova e fixture minime che non vanno mai mergiate. La prima PR di L05 o di api/ può trovare differenze rispetto alle fixture (per esempio astro check che richiede @astrojs/check). Un rosso in quel momento è il comportamento corretto, non un difetto di ci.",
+    "Criterio 9: la misura dice che docs/DEFINITION-OF-DONE.md oggi non elenca alcun comando, mentre CLAUDE.md li elenca nella tabella Comandi e nella Definition of Done per PR. Se la issue intendeva CLAUDE.md, dopo il lotto i comandi restano scritti lì. La correzione è reversibile ma tocca un file che leggono tutti gli agenti: la decide una persona.",
+    "Criterio 8 alla lettera: alcuni strumenti, davanti a una cache alterata, riscaricano da soli e finiscono verdi. Se la misura mostra che il rosso di AC18 non si ottiene con la cache scelta, chi implementa si ferma e lo segnala; non adatta AC18. Il criterio non obbliga ad avere una cache.",
+    "corepack scarica pnpm dal registry npm e ne verifica la firma: un problema di rete o di chiavi rende ci rosso senza modifiche al codice. Le versioni di Node dalla 25 in poi non includono corepack: aggiornare .nvmrc a quelle versioni rompe il criterio 6. Per questo AC11 usa una versione della linea 22.",
+    "La issue non fissa né la versione di Go né quella di golangci-lint. Una versione non fissata può far diventare ci rosso senza cambi al codice; una versione scritta nel workflow può divergere da api/go.mod. Nessun AC di questa spec lo verifica.",
+    "La CI di L12 (ADR-0001) aggiungerà il test di laboratorio sui budget. Se lo mette in un job o in un workflow separato, il suo contesto non è required e non fa da gate. Se lo mette in ci, il required check eredita la variabilità di CPU che ADR-0001 annota fra portatile e CI, e può diventare rosso a intermittenza.",
+    "Una concurrency con annullamento delle esecuzioni in corso lascia conclusion cancelled sui commit superati. Su un commit di main questo significa un commit senza ci verde. AC3 lo intercetta.",
+    "I test di api/ che si saltano da soli quando MongoDB o Redis non ci sono darebbero un verde senza esecuzione, cioè proprio quello che il criterio 8 vieta per la cache. Non è coperto finché api/ non esiste: vedi il non_goal con scadenza.",
+    "I log delle esecuzioni scadono (90 giorni è il default di GitHub): l'evidenza dei criteri verificati su PR di prova va allegata alla PR del lotto quando si verifica, non richiamata dopo."
+  ],
+  "domande_aperte": [],
+  "rese_del_testo": [
+    {
+      "criterio": "1",
+      "testo_issue": "riporta un solo contesto di nome ci, e lo riporta sempre",
+      "resa": "esattamente un check run di nome ci, dell'app GitHub Actions, sul SHA di testa (filter=latest), completato con success anche su una PR che tocca solo docs/; vale anche per le PR in bozza e per i commit su main",
+      "perche": "la issue dice «ogni pull request verso main» e «ogni push su main», senza escludere le bozze; «riporta» si osserva solo come check run completato"
+    },
+    {
+      "criterio": "2",
+      "testo_issue": "termina verde dichiarando nel log che l'area è assente, e non salta il job",
+      "resa": "conclusion success, non skipped né neutral; nel log una riga con il percorso dell'area e la parola «assente», per site/ e per simmetria anche per api/",
+      "perche": "un job saltato riporta skipped, e GitHub lo conta come superato per un required check: è proprio il salto che la issue vieta. Senza un testo fissato @qa-test non potrebbe scrivere il test senza leggere il workflow. api/ oggi è assente come site/, e il criterio 4 non dice cosa succede in quel caso"
+    },
+    {
+      "criterio": "2, 3, 4",
+      "testo_issue": "site/ non esiste / site/ esiste con un package.json / api/ esiste con un go.mod",
+      "resa": "il caso intermedio, cioè l'area con file ma senza package.json o go.mod, è un rosso con il nome del file mancante (AC5)",
+      "perche": "la issue non lo copre. Un verde «per assenza» su un'area creata a metà sarebbe un gate dichiarato e non eseguito, il difetto che la issue vuole eliminare. Scelta reversibile"
+    },
+    {
+      "criterio": "3",
+      "testo_issue": "esegue install",
+      "resa": "l'installazione non riscrive site/pnpm-lock.yaml: un lockfile non allineato o assente fa fallire ci (AC7a)",
+      "perche": "CLAUDE.md, Toolchain: packageManager serve a evitare che si rigeneri il lockfile; ADR-0002, riga 197: «installa dal lockfile senza modificarlo»"
+    },
+    {
+      "criterio": "4",
+      "testo_issue": "con i flag di CI — non -p 1",
+      "resa": "nella riga di comando di go test ci sono -race e ./..., e non ci sono né -p 1 né -p=1; nessun risultato (cached) (AC19)",
+      "perche": "nessun file del repository definisce i «flag di CI»: grep trova solo CLAUDE.md:160. Si fissa ciò che la issue nomina ed è osservabile nel log"
+    },
+    {
+      "criterio": "5",
+      "testo_issue": "La versione di Node viene letta da .nvmrc",
+      "resa": "la versione in uso compare nel log di ogni esecuzione, anche con le aree assenti (AC10); cambiare solo .nvmrc cambia la versione in uso; una versione inesistente è un rosso (AC11); il file del workflow non contiene versioni di Node (AC12)",
+      "perche": "così il criterio si verifica prima che esista site/. Il runner ha già un Node installato: ripiegare su quello sarebbe un disallineamento silenzioso, cioè il fallimento del punto 5 che la issue nomina"
+    },
+    {
+      "criterio": "6",
+      "testo_issue": "rispettando packageManager quando esisterà",
+      "resa": "il campo è quello di site/package.json; la versione di pnpm in uso segue il campo (AC13, AC14); una versione inesistente è un rosso",
+      "perche": "CLAUDE.md (Toolchain) e ADR-0002 D8 mettono packageManager in site/package.json. Il package.json alla radice di L07 è fuori da questo lotto (non_goal e2e)"
+    },
+    {
+      "criterio": "7",
+      "testo_issue": "permissions dichiarato esplicitamente al minimo necessario",
+      "resa": "chiave permissions presente nel file; nel log, permessi del token solo fra Contents: read e Metadata: read; nessun secrets.; nessun pull_request_target",
+      "perche": "il default del repository è già read (misurato: default_workflow_permissions=read), quindi senza la chiave esplicita il minimo sarebbe rispettato solo per caso; pull_request_target darebbe un token con scrittura e i segreti alle PR da fork di un repository pubblico"
+    },
+    {
+      "criterio": "8",
+      "testo_issue": "una cache corrotta deve produrre un rosso, non un salto",
+      "resa": "rosso alla lettera (AC18): corrotta vuol dire contenuto alterato salvato con la chiave che ci ripristina; il confronto con cache e senza cache sullo stesso commit dà la stessa conclusion (AC17); i risultati di go test in cache contano come verde dovuto alla cache (AC19)",
+      "perche": "da fuori GitHub non si può scrivere il contenuto di una cache, quindi la corruzione si definisce con una procedura su una PR di prova. Un test riportato come (cached) è un verde senza esecuzione"
+    },
+    {
+      "criterio": "9",
+      "testo_issue": "docs/DEFINITION-OF-DONE.md rimanda al nome del contesto ci invece di elencare i comandi una seconda volta",
+      "resa": "il file contiene `ci` e nessuno dei comandi (AC20); CLAUDE.md non si modifica",
+      "perche": "misura: oggi il file non contiene comandi (grep, exit=1). Il criterio nomina quel file e non altri: la divergenza è segnalata in rischi, non assorbita"
+    }
+  ],
+  "issue": "https://github.com/OwnConsent/ownconsent-www/issues/25",
+  "fonti": [
+    { "cosa": "corpo della issue #25, autore andreapernici (permesso admin)", "url": "https://github.com/OwnConsent/ownconsent-www/issues/25" },
+    { "cosa": "stato di partenza e gate umano sulla protezione", "percorso": ["journal/2026-09-15/082433-feature-misura.json", "journal/2026-09-15/082433-feature-gate.json"] },
+    { "cosa": "impostazioni Actions, contenuto della DoD, marcatore di ruolo", "percorso": "journal/2026-09-15/083016-product-spec-misura.json" },
+    { "cosa": "regole del progetto e formati", "percorso": ["CLAUDE.md", "docs/HANDOFF.md", "docs/JOURNAL.md", "docs/DEFINITION-OF-DONE.md", ".nvmrc"] },
+    { "cosa": "workflow esistenti, letti e non modificati", "percorso": [".github/workflows/claude-nightly-maintenance.yml", ".github/workflows/claude-pr-review.yml", ".github/workflows/claude-release-comms.yml"] },
+    { "cosa": "posizione di packageManager e del lockfile, progetto di test alla radice, installazione dal lockfile", "percorso": "docs/adr/0002-struttura-site.md (Contesto, D8, riga 197)" },
+    { "cosa": "CI di L12 ed esecuzione del test di laboratorio", "percorso": "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md («Come la CI legge le soglie»)" }
+  ],
+  "redatta_da": "product-spec",
+  "lotto": "L-CI",
+  "data": "2026-09-15",
+  "stato": "pronta: 21 criteri (AC21 a carico di una persona), domande_aperte vuoto"
+}

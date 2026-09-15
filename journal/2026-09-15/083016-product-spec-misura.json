@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-15T08:30:16+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "misura",
+  "titolo": "Impostazioni Actions e firma dei commit prima di scrivere la spec di #25",
+  "contesto": "I criteri 1, 7 e 9 dipendono da impostazioni del repository e da cosa contiene oggi docs/DEFINITION-OF-DONE.md: si misurano invece di assumerle. Solo letture, nessuna modifica.",
+  "evidenza": [
+    "$ gh api repos/OwnConsent/ownconsent-www/branches/main/protection --jq '{rsc: .required_status_checks, admins: .enforce_admins.enabled}' -> {\"admins\":true,\"rsc\":null}",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/permissions/workflow -> {\"default_workflow_permissions\":\"read\",\"can_approve_pull_request_reviews\":false}",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/permissions -> {\"enabled\":true,\"allowed_actions\":\"all\",\"sha_pinning_required\":false}",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/permissions/fork-pr-contributor-approval -> {\"approval_policy\":\"first_time_contributors\"}",
+    "$ grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md -> nessuna riga, exit=1: il file non elenca oggi alcun comando; i comandi stanno in CLAUDE.md (Comandi, Definition of Done per PR)",
+    "$ grep -rn 'flag di CI' . (escluso .git) -> solo CLAUDE.md:160; nessun file definisce quali siano",
+    "$ cat $(git rev-parse --path-format=absolute --git-common-dir)/cantiere-current-agent -> orchestrator (non product-spec): il commit di questa spec uscirà firmato orchestrator",
+    "$ git merge-base --is-ancestor origin/main HEAD; echo $? -> 0"
+  ],
+  "esito": "criterio 9 ha un bersaglio che oggi non contiene comandi (divergenza segnalata nella spec); marcatore di ruolo non modificato perché è in .git/ condiviso con la sessione principale",
+  "umano_coinvolto": false
+}

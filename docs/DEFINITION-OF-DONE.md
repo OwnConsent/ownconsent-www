@@ -31,4 +31,7 @@ Nessun ruolo ha finito finché non ha scritto le proprie voci di `journal/` seco
 `docs/JOURNAL.md`: le decisioni prese con le alternative scartate, i gate incontrati, i
 tentativi falliti e le misure fatte. Scritte durante il lavoro, non ricostruite dopo.
 
+Build, lint, typecheck e test di una pull request sono quelli verificati dal contesto
+`ci`: non si ripetono qui.
+
 | @case-study | ogni affermazione della traccia rimanda a una voce di journal; i fallimenti ci sono; i numeri di costo e durata sono quelli reali |

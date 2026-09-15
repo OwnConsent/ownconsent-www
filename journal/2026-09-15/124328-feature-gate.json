@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T12:43:28+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "gate",
+  "titolo": "La lista chiusa delle divergenze non prevede «la specifica sbaglia prima che esista il prodotto»: fermato invece di forzare una classe",
+  "contesto": "Andrea ha chiesto una voce ratificata in DESIGN-AMENDMENTS.md: la spec issue-25 rileva le aree sullo SHA di testa, la decisione è rilevarle sul merge commit. Il formato impone Classe: unshipped | accessibilita | shipped-vince, e CLAUDE.md dice che le divergenze sono una lista chiusa. Il meccanismo gira solo sulla PR #26, non su main: non è shipped; non è una funzionalità assente; non è accessibilità. La specifica è sbagliata nel merito prima che il prodotto esista.",
+  "evidenza": [
+    "DESIGN-AMENDMENTS.md, Formato: «- Classe: unshipped | accessibilita | shipped-vince»",
+    "CLAUDE.md, Metodo: «Le divergenze sono una lista chiusa. Solo tre classi sono ammesse»",
+    "$ gh pr view 26 --json headRefOid,statusCheckRollup,mergeStateStatus → head b725d49, ci SUCCESS, non mergiata",
+    "ADR-0003 righe 320-321: con pull_request il checkout di default è il merge commit (F6), quindi ci rileva le aree sul merge commit"
+  ],
+  "chi_ha_deciso": "Andrea, risposta alla domanda della sessione (15/09): «Nessuna delle tre»",
+  "cosa_serviva": "la classe della voce A01; decisa come «fuori-lista — specifica errata nel merito, ratificata da Andrea il 15/09, in attesa che una sessione di design decida se aprire una quarta classe», con la correzione del criterio nella spec nello stesso commit",
+  "esito": "la sessione si è fermata e ha chiesto invece di scegliere shipped-vince o unshipped; la voce entra come fuori-lista e l'apertura di una quarta classe resta a una sessione di design",
+  "umano_coinvolto": true
+}

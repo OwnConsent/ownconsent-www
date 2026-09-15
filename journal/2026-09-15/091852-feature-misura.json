@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T09:18:52+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Le quattro voci di journal del secondo giro di CI1 sono scritte dopo il lavoro che raccontano, tutte negli ultimi 50 secondi",
+  "contesto": "DoD per tutti i ruoli: voci scritte durante, non ricostruite dopo. Il contenuto delle voci non risulta falso e i ts sono coerenti con le mtime (a differenza di CI2, voce 091441): il difetto è di tempo, non di contenuto. La voce sul primo passo e quella sul fallimento di actionlint esistono solo perché il prompt le chiedeva, e sono state scritte dopo la correzione che descrivono.",
+  "evidenza": [
+    "$ stat -c '%y %n' … | sort, nella worktree ci1:",
+    "09:13:34 .github/ci/area.sh",
+    "09:14:02-09:14:13 .work/issue-25/devops-scratch/{site-presente,site-incompleta,api-presente,api-incompleta,entrambe-assenti}",
+    "09:15:06 .github/workflows/ci.yml (ultima scrittura, dopo il passaggio a setup-node@v7 e golangci-lint-action@v9)",
+    "09:15:39 091533-devops-misura.json (controllo di ascendenza, che è il primo passo del giro)",
+    "09:15:52 091540-devops-decisione.json; 09:16:05 091554-devops-fallimento.json; 09:16:28 091606-devops-misura.json"
+  ],
+  "esito": "segnalato nella PR come difetto di processo; le voci restano; al giro successivo di CI1 è chiesto di scrivere la voce nel momento in cui accade la cosa",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,16 @@
+{
+  "ts": "2026-09-15T08:32:48+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Il marcatore di ruolo resta orchestrator: il commit della spec esce con la firma sbagliata, lo dice questa voce",
+  "contesto": "Il marcatore .git/cantiere-current-agent contiene orchestrator. Sta nella cartella .git comune, quindi lo vedono la sessione principale e ogni worktree collegata.",
+  "alternative": [
+    { "opzione": "scrivere product-spec nel marcatore prima del commit e rimettere orchestrator dopo", "scartata_perche": "è uno stato condiviso e nessuno ha chiesto di cambiarlo: un commit parallelo di un altro agente in quella finestra uscirebbe firmato product-spec, cioè il registro sarebbe falso dall'altra parte" }
+  ],
+  "evidenza": ["cat $(git rev-parse --path-format=absolute --git-common-dir)/cantiere-current-agent -> orchestrator"],
+  "esito": "firma lasciata com'è; l'autore vero del contenuto è in redatta_da della spec e in questo journal; segnalato a chi ha delegato",
+  "umano_coinvolto": false
+}

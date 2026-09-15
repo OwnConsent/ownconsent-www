@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T08:32:47+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "domande_aperte vuoto: sei punti non detti dalla issue diventano default dichiarati",
+  "contesto": "La issue lascia scoperti casi che cambiano come si verifica, ma ciascuno ha una scelta ragionevole, reversibile e coerente con CLAUDE.md o con ADR-0002.",
+  "alternative": [
+    { "opzione": "fermare la catena con una domanda sui casi intermedi (site/ senza package.json, api/ senza go.mod)", "scartata_perche": "c'è un default coerente con il criterio 8 e con «un gate dichiarato non è un gate»: area incompleta = rosso, non verde per assenza. Si inverte con una riga" },
+    { "opzione": "lasciare indefinito il testo che dichiara l'area assente", "scartata_perche": "@qa-test non può scrivere il test senza guardare il workflow: si fissa che la riga contenga il percorso dell'area e la parola «assente»" },
+    { "opzione": "lasciare indefiniti i «flag di CI» del criterio 4", "scartata_perche": "nessun file del repo li definisce (grep: solo CLAUDE.md:160); si fissa l'osservabile: -race presente, parallelismo dei pacchetti non ridotto a 1, nessun risultato (cached)" }
+  ],
+  "evidenza": [
+    "altri default: criterio 2 esteso ad api/ per simmetria; ci gira anche sulle PR in bozza («ogni pull request»); la versione di Node compare nel log di ogni esecuzione, così il criterio 5 si verifica prima che esista site/; install dal lockfile senza modificarlo, come in ADR-0002 riga 197"
+  ],
+  "esito": "tutti in rese_del_testo con il testo della issue di partenza; nessuna domanda sulla issue",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T08:24:33+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "misura",
+  "titolo": "Stato di partenza: nessun required status check su main, nessun workflow di verifica",
+  "contesto": "La issue #25 chiede un contesto `ci` richiesto sulla protezione di main. Prima di delegare si misura cosa esiste già, per non dare per scontato né l'assenza né la presenza di un check.",
+  "evidenza": [
+    "$ gh api repos/OwnConsent/ownconsent-www/branches/main/protection → required_pull_request_reviews presente (0 approvazioni), enforce_admins.enabled=true, nessuna chiave required_status_checks",
+    "$ ls .github/workflows → claude-nightly-maintenance.yml, claude-pr-review.yml, claude-release-comms.yml: nessuno esegue build, lint o test",
+    "$ cat .nvmrc → 22.23.2",
+    "$ gh api repos/OwnConsent/ownconsent-www/collaborators/andreapernici/permission -q .permission → admin (autore della issue: istruzione valida, regola 9)",
+    "$ git rev-parse HEAD origin/main → 0e079fc entrambi"
+  ],
+  "esito": "si parte da zero; la protezione del ramo resta intatta (gate umano)",
+  "umano_coinvolto": false
+}

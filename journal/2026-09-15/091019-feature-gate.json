@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T09:10:19+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI2",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "CI2 fermato dal controllo di ascendenza per la stessa causa di CI1",
+  "contesto": "Conferma della voce 091002: anche la worktree isolata di @docs-writer nasce da 0e079fc. Il controllo di ascendenza nel prompt ha fermato il lotto prima di qualunque scrittura.",
+  "evidenza": [
+    "@docs-writer: $ git log --oneline -3 → 0e079fc, 29fd594, bd0ab74",
+    "@docs-writer: $ git merge-base --is-ancestor 5bd39b6 HEAD; echo exit=$? → exit=1",
+    "notifica di fine task: tool_uses=6, subagent_tokens=48439, duration_ms=30572",
+    "costo complessivo dei due fermi: 97877 token, 11 chiamate di strumento"
+  ],
+  "chi_ha_deciso": "il controllo di precondizione scritto dalla sessione nel prompt del lotto",
+  "cosa_serviva": "una worktree che discenda da 5bd39b6: creata dalla sessione con git worktree add dal ramo ci/issue-25",
+  "esito": "CI1 e CI2 si rilanciano con agenti nuovi, senza isolamento automatico, puntati alle worktree .claude/worktrees/ci1 e ci2",
+  "umano_coinvolto": false
+}

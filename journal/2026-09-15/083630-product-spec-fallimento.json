@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-15T08:36:30+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "Il primo commit della spec (890160b) non finiva con Co-Authored-By di Claude: l'hook ha spostato la riga fuori dai trailer",
+  "contesto": "Il messaggio chiesto doveva finire con la riga Co-Authored-By di Claude. githooks/prepare-commit-msg toglie le righe vuote finali, ne aggiunge una e poi scrive Cantiere-Agent e il proprio Co-Authored-By: così la riga di Claude resta nel paragrafo precedente.",
+  "evidenza": [
+    "$ git log -1 --format='%(trailers)' (su 890160b) -> solo Cantiere-Agent: orchestrator e Co-Authored-By: cantiere-orchestrator; la riga di Claude non è letta come trailer",
+    "$ git log -1 --format=%B | cat -A | tail -8 -> «Co-Authored-By: Claude ...$», «$», «Cantiere-Agent: orchestrator$»"
+  ],
+  "cosa_si_e_imparato": "Con l'hook attivo un trailer scritto a mano in fondo al messaggio finisce nel corpo. L'hook esce senza toccare nulla se trova già Cantiere-Agent, quindi per avere tutti i trailer in un solo paragrafo bisogna scriverli insieme nel messaggio. Corretto con un amend locale, senza push; la firma resta quella del marcatore.",
+  "esito": "commit riscritto con amend: ultimo paragrafo Cantiere-Agent, Co-Authored-By cantiere, Co-Authored-By Claude",
+  "umano_coinvolto": false
+}

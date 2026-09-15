@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-15T09:06:13+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "adr": "ADR-0003",
+  "tipo": "misura",
+  "titolo": "Fonti su GitHub Actions per ADR-0003: skipped conta come superato, needs salta i job a valle, workflow letto dal commit dell'evento, concurrency annulla le esecuzioni in attesa; nome del check = nome del job resta un'ipotesi",
+  "contesto": "Il lotto chiede fonte con frase citata, oppure ipotesi con comando, per ogni affermazione su Actions che regge D1-D8. Citazioni prese dal sorgente di github/docs scaricato con curl e cercato con grep.",
+  "evidenza": [
+    "$ gh api 'repos/github/docs/git/trees/main?recursive=1' --jq '.tree[].path' | wc -l -> 14943 (truncated false)",
+    "troubleshooting-required-status-checks.md: «Successful check statuses are `success`, `skipped`, and `neutral`.»; riga di tabella «A job depends on a failed job | The dependent job is skipped and may not block merging | Use `always()` with `needs` for required checks that depend on other jobs.»",
+    "data/reusables/actions/workflows/skipped-job-status-checks-passing.md: «A job that is skipped will report its status as \"Success\". It will not prevent a pull request from merging, even if it is a required check.»",
+    "data/reusables/actions/jobs/section-using-jobs-in-a-workflow-needs.md: «If a job fails or is skipped, all jobs that need it are skipped unless the jobs use a conditional expression that causes the job to continue.»",
+    "data/reusables/actions/about-triggers.md (incluso in content/actions/concepts/workflows-and-actions/workflows.md): «Each workflow run will use the version of the workflow that is present in the associated commit SHA or Git ref of the event.»",
+    "events-that-trigger-workflows.md, pull_request: «Note that `GITHUB_SHA` for this event is the last merge commit of the pull request merge branch.»; «Workflows will not run on `pull_request` activity if the pull request has a merge conflict.»",
+    "data/reusables/actions/actions-group-concurrency.md: «By default, any existing `pending` job or workflow in the same concurrency group will be canceled»",
+    "about-protected-branches.md: «make sure that job names are unique across all workflows»; section-using-jobs-in-a-workflow-name.md dice solo «displayed in the GitHub UI»: nessuna frase dice che il nome del check run è il name del job -> H1",
+    "nessuna fonte trovata per il suffisso di matrice (H2) né per lo SHA su cui sta il check run di pull_request (H3)",
+    "$ curl raw withastro/astro/main/packages/telemetry/src/index.ts; grep -n TELEMETRY_DISABLED -> riga 95 if (Boolean(this.ASTRO_TELEMETRY_DISABLED || this.TELEMETRY_DISABLED))"
+  ],
+  "esito": "15 fonti citate (F1-F13 con varianti) e 8 ipotesi (H1-H8) con comando nell'ADR",
+  "umano_coinvolto": false
+}

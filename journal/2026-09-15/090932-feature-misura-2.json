@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T09:09:32+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "titolo": "Il marcatore di ruolo è riscritto con 'orchestrator' anche durante e alla fine dei giri: terzo commit di un altro ruolo firmato orchestrator",
+  "contesto": "Dopo 083847 il marcatore si legge prima e dopo ogni giro che committa. Non si può leggere il plugin (guard-paths.sh, voce 083740), quindi si registra solo il comportamento osservato.",
+  "evidenza": [
+    "08:49:51 (prima di @architect, letto dalla sessione): contenuto orchestrator",
+    "09:06:17 (letto da @architect prima e dopo il proprio commit): contenuto orchestrator, mtime invariata fra le due letture",
+    "09:07:45 (letto dalla sessione dopo la chiusura di @architect, durata 1009939 ms dal lancio delle 08:51): contenuto orchestrator",
+    "$ git log --format='%h %(trailers:key=Cantiere-Agent,valueonly)' origin/main..HEAD → 5bd39b6 orchestrator; 7fb4c77 orchestrator",
+    "@orchestrator alle 08:41: file assente; alle 08:42 presente con mtime 08:40:12"
+  ],
+  "esito": "causa non determinata; firma segnalata nella PR, storia non riscritta; l'autore dei commit risulta dal journal",
+  "umano_coinvolto": false
+}

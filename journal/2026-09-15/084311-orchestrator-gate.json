@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T08:43:11+02:00",
+  "agente": "orchestrator",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "gate",
+  "titolo": "guard-paths.sh blocca la lettura di ~/.nvm: non si sa se Node 22 è installato per le verifiche locali di site/",
+  "contesto": "Nella shell degli agenti node -v stampa v20.20.2, sotto il minimo 22.12 di Astro 5; CLAUDE.md riporta v22.23.2 misurata il 14/09. Volevo sapere se nvm ha la 22 installata, per dire se le fixture di site/ si possono provare in locale.",
+  "evidenza": [
+    "PreToolUse:Bash guard-paths.sh: GATE: il percorso '~/.nvm/versions/node/' porta fuori dal progetto (/home/andreapernici/.nvm/versions/node) — fuori dal perimetro di questa sessione",
+    "$ node -v -> v20.20.2"
+  ],
+  "chi_ha_deciso": "hook guard-paths.sh (perimetro voluto); non aggirato",
+  "cosa_serviva": "Una persona che dica se nella shell degli agenti c'è un Node >= 22.12 utilizzabile, oppure lo renda disponibile; lo stesso vale per golangci-lint (non installato)",
+  "esito": "nel piano astro check e golangci-lint in locale sono dichiarati non verificabili; restano alle PR di prova, fra le decisioni per una persona",
+  "umano_coinvolto": true
+}

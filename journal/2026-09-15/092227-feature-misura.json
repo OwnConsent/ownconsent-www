@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-15T09:22:27+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "04-verifica-locale",
+  "tipo": "misura",
+  "titolo": "Passo 4: i comandi di CLAUDE.md non hanno oggetto su questo ramo; actionlint e area.sh verdi sul ramo integrato",
+  "contesto": "La skill chiede di eseguire i comandi di test dichiarati in CLAUDE.md. site/ e api/ non esistono: i comandi si eseguono comunque, separati, per registrare che falliscono per assenza dell'area e non per un errore del lotto. E2E (playwright) è non_goal della spec e non si esegue.",
+  "evidenza": [
+    "$ git rev-parse --short HEAD → 589d0ca",
+    "$ cd site && pnpm build → cd: site: No such file or directory, exit=1",
+    "$ cd site && pnpm lint && pnpm astro check → cd: site: No such file or directory, exit=1",
+    "$ cd api && go test -race ./... → cd: api: No such file or directory, exit=1",
+    "$ cd api && golangci-lint run → cd: api: No such file or directory, exit=1",
+    "$ cd api && go build ./... → cd: api: No such file or directory, exit=1",
+    "$ docker run --rm -v \"$PWD:$PWD\" -w \"$PWD\" rhysd/actionlint:latest -color .github/workflows/ci.yml → nessun output, exit=0",
+    "$ bash .github/ci/area.sh site → area site/: assente, exit=0",
+    "$ bash .github/ci/area.sh api → area api/: assente, exit=0"
+  ],
+  "esito": "nessun rimando a ruoli di costruzione: nessun comando è fallito per un difetto del lotto; la verifica che conta (ci verde su GitHub) si osserva solo sulla PR",
+  "umano_coinvolto": false
+}

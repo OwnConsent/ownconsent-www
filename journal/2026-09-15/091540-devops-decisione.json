@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:15:40+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "come fissare le versioni delle action di terze parti in ci.yml",
+  "contesto": "ADR-0003 D5 fissa gli input esatti (node-version-file, package-manager-cache, go-version-file, cache:false, version-file, skip-cache) ma non l'esatto tag delle action (actions/checkout, actions/setup-node, actions/setup-go, golangci/golangci-lint-action). L'ADR dichiara esplicitamente che la fissazione a SHA e' materia di @security e non la decide qui (sezione Consumatori impattati). E' un punto su cui l'ADR tace e su cui devo scegliere per poter scrivere il file.",
+  "alternative": [
+    { "opzione": "pin per SHA di commit su tutte le action", "scartata_perche": "l'ADR assegna questa scelta alla revisione di @security, non a questo lotto; introdurla ora anticiperebbe una decisione non mia" },
+    { "opzione": "version: latest / nessun tag esplicito", "scartata_perche": "non riproducibile, e la tabella D5 vieta esplicitamente 'version: latest' per golangci-lint con lo stesso argomento (rosso senza modifiche al codice)" },
+    { "opzione": "tag di versione major (es. @v4, @v7, @v9), coerente con i workflow agentici gia' nel repo (actions/checkout@v4 in tutti e tre)", "scartata_perche": null }
+  ],
+  "evidenza": ["scelta: tag major, applicata"],
+  "esito": "applicata: actions/checkout@v4, actions/setup-node@v7, actions/setup-go@v5, golangci/golangci-lint-action@v9. Riaperta se @security la giro di revisione chiede il pin a SHA (l'ADR lo prevede esplicitamente come sua competenza)",
+  "umano_coinvolto": false
+}

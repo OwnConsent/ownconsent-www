@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:15:54+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "i tag scelti al primo giro (actions/setup-node@v4, golangci-lint-action@v6) non hanno gli input che l'ADR prescrive",
+  "contesto": "prima bozza di ci.yml pinnava actions/setup-node@v4 e golangci/golangci-lint-action@v6, seguendo lo stile del resto del repo senza controllare l'action.yml di quei tag specifici, nonostante l'ADR (sezione 'Fonti', dopo la tabella F1-F13) dica esplicitamente: 'Le action evolvono: CI1 ricontrolla nomi e default degli input sull'action.yml della versione che fissa.'",
+  "cosa_si_e_imparato": "docker run --rm -v \"$PWD:$PWD\" -w \"$PWD\" rhysd/actionlint:latest -color .github/workflows/ci.yml ha dato errore: 'input \"package-manager-cache\" is not defined in action \"actions/setup-node@v4\"' e 'input \"version-file\" is not defined in action \"golangci/golangci-lint-action@v6\"'. Ho verificato via curl gli action.yml reali: package-manager-cache esiste solo da actions/setup-node@v7.0.0 in poi (non in v4/v5/v6, confermato leggendo https://raw.githubusercontent.com/actions/setup-node/v7.0.0/action.yml); version-file su golangci-lint-action esiste da tempo ma non nel major v6 fissato per errore (confermato presente in v9.3.0, https://raw.githubusercontent.com/golangci/golangci-lint-action/v9.3.0/action.yml). Lo stile 'stesso major degli altri workflow' non basta: bisogna leggere l'action.yml del tag scelto, non assumerlo dallo stile del repo o dalla memoria.",
+  "evidenza": [
+    "docker run rhysd/actionlint sul primo ci.yml -> 2 errori [action], righe su package-manager-cache e version-file",
+    "curl action.yml di actions/setup-node@v4, v7.0.0 e main: package-manager-cache assente in v4, presente in v7.0.0 e main",
+    "curl action.yml di golangci-lint-action@v9.3.0: version-file, skip-cache, working-directory, install-mode(default binary) tutti presenti"
+  ],
+  "esito": "corretto: actions/setup-node portato a @v7, golangci/golangci-lint-action a @v9; actionlint rieseguito -> nessun errore (vedi voce misura successiva)",
+  "umano_coinvolto": false
+}

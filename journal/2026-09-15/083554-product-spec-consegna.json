@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-15T08:35:54+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "consegna",
+  "titolo": "Spec di #25 scritta: 21 criteri, domande_aperte vuoto",
+  "contesto": "docs/spec/issue-25.json nel formato di docs/HANDOFF.md. Ogni criterio della issue è diventato uno o più AC con il modo di osservarlo (API dei check run, log del job, PR di prova). AC21 è a carico di una persona (required check). Nessun push, nessuna PR, nessun commento sulla issue, contracts/ e .github/ non toccati.",
+  "evidenza": [
+    "python3 -c 'json.load(docs/spec/issue-25.json)' -> 21 criteri, domande_aperte [], dati_personali [], 9 non_goal, 14 rischi",
+    "costo_token misurato dal contatore dell'ambiente: 15000000 all'avvio, 14913161 prima di questa voce"
+  ],
+  "dod_soddisfatta": {
+    "ogni AC osservabile dall'esterno": "sì: per ciascuno c'è come_si_osserva, con comandi gh o git; AC6–AC9, AC13, AC14 e AC17–AC19 si esercitano solo con PR di prova finché site/ e api/ non esistono (è scritto in esercitabile e in rischi)",
+    "non-goal espliciti": "sì, 9: i 4 della issue più 5 dichiarati, uno con scadenza (servizi MongoDB e Redis)",
+    "domande_aperte vuoto": "sì; i punti non detti dalla issue sono default dichiarati in rese_del_testo",
+    "journal scritto durante": "sì: una misura, quattro decisioni, questa consegna"
+  },
+  "non_fatto": [
+    "Il commit esce firmato Cantiere-Agent: orchestrator, perché il marcatore condiviso contiene quel ruolo (voce 083248)",
+    "Le voci 082433-feature-*.json della sessione principale, citate in fonti, non sono nel commit: non sono di questo agente"
+  ],
+  "costo_token": 86839,
+  "umano_coinvolto": false
+}

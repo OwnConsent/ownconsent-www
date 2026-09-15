@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-15T08:32:45+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Criterio 9 letto alla lettera: il bersaglio è docs/DEFINITION-OF-DONE.md, CLAUDE.md non si tocca",
+  "contesto": "Il criterio 9 chiede che docs/DEFINITION-OF-DONE.md rimandi a ci «invece di elencare i comandi una seconda volta», ma la misura dice che quel file non contiene alcun comando: i comandi stanno in CLAUDE.md, sezioni Comandi e Definition of Done per PR. Due cose con nomi simili («Definition of Done»), da non trattare come una sola.",
+  "alternative": [
+    { "opzione": "estendere il criterio a CLAUDE.md, sostituendo l'elenco della DoD per PR con il rimando a ci", "scartata_perche": "la issue nomina un solo file; CLAUDE.md lo leggono tutti gli agenti a ogni giro e cambiarlo per interpretazione è indovinare. La modifica è reversibile e si può chiedere dopo" },
+    { "opzione": "domanda aperta sulla issue", "scartata_perche": "la lettura alla lettera è eseguibile e verificabile, e il suo esito peggiore (i comandi restano elencati in CLAUDE.md) non rompe niente: non vale fermare la catena" }
+  ],
+  "evidenza": ["grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md -> exit=1, nessuna riga"],
+  "esito": "AC20 alla lettera; divergenza fra testo e stato del file riportata in rischi e rese_del_testo; CLAUDE.md in non_goal",
+  "umano_coinvolto": false
+}

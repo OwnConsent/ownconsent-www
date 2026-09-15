@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T08:32:46+02:00",
+  "agente": "product-spec",
+  "issue": "25",
+  "lotto": "L-CI",
+  "stadio": "01-specifica",
+  "tipo": "decisione",
+  "titolo": "Criterio 8: «rosso» alla lettera, risultati di go test in cache contano come verde dovuto alla cache",
+  "contesto": "Il criterio 8 non definisce «cache corrotta» e da fuori GitHub non permette di scrivere il contenuto di una cache: così com'è scritto non è verificabile. Inoltre alcuni strumenti si riparano da soli davanti a una cache alterata e finirebbero verdi.",
+  "alternative": [
+    { "opzione": "accettare anche un verde ottenuto dopo una reinstallazione automatica", "scartata_perche": "il testo dice «deve produrre un rosso»; ammettere il verde sarebbe riscrivere il criterio. Il rischio che il rosso non sia naturale per qualche strumento va in rischi: se la misura lo smentisce, chi implementa si ferma" },
+    { "opzione": "domanda aperta su come definire la corruzione", "scartata_perche": "si definisce con una procedura di verifica (cache avvelenata da un commit su una PR di prova, con la stessa chiave) senza cambiare cosa si costruisce" },
+    { "opzione": "limitare il criterio alla cache delle dipendenze in senso stretto", "scartata_perche": "un test Go riportato come (cached) è un verde senza esecuzione, cioè proprio quello che il criterio vieta; si aggiunge come default dichiarato, reversibile" }
+  ],
+  "evidenza": [],
+  "esito": "AC17, AC18, AC19; il criterio vale solo se il workflow usa una cache («se presente»)",
+  "umano_coinvolto": false
+}

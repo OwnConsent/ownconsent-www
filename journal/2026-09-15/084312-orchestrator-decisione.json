@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-15T08:43:12+02:00",
+  "agente": "orchestrator",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "AC1, AC2, AC11, AC14 e AC18 spostati dopo il merge: il loro «dato» chiede un diff contro main che non contenga il workflow",
+  "contesto": "La spec segna AC1, AC2 e AC11 come «subito, con una PR di prova». Ma AC1 chiede una PR il cui diff tocca solo docs/, AC11 un diff che elenca solo .nvmrc, AC18 un diff vuoto sotto .github/, AC14 un diff che tocca solo packageManager. Finché il file del workflow non è su main, un diff contro main che lo contiene non soddisfa il dato, e uno che non lo contiene (ipotesi dal meccanismo di pull_request, che usa il workflow del ref di merge della PR) non fa partire ci. L'ipotesi va misurata sulla PR del lotto, non assunta.",
+  "alternative": [
+    { "opzione": "esercitare AC1 su una PR di prova impilata sul ramo ci/issue-25 con base main", "scartata_perche": "il diff contro main contiene .github/ e tests/ci/: non è il dato di AC1. Sarebbe adattare la misura alla descrizione" },
+    { "opzione": "usare come base della PR di prova il ramo ci/issue-25 invece di main", "scartata_perche": "AC1 dice «PR verso main»; il comportamento di un required check su main si osserva solo su PR verso main" },
+    { "opzione": "chiedere a @product-spec di correggere il campo esercitabile", "scartata_perche": "la spec è committata e non cambia cosa si costruisce; la divergenza si segnala in rischi_piano e l'ordine si fissa nel piano" }
+  ],
+  "evidenza": [
+    "docs/spec/issue-25.json AC1.dato «una PR verso main il cui diff tocca solo file sotto docs/», AC11.come_si_osserva «git diff --name-only origin/main...<sha> elenca solo .nvmrc», AC18 «git diff origin/main...<sha> -- .github/ vuoto»",
+    "$ ls .github/workflows -> claude-nightly-maintenance.yml, claude-pr-review.yml, claude-release-comms.yml: nessun job ci su main",
+    "ipotesi non misurata: pull_request esegue la versione del workflow del ref di merge; da confermare leggendo il campo path delle esecuzioni sulla PR del lotto"
+  ],
+  "esito": "richiede_persona divisa in: verifiche sulla PR del lotto, PR di prova prima del merge, verifiche dopo il merge, gate AC21",
+  "umano_coinvolto": false
+}

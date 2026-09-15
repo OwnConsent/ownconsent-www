@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T09:09:32+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI1,CI2",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "CI1 e CI2 lanciati in parallelo in worktree isolate, con controllo di ascendenza dell'ADR come primo passo",
+  "contesto": "ADR-0003 committato (5bd39b6) e verificato: sezioni D1-D8 presenti; git diff --name-only origin/main...HEAD su contracts, .github, CLAUDE.md, ADR 0001 e 0002 vuoto. I due lotti non condividono file.",
+  "alternative": [
+    { "opzione": "lavorare entrambi i lotti nella working tree principale", "scartata_perche": "due agenti che committano nella stessa working tree si contendono l'indice; nella working tree ci sono anche voci di journal non tracciate di altri ruoli" },
+    { "opzione": "serializzare CI2 dopo CI1", "scartata_perche": "file disgiunti e AC20 non dipende dal contenuto del workflow, solo dal nome del contesto fissato in D1" }
+  ],
+  "evidenza": [
+    "$ git log --oneline origin/main..HEAD → 5bd39b6, 7fb4c77",
+    "$ grep -n '^#' docs/adr/0003-contesto-ci.md → D1 riga 101 … D8 riga 361"
+  ],
+  "esito": "lanciati @devops (ci/issue-25-ci1) e @docs-writer (ci/issue-25-ci2); se la worktree non discende da 5bd39b6 si fermano",
+  "umano_coinvolto": false
+}

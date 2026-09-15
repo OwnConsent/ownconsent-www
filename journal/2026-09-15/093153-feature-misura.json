@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-15T09:31:53+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI3",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "CI3 verificato dalla sessione dopo il fermo di @qa-test al limite di turni: 55 test verdi, tre mutazioni prese",
+  "contesto": "@qa-test si è fermato a 32 chiamate di strumento (istruzione: fermarsi a 26 e committare) senza report, senza commit, senza voce sulle mutazioni e senza consegna. Le copie mutate esistevano in .work/issue-25/prove/mutations/ ma nessun esito era registrato.",
+  "evidenza": [
+    "notifica: «stopped at its 30-turn limit», tool_uses=32, subagent_tokens=141315, duration_ms=475294",
+    "$ cd tests/ci && python3 -B -m unittest discover -s . -p 'test_*.py' → Ran 55 tests in 0.368s, OK, exit=0",
+    "$ python3 -m unittest discover -s tests/ci -t . → ImportError: Start directory is not importable (primo tentativo della sessione: invocazione sbagliata, tests/ci non è un pacchetto)",
+    "diff -u originale copia: ac12 aggiunge node-version: \"22\"; ac16 contents: write; ac04 assente → mancante in area.sh",
+    "CI_ROOT=…/ac12-node-version-letterale → FAIL test_setup_node_non_ha_input_node_version, test_nessuna_chiave_node_version_letterale; FAILED (failures=2), exit=1",
+    "CI_ROOT=…/ac16-permissions-write → FAIL test_permissions_e_esattamente_contents_read, test_nessun_permesso_write; FAILED (failures=2), exit=1",
+    "CI_ROOT=…/ac04-parola-assente-cambiata → FAIL test_api_assente_riga_e_exit_code, test_site_assente_riga_e_exit_code; FAILED (failures=2), exit=1",
+    "$ grep -rn -e skip -e importorskip -e 'except ImportError' tests/ci → solo l'input skip-cache e una docstring: nessun test si salta",
+    "AC citati nei file di test contro spec: senza test AC11 (solo dinamico, in procedura) e AC21 (gate umano)",
+    "$ git diff --stat 589d0ca -- .github docs → vuoto: gli originali sotto test non sono stati toccati"
+  ],
+  "esito": "CI3 accettato e committato dalla sessione; mancano per DoD di @qa-test la voce sulle mutazioni e la consegna, sostituite da questa misura e segnalate nella PR",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-15T09:16:06+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "verifiche locali su ci.yml e .github/ci/area.sh",
+  "contesto": "verifiche locali richieste dal task, prima del commit: sintassi YAML, sintassi bash, comportamento di area.sh sui quattro casi (site presente, site incompleta, api presente, api incompleta, piu' entrambe assenti e i due casi di errore), actionlint via docker, grep di supporto ad AC12/AC15/AC16/D1.",
+  "evidenza": [
+    "python3 -c 'import yaml; yaml.safe_load(open(\".github/workflows/ci.yml\"))' -> nessun errore",
+    "bash -n .github/ci/area.sh -> nessun errore",
+    "shellcheck non installato nella shell (which shellcheck -> vuoto): verifica dichiarata non eseguita, non aggirata",
+    "su repository git temporanei sotto .work/issue-25/devops-scratch/: site/package.json -> 'area site/: presente (site/package.json)' exit 0, api/ assente -> 'area api/: assente' exit 0; site/ solo README.md -> 'area site/: incompleta, manca site/package.json' exit 1; api/go.mod -> 'area api/: presente (api/go.mod)' exit 0; api/ solo README.md -> 'area api/: incompleta, manca api/go.mod' exit 1; nessun file sotto site/ o api/ (commit valido) -> entrambe 'assente' exit 0; area 'foo' -> messaggio su stderr, exit 2; rev inesistente -> messaggio su stderr, exit 2",
+    "sullo stato reale della worktree al commit 0e079fc: bash .github/ci/area.sh site 0e079fc -> 'area site/: assente' exit 0; bash .github/ci/area.sh api 0e079fc -> 'area api/: assente' exit 0 (coerente con AC4, che descrive esattamente questo commit)",
+    "GITHUB_OUTPUT=<tmp> bash .github/ci/area.sh site 0e079fc; cat <tmp> -> 'site=assente'",
+    "docker run --rm -v \"$PWD:$PWD\" -w \"$PWD\" rhysd/actionlint:latest -color .github/workflows/ci.yml -> exit 0, nessun errore (dopo la correzione dei tag delle action, vedi voce fallimento precedente)",
+    "grep -nE '^\\s*(node-version|go-version|version):' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'pnpm@' .github/workflows/ci.yml -> nessuna riga",
+    "grep -nE '22\\.[0-9]+' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'secrets\\.' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'write' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'continue-on-error' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'concurrency' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'matrix' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n 'pull_request_target' .github/workflows/ci.yml -> nessuna riga",
+    "grep -n '^permissions:' .github/workflows/ci.yml -> riga 14, 'contents: read' unica voce"
+  ],
+  "esito": "verifiche locali disponibili tutte superate; comportamento reale su GitHub Actions resta ipotesi (act non installato, come dichiarato dal task): non verificato che H1-H8 valgano davvero finche' non gira una PR",
+  "umano_coinvolto": false
+}

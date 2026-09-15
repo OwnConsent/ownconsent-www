@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-15T09:14:00+02:00",
+  "agente": "docs-writer",
+  "issue": "25",
+  "lotto": "CI2",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "dove e come scrivere il rimando al contesto `ci` in docs/DEFINITION-OF-DONE.md",
+  "contesto": "AC20 vuole una frase che nomini `ci` fra backtick e dica che build, lint, typecheck e test di una PR sono quelli verificati da quel contesto, senza ripetere i comandi. Il file ha una tabella per ruolo e una sezione 'Vale per tutti' che gia' si applica a chiunque apra una PR.",
+  "alternative": [
+    { "opzione": "una nuova riga di tabella per un ruolo esistente (es. @devops o @qa-test)", "scartata_perche": "build/lint/typecheck/test di una PR non sono la Definition of Done di un ruolo solo; il criterio 9 della issue parla del file nel suo insieme, non di una riga di ruolo" },
+    { "opzione": "mettere la frase in cima al file, prima della tabella dei ruoli", "scartata_perche": "cambierebbe la struttura esistente del file (titolo -> tabella ruoli -> sezione trasversale) senza che l'AC lo richieda; la sezione 'Vale per tutti' e' gia' il posto per cio' che riguarda ogni PR" },
+    { "opzione": "citare anche il percorso del workflow (.github/workflows/...)", "scartata_perche": "il criterio chiede di rimandare al nome del contesto, non al file che lo implementa; citare il percorso crea un secondo posto da tenere allineato se il file si sposta o si rinomina" }
+  ],
+  "evidenza": [
+    "scelta: paragrafo aggiunto in fondo alla sezione 'Vale per tutti', dopo il paragrafo sul journal e prima della riga @case-study: 'Build, lint, typecheck e test di una pull request sono quelli verificati dal contesto `ci`: non si ripetono qui.'"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

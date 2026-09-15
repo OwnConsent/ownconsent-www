@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T08:38:47+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "01-specifica",
+  "tipo": "fallimento",
+  "titolo": "Il marcatore di ruolo non è stato misurato prima di delegare: il commit di @product-spec esce firmato orchestrator",
+  "contesto": "Il commit 7fb4c77, scritto da @product-spec, porta Cantiere-Agent: orchestrator. Il valore del marcatore prima del lancio non è stato letto, quindi non si sa se fosse già stantio o se sia stato riscritto durante il giro.",
+  "evidenza": [
+    "$ git log -1 --format='%(trailers)' → Cantiere-Agent: orchestrator",
+    "$ ls -l --time-style=full-iso .git/cantiere-current-agent → mtime 2026-09-15 08:36:59, contenuto 'orchestrator'",
+    "primo tentativo di misura con jq: 'jq: command not found', exit=127; la catena && ha saltato il grep successivo e l'exit stampato era quello di jq"
+  ],
+  "cosa_si_e_imparato": "Prima di delegare un giro che committa si legge il marcatore, e si rilegge dopo: senza il valore di partenza la firma sbagliata non si attribuisce a nessuna causa. Le misure si lanciano come comandi separati, non concatenate con &&, altrimenti un exit code finisce attribuito al comando sbagliato. jq non c'è su questa macchina: python3 -m json.",
+  "esito": "le voci della sessione principale non si committano finché la firma non è capita; storia non riscritta",
+  "umano_coinvolto": false
+}

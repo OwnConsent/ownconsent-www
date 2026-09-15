@@ -1,0 +1,113 @@
+# Stadio 03 — contesto ci: build, lint, typecheck e test di ogni PR verso main.
+# Interfaccia fissata da docs/adr/0003-contesto-ci.md. Il nome del job (`ci`) e'
+# quello che una persona lega, con un gate umano separato, ai required status
+# checks di main (AC21, non_goal di questo lotto). Non rinominare il job senza
+# passare dal percorso di deprecazione dell'ADR, sezione D1.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    env:
+      # ADR-0002, D9: nessuna telemetria di terzi da un repository pubblico.
+      # Vale anche quando site/ e' assente (ADR-0003, D4).
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Node.js (da .nvmrc)
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Versione Node in uso
+        run: node -v
+
+      - name: SHA verificato
+        run: git rev-parse HEAD
+
+      # Interfaccia di .github/ci/area.sh: ADR-0003, D6.
+      - name: Rilevamento aree
+        id: rilevamento
+        run: |
+          set +e
+          bash .github/ci/area.sh site
+          site_status=$?
+          bash .github/ci/area.sh api
+          api_status=$?
+          set -e
+          if [ "$site_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
+            exit 1
+          fi
+
+      # --- site/ (solo se l'area e' presente) ---
+
+      - name: site/ — pnpm (corepack) e versione in uso
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: |
+          corepack enable
+          pnpm -v
+
+      - name: site/ — installazione dipendenze
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: site/ — build
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm build
+
+      - name: site/ — lint
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm lint
+
+      - name: site/ — astro check
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm astro check
+
+      # --- api/ (solo se l'area e' presente) ---
+
+      - name: api/ — Go (da api/go.mod)
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: api/go.mod
+          cache: false
+
+      - name: Versione Go in uso
+        if: steps.rilevamento.outputs.api == 'presente'
+        run: go version
+
+      - name: api/ — build
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go build ./...
+
+      - name: api/ — lint (golangci-lint)
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        with:
+          working-directory: api
+          version-file: .golangci-lint-version
+          skip-cache: true
+
+      - name: api/ — test (-race -count=1 -v, niente cache)
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go test -race -count=1 -v ./...

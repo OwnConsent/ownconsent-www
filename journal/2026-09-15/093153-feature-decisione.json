@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T09:31:53+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "CI3",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "La sessione committa CI3 invece di lanciare un quarto agente, e porta la procedura GitHub da .work/ a tests/ci/",
+  "contesto": "I file di CI3 sono completi e verificati (misura precedente). La procedura per gli AC dinamici sta in .work/issue-25/prove/procedure.md, in .gitignore: una persona che apre le PR di prova non la troverebbe nel repository.",
+  "alternative": [
+    { "opzione": "lanciare un @qa-test nuovo solo per committare e scrivere consegna", "scartata_perche": "nessun dubbio aperto da chiudere, a differenza di CI1; il commit è integrazione di file verificati, e un giro nuovo costerebbe decine di migliaia di token per un git add" },
+    { "opzione": "lasciare la procedura in .work/ e incollarla solo nel corpo della PR", "scartata_perche": "si implementa solo da artefatti committati: chi esegue le PR di prova dopo il merge deve trovarla nel repository; tests/ci/** è già fra i file del lotto CI3 nel piano" },
+    { "opzione": "committare anche tests/ci/__pycache__/", "scartata_perche": "bytecode generato dalle esecuzioni dell'agente; .gitignore non copre __pycache__, i file sono stati rimossi e l'esecuzione della sessione usa python3 -B" }
+  ],
+  "evidenza": [
+    "$ cmp .work/issue-25/prove/procedure.md tests/ci/procedure-github.md → identici",
+    "plan.json, lotto CI3: file [tests/ci/**, .work/issue-25/prove/**]"
+  ],
+  "esito": "applicata; .gitignore senza __pycache__ segnalato nella PR, non corretto qui",
+  "umano_coinvolto": false
+}

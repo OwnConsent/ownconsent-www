@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T12:45:20+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "ci ha rilevato le aree sul merge commit: lo SHA stampato è Merge b62d60b into 0e079fc",
+  "contesto": "La voce A01 di DESIGN-AMENDMENTS.md, nella prima stesura della sessione, diceva «Osservato sulla PR #26» senza che lo SHA del checkout fosse mai stato letto. Prima del commit la frase è stata sostituita dalla misura.",
+  "evidenza": [
+    "$ grep -P '\\tSHA verificato\\t' ci-run-34942254235.log (log del job ci salvato nello scratchpad) → ##[group]Run git rev-parse HEAD … bbda3d2d46830a0440d897ea341f924567809dab",
+    "testa della PR al momento del run: b62d60b59f3673fd32f4d73e9049c12e806ffe33",
+    "$ gh api repos/OwnConsent/ownconsent-www/commits/bbda3d2d46830a0440d897ea341f924567809dab --jq '{parents: [.parents[].sha], message: .commit.message}' → message «Merge b62d60b59f3673fd32f4d73e9049c12e806ffe33 into 0e079fc476d0b381f85a8d0d64387877723861c2», parents [0e079fc…, b62d60b…]",
+    "origin/main: 0e079fc476d0b381f85a8d0d64387877723861c2"
+  ],
+  "esito": "A01 cita la misura invece dell'affermazione; H3/F6 di ADR-0003 confermati per il checkout, non modificati",
+  "umano_coinvolto": false
+}

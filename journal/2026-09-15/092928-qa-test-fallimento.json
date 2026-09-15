@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-15T09:29:28+02:00",
+  "agente": "qa-test",
+  "issue": "25",
+  "lotto": "CI3",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "primo test di AC20 falliva sull'originale per un difetto del test, non del contenuto",
+  "contesto": "test_ac20_definition_of_done.py, prima versione: cercava build/lint/typecheck/test sulla stessa riga fisica di `ci`.",
+  "cosa_si_e_imparato": "docs/DEFINITION-OF-DONE.md righe 34-35: 'Build, lint, typecheck e test di una pull request sono quelli verificati dal contesto\\n`ci`: non si ripetono qui.' e' UNA frase, spezzata a capo dal markdown. La spec (AC20, 'allora') chiede 'una frase', non una riga grep-abile: il primo test confondeva le due cose e falliva su un contenuto corretto. Sono le stesse conseguenze del principio del lotto ('test dalla spec, non dal codice'): senza guardare il file prima, il test aveva assunto un formato di riga che l'autore del file non doveva rispettare.",
+  "evidenza": [
+    "$ cd tests/ci && python3 -m unittest test_ac20_definition_of_done -v 2>&1 | tail -10 (prima versione) -> FAIL: nessuna riga con `ci` menziona insieme build, lint, typecheck e test: ['`ci`: non si ripetono qui.']",
+    "$ sed -n '33,36p' docs/DEFINITION-OF-DONE.md mostra la frase spezzata su due righe"
+  ],
+  "esito": "test corretto per confrontare a livello di paragrafo (blocco separato da riga vuota) invece che di riga fisica; il contenuto di docs/DEFINITION-OF-DONE.md non e' stato toccato, non essendo un difetto del file",
+  "umano_coinvolto": false
+}

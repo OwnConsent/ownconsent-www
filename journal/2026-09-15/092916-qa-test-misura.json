@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T09:29:16+02:00",
+  "agente": "qa-test",
+  "issue": "25",
+  "lotto": "CI3",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "prima misura del giro e suite tests/ci/ verde sugli oggetti originali",
+  "contesto": "Stadio 03, lotto CI3: test di accettazione del contesto ci scritti dalla spec (docs/spec/issue-25.json) e dall'interfaccia D6 dell'ADR (docs/adr/0003-contesto-ci.md), senza guardare l'implementazione prima di scrivere i test.",
+  "evidenza": [
+    "$ git -C /home/andreapernici/src/ownconsent/www log --oneline -1 -> 589d0ca docs(journal): consegna CI1 (#25)",
+    "$ command -v pytest -> non trovato; command -v shellcheck -> non trovato",
+    "$ python3 -c 'import yaml; print(yaml.__version__)' -> 6.0.1",
+    "pytest assente: i test sono scritti con unittest della libreria standard (ADR D7 richiede solo python3+PyYAML, git, bash, nessun package manager)",
+    "$ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -v 2>&1 | tail -5 -> 'Ran 55 tests in 0.355s' / 'OK'"
+  ],
+  "esito": "55 test in 11 file sotto tests/ci/, un test per ciascuno dei 20 AC esercitabili localmente (interi o come precondizione statica) piu' un file di supporto su ADR-0003 D1 (forma del job, non un AC a se'); tutti verdi sugli oggetti originali dopo una correzione (vedi voce fallimento separata)",
+  "umano_coinvolto": false
+}

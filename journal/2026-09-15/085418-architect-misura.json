@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-15T08:54:18+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "misura",
+  "adr": "ADR-0003",
+  "titolo": "go test -race mette in cache i risultati; setup-go e golangci-lint-action accendono una cache per default, setup-node no per pnpm",
+  "contesto": "D4 (cache) e AC19 (nessun (cached)) dipendono da due fatti: se -race basta a escludere la cache dei test, e quali action accendono una cache senza che il workflow lo dica.",
+  "evidenza": [
+    "modulo minimo nella scratchpad della sessione, GOCACHE nella scratchpad; go version -> go1.25.7 linux/amd64",
+    "$ go test -race ./... (prima volta) -> ok example.com/m/a 1.022s, exit=0",
+    "$ go test -race ./... (seconda volta) -> ok example.com/m/a (cached), exit=0",
+    "$ go test -race -count=1 ./... -> ok example.com/m/a 1.011s, exit=0",
+    "$ go help test -> «The idiomatic way to disable test caching explicitly is to use -count=1.»",
+    "$ curl raw actions/setup-go/main/action.yml -> input cache «default: true»; README: «The `cache` input is optional, and caching is enabled by default. To disable caching, set `cache: false`.»",
+    "$ curl raw actions/setup-node/main/README.md -> «For other package managers, such as Yarn and pnpm, caching is disabled by default and must be configured manually using the `cache` input.»",
+    "$ curl raw golangci/golangci-lint-action/main/action.yml -> input skip-cache «default: 'false'»; README, sezione Caching internals: salva e ripristina la cartella di cache di golangci-lint con chiave golangci-lint.cache-{runner_os}-{working_directory}-{interval_number}-{go.mod_hash}"
+  ],
+  "esito": "-race da solo non basta per AC19: serve -count=1. Tre action su tre lette hanno una cache: due accese per default (setup-go, golangci-lint-action), una spenta per pnpm (setup-node)",
+  "umano_coinvolto": false
+}

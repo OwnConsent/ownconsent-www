@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-15T08:54:18+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "tipo": "fallimento",
+  "adr": "ADR-0003",
+  "titolo": "Le citazioni dei docs GitHub prese con WebFetch non sono alla lettera; il percorso della pagina sui required checks è cambiato; una voce di journal bloccata da guard-paths.sh",
+  "contesto": "Il lotto chiede la fonte con la frase citata per ogni affermazione su GitHub Actions che regge una decisione. Primo tentativo: WebFetch sulle pagine HTML di docs.github.com e sui README delle action.",
+  "tentativo": "WebFetch con richiesta di citare alla lettera. Il modello che riassume ha restituito frasi ricomposte (una riga di tabella rimontata come frase) e ha messo sotto «Workflow File Version» una frase sul payload degli eventi che non parla della versione del file.",
+  "secondo_tentativo": "curl del sorgente Markdown di github/docs: il vecchio percorso di troubleshooting-required-status-checks.md sotto collaborating-on-repositories-with-code-quality-features -> HTTP 404; gh api 'repos/github/docs/git/trees/main?recursive=1' -> 14943 percorsi, truncated false; la pagina ora sta in content/pull-requests/how-tos/merge-and-close-pull-requests/.",
+  "terzo_inciampo": "La prima scrittura di questa voce e della misura è stata bloccata da guard-paths.sh: nel testo c'era, come citazione del README di golangci-lint-action, il percorso della cartella di cache nella home con la tilde. Nessun accesso a quel percorso era tentato; la citazione è stata riformulata senza il percorso, il blocco non è stato aggirato in altro modo.",
+  "cosa_si_e_imparato": "Una citazione che deve reggere una decisione si prende dal sorgente scaricato e si cerca con grep, non dal riassunto di uno strumento. Nel sorgente dei docs la frase spesso sta in data/reusables/, non nella pagina. Un percorso con la tilde dentro un testo fa scattare il perimetro anche se è solo una stringa.",
+  "esito": "le citazioni dell'ADR vengono solo dai file scaricati in scratchpad e cercati con grep",
+  "umano_coinvolto": false
+}

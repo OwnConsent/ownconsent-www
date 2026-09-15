@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-15T09:06:13+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "adr": "ADR-0003",
+  "tipo": "decisione",
+  "titolo": "D1-D2: un solo job ci, senza if, matrice, filtri o concurrency; le estensioni sono passi del job, job separati solo come aggregatore con always() dopo una sezione dell'ADR",
+  "contesto": "Il nome ci diventa una stringa nella protezione di main (AC21). Un job skipped soddisfa un required check (F1, F2) e un job con needs su un job fallito è skipped (F3).",
+  "alternative": [
+    {
+      "opzione": "job separati per area con ci che li aspetta via needs",
+      "scartata_perche": "un job a monte fallito rende ci skipped (F3), che vale come superato (F1, F2): un rosso diventa via libera"
+    },
+    {
+      "opzione": "aggregatore con needs e if: always() già adesso",
+      "scartata_perche": "astrazione senza casi d'uso presenti: site/ e api/ non esistono; resta l'unica forma ammessa quando una sezione datata introduce job separati"
+    },
+    {
+      "opzione": "un check richiesto per area",
+      "scartata_perche": "ogni area nuova cambierebbe la protezione, gate umano ogni volta"
+    },
+    {
+      "opzione": "concurrency con cancel-in-progress solo sulle PR",
+      "scartata_perche": "anche senza cancel-in-progress un gruppo annulla le esecuzioni pending (F7); il risparmio di minuti non è misurato"
+    },
+    {
+      "opzione": "push su tutti i rami",
+      "scartata_perche": "due esecuzioni sullo SHA di testa di una PR e, secondo H3, due check ci: AC1 ne chiede esattamente uno"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0003-contesto-ci.md, D1 e D2",
+    "fonti F1, F2, F3, F4, F7, F8 e ipotesi H1-H3 nella stessa voce di misura"
+  ],
+  "esito": "deciso; rinomina con percorso di deprecazione in quattro passi e gate umano",
+  "umano_coinvolto": false
+}

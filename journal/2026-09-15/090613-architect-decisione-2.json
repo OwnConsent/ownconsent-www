@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-15T09:06:13+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "adr": "ADR-0003",
+  "tipo": "decisione",
+  "titolo": "D3-D4: nessun site-ci.yml, budget dentro o fuori ci rinviato al giro di L12 con misura di variabilità; telemetria di Astro spenta da CI1; nessuna cache",
+  "contesto": "contracts/perf-budgets.json:33 nomina site-ci.yml e un confronto fatto dalla CI; ADR-0001 vuole un solo comparatore; ADR-0002 riga 386 e 424 assegnano a L12 telemetria e cache dei lockfile. La misura in 085418-architect-misura.json mostra (cached) con go test -race e cache accese per default in setup-go e golangci-lint-action.",
+  "alternative": [
+    {
+      "opzione": "budget in ci subito",
+      "scartata_perche": "non_goal della spec, L07 e site/ assenti, variabilità di CPU (ADR-0001 riga 71) non misurata: sarebbe dedurre"
+    },
+    {
+      "opzione": "L12 con site-ci.yml come nel piano della #8",
+      "scartata_perche": "due workflow costruirebbero site/ con due fonti di Node e pnpm; stesso argomento del comparatore unico di ADR-0001"
+    },
+    {
+      "opzione": "cache dello store pnpm sui lockfile (ADR-0002 riga 424)",
+      "scartata_perche": "rende applicabili AC17 e AC18, con una PR pubblica avvelenata e gh cache delete --all distruttivo; beneficio non misurato"
+    },
+    {
+      "opzione": "cache di default di setup-go",
+      "scartata_perche": "GOCACHE porta i risultati dei test: (cached) misurato anche con -race, contro AC19"
+    },
+    {
+      "opzione": "telemetria spenta solo nei passi di site/",
+      "scartata_perche": "un passo aggiunto dopo senza env la manderebbe; a livello di job è una riga"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0003-contesto-ci.md, D3 e D4",
+    "F10, F11, F12, F13; H6 da misurare su P2 e P3"
+  ],
+  "esito": "D3 in parte deciso e in parte rinviato con scadenza (giro di L12, prima di scrivere il workflow); D4 deciso con rinvio della cache (giro di L12 o durata misurata su 5 esecuzioni); divergenze su contracts/perf-budgets.json:33, ADR-0001 e ADR-0002 elencate come da ratificare, file non toccati",
+  "umano_coinvolto": false
+}

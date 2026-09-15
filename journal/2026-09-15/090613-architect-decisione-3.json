@@ -1,0 +1,43 @@
+{
+  "ts": "2026-09-15T09:06:13+02:00",
+  "agente": "architect",
+  "issue": "25",
+  "lotto": "CI0",
+  "stadio": "02-contratti",
+  "adr": "ADR-0003",
+  "tipo": "decisione",
+  "titolo": "D5-D8: versioni solo da file delle aree, script .github/ci/area.sh con interfaccia fissata, tests/ci/ non eseguiti da ci con scadenza, niente skip nei test di api/",
+  "contesto": "AC12 vieta versioni di Node nel workflow; la spec lascia aperte le versioni di Go e golangci-lint; AC4 e AC5 chiedono righe di log fissate; @qa-test deve provare dal documento. Mentre scrivevo D6 è emerso che su pull_request il checkout di default è il merge commit (F6), mentre la spec definisce l'area sullo SHA di testa.",
+  "alternative": [
+    {
+      "opzione": "versione di golangci-lint nel workflow o latest",
+      "scartata_perche": "cambiarla toccherebbe .github/, oppure ci diventa rosso senza modifiche al codice"
+    },
+    {
+      "opzione": ".tool-versions unico per Go e golangci-lint",
+      "scartata_perche": "duplica la versione di Go già in api/go.mod"
+    },
+    {
+      "opzione": "rilevamento delle aree scritto nel YAML",
+      "scartata_perche": "non si prova senza eseguire il workflow; CI3 dovrebbe leggere il codice"
+    },
+    {
+      "opzione": "checkout dello SHA di testa per allinearsi alla definizione della spec",
+      "scartata_perche": "verificherebbe un albero diverso da quello che entra in main; la divergenza si segnala a product-spec e qa-test"
+    },
+    {
+      "opzione": "ci esegue tests/ci/ già in questo giro",
+      "scartata_perche": "una PR indebolisce insieme workflow e test (F5); CI3 dovrebbe modificare il file di CI1"
+    },
+    {
+      "opzione": "skip dei test di api/ quando MongoDB o Redis mancano",
+      "scartata_perche": "verde senza esecuzione, lo stesso difetto che il criterio 8 vieta per la cache"
+    }
+  ],
+  "evidenza": [
+    "docs/adr/0003-contesto-ci.md, D5-D8",
+    "F5, F6, F10, F12; H5, H7, H8"
+  ],
+  "esito": "deciso; D7 rinviato con scadenza (prima PR che modifica ci.yml o .github/ci/** dopo il merge, oppure giro di L07); D8 registra la scadenza del non_goal e aggiunge -v e il divieto di build tag che escludono test",
+  "umano_coinvolto": false
+}

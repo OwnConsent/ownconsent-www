@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T09:35:08+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "consegna",
+  "titolo": "PR #26 aperta; ci verde sulla PR stessa, che tocca solo .github/, docs/, tests/ e journal/",
+  "contesto": "Chiusura degli stadi 01-05 della skill feature. Merge e required status check restano a una persona (voce 093313-feature-gate).",
+  "evidenza": [
+    "$ gh api 'repos/OwnConsent/ownconsent-www/commits/b62d60b/check-runs?filter=latest' --jq '[.check_runs[] | {name, status, conclusion, app: .app.slug}]' → [{\"app\":\"github-actions\",\"conclusion\":\"success\",\"name\":\"ci\",\"status\":\"completed\"}]",
+    "$ gh api 'repos/OwnConsent/ownconsent-www/actions/runs?head_sha=b62d60b…' → un solo run: id 34942254235, name CI, event pull_request, path .github/workflows/ci.yml",
+    "$ gh run view 34942254235 --job 104293399613 --log (salvato nello scratchpad, 191 righe) → 'area site/: assente', 'area api/: assente', 'node: v22.23.2'",
+    "stesso log, righe 21-26 [Set up job]: ##[group]GITHUB_TOKEN Permissions / Contents: read / Metadata: read / ##[endgroup] / Secret source: Actions / Cache mode: write",
+    "$ gh pr view 26 --json statusCheckRollup,mergeStateStatus → checks [{name: ci, conclusion: SUCCESS}], mergeStateStatus CLEAN",
+    "costo degli agenti (notifiche di sistema): product-spec 95535, orchestrator 132636, architect 176525, devops 49438+122192+67113, docs-writer 48439+72921, qa-test 141315 token"
+  ],
+  "dod_soddisfatta": "parziale e dichiarata: build/lint/typecheck e go test senza oggetto (site/ e api/ assenti, comandi eseguiti con exit=1 per cd); test per ogni AC esercitabile scritti da @qa-test (55, verdi, tre mutazioni prese) ma committati dalla sessione dopo il fermo per limite di turni; nessun bug corretto, nessun budget di perf-budgets.json toccato, niente di visibile; journal: difetti di contemporaneità in orchestrator, docs-writer e devops (correzioni 091441, 092413, misura 091852). Osservati su GitHub: AC4, AC10, AC15 (sezione del token solo Contents: read e Metadata: read; 'Cache mode: write' è fuori da quella sezione ed è segnalato), AC1 nella parte osservabile da questa PR. Non osservati: AC2, AC3, AC5-AC9, AC11, AC13, AC14, AC19, AC21.",
+  "esito": "catena ferma al gate umano",
+  "umano_coinvolto": true
+}

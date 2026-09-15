@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:34:33+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "gate",
+  "titolo": "guard-paths.sh ferma un filtro awk del log di ci: la regex è letta come percorso",
+  "contesto": "Per osservare AC15 la sessione cercava in quale gruppo del log compare la riga «Cache mode: write». Il comando usava awk con sub() su una regex che contiene «/,\"\",$3)»; l'hook l'ha interpretata come percorso fuori dal progetto.",
+  "evidenza": [
+    "PreToolUse:Bash guard-paths.sh: GATE: il percorso '/,\"\",$3)' porta fuori dal progetto",
+    "il comando leggeva solo l'output di gh run view: nessun accesso a file fuori dal progetto"
+  ],
+  "chi_ha_deciso": "hook guard-paths.sh",
+  "cosa_serviva": "nulla da una persona: falso positivo spiegabile (delimitatore di regex awk, non un percorso); riformulato salvando il log nello scratchpad e filtrandolo con python3, secondo la regola di HANDOFF.md sul cambio di strumento",
+  "esito": "riformulato",
+  "umano_coinvolto": false
+}

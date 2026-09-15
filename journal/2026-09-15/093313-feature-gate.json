@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T09:33:13+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": null,
+  "stadio": "05-pr",
+  "tipo": "gate",
+  "titolo": "PR #26 aperta verso main: merge, required status check e PR di prova restano a una persona",
+  "contesto": "Il ramo ci/issue-25 (b62d60b) è stato pubblicato dopo test e actionlint verdi sul HEAD. La skill si ferma alla PR aperta.",
+  "evidenza": [
+    "$ git push -u origin ci/issue-25 → * [new branch] ci/issue-25 -> ci/issue-25, exit=0",
+    "$ gh pr create --base main --head ci/issue-25 … → https://github.com/OwnConsent/ownconsent-www/pull/26, exit=0",
+    "corpo della PR: 38432 caratteri, spec per intero in un blocco details, sette decisioni per una persona"
+  ],
+  "chi_ha_deciso": "regola 4 del cantiere e non-goal della issue #25",
+  "cosa_serviva": "Andrea: (1) merge della PR; (2) ci fra i required status checks di main dopo averlo visto verde; (3) se aprire le PR di prova di tests/ci/procedure-github.md; (4) criterio 9 e CLAUDE.md; (5) area su merge commit o SHA di testa; (6) pin delle action a SHA; (7) toolchain locale v20.20.2 contro CLAUDE.md",
+  "esito": "catena ferma al gate umano; nessun merge, nessuna modifica alla protezione di main",
+  "umano_coinvolto": true
+}

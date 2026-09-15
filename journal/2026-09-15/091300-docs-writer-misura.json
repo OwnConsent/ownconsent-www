@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-15T09:13:00+02:00",
+  "agente": "docs-writer",
+  "issue": "25",
+  "lotto": "CI2",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "misure iniziali del lotto CI2 sulla worktree",
+  "contesto": "Prima di toccare docs/DEFINITION-OF-DONE.md verifico che la worktree ci2 parta dal commit dell'ADR-0003 e che il file non elenchi gia' comandi, come riportato nel prompt del lotto.",
+  "alternative": [],
+  "evidenza": [
+    "git -C .claude/worktrees/ci2 log --oneline -3 -> '5bd39b6 docs(adr): 0003 — il contesto ci come interfaccia stabile (#25)', '7fb4c77 docs(spec): issue 25 — integrazione continua', '0e079fc chore: versioni di Node e pnpm misurate, requisito minimo nel repo (#23)'",
+    "git -C .claude/worktrees/ci2 merge-base --is-ancestor 5bd39b6 HEAD -> exit=0",
+    "grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md -> nessun output, exit=1",
+    "docs/spec/issue-25.json AC20 (riga 214-215): la frase deve nominare `ci` fra backtick e dire che build, lint, typecheck e test di una PR sono verificati da quel contesto, senza le stringhe pnpm install/pnpm build/pnpm lint/astro check/go build/go test/golangci-lint",
+    "docs/adr/0003-contesto-ci.md riga 449: '| @docs-writer (CI2) | nessun vincolo nuovo oltre AC20 |' -> nessuna divergenza fra D3/D7 e AC20 da segnalare per questo file"
+  ],
+  "esito": "worktree valida, file di partenza confermato, si procede alla modifica",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

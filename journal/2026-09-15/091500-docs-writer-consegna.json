@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-15T09:15:00+02:00",
+  "agente": "docs-writer",
+  "issue": "25",
+  "lotto": "CI2",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "docs/DEFINITION-OF-DONE.md rimanda al contesto `ci` (AC20)",
+  "contesto": "Unico file modificato: docs/DEFINITION-OF-DONE.md. Aggiunta una frase in fondo alla sezione 'Vale per tutti' che nomina `ci` fra backtick senza ripetere i comandi. CLAUDE.md non toccato (non_goal della spec). Commit sul ramo ci/issue-25-ci2 della worktree ci2.",
+  "alternative": [],
+  "evidenza": [
+    "grep -n '`ci`' docs/DEFINITION-OF-DONE.md -> '35:`ci`: non si ripetono qui.' (exit=0)",
+    "grep -n -e pnpm -e 'go test' -e golangci -e astro docs/DEFINITION-OF-DONE.md -> nessun output (exit=1)",
+    "git diff --stat (prima del commit) -> 'docs/DEFINITION-OF-DONE.md | 3 +++, 1 file changed, 3 insertions(+)'",
+    "commit finale c1ae2b34a5f4cf7187fd98d9e34d38d04a3f1501 su ci/issue-25-ci2"
+  ],
+  "dod_soddisfatta": "AC20 (docs/spec/issue-25.json) verificato con i due grep sopra; nessuna modifica a CLAUDE.md; journal scritto durante il lavoro con almeno una voce decisione (alternative scartate) e questa consegna",
+  "esito": "lotto CI2 concluso, in attesa di revisione umana prima di ogni push o PR",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

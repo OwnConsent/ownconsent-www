@@ -1,0 +1,16 @@
+{
+  "ts": "2026-09-15T09:15:29+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "worktree ci1 allineata a CI0 prima di iniziare",
+  "contesto": "primo passo richiesto dal task: verificare che la worktree parta dal commit dell'ADR (5bd39b6) prima di implementare, invece di assumerlo.",
+  "evidenza": [
+    "git log --oneline -3 -> 5bd39b6 docs(adr): 0003 — il contesto ci come interfaccia stabile (#25) / 7fb4c77 docs(spec): issue 25 — integrazione continua / 0e079fc chore: versioni di Node e pnpm misurate, requisito minimo nel repo (#23)",
+    "git merge-base --is-ancestor 5bd39b6 HEAD -> exit code 0"
+  ],
+  "esito": "confermato: si puo' procedere",
+  "umano_coinvolto": false
+}

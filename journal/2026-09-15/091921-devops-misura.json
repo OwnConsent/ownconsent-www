@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T09:19:21+02:00",
+  "agente": "devops",
+  "issue": "25",
+  "lotto": "CI1",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "version-file del passo golangci-lint si risolve rispetto a working-directory, non alla radice del repository: ci.yml e ADR-0003 D5 sono coerenti",
+  "contesto": "dubbio lasciato aperto dalla sessione precedente: ci.yml usa working-directory: api e version-file: .golangci-lint-version nel passo golangci/golangci-lint-action@v9; ADR-0003 D5 assume il file in api/.golangci-lint-version. Bisognava stabilire su quale base si risolve version-file al tag pinnato (@v9, risolto a v9.3.0).",
+  "cosa_si_e_imparato": "il sorgente conferma che version-file si risolve rispetto a working-directory quando questo e' definito, non rispetto alla radice del repository. action.yml, riga 17: 'The path must be relative to the root of the project, or the `working-directory` if defined.' src/version.ts, righe 76 e 92-94: `const workingDirectory = core.getInput('working-directory')` ... `if (requestedVersion == \"\" && versionFilePath) { if (workingDirectory) { versionFilePath = path.join(workingDirectory, versionFilePath) } }`. Con working-directory: api e version-file: .golangci-lint-version il percorso risolto e' api/.golangci-lint-version, esattamente cio' che ADR-0003 D5 assume: nessuna divergenza, nessuna correzione a ci.yml. Il file api/.golangci-lint-version non esiste ancora nella worktree (api/ stessa non esiste ancora), ma questo e' fuori dal perimetro del lotto CI1 (solo .github/workflows/ci.yml, .github/ci/** e journal) e spetta a chi costruisce api/.",
+  "evidenza": [
+    "curl -sS https://raw.githubusercontent.com/golangci/golangci-lint-action/v9.3.0/action.yml | grep -n version-file -> riga 14 'version-file:', riga 17 'The path must be relative to the root of the project, or the `working-directory` if defined.'",
+    "curl -sS https://raw.githubusercontent.com/golangci/golangci-lint-action/v9.3.0/src/version.ts | sed -n '65,96p' -> righe 76 'const workingDirectory = core.getInput(`working-directory`)', 92-94 'if (requestedVersion == \"\" && versionFilePath) { if (workingDirectory) { versionFilePath = path.join(workingDirectory, versionFilePath) } }'",
+    "ls api/.golangci-lint-version -> 'No such file or directory' (api/ non ancora costruita in questa worktree; fuori perimetro CI1)"
+  ],
+  "esito": "nessuna correzione necessaria a .github/workflows/ci.yml: working-directory: api + version-file: .golangci-lint-version risolvono a api/.golangci-lint-version, coerente con ADR-0003 D5",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-19T20:49:09+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "Sulla PR #34 il contesto ci esegue il percorso site: i passi 7-11 passano da skipped a success",
+  "contesto": "Condizione di fine del lotto: non basta che i comandi funzionino in locale, ci deve eseguirli davvero. Prima di L05 l'area risultava assente e quei passi erano saltati.",
+  "evidenza": [
+    "$ gh api '…/commits/b30a6ea/check-runs?filter=latest' → ci completed success",
+    "$ gh pr view 34 --json state,mergeStateStatus,statusCheckRollup → checks [{name: ci, conclusion: SUCCESS}], mergeStateStatus CLEAN, state OPEN",
+    "run 35462349894, job 105948344382",
+    "passi: 6 success Rilevamento aree; 7 success site/ — pnpm (corepack) e versione in uso; 8 success site/ — installazione dipendenze; 9 success site/ — build; 10 success site/ — lint; 11 success site/ — astro check; 12-16 skipped (api/)"
+  ],
+  "esito": "criterio del lotto soddisfatto su GitHub, non solo in locale; il lotto resta comunque fermo per l'ipotesi (b) di ADR-0002 caduta (voce di gate delle 20:47)",
+  "umano_coinvolto": false
+}

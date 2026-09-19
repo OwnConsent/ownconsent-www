@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T13:04:10+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "PR di prova A (#27): ci verde sul percorso site/, criterio 3 provato con script che non fanno nulla",
+  "contesto": "Criterio 3 della issue #25 (AC6). La fixture ha script build, lint e astro che escono 0: la prova dice che ci rileva site/ presente ed esegue i quattro comandi nell'ordine, non che un vero progetto Astro passi.",
+  "evidenza": [
+    "$ gh api 'repos/OwnConsent/ownconsent-www/actions/runs?head_sha=da13e13…' → id 34961107867, event pull_request, path .github/workflows/ci.yml, conclusion success, https://github.com/OwnConsent/ownconsent-www/actions/runs/34961107867",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/runs/34961107867/jobs → passi 6-11 success (Rilevamento aree, pnpm corepack, installazione, build, lint, astro check); 12-16 skipped (api/)",
+    "log: [Rilevamento aree] area site/: presente (site/package.json); area api/: assente",
+    "log: Run corepack enable → 12.4.1; Run pnpm install --frozen-lockfile → Already up to date, Done in 19ms using pnpm v12.4.1",
+    "log: Run pnpm build → $ node -e \"process.exit(0)\"; Run pnpm lint → idem; Run pnpm astro check → $ node -e \"process.exit(0)\" check",
+    "log: [Versione Node in uso] v22.23.2"
+  ],
+  "esito": "criterio 3 provato nel percorso verde; AC7 (rosso quando un passo fallisce) non provato da questa PR",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-15T13:11:37+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "correzione",
+  "corregge": "2026-09-15/130229-feature-decisione.json",
+  "cosa_era_sbagliato": "Il contesto dice «Il workflow ci esiste solo sul ramo della PR #26» e l'alternativa scartata «rami creati da origin/main» è motivata con «il merge commit non conterrebbe .github/workflows/ci.yml: ci non partirebbe». Alle 13:02 locali main conteneva già ci.yml: #26 era mergiata (squash) alle 12:47:57 locali. Da origin/main ci sarebbe partito. Anche la frase «il diff verso main contiene i file di #26» è vera solo per la lista di GitHub: per lo squash il merge-base resta 0e079fc, ma il contenuto delle prove rispetto a main è solo la fixture.",
+  "come_lo_so": "$ gh pr view 26 --json mergedAt,mergeCommit → 2026-09-15T10:47:57Z, b2480ac; $ gh pr view 27/28 --json createdAt → 11:02:11Z, 11:04:07Z; $ git cat-file -e origin/main:.github/workflows/ci.yml → exit=0; $ git diff --stat 3ad7413 b2480ac → vuoto; $ git merge-base b2480ac da13e13 → 0e079fc; $ git merge-base --is-ancestor 3ad7413 origin/main → exit=1; $ git diff --stat b2480ac da13e13 → 3 file site/; $ git diff --stat b2480ac 3e45fc2 → 4 file api/; gh pr view 27/28 --json files → 80 e 81 file",
+  "cosa_si_e_imparato": "Vedi 131028-feature-fallimento: lo stato remoto si misura con git fetch prima di ogni decisione che ne dipende. Qui il risultato delle prove non cambia (workflow identico a quello di main), cambia la ragione scritta e il diff mostrato da GitHub, che da un ramo di origin/main sarebbe stato di soli 3 e 4 file.",
+  "esito": "la voce superata resta, questa la corregge; corretti anche i corpi di #26, #27 e #28",
+  "umano_coinvolto": false
+}

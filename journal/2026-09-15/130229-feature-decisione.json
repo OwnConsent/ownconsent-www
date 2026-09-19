@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T13:02:29+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "decisione",
+  "titolo": "PR di prova A e B verso main, con rami che partono da ci/issue-25 e non da main",
+  "contesto": "Richiesta di Andrea: due PR di prova non mergiabili, verso main, per i criteri 3 e 4. Il workflow ci esiste solo sul ramo della PR #26; su pull_request il file del workflow si legge dal merge commit fra la testa della PR e main (ADR-0003 F6, misura 124520).",
+  "alternative": [
+    { "opzione": "rami creati da origin/main (0e079fc)", "scartata_perche": "il merge commit non conterrebbe .github/workflows/ci.yml: ci non partirebbe e la prova non proverebbe nulla" },
+    { "opzione": "PR con base ci/issue-25 invece di main", "scartata_perche": "Andrea ha chiesto «verso main», e il workflow ha trigger pull_request senza filtri ma la protezione e le condizioni reali sono quelle verso main" }
+  ],
+  "evidenza": [
+    "$ git ls-remote --heads origin 'prova/*' → nessun ramo, exit=0",
+    "$ git worktree list → solo la working tree principale su 3ad7413 [ci/issue-25]"
+  ],
+  "esito": "rami prova/ci-area-site e prova/ci-area-api da 3ad7413, PR in bozza verso main; il corpo dichiara che il diff include i file di #26. Journal tenuto nella working tree principale, non committato: il ramo di #26 non si tocca e i rami di prova non si mergiano",
+  "umano_coinvolto": false
+}

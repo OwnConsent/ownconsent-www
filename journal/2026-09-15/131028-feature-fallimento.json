@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-15T13:10:28+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "fallimento",
+  "titolo": "Le PR di prova sono partite dall'assunzione «su main il workflow ci non esiste», falsa da 14 minuti: la PR #26 era già mergiata",
+  "contesto": "La decisione 130229 e i corpi di #27, #28 e della nuova descrizione di #26 dicono che su main ci non esisteva e che il diff delle prove conteneva i file di #26. Andrea aveva mergiato #26 prima della richiesta delle prove. La sessione non ha fatto git fetch né letto origin/main prima di decidere la base dei rami, e il primo comando del giro, che includeva origin/main, era fallito senza che l'errore venisse letto. Il controllo prima di pubblicare la descrizione di #26 verificava testo e testa, non lo stato della PR.",
+  "evidenza": [
+    "$ git rev-parse --short HEAD origin/ci/issue-25 origin/main (13:01, primo comando del giro) → fatal: Needed a single revision; output non considerato",
+    "$ gh pr view 26 --json state,mergedAt,mergedBy,mergeCommit → MERGED, 2026-09-15T10:47:57Z, andreapernici, b2480acfe86d1e417e43858304a0ec0611c201b4",
+    "$ gh pr view 27 --json createdAt → 2026-09-15T11:02:11Z; $ gh pr view 28 --json createdAt → 2026-09-15T11:04:07Z",
+    "$ git fetch origin && git cat-file -e origin/main:.github/workflows/ci.yml → exit=0",
+    "$ gh pr view 26 --json body,headRefOid,state (dopo gh pr edit 26) → state MERGED: la descrizione è stata aggiornata su una PR già mergiata"
+  ],
+  "cosa_si_e_imparato": "Prima di decidere contro quale stato di main si lavora si fa git fetch e si legge origin/main e lo stato delle PR coinvolte: in questo giro lo stato remoto era cambiato per mano di una persona fra due richieste. Un comando di misura che fallisce si legge e si ripete, non si scavalca. Il controllo prima di una scrittura remota include lo stato dell'oggetto (open/merged/closed), non solo il suo contenuto.",
+  "esito": "le prove restano valide sul percorso verde (il workflow del merge commit è quello di main); frasi false da correggere nei corpi di #26, #27 e #28",
+  "umano_coinvolto": false
+}

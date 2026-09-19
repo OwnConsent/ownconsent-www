@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T13:02:29+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "Fixture delle PR di prova misurate in locale prima di aprirle",
+  "contesto": "ci esegue pnpm install --frozen-lockfile e pnpm astro check su site/, e golangci-lint-action con version-file su api/. Si verifica in locale, in repository temporanei nello scratchpad, che le fixture non siano rosse per un difetto della fixture invece che di ci.",
+  "evidenza": [
+    "site/: $ pnpm install --frozen-lockfile (senza lockfile) → «Cannot update packageManagerDependencies with \"frozen-lockfile\" because the lockfile is not up to date», exit=1",
+    "site/: $ pnpm install → Done in 203ms using pnpm v12.4.1, exit=0; pnpm-lock.yaml generato (lockfileVersion '9.0', packageManagerDependencies pnpm 12.4.1)",
+    "site/: $ pnpm install --frozen-lockfile (con lockfile) → Already up to date, exit=0",
+    "site/: $ pnpm build → node -e \"process.exit(0)\", exit=0; $ pnpm lint → exit=0; $ pnpm astro check → node -e \"process.exit(0)\" check, exit=0",
+    "api/: $ go version → go1.25.7 linux/amd64; $ go build ./... → exit=0; $ go vet ./... → exit=0; $ go test -race -count=1 -v ./... → --- PASS: TestSomma, ok github.com/OwnConsent/ownconsent-www/api/prova, exit=0; $ gofmt -l . → nessun file",
+    "api/: $ curl -s https://raw.githubusercontent.com/golangci/golangci-lint-action/v9.3.0/src/version.ts | sed -n 60,125p → se version-file non esiste: throw «The specified golangci-lint version file at: … does not exist»; contenuto letto come \"v\" + content.trim() senza v iniziale",
+    "api/: $ git ls-remote --tags https://github.com/golangci/golangci-lint 'refs/tags/v2.*' | … | sort -V | tail -3 → v2.13.0, v2.13.1, v2.13.2"
+  ],
+  "esito": "PR A include site/pnpm-lock.yaml; PR B include api/.golangci-lint-version con 2.13.2, richiesto da ADR-0003 D5 alla prima PR di api/ e senza il quale ci sarebbe rosso per un file mancante e non per il criterio 4",
+  "umano_coinvolto": false
+}

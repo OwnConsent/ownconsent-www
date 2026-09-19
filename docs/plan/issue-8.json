@@ -1,0 +1,909 @@
+{
+  "issue": "8",
+  "titolo": "Consegna 1 — sito pubblico e contenuti",
+  "prodotto_da": "orchestrator",
+  "data": "2026-09-19",
+  "stato": "proposto: nessun lotto e stato delegato, nessun codice scritto. Serve la ratifica di Andrea prima di far partire L05.",
+  "spec": "docs/spec/issue-8.json",
+  "fonti": [
+    "docs/spec/issue-8.json (22 criteri, 8 pagine, segnaposto, gate di pubblicazione)",
+    "docs/adr/0002-struttura-site.md (struttura di site/, in vigore; il piano la rispetta, le divergenze sono elencate sotto)",
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md e contracts/perf-budgets.json (soglie di laboratorio, gia in vigore)",
+    "docs/adr/0003-contesto-ci.md, .github/workflows/ci.yml, .github/ci/area.sh (il contesto che blocca le PR)",
+    "contracts/design-tokens.json, docs/design/00-sistema-e-componenti.md, docs/design/01-pagine.md (output di @design, lotto L02)",
+    "CLAUDE.md, docs/HANDOFF.md, docs/DEFINITION-OF-DONE.md, docs/JOURNAL.md, .nvmrc"
+  ],
+  "perimetro": {
+    "dentro": [
+      "site/ per intero: impalcatura Astro, componenti, 5 pagine di vendita, rotta delle 3 bozze legali, sitemap.xml, robots.txt",
+      "il progetto di collaudo alla radice (ADR-0002 D8): package.json e pnpm-lock.yaml di radice, playwright.config.ts, e2e/, tests/perf/",
+      "l'estensione del contesto ci in .github/workflows/ci.yml perche i test di accettazione e la misura di laboratorio blocchino le PR",
+      "le righe della tabella Comandi di CLAUDE.md verificate da chi tocca l'area per primo"
+    ],
+    "fuori": [
+      "api/, MongoDB, Redis: nessun file, nessuna chiamata (vincolo 1 di Andrea e non_goal della spec)",
+      "nessun dato personale raccolto dal sito: nessun modulo, nessun campo, nessuna modifica a contracts/data-map.json (il trattamento della casella di contatto e gia dichiarato, commit 8d5bad4, lotto L11)",
+      "prezzi, indirizzo di contatto reale, dominio reale, identita del titolare, registrazione IAB, pubblicazione: gate di persona (vincolo 6, regola 7 di CLAUDE.md)",
+      "eventi di misurazione (compreso modalita_confrontata), banner della CMP, Open Graph e dati strutturati: non_goal della spec"
+    ]
+  },
+  "lotti_gia_chiusi": [
+    {
+      "id": "L00",
+      "agente": "product-spec",
+      "cosa": "docs/spec/issue-8.json",
+      "prova": "il file e committato; la spec dichiara lotto L00 e domande_aperte vuoto"
+    },
+    {
+      "id": "L01",
+      "agente": "performance",
+      "cosa": "soglie di laboratorio lcp_ms_lab_mediana e cls_lab_mediana e metodo in contracts/perf-budgets.json",
+      "prova": "commit a24f2db (#17); ADR-0001 in stato «accettata»"
+    },
+    {
+      "id": "L02",
+      "agente": "design",
+      "cosa": "contracts/design-tokens.json, docs/design/00-sistema-e-componenti.md, docs/design/01-pagine.md",
+      "prova": "commit b677bdd (#15); include l'alias focus-ring-on-inverse che chiude il gate aperto da ADR-0002 D6"
+    },
+    {
+      "id": "L03",
+      "agente": "architect",
+      "cosa": "docs/adr/0002-struttura-site.md",
+      "prova": "commit 7db22ad (#16) e aggiornamento bd0ab74 (#21) per DP-27 e DP-29"
+    },
+    {
+      "id": "L11",
+      "agente": "privacy",
+      "cosa": "trattamento delle email ricevute alla casella di contatto in contracts/data-map.json",
+      "prova": "commit 8d5bad4 (#14); il campo «indirizzo email del mittente e contenuto del messaggio» e presente con finalita, base giuridica e retention"
+    },
+    {
+      "id": "L-CI",
+      "agente": "devops",
+      "cosa": "contesto ci (build, lint, typecheck, test) e .github/ci/area.sh",
+      "prova": "commit b2480ac (#26), ADR-0003"
+    }
+  ],
+  "lotti": [
+    {
+      "id": "L05",
+      "agente": "frontend",
+      "titolo": "Impalcatura di site/: progetto Astro statico, token in CSS, componenti condivisi, rotte tecniche e rotta delle bozze legali",
+      "ac": [
+        "AC1",
+        "AC2",
+        "AC3",
+        "AC5",
+        "AC6",
+        "AC8",
+        "AC9",
+        "AC10",
+        "AC37",
+        "AC39",
+        "AC40",
+        "N2",
+        "N3"
+      ],
+      "file": [
+        "site/package.json",
+        "site/pnpm-lock.yaml",
+        "site/tsconfig.json",
+        "site/astro.config.mjs",
+        "site/.gitignore",
+        "site/src/dati/sito.json",
+        "site/src/dati/contatto.json",
+        "site/src/dati/listino.json",
+        "site/src/lib/**",
+        "site/src/styles/**",
+        "site/src/layouts/**",
+        "site/src/components/comuni/**",
+        "site/src/content.config.ts",
+        "site/src/pages/sitemap.xml.ts",
+        "site/src/pages/robots.txt.ts",
+        "site/src/pages/legale/[slug].astro",
+        "CLAUDE.md (solo le quattro righe della tabella Comandi relative a site/, verificate eseguendole)",
+        "journal/2026-09-19/*-frontend-*.json"
+      ],
+      "non_tocca": [
+        "site/src/pages/index.astro, saas.astro, hosted.astro, on-premise.astro, confronto.astro e site/src/components/pagine/** (sono di L06)",
+        "site/src/content/legale/*.md (sono di L04)",
+        "contracts/** e docs/adr/** (di @architect: se una decisione di struttura non regge, il lotto si ferma e torna ad @architect invece di adattarla)"
+      ],
+      "dipende_da": [],
+      "verifica": [
+        "cd site && corepack enable && pnpm install; pnpm -v stampa 12.4.1 e node -v almeno v22.12; exit 0",
+        "cd site && pnpm build; exit 0 e site/dist/ prodotto, con la collezione «legale» ancora vuota (le bozze arrivano con L04): se Astro fallisce su una collezione vuota, il lotto si ferma e torna ad @architect invece di aggiungere un file finto",
+        "cd site && pnpm lint && pnpm astro check; exit 0",
+        "git ls-tree -r --name-only HEAD -- site/ | grep -Fx site/package.json restituisce una riga: area.sh legge l'albero del commit, non la worktree, quindi il file deve essere committato",
+        "bash .github/ci/area.sh site stampa «area site/: presente (site/package.json)» con exit 0; oggi, misurato su questo ramo, stampa «area site/: assente»",
+        "il contesto ci della PR del lotto risulta success ed esegue i passi «site/ — installazione dipendenze», «site/ — build», «site/ — lint», «site/ — astro check» (oggi saltati perche l'area e assente)",
+        "grep -rnE '#[0-9a-fA-F]{3,8}\\b|[0-9.]+(px|rem|em)\\b' site/src --include='*.astro' --include='*.css' restituisce zero righe (ADR-0002 D5; DoD @frontend: nessun valore hard-coded)",
+        "ipotesi da misurare, ADR-0002 righe 31-33 e 420: nessun file JavaScript nell'output (grep -rl 'script' site/dist e ispezione di site/dist/_astro), @custom-media risolto anche negli <style> dei file .astro, rotte con barra finale servite 200 da astro preview. Se una misura smentisce l'ipotesi, il lotto si ferma e torna ad @architect",
+        "la tabella Comandi di CLAUDE.md riporta i comandi eseguiti davvero, con l'output nel journal"
+      ],
+      "tetto_turni": 90,
+      "note": "ADR-0002 assegna a L05 «site/ meno pagine e bozze». Il piano precisa la frontiera dentro i componenti: comuni/ a L05 (intestazione, footer, contrassegno «pagina dimostrativa», contrassegno «bozza», valore «da definire», CTA mailto — docs/design/00), pagine/ a L06. Non e una divergenza: e la stessa divisione resa in percorsi disgiunti."
+    },
+    {
+      "id": "L04",
+      "agente": "privacy",
+      "titolo": "Bozze contrassegnate di termini di servizio, informativa privacy e cookie policy",
+      "ac": [
+        "AC1",
+        "AC2",
+        "AC7",
+        "AC8",
+        "AC40",
+        "AC41",
+        "AC53",
+        "N3"
+      ],
+      "file": [
+        "site/src/content/legale/termini-di-servizio.md",
+        "site/src/content/legale/informativa-privacy.md",
+        "site/src/content/legale/cookie-policy.md",
+        "journal/2026-09-19/*-privacy-*.json"
+      ],
+      "non_tocca": [
+        "site/src/pages/legale/[slug].astro e ogni altro file di L05: il recapito lo rende la rotta da site/src/dati/contatto.json (ADR-0002, aggiornamento del 14/09, DP-27 e DP-29), non il Markdown",
+        "contracts/data-map.json: il trattamento della casella e gia dichiarato (L11, commit 8d5bad4). Se servisse un campo nuovo, e un gate verso @architect e Andrea, non una modifica di questo lotto"
+      ],
+      "dipende_da": [
+        "L05"
+      ],
+      "verifica": [
+        "cd site && pnpm build; exit 0: lo schema rigido della collezione «legale» (titolo, descrizione, bozza letterale true) fa fallire la build su una chiave sconosciuta o su bozza diversa da true (ADR-0002 D7)",
+        "le tre rotte rispondono 200 su astro preview (http://localhost:4321/legale/termini-di-servizio/ e le altre due) e l'HTML servito mostra il contrassegno «bozza»",
+        "descrizione diversa in ciascuno dei tre file e diversa da quelle delle cinque pagine di L06 (AC2): confronto fatto sull'HTML servito, non sul sorgente",
+        "grep, su site/src/content/legale/ e su site/dist/, dei tre segnaposto di ADR-0002 D3 (segnaposto-nome-casella, segnaposto-dominio-casella.invalid, segnaposto-dominio-sito.example): zero righe nei sorgenti Markdown; l'indirizzo compare solo nell'HTML reso dalla rotta",
+        "nell'HTML servito delle tre pagine nessun link mailto porta un oggetto precompilato (N3, DP-29) e l'informativa identifica il titolare con il segnaposto dichiarato, senza alcuna identita inventata",
+        "nessuna affermazione di registrazione, certificazione o approvazione IAB e nessun identificativo CMP (AC7); nessun limite di frequenza presentato come caratteristica di piano (AC53); testi in italiano e date in formato gg/mm/aaaa (AC41)"
+      ],
+      "tetto_turni": 45,
+      "note": "Il valore letterale del segnaposto dell'identita del titolare lo sceglie questo lotto sullo stile di ADR-0002 D3 (una parola che contiene «segnaposto»), lo dichiara in cima al file e lo aggiunge alla lista che il gate G3 deve cercare. Scegliere una stringa segnaposto non e decidere l'identita: l'identita la comunica Andrea."
+    },
+    {
+      "id": "L06",
+      "agente": "frontend",
+      "titolo": "Le cinque pagine di vendita: Home, SaaS, Hosted, On-premise, Confronto modalita e listino",
+      "ac": [
+        "AC1",
+        "AC2",
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC12",
+        "AC33",
+        "AC34",
+        "AC37",
+        "AC39",
+        "AC40",
+        "AC41",
+        "AC49",
+        "AC53",
+        "N1",
+        "N2"
+      ],
+      "file": [
+        "site/src/pages/index.astro",
+        "site/src/pages/saas.astro",
+        "site/src/pages/hosted.astro",
+        "site/src/pages/on-premise.astro",
+        "site/src/pages/confronto.astro",
+        "site/src/components/pagine/**",
+        "journal/2026-09-19/*-frontend-*.json"
+      ],
+      "non_tocca": [
+        "site/src/dati/**, site/src/lib/**, site/src/layouts/**, site/src/components/comuni/**, site/src/content.config.ts (di L05): se manca un componente condiviso o un dato, il lotto si ferma e lo chiede invece di duplicarlo",
+        "site/src/content/legale/*.md (di L04)"
+      ],
+      "dipende_da": [
+        "L05"
+      ],
+      "verifica": [
+        "cd site && pnpm build && pnpm lint && pnpm astro check; exit 0",
+        "su astro preview, richiesta HTTP senza JavaScript a http://localhost:4321/ e alle rotte saas/, hosted/, on-premise/, confronto/ (barra finale): 200 e HTML che contiene gia h1, testo principale e i link alle tre modalita (AC1)",
+        "title e meta description non vuoti e diversi da quelli di ogni altra delle 8 pagine; canonical assoluto costruito dalla funzione unica di site/src/lib/ sul valore di site/src/dati/sito.json (AC2)",
+        "AC4: nella pagina di confronto, per SaaS, Hosted e On-premise, cosa riceve il cliente, come paga e chi registra la CMP presso IAB, con «in definizione» per Hosted",
+        "AC33 e AC34: l'ultimo blocco del contenuto principale, prima del footer, contiene «si attiva parlando con noi» e il link mailto con oggetto Hosted e On-premise; N1: la pagina SaaS contiene «scrivici e ti attiviamo noi», oggetto SaaS, e nessun modulo, data, lista d'attesa o dicitura «in arrivo»",
+        "AC6: grep sull'HTML servito delle quattro pagine con prezzi: nessun importo in euro e nessun numero di richieste, GB, memoria o CPU che non venga da site/src/dati/listino.json, che oggi e senza valori; al loro posto «da definire»",
+        "AC5: alle viewport 360x640 e 1280x800 il contrassegno «pagina dimostrativa» e nel primo schermo, misurato sugli elementi resi, non dedotto",
+        "AC7, AC49, AC53: nessun identificativo CMP IAB ne affermazione di registrazione; la pagina SaaS e il confronto spiegano cosa conta come richiesta, cosa non si conta, che superare il tetto non interrompe il servizio e che non ci sono addebiti automatici, senza alcuna percentuale o soglia di avviso; nessun limite di frequenza come caratteristica di piano",
+        "AC12 e AC9: nessuno script nelle pagine, quindi nessuna richiesta che trasmetta modalita_confrontata; la verifica di rete la esegue L07",
+        "le pagine rese corrispondono a docs/design/01-pagine.md: le divergenze si classificano secondo CLAUDE.md (tre classi) e si portano in DESIGN-AMENDMENTS.md solo se ratificate, mai assorbite"
+      ],
+      "tetto_turni": 80,
+      "note": "L04 e L06 corrono in parallelo: insiemi di file disgiunti, verificato sotto in verifica_sovrapposizioni."
+    },
+    {
+      "id": "L07",
+      "agente": "qa-test",
+      "titolo": "Progetto di collaudo alla radice: un test per ciascuno dei 22 criteri e la misura di laboratorio",
+      "ac": [
+        "AC1",
+        "AC2",
+        "AC3",
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC8",
+        "AC9",
+        "AC10",
+        "AC12",
+        "AC33",
+        "AC34",
+        "AC37",
+        "AC39",
+        "AC40",
+        "AC41",
+        "AC49",
+        "AC53",
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "file": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "playwright.config.ts",
+        "e2e/**",
+        "tests/perf/**",
+        "CLAUDE.md (solo la riga E2E della tabella Comandi)",
+        "journal/2026-09-19/*-qa-test-*.json"
+      ],
+      "non_tocca": [
+        "site/** per intero: chi scrive il codice non scrive i test di accettazione, e chi scrive i test non aggiusta il prodotto. Un criterio che non passa e un finding che torna a L06, L05 o L04",
+        "tests/ci/** (test della issue #25 sul contesto ci) e contracts/**"
+      ],
+      "dipende_da": [
+        "L05",
+        "L04",
+        "L06"
+      ],
+      "verifica": [
+        "pnpm install && pnpm exec playwright test; ogni criterio della spec ha almeno un test che lo nomina per id, e la mappa criterio-test e nel journal",
+        "i test leggono i valori attesi da site/src/dati/sito.json, site/src/dati/contatto.json, site/src/dati/listino.json e da contracts/design-tokens.json sul filesystem, non li copiano nel codice (ADR-0002 D3 e D8)",
+        "AC6 e N2 con la copia temporanea di ADR-0002 D4: copia di site/ e contracts/ con gli stessi percorsi relativi, sostituzione della sola fixture in e2e/fixtures/, pnpm install --frozen-lockfile, build, servizio su una porta diversa, verifica; i valori di prova non assomigliano a prezzi plausibili",
+        "AC9 e AC10 su profilo pulito: nessun cookie, niente in localStorage, sessionStorage, IndexedDB e Cache Storage, nessuna richiesta verso un'origine diversa da quella che serve il sito; AC12 su URL e corpo delle richieste",
+        "AC39: peso gzip di JavaScript e CSS dall'artefatto di build e mediana di 5 esecuzioni per LCP e CLS con il metodo di contracts/perf-budgets.json ($metodo_laboratorio_pagine_pubbliche), confronto con lcp_ms_lab_mediana e cls_lab_mediana; lcp_ms_p75 e cls_p75 non si verificano (DV-4)",
+        "AC40: controllo automatico WCAG 2.2 A e AA su tutte e 8 le pagine, compresi i contrassegni; il risultato e l'output dello strumento, non un giudizio",
+        "ADR-0002 D6: su ogni pagina, a 360x640 e 1280x800, in tema chiaro e scuro, si scorre con Tab e si leggono gli stili calcolati dell'elemento attivo; l'anello atteso e il valore in vigore per il contesto dell'elemento (focus-ring, e focus-ring-on-inverse dentro il footer: vedi divergenza D-2)"
+      ],
+      "tetto_turni": 110,
+      "note": "ADR-0002 D4 nomina e2e/fixtures/, contracts/perf-budgets.json nomina tests/perf/: il piano tiene entrambe le cartelle come le nominano i due artefatti in vigore invece di sceglierne una a naso (vedi suonano_uguali)."
+    },
+    {
+      "id": "L12",
+      "agente": "devops",
+      "titolo": "Il contesto ci esegue i test di accettazione e la misura di laboratorio",
+      "ac": [
+        "AC39"
+      ],
+      "file": [
+        ".github/workflows/ci.yml",
+        "journal/2026-09-19/*-devops-*.json"
+      ],
+      "non_tocca": [
+        "tests/ci/**: sono i test della issue #25 sulla forma del workflow. Se uno fallisce dopo la modifica, il lotto si ferma e torna ad @architect: adattare il test alla modifica sarebbe adattare la misura alla descrizione",
+        "il nome del job «ci» (ADR-0003 D1: rinominarlo passa da un percorso di deprecazione) e site/**"
+      ],
+      "dipende_da": [
+        "L07"
+      ],
+      "verifica": [
+        "python3 -m pytest tests/ci (o il comando con cui quei test si eseguono oggi) verde dopo la modifica del workflow",
+        "bash .github/ci/area.sh site stampa «presente» e i passi di site/ vengono eseguiti; i passi nuovi (installazione del progetto di radice, playwright test, misura di laboratorio) girano solo quando l'area site/ e presente",
+        "il contesto ci della PR risulta success e, su una PR di prova che rompe un criterio, risulta failure: il gate si dimostra rosso, non si deduce",
+        "ASTRO_TELEMETRY_DISABLED resta impostato (ADR-0002 D9); nessun segreto aggiunto al workflow (repository pubblico)"
+      ],
+      "tetto_turni": 50,
+      "note": "contracts/perf-budgets.json, in $lettura_ci, nomina .github/workflows/site-ci.yml: e il documento contro il meccanismo gia in produzione. Vince il secondo (divergenza D-3)."
+    },
+    {
+      "id": "L08",
+      "agente": "code-reviewer",
+      "titolo": "Revisione avversariale del diff di site/ e del progetto di collaudo",
+      "ac": [],
+      "file": [
+        "journal/2026-09-19/*-code-reviewer-*.json"
+      ],
+      "non_tocca": [
+        "site/**, e2e/**, tests/**: i finding si scrivono, non si correggono (i rientri sono L14 e L15)"
+      ],
+      "dipende_da": [
+        "L07"
+      ],
+      "verifica": [
+        "findings in .work/8/findings-code-reviewer.json (scratch, non committato) nel formato di docs/HANDOFF.md: ogni finding ha file, riga e scenario concreto; i non riproducibili sono scartati",
+        "ripete i comandi di verifica di ADR-0002 D3 (grep dei segnaposto), D5 (grep dei valori scritti a mano) e D6 e riporta l'output, non la conclusione"
+      ],
+      "tetto_turni": 40,
+      "note": "Non puo essere lo stesso agente di L05, L06 o L07."
+    },
+    {
+      "id": "L09",
+      "agente": "accessibility",
+      "titolo": "Verifica WCAG 2.2 AA da tastiera sulle 8 pagine",
+      "ac": [
+        "AC37",
+        "AC40"
+      ],
+      "file": [
+        "journal/2026-09-19/*-accessibility-*.json"
+      ],
+      "non_tocca": [
+        "site/**, e2e/**"
+      ],
+      "dipende_da": [
+        "L07"
+      ],
+      "verifica": [
+        "percorso completabile da tastiera su tutte e 8 le pagine, a 360x640 e 1280x800, nei due temi; l'anello di focus non e tagliato da overflow o clip (ADR-0002 D6)",
+        "bersagli interattivi di almeno 24x24 CSS px o con la spaziatura di WCAG 2.5.8, misurati sugli elementi resi (AC37)",
+        "nessuna violazione bloccante di livello A e AA che il controllo automatico di L07 non abbia gia visto; i finding vanno in .work/8/findings-accessibility.json"
+      ],
+      "tetto_turni": 50,
+      "note": ""
+    },
+    {
+      "id": "L10",
+      "agente": "design",
+      "titolo": "Evidenza documento-contro-prodotto delle 8 pagine",
+      "ac": [
+        "AC5",
+        "AC8"
+      ],
+      "file": [
+        "journal/2026-09-19/*-design-*.json"
+      ],
+      "non_tocca": [
+        "site/**, contracts/design-tokens.json (una modifica ai token sarebbe una sessione di design, non una PR di implementazione)"
+      ],
+      "dipende_da": [
+        "L07"
+      ],
+      "verifica": [
+        "per ciascuna delle 8 pagine, confronto fra docs/design/01-pagine.md e il prodotto reso, con gli stili calcolati estratti dal documento servito via HTTP",
+        "ogni divergenza classificata secondo CLAUDE.md (non costruito, accessibilita, shipped vince); nessuna divergenza «migliorativa»; le ratificate vanno in DESIGN-AMENDMENTS.md a cura di Andrea",
+        "i contrassegni «pagina dimostrativa» e «bozza» rispettano il contrasto dichiarato in docs/design/00-sistema-e-componenti.md, verificato con docs/design/contrast-check.py"
+      ],
+      "tetto_turni": 45,
+      "note": "@design ha prodotto L02: qui non rivede il proprio codice, perche il codice non e suo. Se questo gate diventasse una revisione del proprio documento, si affida a una persona."
+    },
+    {
+      "id": "L13",
+      "agente": "seo",
+      "titolo": "Controllo di title, description, canonical, sitemap, robots e ordine dei titoli sull'HTML servito",
+      "ac": [
+        "AC2",
+        "AC3"
+      ],
+      "file": [
+        "journal/2026-09-19/*-seo-*.json"
+      ],
+      "non_tocca": [
+        "site/**, e2e/**"
+      ],
+      "dipende_da": [
+        "L07"
+      ],
+      "verifica": [
+        "sulle 8 pagine servite: lang=it, title e description non vuoti e distinti a coppie, canonical assoluto con la rotta della pagina e il dominio segnaposto, gerarchia dei titoli senza salti",
+        "http://localhost:4321/sitemap.xml elenca esattamente le 8 rotte con gli stessi URL dei canonical; robots.txt non esclude nessuna delle 8",
+        "Open Graph e dati strutturati restano fuori (non_goal della spec): segnalarli come mancanti sarebbe aggiungere un requisito"
+      ],
+      "tetto_turni": 30,
+      "note": "AC2 e AC3 sono chiusi dall'implementazione (L05, L06, L04) e verificati dai test di L07; questo lotto e la revisione di ruolo prevista dalla DoD di @seo, non una seconda implementazione."
+    },
+    {
+      "id": "L14",
+      "agente": "frontend",
+      "titolo": "Rientro dei finding confermati su site/ (condizionale)",
+      "ac": [],
+      "file": [
+        "site/src/pages/**",
+        "site/src/components/**",
+        "site/src/layouts/**",
+        "site/src/lib/**",
+        "site/src/styles/**",
+        "site/src/dati/**",
+        "site/src/content.config.ts",
+        "site/astro.config.mjs",
+        "journal/2026-09-19/*-frontend-*.json"
+      ],
+      "non_tocca": [
+        "site/src/content/legale/*.md: sono di L15, che corre in parallelo",
+        "e2e/**, tests/**: un test che non passa non si modifica per farlo passare"
+      ],
+      "dipende_da": [
+        "L08",
+        "L09",
+        "L10",
+        "L13"
+      ],
+      "verifica": [
+        "ogni finding confermato ha una correzione o una ragione scritta per cui non si corregge; per ogni bug, prova-by-reversion: un test che, rimettendo il codice com'era, fallisce",
+        "pnpm exec playwright test verde e contesto ci success dopo il rientro"
+      ],
+      "tetto_turni": 45,
+      "note": "Il lotto esiste solo se i finding confermati lo richiedono, e tocca solo i file che i finding nominano. L'insieme dichiarato esclude per costruzione site/src/content/legale/, cosi il parallelismo con L15 regge al controllo automatico delle sovrapposizioni. Massimo due rimandi allo stesso ruolo (docs/HANDOFF.md), poi ci si ferma e si riporta."
+    },
+    {
+      "id": "L15",
+      "agente": "privacy",
+      "titolo": "Rientro dei finding confermati sulle bozze legali (condizionale)",
+      "ac": [],
+      "file": [
+        "site/src/content/legale/*.md",
+        "journal/2026-09-19/*-privacy-*.json"
+      ],
+      "non_tocca": [
+        "tutto il resto di site/, che e di L14"
+      ],
+      "dipende_da": [
+        "L08",
+        "L09",
+        "L10",
+        "L13"
+      ],
+      "verifica": [
+        "le tre bozze restano contrassegnate (bozza true), senza identita inventata e senza oggetto nei mailto (N3)",
+        "pnpm exec playwright test verde dopo il rientro"
+      ],
+      "tetto_turni": 30,
+      "note": "Parallelo a L14: insiemi di file disgiunti (site/src/content/legale/ contro il resto di site/src/)."
+    }
+  ],
+  "ordine_e_parallelismo": {
+    "onda_0": {
+      "lotti": [
+        "L05"
+      ],
+      "parallelo": false,
+      "perche": "vincolo 2 di Andrea: l'impalcatura non ha nulla in parallelo e tutti gli altri lotti ne dipendono. Finche site/package.json non e committato, il contesto ci non esegue il percorso site e nessun altro lotto ha un comando con cui verificarsi."
+    },
+    "onda_1": {
+      "lotti": [
+        "L04",
+        "L06"
+      ],
+      "parallelo": true,
+      "perche": "insiemi di file disgiunti: i tre Markdown di @privacy contro le cinque pagine e i componenti di pagina di @frontend. Entrambi dipendono dallo schema e dai componenti di L05."
+    },
+    "onda_2": {
+      "lotti": [
+        "L07"
+      ],
+      "parallelo": false,
+      "perche": "i test di accettazione si scrivono dalla spec sul prodotto completo, e chi li scrive non e chi lo ha costruito (regola 3 di CLAUDE.md)."
+    },
+    "onda_3": {
+      "lotti": [
+        "L08",
+        "L09",
+        "L10",
+        "L13",
+        "L12"
+      ],
+      "parallelo": true,
+      "perche": "le quattro revisioni non scrivono nel prodotto (solo journal e findings di scratch) e L12 tocca solo .github/workflows/ci.yml: nessun percorso in comune."
+    },
+    "onda_4": {
+      "lotti": [
+        "L14",
+        "L15"
+      ],
+      "parallelo": true,
+      "condizionale": true,
+      "perche": "rientri dei finding confermati, su insiemi di file disgiunti. Esistono solo se ci sono finding."
+    },
+    "chiusura": "PR unica verso main con corpo generato dalla spec, dalla lista dei lotti e dai comandi di verifica eseguiti. Nessun merge, nessun tag, nessun deploy: sono gate di persona (regola 4)."
+  },
+  "verifica_sovrapposizioni": {
+    "metodo": "Per ogni coppia di lotti senza relazione di dipendenza (diretta o transitiva) si confrontano i percorsi dichiarati in «file», normalizzati a prefisso di cartella: due lotti si sovrappongono se un percorso dell'uno e prefisso di un percorso dell'altro. Le voci di journal si confrontano per glob, che contiene il nome del ruolo ed e quindi distinto fra ruoli diversi.",
+    "coppie_parallele_controllate": [
+      {
+        "coppia": [
+          "L04",
+          "L06"
+        ],
+        "esito": "disgiunti: site/src/content/legale/ contro site/src/pages/ piu site/src/components/pagine/; journal *-privacy-* contro *-frontend-*"
+      },
+      {
+        "coppia": [
+          "L08",
+          "L09",
+          "L10",
+          "L13",
+          "L12"
+        ],
+        "esito": "disgiunti: quattro lotti scrivono solo la propria voce di journal (glob distinti per ruolo) e i findings in .work/8/, che e in .gitignore; L12 scrive solo .github/workflows/ci.yml"
+      },
+      {
+        "coppia": [
+          "L14",
+          "L15"
+        ],
+        "esito": "disgiunti per costruzione: L15 e limitato a site/src/content/legale/*.md, che L14 dichiara fuori dal proprio insieme"
+      }
+    ],
+    "sovrapposizioni_risolte_serializzando": [
+      {
+        "percorso": "CLAUDE.md",
+        "lotti": [
+          "L05",
+          "L07"
+        ],
+        "come": "L05 tocca solo le quattro righe di site/ della tabella Comandi, L07 solo la riga E2E; i due lotti sono in onde diverse (L07 dipende da L05), quindi non sono paralleli"
+      },
+      {
+        "percorso": "journal/2026-09-19/*-frontend-*.json",
+        "lotti": [
+          "L05",
+          "L06",
+          "L14"
+        ],
+        "come": "stesso ruolo, onde diverse: L06 dipende da L05 e L14 da tutte le revisioni; nomi di file distinti dall'orario"
+      },
+      {
+        "percorso": "site/src/** e site/src/content/legale/*.md",
+        "lotti": [
+          "L14",
+          "L15",
+          "L05",
+          "L06",
+          "L04"
+        ],
+        "come": "i rientri riscrivono file gia scritti nelle onde precedenti: sono serializzati dopo le revisioni, mai paralleli ai lotti che li hanno creati"
+      }
+    ],
+    "comando": "python3 sovrapposizioni.py (script di scratch): calcola la chiusura transitiva di dipende_da, prende le coppie di lotti senza relazione di dipendenza e confronta i percorsi dichiarati normalizzati a prefisso",
+    "esito_misurato": "14 coppie senza relazione di dipendenza. Primo giro: 13 DISGIUNTI e 1 SOVRAPPOSTI, la coppia L14 x L15 su ('site/src', 'site/src/content/legale/.md'). Corretto restringendo l'insieme di L14 ai sottoalberi che non contengono site/src/content/legale/. Secondo giro: 14 coppie su 14 DISGIUNTI."
+  },
+  "copertura_ac": [
+    {
+      "ac": "AC1",
+      "chiuso_da": [
+        "L05",
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "resa statica e contenuto nell'HTML servito (ADR-0002 D1)"
+    },
+    {
+      "ac": "AC2",
+      "chiuso_da": [
+        "L05",
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07",
+        "L13"
+      ],
+      "nota": "canonical dalla funzione unica di site/src/lib/ sul dominio segnaposto di site/src/dati/sito.json"
+    },
+    {
+      "ac": "AC3",
+      "chiuso_da": [
+        "L05"
+      ],
+      "verificato_da": [
+        "L07",
+        "L13"
+      ],
+      "nota": "sitemap.xml e robots.txt sono endpoint propri (ADR-0002 D2, D9)"
+    },
+    {
+      "ac": "AC4",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "«in definizione» per chi registra la CMP in Hosted: nessun agente decide (regola 7)"
+    },
+    {
+      "ac": "AC5",
+      "chiuso_da": [
+        "L05",
+        "L06"
+      ],
+      "verificato_da": [
+        "L07",
+        "L10"
+      ],
+      "nota": "componente del contrassegno in L05, uso nelle quattro pagine con prezzi in L06"
+    },
+    {
+      "ac": "AC6",
+      "chiuso_da": [
+        "L05",
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "listino.json senza valori piu validazione alla build (ADR-0002 D4); la configurazione di prova sta in e2e/fixtures/, fuori da site/"
+    },
+    {
+      "ac": "AC7",
+      "chiuso_da": [
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "vale su tutte e 8 le pagine, bozze legali comprese"
+    },
+    {
+      "ac": "AC8",
+      "chiuso_da": [
+        "L05",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07",
+        "L10"
+      ],
+      "nota": "footer e contrassegno «bozza» in L05, campo bozza true nel frontmatter in L04"
+    },
+    {
+      "ac": "AC9",
+      "chiuso_da": [
+        "L05",
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "nessun JavaScript lato client, nessun interruttore di tema (ADR-0002 D5, D9)"
+    },
+    {
+      "ac": "AC10",
+      "chiuso_da": [
+        "L05",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "nessun font scaricato, nessuna CDN, nessuna risorsa remota nei Markdown"
+    },
+    {
+      "ac": "AC12",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "conseguenza dell'assenza di script; gli eventi sono non_goal della spec"
+    },
+    {
+      "ac": "AC33",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": ""
+    },
+    {
+      "ac": "AC34",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": ""
+    },
+    {
+      "ac": "AC37",
+      "chiuso_da": [
+        "L05",
+        "L06"
+      ],
+      "verificato_da": [
+        "L07",
+        "L09"
+      ],
+      "nota": "bersagli e testo dai token; misura sugli elementi resi"
+    },
+    {
+      "ac": "AC39",
+      "chiuso_da": [
+        "L05",
+        "L06"
+      ],
+      "verificato_da": [
+        "L07",
+        "L12"
+      ],
+      "nota": "soglie di laboratorio gia in contracts/perf-budgets.json (L01 chiuso); il gate in ci e di L12"
+    },
+    {
+      "ac": "AC40",
+      "chiuso_da": [
+        "L05",
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07",
+        "L09"
+      ],
+      "nota": ""
+    },
+    {
+      "ac": "AC41",
+      "chiuso_da": [
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": ""
+    },
+    {
+      "ac": "AC49",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "promessa pubblica senza meccanismo: l'obbligo manuale OM-1 resta e richiede una persona nominata al gate G3"
+    },
+    {
+      "ac": "AC53",
+      "chiuso_da": [
+        "L06",
+        "L04"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "vale su tutte e 8 le pagine"
+    },
+    {
+      "ac": "N1",
+      "chiuso_da": [
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": ""
+    },
+    {
+      "ac": "N2",
+      "chiuso_da": [
+        "L05",
+        "L06"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "site/src/dati/contatto.json e la funzione unica del mailto in site/src/lib/ (ADR-0002 D3); le bozze non scrivono l'indirizzo, lo rende la rotta"
+    },
+    {
+      "ac": "N3",
+      "chiuso_da": [
+        "L04",
+        "L05"
+      ],
+      "verificato_da": [
+        "L07"
+      ],
+      "nota": "testo e titolare segnaposto in L04, mailto senza oggetto reso dalla rotta di L05 (DP-27, DP-29)"
+    }
+  ],
+  "ac_non_copribili": [],
+  "divergenze": [
+    {
+      "id": "D-1",
+      "da": "protocollo, docs/HANDOFF.md",
+      "documento_dice": "«Lo scratch sta sotto .work/<issue-id>/, in .gitignore: plan.json, findings.json, prove ed evidenze»",
+      "piano_fa": "il piano sta in docs/plan/issue-8.json ed e committato; sotto .work/8/ restano solo i findings e le evidenze",
+      "ragione": "richiesta esplicita di Andrea: il piano va ratificato e riletto dai lotti, come la spec, e un file in .gitignore non e leggibile da chi rivede. Stessa ragione per cui la spec e gia fuori dallo scratch"
+    },
+    {
+      "id": "D-2",
+      "da": "docs/adr/0002-struttura-site.md, D6 (righe 265-272 e 296-299)",
+      "documento_dice": "la regola unica dentro il livello «focus» usa var(--color-focus-ring) con !important, e il test di L07 attende «outline-color a focus-ring del tema»",
+      "piano_fa": "nel footer l'anello atteso e focus-ring-on-inverse: la custom property si ridefinisce nello scope del footer, cosi la regola a livello di D6 resta intatta, e il test di L07 confronta con l'alias in vigore per il contesto dell'elemento",
+      "ragione": "contracts/design-tokens.json e docs/design/00-sistema-e-componenti.md (riga 102), mergiati dopo l'ADR con la PR #15, introducono focus-ring-on-inverse proprio perche D6 aveva lasciato aperto il gate sul contrasto nel footer (2,38:1 in chiaro, 1,87:1 in scuro, sotto il 3:1 di WCAG 1.4.11). Prendere alla lettera la frase dell'ADR farebbe fallire un requisito di accessibilita gia misurato. L'ADR non viene modificato da questo piano: se @architect ritiene che vada allineato, e un gate suo"
+    },
+    {
+      "id": "D-3",
+      "da": "contracts/perf-budgets.json, campo $lettura_ci (e la tabella dei lotti di ADR-0002 per @devops)",
+      "documento_dice": "«La CI (L12, .github/workflows/site-ci.yml) legge le soglie per chiave da questo file»",
+      "piano_fa": "L12 estende .github/workflows/ci.yml, job «ci»; nessun workflow site-ci.yml viene creato",
+      "ragione": "shipped vince: il contesto che blocca le PR e stato costruito dopo, con la PR #26 e ADR-0003, e si chiama «ci». Creare un secondo workflow spezzerebbe il gate unico che una persona lega ai required status checks"
+    },
+    {
+      "id": "D-4",
+      "da": "docs/adr/0002-struttura-site.md, riga 37",
+      "documento_dice": "«La tabella Comandi di CLAUDE.md la corregge L07 con i comandi eseguiti»",
+      "piano_fa": "L05 corregge le quattro righe di site/ (install, dev, build, lint e astro check) nello stesso commit in cui crea l'area; L07 corregge la riga E2E",
+      "ragione": "CLAUDE.md chiede che «la prima PR che tocca un'area verifica il comando corrispondente e corregge questa tabella nello stesso commit»: il primo lotto che tocca site/ e L05, e lasciare quattro righe non verificate fino a L07 lascerebbe per tre lotti un comando che nessuno ha eseguito. La divisione per righe tiene comunque i due lotti in onde diverse, quindi non paralleli"
+    }
+  ],
+  "suonano_uguali": [
+    {
+      "termine": "reso lato server",
+      "chiarimento": "CLAUDE.md lo definisce come «il contenuto e nell'HTML servito»: la resa statica di Astro (ADR-0002 D1) lo soddisfa e non richiede un processo Node in produzione"
+    },
+    {
+      "termine": "e2e/ e tests/",
+      "chiarimento": "non sono la stessa cartella: ADR-0002 D4 nomina e2e/fixtures/ per gli aiuti del collaudo, contracts/perf-budgets.json nomina tests/perf/ per la misura di laboratorio, e tests/ci/ e gia occupata dai test della issue #25 sul workflow. Il piano tiene i tre percorsi separati"
+    },
+    {
+      "termine": "lotto L11",
+      "chiarimento": "la spec lo indica come «da fare» per la retention della casella, ma il campo e gia in contracts/data-map.json dal commit 8d5bad4 (#14): il lotto e chiuso, non da rifare"
+    },
+    {
+      "termine": "«pagina dimostrativa» e «bozza»",
+      "chiarimento": "due contrassegni diversi, con regole diverse: il primo sulle quattro pagine con prezzi (AC5), il secondo sulle tre pagine legali (AC8). Una pagina legale non porta il contrassegno dei prezzi"
+    }
+  ],
+  "domande_chiuse": [
+    {
+      "domanda": "ADR-0002 D7 lasciava una domanda all'orchestratore: N2 chiede l'oggetto nel mailto, ma una pagina legale non ha una modalita",
+      "chiusa_da": "DP-29 (commento di Andrea sulla issue #8) e l'aggiornamento del 14/09 in fondo ad ADR-0002: nelle pagine legali il mailto non ha oggetto. La spec lo registra in N2 ristretta e nel nuovo criterio N3"
+    }
+  ],
+  "contratti_da_aggiornare": [],
+  "regole_di_esecuzione": [
+    "Un lotto, un agente nuovo, un ramo nuovo da origin/main, verificato con git merge-base --is-ancestor origin/main HEAD prima di partire (docs/HANDOFF.md). Nessun agente si riprende per un compito nuovo",
+    "Ogni lotto lavora in una worktree propria; i lotti della stessa onda partono insieme",
+    "Nessun git add -A: si aggiungono i percorsi dichiarati in «file», uno per uno",
+    "Le voci di journal si scrivono durante il lavoro, con ts preso da date -Is, e fanno parte della DoD del lotto",
+    "Un lotto che trova una decisione di struttura sbagliata si ferma e torna ad @architect: non la adatta, non la aggira",
+    "Nessun lotto decide prezzi, dominio reale, indirizzo reale, identita del titolare o registrazione IAB (vincolo 6, regola 7)",
+    "Massimo due rimandi allo stesso ruolo per lo stesso motivo; al terzo ci si ferma e si chiede a una persona",
+    "Nessun merge, nessun tag, nessun deploy, nessun push su main"
+  ],
+  "revisioni": {
+    "per_ruolo": {
+      "code-reviewer": "L08, sul diff di site/ e del progetto di collaudo",
+      "accessibility": "L09, WCAG 2.2 AA e tastiera",
+      "design": "L10, evidenza documento-contro-prodotto",
+      "seo": "L13, meta, canonical, sitemap, robots, ordine dei titoli",
+      "security": "non prevista come lotto: nessuna autenticazione, nessun input esterno, nessun dato raccolto, nessun processo in produzione (ADR-0002 D1). Si riapre se compare un adapter, un modulo o una dipendenza a runtime",
+      "privacy": "L04 e L15; la data map e gia aggiornata (L11) perche il sito non raccoglie dati",
+      "performance": "la misura e in L07 e il gate in L12; @performance ha gia fissato le soglie in L01"
+    },
+    "nessuno_rivede_il_proprio_lavoro": "L08, L09, L10 e L13 sono agenti distinti da L05, L06, L04 e L07"
+  },
+  "rischi_piano": [
+    "L05 e il collo di bottiglia: tutto il resto ne dipende. Se una delle tre ipotesi di ADR-0002 (nessun JavaScript nell'output, @custom-media risolto negli .astro, rotte con barra finale servite 200) cade, il piano si ferma all'onda 0 e serve un giro di @architect",
+    "L12 tocca un workflow coperto dai test della issue #25: una modifica che li fa fallire e un gate verso @architect, non un test da riscrivere",
+    "Il segnaposto dell'identita del titolare (scelto in L04) e un quarto valore da sostituire al gate G3, che oggi in ADR-0002 D3 ne elenca tre: se non viene aggiunto alla verifica del gate, rischia di restare in pagina alla pubblicazione",
+    "AC5 e AC8 chiedono «visibile senza scorrere»: e una misura sulla resa, e nessun agente vede il prodotto reso. L'evidenza di L10 e la verifica automatica di L07 non sostituiscono l'occhio di Andrea",
+    "Il numero dei lotti e alto rispetto alla consegna: ogni passaggio costa contesto. Se l'onda 3 produce pochi finding, le revisioni si chiudono presto; se ne produce molti, il tetto dei due rimandi arriva prima del verde",
+    "AC39 include LCP e CLS di laboratorio con cinque esecuzioni per pagina: e la parte piu lenta di L07 e puo sforare il tetto di turni del lotto"
+  ],
+  "richiede_persona": [
+    "Ratifica di questo piano prima che L05 parta (nessun lotto e stato delegato).",
+    "docs/adr/0002-struttura-site.md e ancora in stato «proposta (ratifica di Andrea al gate G1, PR-1)» mentre il mandato lo dichiara in vigore: allineare lo stato e una decisione di persona, non di un agente.",
+    "Divergenza D-2 (anello di focus nel footer): se @architect preferisce aggiornare ADR-0002 invece di lasciarla dichiarata qui, serve il suo giro e la ratifica.",
+    "Gate di pubblicazione G3, per intero: domini, casella che riceve davvero, approvazione delle bozze legali da una persona competente, hosting che non inietta cookie o terze parti, identita del titolare.",
+    "Obbligo manuale OM-1: la persona responsabile delle promesse della pagina SaaS e ancora un segnaposto. Senza un nome, quella pagina non si pubblica.",
+    "Prezzi, tetti, taglie, nomi dei piani e registrazione IAB: restano «da definire» e nessun lotto li decide."
+  ],
+  "budget_turni": 615
+}

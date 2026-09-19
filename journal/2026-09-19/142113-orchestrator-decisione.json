@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-19T14:21:13+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "piano (stadio 02)",
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "Scomposizione della consegna 1 in undici lotti: impalcatura sola, poi bozze legali e pagine in parallelo, poi collaudo, poi revisioni",
+  "contesto": "docs/spec/issue-8.json chiude 22 criteri su 8 pagine, solo dentro site/. ADR-0002 (in vigore) nomina gia dei lotti per ruolo: L04 privacy, L05 e L06 frontend, L07 qa-test, L08 code-reviewer, L09 accessibility, L10 design, L12 devops; L01 (soglie di laboratorio), L02 (token e specifica pagine), L03 (ADR-0002) e L11 (data-map della casella) risultano gia chiusi sui commit a24f2db, b677bdd, 7db22ad, 8d5bad4. Vincolo di Andrea: il primo lotto e l'impalcatura di site/, senza nulla in parallelo, e i lotti paralleli non condividono file.",
+  "alternative": [
+    { "opzione": "rinumerare i lotti da L1 in avanti, come nell'esempio di docs/HANDOFF.md", "scartata_perche": "ADR-0002 committato cita L04, L05, L06, L07, L08, L09, L10 e L12 per nome nella tabella «Lotti impattati» (righe 416-426) e in D4, D6, D7, D8: rinumerare renderebbe illeggibile un artefatto gia in vigore" },
+    { "opzione": "impalcatura minima (solo package.json e configurazione) e componenti condivisi in un lotto a parte", "scartata_perche": "i componenti condivisi (intestazione, footer, contrassegni, valore «da definire», CTA mailto) sono usati da tutte e cinque le pagine di L06 e dalla rotta delle bozze: tenerli fuori da L05 costringerebbe L04 e L06 a dipendere da un secondo lotto frontend prima di poter partire, e toglierebbe l'unico parallelismo reale della consegna" },
+    { "opzione": "bozze legali (L04) in parallelo all'impalcatura (L05)", "scartata_perche": "lo schema del frontmatter e la collezione «legale» li definisce site/src/content.config.ts, che sta in L05 (ADR-0002 D7): scrivere i Markdown prima dello schema significa scriverli contro un contratto non ancora esistente, e la verifica del lotto (build che fallisce su una chiave sconosciuta) non sarebbe eseguibile" },
+    { "opzione": "un solo lotto frontend per impalcatura e pagine", "scartata_perche": "L04 non avrebbe piu nessun lotto con cui correre in parallelo e il lotto diventerebbe troppo grande per un tetto di turni onesto; inoltre ADR-0002 separa gia i due insiemi di file" },
+    { "opzione": "far scrivere i testi delle tre pagine legali a @frontend insieme alle altre pagine", "scartata_perche": "vincolo 5 di Andrea e ADR-0002 D7: sono bozze contrassegnate di @privacy, e il testo legale dentro i file di @frontend renderebbe i due lotti non disgiunti" },
+    { "opzione": "un lotto @devops che crea .github/workflows/site-ci.yml, come dice contracts/perf-budgets.json in $lettura_ci", "scartata_perche": "shipped vince: il contesto che blocca le PR e il job «ci» di .github/workflows/ci.yml, mergiato con la PR #26 e fissato da ADR-0003. L12 estende quel workflow; la divergenza e dichiarata nel piano invece di essere assorbita" }
+  ],
+  "evidenza": [
+    "$ git log --oneline -1 -> 4209875 docs(journal): orari dall'orologio, niente conteggi dichiarati, niente trailer a mano (#32)",
+    "$ git merge-base --is-ancestor origin/main HEAD -> exit=0",
+    "$ bash .github/ci/area.sh site -> area site/: assente (exit=0)",
+    "letto in .github/ci/area.sh: lo stato dell'area si legge con git ls-tree sul commit, non sul filesystem: la condizione di fine di L05 richiede site/package.json committato, non solo presente nella worktree"
+  ],
+  "esito": "piano scritto in docs/plan/issue-8.json: L05 da solo, poi L04 e L06 in parallelo, poi L07, poi L08, L09, L10, L13 e L12 in parallelo, poi i rientri L14 e L15",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,21 @@
+---
+// Contrassegno «pagina dimostrativa» (AC5): docs/design/00-sistema-e-componenti.md.
+// Primo elemento dentro <main>, prima dell'h1, su ogni pagina con mostra_prezzi: true.
+---
+<p class="badge badge-demo">Pagina dimostrativa — i valori mostrati non sono definitivi</p>
+<style>
+  .badge {
+    display: inline-block;
+    width: fit-content;
+    border-radius: var(--radius-full);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-100);
+    padding: var(--spacing-2) var(--spacing-4);
+    margin: 0 0 var(--spacing-4);
+  }
+
+  .badge-demo {
+    background: var(--color-badge-demo-bg);
+    color: var(--color-badge-demo-text);
+  }
+</style>

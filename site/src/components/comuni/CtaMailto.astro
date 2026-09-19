@@ -1,0 +1,38 @@
+---
+// Link mailto in stile bottone (docs/design/00): indirizzo e oggetto vengono dal file
+// unico di contenuto tramite src/lib/contatto.ts (ADR-0002 D3, N2).
+import { mailto, type Modalita } from '../../lib/contatto';
+
+interface Props {
+  modalita?: Modalita;
+  testo: string;
+}
+
+const { modalita, testo } = Astro.props;
+const href = mailto(modalita);
+---
+<a class="cta-mailto" href={href}>{testo}</a>
+<style>
+    .cta-mailto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    background: var(--color-brand-bg);
+    color: var(--color-text-on-brand);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-3) var(--spacing-6);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: none;
+    min-height: var(--touch-target-min-size);
+  }
+
+  .cta-mailto:hover {
+    background: var(--color-brand-bg-hover);
+  }
+
+  .cta-mailto:active {
+    background: var(--color-brand-bg-active);
+  }
+</style>

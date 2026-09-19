@@ -1,0 +1,6 @@
+{
+  "$nota": "Struttura del listino senza valori commerciali (DP-21). Ogni null e ogni lista vuota si mostra come «da definire». Il denaro è una stringa decimale, mai un numero JSON.",
+  "saas": { "piani": [] },
+  "hosted": { "taglie": [] },
+  "on-premise": { "licenza_annuale_eur": null }
+}

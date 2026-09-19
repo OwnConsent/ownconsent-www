@@ -1,0 +1,10 @@
+/* ADR-0002 D6: garanzia di cascata via @layer, non convenzione. Nessun componente,
+   nemmeno con !important, può togliere l'anello: nessuna regola di componente vive in
+   un livello dichiarato prima di "focus" o dopo questo import. */
+@layer focus;
+@layer focus {
+  :focus-visible {
+    outline: var(--focus-ring-width) var(--focus-ring-style) var(--color-focus-ring) !important;
+    outline-offset: var(--focus-ring-offset) !important;
+  }
+}

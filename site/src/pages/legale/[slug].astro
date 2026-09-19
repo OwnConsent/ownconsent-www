@@ -1,0 +1,27 @@
+---
+// Rotta delle bozze legali (ADR-0002 D2, D7): genera i tre percorsi dalla collezione
+// "legale". Con la collezione ancora vuota (prima di L04) non genera pagine, e la build
+// non fallisce: getStaticPaths su una collezione vuota restituisce [].
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BadgeDraft from '../../components/comuni/BadgeDraft.astro';
+import { urlAssoluto } from '../../lib/canonical';
+
+export async function getStaticPaths() {
+  const voci = await getCollection('legale');
+  return voci.map((voce) => ({
+    params: { slug: voce.id },
+    props: { voce },
+  }));
+}
+
+const { voce } = Astro.props;
+const { Content } = await render(voce);
+const canonical = urlAssoluto(`/legale/${voce.id}/`);
+const titolo = `${voce.data.titolo} — OwnConsent`;
+---
+<BaseLayout title={titolo} description={voce.data.descrizione} canonical={canonical}>
+  <BadgeDraft />
+  <h1 id="contenuto">{voce.data.titolo}</h1>
+  <Content />
+</BaseLayout>

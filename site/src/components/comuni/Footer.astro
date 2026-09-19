@@ -1,0 +1,45 @@
+---
+// Piè di pagina, identico su tutte le 8 pagine (AC8, docs/design/00). L'anello di focus
+// qui usa focus-ring-on-inverse: si ridefinisce la custom property --color-focus-ring
+// nello scope del footer, la regola !important a livello di ADR-0002 D6 non si tocca
+// (aggiornamento del 2026-09-19 dell'ADR, divergenza D-2 del piano).
+---
+<footer class="piede">
+  <nav aria-label="Legale">
+    <ul>
+      <li><a href="/legale/termini-di-servizio/">Termini di servizio</a></li>
+      <li><a href="/legale/informativa-privacy/">Informativa privacy</a></li>
+      <li><a href="/legale/cookie-policy/">Cookie policy</a></li>
+    </ul>
+  </nav>
+  <p>© OwnConsent — ragione sociale da definire</p>
+</footer>
+<style>
+    .piede {
+    background: var(--color-bg-inverse);
+    color: var(--color-text-on-inverse);
+    padding: var(--spacing-6) var(--spacing-4);
+    --color-focus-ring: var(--color-focus-ring-on-inverse);
+  }
+
+  .piede :global(a) {
+    color: var(--color-text-on-inverse);
+    text-decoration: underline;
+    min-height: var(--touch-target-min-size);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .piede :global(a:hover) {
+    color: var(--color-text-link);
+  }
+
+  nav[aria-label='Legale'] ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+    margin: 0 0 var(--spacing-4);
+    padding: 0;
+  }
+</style>

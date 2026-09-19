@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T18:12:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "02-piano",
+  "tipo": "decisione",
+  "titolo": "L07 spostato in parallelo con L04 e L06; per conservare l'ordine, le revisioni e L12 dipendono anche da L04 e L06",
+  "contesto": "Andrea: L07 dipende solo da L05 e i test si scrivono dalla spec senza leggere site/ né le bozze legali, rossi alla fine del lotto (CLAUDE.md regola 3, scheda di @product-spec). Nel piano L08, L09, L10, L13 e L12 dipendevano solo da L07: spostando L07 sarebbero diventati eseguibili prima che pagine e bozze esistessero.",
+  "alternative": [
+    { "opzione": "cambiare solo L07, come chiesto alla lettera", "scartata_perche": "lascerebbe quattro revisioni e la misura dei budget eseguibili su un prodotto inesistente: il piano direbbe una cosa che non si può fare" },
+    { "opzione": "fermarsi e chiedere ad Andrea prima di toccare le altre dipendenze", "scartata_perche": "la modifica conserva l'ordine che quei lotti avevano già e si annulla togliendo due voci da cinque dipende_da; è dichiarata nel piano, nel journal e nella descrizione della PR, quindi resta reversibile e visibile" }
+  ],
+  "evidenza": [
+    "prima: L07 dipende_da ['L05','L04','L06']; L08, L09, L10, L13, L12 dipende_da ['L07']",
+    "dopo: L07 dipende_da ['L05']; L08, L09, L10, L13, L12 dipende_da ['L05','L04','L06','L07']",
+    "onde ricalcolate: onda_0 L05; onda_1 L04, L06, L07; onda_2 L08, L09, L10, L13, L12; onda_3 L14, L15 (condizionali)"
+  ],
+  "esito": "applicata; registrata anche nel campo modifiche_dopo_la_consegna del piano",
+  "umano_coinvolto": true
+}

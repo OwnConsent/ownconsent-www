@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-19T14:25:33+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "piano (stadio 02)",
+  "stadio": "02-piano",
+  "tipo": "consegna",
+  "titolo": "Piano della consegna 1 committato: undici lotti, quattro onde, 22 criteri coperti, quattro divergenze dichiarate",
+  "contesto": "Mandato: solo il piano. Nessun agente delegato, nessun file sotto site/ creato, nessun push, nessuna PR.",
+  "dod_soddisfatta": [
+    "docs/plan/issue-8.json esiste, e JSON valido e porta per ogni lotto id, agente, titolo, ac, file, non_tocca, dipende_da, verifica e tetto_turni",
+    "tutti e 22 i criteri della spec sono coperti: confronto automatico fra gli id di criteri_accettazione e copertura_ac, mancanti zero; ac_non_copribili vuoto",
+    "nessuna sovrapposizione di file fra lotti paralleli: 14 coppie controllate con lo script, 14 disgiunte al secondo giro",
+    "le divergenze sono dichiarate e non assorbite: D-1 (piano committato in docs/plan/ invece che sotto lo scratch), D-2 (anello di focus nel footer, ADR-0002 D6 contro i token mergiati con la PR #15), D-3 (il contesto ci si chiama ci, non site-ci), D-4 (chi corregge la tabella Comandi di CLAUDE.md)",
+    "voci di journal scritte durante: decisione sulla scomposizione con sei alternative scartate, misura sul controllo delle sovrapposizioni con il giro fallito, questa consegna"
+  ],
+  "cosa_resta": [
+    "delega dei lotti: nessuno e partito, a cominciare da L05 che e l'unico senza dipendenze",
+    "ADR-0002 e ancora in stato «proposta» nel file, mentre il mandato lo dichiara in vigore: allineamento di persona",
+    "gate di pubblicazione G3 e obbligo manuale OM-1: entrambi di Andrea"
+  ],
+  "esito": "consegnato",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea: perimetro solo site/, impalcatura come primo lotto senza nulla in parallelo, piano committato in docs/plan/"
+}

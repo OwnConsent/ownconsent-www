@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T14:25:12+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "piano (stadio 02)",
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Controllo automatico delle sovrapposizioni fra lotti paralleli: la prima stesura ne aveva una, L14 contro L15",
+  "contesto": "Vincolo 3 di Andrea e regola di docs/HANDOFF.md: due lotti paralleli non possono dichiarare gli stessi file. Leggere gli elenchi a occhio su undici lotti e un'ipotesi, non una verifica: uno script calcola la chiusura transitiva di dipende_da, prende tutte le coppie senza relazione di dipendenza (cioe quelle che possono davvero correre insieme) e confronta i percorsi dichiarati normalizzati a prefisso di cartella.",
+  "evidenza": [
+    "primo giro: coppie senza relazione di dipendenza: 14; L04 x L06 DISGIUNTI; L12 x L08, L12 x L09, L12 x L10, L12 x L13, L12 x L14, L12 x L15 DISGIUNTI; L08 x L09, L08 x L10, L08 x L13, L09 x L10, L09 x L13, L10 x L13 DISGIUNTI; L14 x L15 SOVRAPPOSTI [('site/src', 'site/src/content/legale/.md')]",
+    "la sovrapposizione stava solo nella dichiarazione: L14 diceva «site/src/ (solo i file nominati dai finding confermati)» e L15 «site/src/content/legale/*.md», che ne e un sottoalbero. L'esclusione era scritta in non_tocca, in prosa, dove nessun controllo la legge",
+    "correzione: l'insieme di L14 e stato riscritto per sottoalberi che non contengono site/src/content/legale/ (pages, components, layouts, lib, styles, dati, content.config.ts, astro.config.mjs)",
+    "secondo giro, stesso script: coppie senza relazione di dipendenza: 14; tutte e 14 DISGIUNTI",
+    "$ python3 -m json.tool docs/plan/issue-8.json > /dev/null -> exit=0",
+    "$ confronto fra gli id di criteri_accettazione della spec e copertura_ac del piano -> spec: 22, mancano: [], in piu: []"
+  ],
+  "esito": "il piano dichiara le sovrapposizioni risolte serializzando (CLAUDE.md fra L05 e L07, le voci di journal di @frontend fra L05, L06 e L14) e non ne lascia nessuna fra lotti paralleli",
+  "cosa_si_e_imparato": "Un'esclusione scritta in prosa dentro non_tocca non regge a un controllo automatico: se l'insieme dei file deve essere verificabile, l'esclusione va scritta nell'insieme, non accanto.",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T18:12:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "Controllo di sovrapposizioni e copertura rifatto dopo lo spostamento di L07: 16 coppie parallele, nessuna sovrapposizione",
+  "contesto": "Con L07 nell'onda parallela le coppie che possono correre insieme passano da 14 a 16 (si aggiungono L04xL07 e L06xL07). Il controllo si rifà con lo stesso script, non si deduce dal fatto che prima andasse bene.",
+  "evidenza": [
+    "lotti senza dipendenze: ['L05']",
+    "ogni altro lotto dipende da L05: True",
+    "coppie che possono correre insieme: 16 → L04xL06, L04xL07, L06xL07, L08xL09, L08xL10, L08xL12, L08xL13, L09xL10, L09xL12, L09xL13, L10xL12, L10xL13, L12xL13, L12xL14, L12xL15, L14xL15",
+    "sovrapposizioni di percorso: nessuna",
+    "criteri della spec non chiusi da nessun lotto: []",
+    "citati nel piano ma non nella spec: []",
+    "$ python3 -m json.tool docs/plan/issue-8.json → exit=0"
+  ],
+  "esito": "esito scritto anche nel campo verifica_sovrapposizioni del piano, con la data del ricalcolo",
+  "umano_coinvolto": false
+}

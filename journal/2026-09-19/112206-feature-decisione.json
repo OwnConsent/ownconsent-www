@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-19T11:22:06+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "decisione",
+  "titolo": "PR di prova rossa: il fallimento deve arrivare dal passo go test, quindi i passi precedenti devono passare",
+  "contesto": "Richiesta di Andrea: vedere ci riportare failure per un test che fallisce, non per un errore di compilazione. Nel workflow i passi di api/ sono in ordine: go build, golangci-lint, go test. Se uno dei primi fallisce, go test non viene eseguito e la prova non direbbe nulla sul gate dei test.",
+  "alternative": [
+    { "opzione": "omettere api/.golangci-lint-version, come sarebbe naturale in una fixture minima", "scartata_perche": "ADR-0003 D5: senza quel file golangci-lint-action si ferma con «version file does not exist» e il rosso arriverebbe dal lint, prima di go test (misurato leggendo src/version.ts di v9.3.0 il 15/09)" },
+    { "opzione": "far fallire il test con un errore di compilazione (per esempio un tipo sbagliato)", "scartata_perche": "romperebbe go build: è esattamente il caso che Andrea ha escluso" },
+    { "opzione": "ramo dal ramo della PR #26 come per #27 e #28", "scartata_perche": "#26 è mergiata: main contiene ci.yml. Questa volta la base è origin/main dopo git fetch --prune (5bcb7ac), verificata con git cat-file -e HEAD:.github/workflows/ci.yml" }
+  ],
+  "evidenza": [
+    "$ git fetch --prune origin → - [deleted] (none) -> origin/docs/journal-l-ci; exit=0",
+    "$ git log --oneline -2 origin/main → 5bcb7ac docs(journal): voci della lavorazione L-CI (#29); b2480ac ci: contesto ci … (#26)",
+    "$ git -C .claude/worktrees/prova-rosso merge-base --is-ancestor origin/main HEAD → exit=0",
+    "$ gofmt -l . → nessun file; $ go build ./... → exit=0; $ go vet ./... → exit=0",
+    "$ go test -race -count=1 -v ./... → prova_test.go:9: Somma(2, 3) = 5, l'asserzione falsa di questa prova attende 6; --- FAIL: TestSommaFallisce (0.00s); FAIL, exit=1",
+    "$ bash .github/ci/area.sh api (dopo il commit 7156af4) → area api/: presente (api/go.mod), exit=0",
+    "$ gh pr create --draft --base main --head prova/ci-rosso → https://github.com/OwnConsent/ownconsent-www/pull/30"
+  ],
+  "esito": "in attesa dell'esito di ci; se uscisse success la catena si ferma e la cosa si riporta ad Andrea invece di chiudere la PR",
+  "umano_coinvolto": false
+}

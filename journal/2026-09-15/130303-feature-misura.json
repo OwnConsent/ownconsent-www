@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T13:03:03+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "PR di prova A (#27) aperta in bozza verso main con area site/ presente",
+  "contesto": "Criterio 3 della issue #25 (AC6). Ramo prova/ci-area-site da 3ad7413, un solo commit di fixture.",
+  "evidenza": [
+    "$ bash .github/ci/area.sh site (su 3ad7413) → area site/: assente, exit=0",
+    "$ git diff --cached --stat → site/package.json 10, site/pnpm-lock.yaml 167, site/src/index.mjs 1",
+    "$ bash .github/ci/area.sh site (su da13e13) → area site/: presente (site/package.json), exit=0",
+    "$ git push -u origin prova/ci-area-site → * [new branch] prova/ci-area-site -> prova/ci-area-site",
+    "$ gh pr create --draft --base main --head prova/ci-area-site … → https://github.com/OwnConsent/ownconsent-www/pull/27, exit=0"
+  ],
+  "esito": "in attesa dell'esito di ci su da13e13",
+  "umano_coinvolto": false
+}

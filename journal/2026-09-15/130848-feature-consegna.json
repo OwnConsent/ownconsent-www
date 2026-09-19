@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-15T13:08:48+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "consegna",
+  "titolo": "PR di prova #27 e #28 verdi e chiuse senza merge; descrizione della PR #26 aggiornata",
+  "contesto": "Richiesta di Andrea: due PR di prova non mergiabili per i criteri 3 e 4, una alla volta, log allegato, poi aggiornamento della sola descrizione di #26.",
+  "evidenza": [
+    "$ gh pr view 27 --json state,mergedAt,url → CLOSED null https://github.com/OwnConsent/ownconsent-www/pull/27 (run 34961107867, success)",
+    "$ gh pr view 28 --json state,mergedAt,url → CLOSED null https://github.com/OwnConsent/ownconsent-www/pull/28 (run 34961281239, success)",
+    "$ cmp pr26-body-attuale.md pr26-body-ricontrollo.md → exit 0 prima di pubblicare; testa di #26 3ad7413",
+    "$ gh pr edit 26 --body-file pr26-body-nuovo.md → exit 0; il corpo contiene i link a #27 e #28, la sezione «Deciso dopo l'apertura» con A01 e le action a SHA, la spec di 3ad7413"
+  ],
+  "dod_soddisfatta": "criteri 3 e 4 provati nel percorso verde; AC6, AC8, AC13 osservati; restano AC5, AC7, AC9, AC11, AC14, AC19 e AC21. Nessun file del ramo di #26 toccato. Voci di journal del giro non committate (13 file da 130229 a questa): il ramo di #26 non si tocca e i rami di prova non si mergiano; rami remoti prova/ci-area-site e prova/ci-area-api non cancellati; worktree locali prova-site e prova-api ancora presenti",
+  "esito": "consegnato; decisione su dove committare il journal lasciata a una persona",
+  "umano_coinvolto": true
+}

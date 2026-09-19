@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T13:04:32+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "PR A (#27) chiusa senza merge con log allegato; PR B (#28) aperta in bozza con area api/ presente",
+  "contesto": "Richiesta di Andrea: una PR di prova alla volta. Lo script ha aperto la B solo dopo aver letto la A come CLOSED e non mergiata.",
+  "evidenza": [
+    "$ gh pr edit 27 --body-file prova-a-body-final.md → exit=0 (link al run 34961107867, passi e righe del log)",
+    "$ gh pr close 27 --comment … → ✓ Closed pull request OwnConsent/ownconsent-www#27, exit=0",
+    "$ gh pr view 27 --json state,mergedAt,url → CLOSED null https://github.com/OwnConsent/ownconsent-www/pull/27",
+    "ramo prova/ci-area-api da 3ad7413, commit 3e45fc2: api/.golangci-lint-version, api/go.mod, api/prova/prova.go, api/prova/prova_test.go",
+    "$ bash .github/ci/area.sh api (su 3e45fc2) → area api/: presente (api/go.mod), exit=0",
+    "$ (cd api && go build ./... && go test -race -count=1 ./...) → ok github.com/OwnConsent/ownconsent-www/api/prova 1.014s, exit=0",
+    "$ git push -u origin prova/ci-area-api → * [new branch]; $ gh pr create --draft --base main --head prova/ci-area-api … → https://github.com/OwnConsent/ownconsent-www/pull/28, exit=0"
+  ],
+  "esito": "ramo remoto prova/ci-area-site non cancellato (non richiesto); in attesa dell'esito di ci su 3e45fc2",
+  "umano_coinvolto": false
+}

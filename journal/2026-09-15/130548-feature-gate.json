@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-15T13:05:48+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "gate",
+  "titolo": "guard-paths.sh ferma il filtro del log della PR B: un frammento di regex con la barra davanti a golangci-lint letto come percorso",
+  "contesto": "Per estrarre dal log di ci le righe di golangci-lint la sessione usava in python3 una regex con l'alternativa «/golangci-lint ». L'hook l'ha letta come percorso assoluto fuori dal progetto. Secondo caso dello stesso tipo nel giro (il primo: regex awk, voce 093433).",
+  "evidenza": [
+    "PreToolUse:Bash guard-paths.sh: GATE: il percorso '/golangci-lint' porta fuori dal progetto (/golangci-lint)",
+    "il comando leggeva solo l'output di gh e un file nello scratchpad: nessun accesso a /golangci-lint"
+  ],
+  "chi_ha_deciso": "hook guard-paths.sh",
+  "cosa_serviva": "nulla da una persona: falso positivo spiegabile; riformulato con una lista di sottostringhe senza barra iniziale, regola di HANDOFF.md sul cambio di strumento",
+  "esito": "riformulato; due falsi positivi dello stesso tipo (testo con barra iniziale dentro un comando) da riportare a chi mantiene l'hook",
+  "umano_coinvolto": false
+}

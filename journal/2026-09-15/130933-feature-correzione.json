@@ -1,0 +1,14 @@
+{
+  "ts": "2026-09-15T13:09:33+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "correzione",
+  "corregge": "2026-09-15/130848-feature-consegna.json",
+  "cosa_era_sbagliato": "La voce dice «Voci di journal del giro non committate (13 file da 130229 a questa)». I file non tracciati sono 9, compresa la voce stessa. Il numero è stato scritto nel testo prima di contarli.",
+  "come_lo_so": "$ git status --porcelain subito dopo la scrittura della voce → 9 righe ?? journal/2026-09-15/: 130229-feature-decisione, 130229-feature-misura, 130303-feature-misura, 130410-feature-misura, 130432-feature-misura, 130548-feature-gate, 130644-feature-misura, 130815-feature-gate, 130848-feature-consegna",
+  "cosa_si_e_imparato": "Un conteggio in una voce si ricava da un comando eseguito prima di scriverla, non si stima mentre la si scrive: è lo stesso difetto dei turni dichiarati invece che misurati.",
+  "esito": "la voce superata resta, questa la corregge",
+  "umano_coinvolto": false
+}

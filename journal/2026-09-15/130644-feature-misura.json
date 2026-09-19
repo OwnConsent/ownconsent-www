@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-15T13:06:44+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "PR di prova B (#28): ci verde sul percorso api/, go build, golangci-lint 2.13.2 e go test -race eseguiti",
+  "contesto": "Criterio 4 della issue #25 (AC8). Fixture con un package, una funzione e un test che passa, più api/.golangci-lint-version richiesto da ADR-0003 D5.",
+  "evidenza": [
+    "$ gh api 'repos/OwnConsent/ownconsent-www/actions/runs?head_sha=3e45fc2…' → id 34961281239, event pull_request, path .github/workflows/ci.yml, conclusion success, https://github.com/OwnConsent/ownconsent-www/actions/runs/34961281239",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/runs/34961281239/jobs → passi 7-11 skipped (site/); 12-16 success (setup-go, go version, build, golangci-lint, go test)",
+    "log: [Rilevamento aree] area site/: assente; area api/: presente (api/go.mod)",
+    "log: Setup go version spec 1.25 → go version go1.25.14 linux/amd64",
+    "log: Run go build ./...",
+    "log: Installed golangci-lint into …golangci-lint-2.13.2-linux-amd64… ; Running [… golangci-lint run --path-mode=abs] in […/api] ; 0 issues.",
+    "log: Run go test -race -count=1 -v ./... → === RUN TestSomma, --- PASS: TestSomma (0.00s), ok github.com/OwnConsent/ownconsent-www/api/prova 1.006s"
+  ],
+  "esito": "criterio 4 provato nel percorso verde; H7 di ADR-0003 (formato di .golangci-lint-version e versione nel log) osservata: file con «2.13.2», log con golangci-lint-2.13.2. AC9 e AC19 non provati da questa PR",
+  "umano_coinvolto": false
+}

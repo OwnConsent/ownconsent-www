@@ -1,15 +1,17 @@
 # Protocollo di handoff
 
 Gli agenti si passano JSON, non prosa. Lo scratch sta sotto `.work/<issue-id>/`, in `.gitignore`:
-`plan.json`, `findings.json`, prove ed evidenze.
+`findings.json`, prove ed evidenze.
 
-La specifica **non è scratch**: è il contratto della consegna, e chi rivede deve poterla
-leggere. Sta in `docs/spec/issue-<id>.json` ed è committata.
+**Specifica e piano non sono scratch**: sono il contratto della consegna, una persona li
+ratifica e chi rivede deve poterli leggere. Stanno in `docs/spec/issue-<id>.json` e in
+`docs/plan/issue-<id>.json`, committati. Un artefatto che si ratifica non può stare in una
+cartella ignorata da git (divergenza D-1 del piano della #8, ratificata da Andrea il 19/09/2026).
 
 ## Regola: non si riprende un agente per un compito nuovo
 
 Un agente che ha finito si chiude. L'esito si scrive nell'artefatto di handoff
-(`spec.json`, `plan.json`, `findings.json`) e il compito successivo lo fa un agente
+(`docs/spec/issue-<id>.json`, `docs/plan/issue-<id>.json`, `findings.json`) e il compito successivo lo fa un agente
 **nuovo** che legge quell'artefatto. Vale anche per un messaggio accodato a un agente
 appena fermo: quando viene consegnato lo riavvia, ed è una ripresa.
 
@@ -68,7 +70,7 @@ Misura sulla issue #8: un agente ha dichiarato «circa 15-16 turni», mentre l'a
 ```
 Regola: `domande_aperte` non vuoto ⇒ la catena si ferma e si commenta la issue.
 
-## plan.json — prodotto da @orchestrator
+## docs/plan/issue-<id>.json — prodotto da @orchestrator
 ```json
 {
   "lotti": [

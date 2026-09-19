@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T14:27:36+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "consegna",
+  "titolo": "Piano della consegna 1 committato e in PR #33; la costruzione non è partita",
+  "contesto": "Stadio 2 chiesto da Andrea: verifica della spec, poi piano prodotto da @orchestrator, commit su un ramo suo, PR e stop. La ratifica è di Andrea.",
+  "evidenza": [
+    "verifica indipendente della sessione su docs/plan/issue-8.json: 11 lotti; lotti senza dipendenze ['L05']; ogni altro lotto dipende dal primo True; coppie che possono correre insieme 14; sovrapposizioni di percorso: nessuna; criteri non chiusi da nessun lotto []; citati nel piano ma non nella spec []",
+    "percorsi dei lotti, prime componenti: site, .github, e2e, tests, package.json, pnpm-lock.yaml, playwright.config.ts, journal, CLAUDE.md (righe dichiarate). Nessun percorso sotto api/, nessun mongo, nessun redis",
+    "pagine legali: L04 e L15 sono di @privacy, non di @frontend",
+    "$ git show --stat 22de7e6 → docs/plan/issue-8.json 909 righe + 2 voci di journal; a6d6156 → voce consegna",
+    "$ git push -u origin plan/issue-8 → * [new branch]; $ gh pr create --base main --head plan/issue-8 → https://github.com/OwnConsent/ownconsent-www/pull/33",
+    "notifica di fine task di @orchestrator: tool_uses=20 su tetto 30, subagent_tokens=136427, duration_ms=580413"
+  ],
+  "dod_soddisfatta": "stadio 2 e basta: piano committato e ratificabile, copertura dei 22 criteri verificata due volte (agente e sessione), divergenze dichiarate (D-1 protocollo, D-2 ADR-0002 D6, D-3 perf-budgets, D-4 ADR-0002 riga 37) invece che assorbite. Nessun lotto avviato, nessun file sotto site/ creato, spec non toccata",
+  "esito": "fermo al gate umano: la ratifica del piano è di Andrea",
+  "umano_coinvolto": true
+}

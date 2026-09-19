@@ -255,15 +255,15 @@
         "journal/2026-09-19/*-qa-test-*.json"
       ],
       "non_tocca": [
+        "site/** anche in lettura mentre si scrivono i test: pagine, componenti, contenuti e bozze legali non si aprono (vedi scritti_dalla_spec). Restano leggibili solo i tre file di dati citati in verifica e contracts/design-tokens.json, che sono gli artefatti da cui la spec fa dipendere i valori attesi",
         "site/** per intero: chi scrive il codice non scrive i test di accettazione, e chi scrive i test non aggiusta il prodotto. Un criterio che non passa e un finding che torna a L06, L05 o L04",
         "tests/ci/** (test della issue #25 sul contesto ci) e contracts/**"
       ],
       "dipende_da": [
-        "L05",
-        "L04",
-        "L06"
+        "L05"
       ],
       "verifica": [
+        "alla fine del lotto: pnpm exec playwright test esce diverso da 0 e ogni criterio ha almeno un test che fallisce per pagina mancante, non per errore di sintassi; la mappa criterio-test e nel journal. Diventera verde quando L04 e L06 avranno finito, ed e L12 a farne un gate",
         "pnpm install && pnpm exec playwright test; ogni criterio della spec ha almeno un test che lo nomina per id, e la mappa criterio-test e nel journal",
         "i test leggono i valori attesi da site/src/dati/sito.json, site/src/dati/contatto.json, site/src/dati/listino.json e da contracts/design-tokens.json sul filesystem, non li copiano nel codice (ADR-0002 D3 e D8)",
         "AC6 e N2 con la copia temporanea di ADR-0002 D4: copia di site/ e contracts/ con gli stessi percorsi relativi, sostituzione della sola fixture in e2e/fixtures/, pnpm install --frozen-lockfile, build, servizio su una porta diversa, verifica; i valori di prova non assomigliano a prezzi plausibili",
@@ -273,7 +273,8 @@
         "ADR-0002 D6: su ogni pagina, a 360x640 e 1280x800, in tema chiaro e scuro, si scorre con Tab e si leggono gli stili calcolati dell'elemento attivo; l'anello atteso e il valore in vigore per il contesto dell'elemento (focus-ring, e focus-ring-on-inverse dentro il footer: vedi divergenza D-2)"
       ],
       "tetto_turni": 110,
-      "note": "ADR-0002 D4 nomina e2e/fixtures/, contracts/perf-budgets.json nomina tests/perf/: il piano tiene entrambe le cartelle come le nominano i due artefatti in vigore invece di sceglierne una a naso (vedi suonano_uguali)."
+      "note": "ADR-0002 D4 nomina e2e/fixtures/, contracts/perf-budgets.json nomina tests/perf/: il piano tiene entrambe le cartelle come le nominano i due artefatti in vigore invece di sceglierne una a naso (vedi suonano_uguali).",
+      "scritti_dalla_spec": "I test si scrivono dai criteri di docs/spec/issue-8.json SENZA leggere site/ ne le bozze legali di L04: non si aprono i file delle pagine, dei componenti e dei contenuti, e non si copiano da li stringhe, selettori o valori attesi. Alla fine di L07 i test devono FALLIRE, perche le pagine non esistono ancora: il rosso e l'esito atteso del lotto, non un difetto. Motivo: CLAUDE.md regola 3 (chi scrive il codice non scrive i test di accettazione) e la scheda di @product-spec, per cui i criteri verificabili vengono dalla specifica. Un test scritto guardando l'implementazione descrive l'implementazione, e L12 ne fa il contenuto del gate: il gate misurerebbe se stesso."
     },
     {
       "id": "L12",
@@ -291,6 +292,9 @@
         "il nome del job «ci» (ADR-0003 D1: rinominarlo passa da un percorso di deprecazione) e site/**"
       ],
       "dipende_da": [
+        "L05",
+        "L04",
+        "L06",
         "L07"
       ],
       "verifica": [
@@ -314,6 +318,9 @@
         "site/**, e2e/**, tests/**: i finding si scrivono, non si correggono (i rientri sono L14 e L15)"
       ],
       "dipende_da": [
+        "L05",
+        "L04",
+        "L06",
         "L07"
       ],
       "verifica": [
@@ -338,6 +345,9 @@
         "site/**, e2e/**"
       ],
       "dipende_da": [
+        "L05",
+        "L04",
+        "L06",
         "L07"
       ],
       "verifica": [
@@ -363,6 +373,9 @@
         "site/**, contracts/design-tokens.json (una modifica ai token sarebbe una sessione di design, non una PR di implementazione)"
       ],
       "dipende_da": [
+        "L05",
+        "L04",
+        "L06",
         "L07"
       ],
       "verifica": [
@@ -388,6 +401,9 @@
         "site/**, e2e/**"
       ],
       "dipende_da": [
+        "L05",
+        "L04",
+        "L06",
         "L07"
       ],
       "verifica": [
@@ -468,19 +484,13 @@
     "onda_1": {
       "lotti": [
         "L04",
-        "L06"
-      ],
-      "parallelo": true,
-      "perche": "insiemi di file disgiunti: i tre Markdown di @privacy contro le cinque pagine e i componenti di pagina di @frontend. Entrambi dipendono dallo schema e dai componenti di L05."
-    },
-    "onda_2": {
-      "lotti": [
+        "L06",
         "L07"
       ],
-      "parallelo": false,
-      "perche": "i test di accettazione si scrivono dalla spec sul prodotto completo, e chi li scrive non e chi lo ha costruito (regola 3 di CLAUDE.md)."
+      "parallelo": true,
+      "perche": "insiemi di file disgiunti: i tre Markdown di @privacy, le pagine e i componenti di pagina di @frontend, il progetto di collaudo alla radice di @qa-test. L07 entra qui perche i test si scrivono dalla spec e non dal prodotto (vedi L07.scritti_dalla_spec): alla fine del lotto falliscono, e diventano verdi quando L04 e L06 hanno finito. Decisione di Andrea del 19/09."
     },
-    "onda_3": {
+    "onda_2": {
       "lotti": [
         "L08",
         "L09",
@@ -489,9 +499,9 @@
         "L12"
       ],
       "parallelo": true,
-      "perche": "le quattro revisioni non scrivono nel prodotto (solo journal e findings di scratch) e L12 tocca solo .github/workflows/ci.yml: nessun percorso in comune."
+      "perche": "le quattro revisioni non scrivono nel prodotto (solo journal e findings di scratch) e L12 tocca solo .github/workflows/ci.yml: nessun percorso in comune. Dipendono da L04, L06 e L07 perche revisionano e misurano il prodotto finito con i test gia scritti."
     },
-    "onda_4": {
+    "onda_3": {
       "lotti": [
         "L14",
         "L15"
@@ -504,64 +514,35 @@
   },
   "verifica_sovrapposizioni": {
     "metodo": "Per ogni coppia di lotti senza relazione di dipendenza (diretta o transitiva) si confrontano i percorsi dichiarati in «file», normalizzati a prefisso di cartella: due lotti si sovrappongono se un percorso dell'uno e prefisso di un percorso dell'altro. Le voci di journal si confrontano per glob, che contiene il nome del ruolo ed e quindi distinto fra ruoli diversi.",
-    "coppie_parallele_controllate": [
-      {
-        "coppia": [
-          "L04",
-          "L06"
-        ],
-        "esito": "disgiunti: site/src/content/legale/ contro site/src/pages/ piu site/src/components/pagine/; journal *-privacy-* contro *-frontend-*"
-      },
-      {
-        "coppia": [
-          "L08",
-          "L09",
-          "L10",
-          "L13",
-          "L12"
-        ],
-        "esito": "disgiunti: quattro lotti scrivono solo la propria voce di journal (glob distinti per ruolo) e i findings in .work/8/, che e in .gitignore; L12 scrive solo .github/workflows/ci.yml"
-      },
-      {
-        "coppia": [
-          "L14",
-          "L15"
-        ],
-        "esito": "disgiunti per costruzione: L15 e limitato a site/src/content/legale/*.md, che L14 dichiara fuori dal proprio insieme"
-      }
+    "rifatta_il": "2026-09-19, dalla sessione principale, dopo lo spostamento di L07",
+    "coppie_che_possono_correre_insieme": [
+      "L04xL06",
+      "L04xL07",
+      "L06xL07",
+      "L08xL09",
+      "L08xL10",
+      "L08xL12",
+      "L08xL13",
+      "L09xL10",
+      "L09xL12",
+      "L09xL13",
+      "L10xL12",
+      "L10xL13",
+      "L12xL13",
+      "L12xL14",
+      "L12xL15",
+      "L14xL15"
     ],
-    "sovrapposizioni_risolte_serializzando": [
-      {
-        "percorso": "CLAUDE.md",
-        "lotti": [
-          "L05",
-          "L07"
-        ],
-        "come": "L05 tocca solo le quattro righe di site/ della tabella Comandi, L07 solo la riga E2E; i due lotti sono in onde diverse (L07 dipende da L05), quindi non sono paralleli"
-      },
-      {
-        "percorso": "journal/2026-09-19/*-frontend-*.json",
-        "lotti": [
-          "L05",
-          "L06",
-          "L14"
-        ],
-        "come": "stesso ruolo, onde diverse: L06 dipende da L05 e L14 da tutte le revisioni; nomi di file distinti dall'orario"
-      },
-      {
-        "percorso": "site/src/** e site/src/content/legale/*.md",
-        "lotti": [
-          "L14",
-          "L15",
-          "L05",
-          "L06",
-          "L04"
-        ],
-        "come": "i rientri riscrivono file gia scritti nelle onde precedenti: sono serializzati dopo le revisioni, mai paralleli ai lotti che li hanno creati"
-      }
-    ],
-    "comando": "python3 sovrapposizioni.py (script di scratch): calcola la chiusura transitiva di dipende_da, prende le coppie di lotti senza relazione di dipendenza e confronta i percorsi dichiarati normalizzati a prefisso",
-    "esito_misurato": "14 coppie senza relazione di dipendenza. Primo giro: 13 DISGIUNTI e 1 SOVRAPPOSTI, la coppia L14 x L15 su ('site/src', 'site/src/content/legale/.md'). Corretto restringendo l'insieme di L14 ai sottoalberi che non contengono site/src/content/legale/. Secondo giro: 14 coppie su 14 DISGIUNTI."
+    "numero_coppie": 16,
+    "sovrapposizioni": "nessuna",
+    "output": [
+      "lotti senza dipendenze: ['L05']",
+      "ogni altro lotto dipende da L05: True",
+      "coppie che possono correre insieme: 16",
+      "sovrapposizioni di percorso: nessuna",
+      "criteri della spec non chiusi da nessun lotto: []",
+      "citati nel piano ma non nella spec: []"
+    ]
   },
   "copertura_ac": [
     {
@@ -818,14 +799,16 @@
       "da": "protocollo, docs/HANDOFF.md",
       "documento_dice": "«Lo scratch sta sotto .work/<issue-id>/, in .gitignore: plan.json, findings.json, prove ed evidenze»",
       "piano_fa": "il piano sta in docs/plan/issue-8.json ed e committato; sotto .work/8/ restano solo i findings e le evidenze",
-      "ragione": "richiesta esplicita di Andrea: il piano va ratificato e riletto dai lotti, come la spec, e un file in .gitignore non e leggibile da chi rivede. Stessa ragione per cui la spec e gia fuori dallo scratch"
+      "ragione": "richiesta esplicita di Andrea: il piano va ratificato e riletto dai lotti, come la spec, e un file in .gitignore non e leggibile da chi rivede. Stessa ragione per cui la spec e gia fuori dallo scratch",
+      "esito": "RATIFICATA da Andrea il 19/09/2026: docs/HANDOFF.md corretto nello stesso ramo, spec in docs/spec/issue-<id>.json e piano in docs/plan/issue-<id>.json. Sotto .work/<issue>/ restano findings ed evidenze."
     },
     {
       "id": "D-2",
       "da": "docs/adr/0002-struttura-site.md, D6 (righe 265-272 e 296-299)",
       "documento_dice": "la regola unica dentro il livello «focus» usa var(--color-focus-ring) con !important, e il test di L07 attende «outline-color a focus-ring del tema»",
       "piano_fa": "nel footer l'anello atteso e focus-ring-on-inverse: la custom property si ridefinisce nello scope del footer, cosi la regola a livello di D6 resta intatta, e il test di L07 confronta con l'alias in vigore per il contesto dell'elemento",
-      "ragione": "contracts/design-tokens.json e docs/design/00-sistema-e-componenti.md (riga 102), mergiati dopo l'ADR con la PR #15, introducono focus-ring-on-inverse proprio perche D6 aveva lasciato aperto il gate sul contrasto nel footer (2,38:1 in chiaro, 1,87:1 in scuro, sotto il 3:1 di WCAG 1.4.11). Prendere alla lettera la frase dell'ADR farebbe fallire un requisito di accessibilita gia misurato. L'ADR non viene modificato da questo piano: se @architect ritiene che vada allineato, e un gate suo"
+      "ragione": "contracts/design-tokens.json e docs/design/00-sistema-e-componenti.md (riga 102), mergiati dopo l'ADR con la PR #15, introducono focus-ring-on-inverse proprio perche D6 aveva lasciato aperto il gate sul contrasto nel footer (2,38:1 in chiaro, 1,87:1 in scuro, sotto il 3:1 di WCAG 1.4.11). Prendere alla lettera la frase dell'ADR farebbe fallire un requisito di accessibilita gia misurato. L'ADR non viene modificato da questo piano: se @architect ritiene che vada allineato, e un gate suo",
+      "esito": "RATIFICATA da Andrea il 19/09/2026 come classe 2 delle divergenze ammesse (il documento fallisce un requisito di accessibilita, si corregge il valore): ADR-0002 annotato in fondo, D6 superata sul footer, stato dell'ADR portato ad accettata."
     },
     {
       "id": "D-3",
@@ -905,5 +888,16 @@
     "Obbligo manuale OM-1: la persona responsabile delle promesse della pagina SaaS e ancora un segnaposto. Senza un nome, quella pagina non si pubblica.",
     "Prezzi, tetti, taglie, nomi dei piani e registrazione IAB: restano «da definire» e nessun lotto li decide."
   ],
-  "budget_turni": 615
+  "budget_turni": 615,
+  "modifiche_dopo_la_consegna": [
+    {
+      "data": "2026-09-19",
+      "chi": "Andrea, richiesta alla sessione principale",
+      "cosa": [
+        "L07 dipende solo da L05 e passa nell'onda parallela con L04 e L06; test scritti dalla spec, rossi alla fine del lotto (L07.scritti_dalla_spec).",
+        "Conseguenza dichiarata dalla sessione, non chiesta da Andrea: L08, L09, L10, L13 e L12 dipendevano solo da L07; con L07 spostato sarebbero partiti prima che le pagine esistessero. Ora dipendono anche da L04 e L06, cioe conservano l'ordine che avevano. Si annulla togliendo L04 e L06 da quei cinque dipende_da.",
+        "D-1 e D-2 ratificate: HANDOFF.md e ADR-0002 aggiornati nello stesso ramo."
+      ]
+    }
+  ]
 }

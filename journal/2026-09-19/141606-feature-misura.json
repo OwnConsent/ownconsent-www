@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-19T14:16:06+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "02-piano",
+  "tipo": "misura",
+  "titolo": "La spec issue-8 copre tutti i 22 criteri della issue di oggi, comprese DP-27, DP-29, D1, D3 e D4: si può pianificare",
+  "contesto": "Richiesta di Andrea: prima di qualunque piano, verificare che docs/spec/issue-8.json copra la issue #8 come è oggi; se qualcosa manca o diverge, fermarsi. La spec è stata scritta il 13/09 e corretta il 14/09.",
+  "evidenza": [
+    "$ python3 (confronto id issue contro spec) → issue 22 id, spec 22 id, «nella issue ma non nella spec: []», «nella spec ma non nella issue: []», domande_aperte []",
+    "frasi cercate nei criteri della spec, tutte presenti: «scrivici», «scrivici e ti attiviamo noi», «in definizione», «cambio di piano», «una persona», «percentuale», «120%», «?subject=SaaS», «?subject=Hosted», «?subject=On-premise», «senza oggetto precompilato», «titolare», «bozza», «pagina dimostrativa», «da definire», «gg/mm/aaaa»",
+    "D1 in AC4 (tre celle «scrivici») e N1; D3 in AC49 (avviso senza percentuali, cambio piano deciso da una persona, 120% escluso); D4 in N2; DP-27 in N3 (titolare con segnaposto e recapito); DP-29 in N2 e N3 (legali senza oggetto)",
+    "spec: DP-27 e DP-29 citate anche nel campo modifiche del 14/09",
+    "$ gh issue view 8 --json updatedAt → 2026-09-14T08:24:40Z; $ git log -1 --date=iso -- docs/spec/issue-8.json → bd0ab74 2026-09-14 12:42:50 +0200: la spec è più recente dell'ultimo aggiornamento della issue",
+    "$ gh api …/collaborators/andreapernici/permission → admin (regola 9: istruzione valida)"
+  ],
+  "esito": "verifica superata, nessuna divergenza: piano delegato a @orchestrator sul ramo plan/issue-8",
+  "umano_coinvolto": false
+}

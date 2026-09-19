@@ -1,6 +1,6 @@
 # ADR-0002 — Struttura di `site/` per la consegna 1
 
-- Stato: proposta (ratifica di Andrea al gate G1, PR-1)
+- Stato: accettata (ratificata da Andrea il 19/09/2026; vedi «Aggiornamento del 2026-09-19» in fondo)
 - Data: 2026-09-13
 - Deciso da: @architect (lotto L03, issue #8)
 - Vincola: @frontend (L05, L06), @privacy (L04), @qa-test (L07), @devops (L12); da leggere
@@ -437,3 +437,20 @@ Cosa cambia rispetto a D7:
 - lo schema del frontmatter (`titolo`, `descrizione`, `bozza`) resta invariato;
 - la spec registra la modifica in N2 (ristretta) e nel nuovo criterio N3.
 
+## Aggiornamento del 2026-09-19 — D6 superata sul footer, ADR accettata
+
+Annotazione, non riscrittura: il testo di D6 qui sopra resta com'è.
+
+- **Stato**: da «proposta» ad **accettata**. Deciso da Andrea, 19/09/2026.
+- **D6 superata nel footer.** D6 fissa `var(--color-focus-ring)` nella regola `!important`
+  a livello, e fa attendere a L07 `outline-color` uguale a `focus-ring` del tema. Nel
+  footer quel valore non raggiunge il contrasto richiesto: misurato **2,38:1** in tema
+  chiaro e **1,87:1** in tema scuro, contro il **3:1** di WCAG 2.2, criterio 1.4.11. Vale
+  quindi l'alias `focus-ring-on-inverse`, introdotto dai token mergiati dopo questo ADR,
+  ridefinito nello scope del footer: la regola `!important` a livello non si tocca.
+- **Perché si annota e non si riscrive**: è la classe 2 delle divergenze ammesse da
+  CLAUDE.md — il documento fallisce un requisito di accessibilità, si corregge il valore.
+  Le altre due classi non si applicano.
+- **Chi la legge**: L05 (definisce la custom property nello scope del footer), L07 (attende
+  per ogni elemento l'alias in vigore per il suo contesto), L09 (verifica a tastiera).
+  Divergenza D-2 di `docs/plan/issue-8.json`.

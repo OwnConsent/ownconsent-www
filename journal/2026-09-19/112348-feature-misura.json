@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T11:23:48+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "25",
+  "lotto": "prova",
+  "stadio": "05-pr",
+  "tipo": "misura",
+  "titolo": "PR di prova #30: ci rosso nel passo go test, mergeStateStatus UNSTABLE; il gate guarda l'esito dei test",
+  "contesto": "Prova del caso rosso chiesta da Andrea. Il dubbio da sciogliere: se ci fosse uscito verde con un test che fallisce, non avrebbe senso renderlo un required status check. Completa le prove verdi #27 (criterio 3) e #28 (criterio 4).",
+  "evidenza": [
+    "$ gh api 'repos/OwnConsent/ownconsent-www/commits/7156af4/check-runs?filter=latest' --jq '[.check_runs[] | {name, status, conclusion, app: .app.slug}]' → [{\"app\":\"github-actions\",\"conclusion\":\"failure\",\"name\":\"ci\",\"status\":\"completed\"}]",
+    "$ gh pr view 30 --json state,mergeStateStatus,statusCheckRollup → checks [{name: ci, conclusion: FAILURE}], mergeStateStatus UNSTABLE, state OPEN (prima della chiusura)",
+    "run 35434480919, event pull_request, https://github.com/OwnConsent/ownconsent-www/actions/runs/35434480919",
+    "passi del job: 14 success api/ — build; 15 success api/ — lint (golangci-lint); 16 failure api/ — test (-race -count=1 -v, niente cache); 7-11 skipped (site/)",
+    "log: [api/ — lint (golangci-lint)] 0 issues.",
+    "log: [api/ — test] Run go test -race -count=1 -v ./... ; === RUN TestSommaFallisce ; prova_test.go:9: Somma(2, 3) = 5, l'asserzione falsa di questa prova attende 6 ; --- FAIL: TestSommaFallisce (0.00s) ; FAIL github.com/OwnConsent/ownconsent-www/api/prova 0.007s ; ##[error]Process completed with exit code 1.",
+    "$ gh pr view 30 --json state,mergedAt,mergeStateStatus,url → CLOSED mergedAt=null UNSTABLE https://github.com/OwnConsent/ownconsent-www/pull/30"
+  ],
+  "esito": "il rosso arriva dal passo go test e non dai passi precedenti: il contesto ci riflette l'esito dei test. UNSTABLE e non CLEAN: con ci fra i required status checks il merge risulterebbe BLOCKED, che resta da verificare dopo il gate umano (AC21)",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-19T20:47:26+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Condizioni di fine di L05 misurate dalla sessione: quattro comandi verdi, area presente, D5 pulito, niente JavaScript nell'output",
+  "contesto": "Due agenti di seguito si sono fermati al limite di turni senza journal: le misure che il lotto richiede non erano state registrate da nessuno. Le esegue la sessione, sul commit 6fea569 più le tre modifiche non committate lasciate dal secondo giro.",
+  "evidenza": [
+    "$ node -v → v22.23.2; $ pnpm -v → 12.4.1",
+    "$ corepack enable && pnpm install → Already up to date, Done in 2ms using pnpm v12.4.1, exit=0",
+    "$ pnpm build (collezione legale vuota) → 0 page(s) built in 635ms, Complete!, exit=0: Astro non fallisce sulla collezione vuota",
+    "$ pnpm lint → eslint ., exit=0",
+    "$ pnpm astro check → Result (19 files): 0 errors, 0 warnings, 6 hints, exit=0",
+    "$ git ls-tree -r --name-only HEAD -- site/ | grep -Fx site/package.json → site/package.json",
+    "$ bash .github/ci/area.sh site → area site/: presente (site/package.json), exit=0",
+    "$ grep -rnE '#[0-9a-fA-F]{3,8}\\b|[0-9.]+(px|rem|em)\\b' src --include=*.astro --include=*.css → nessuna riga, exit=1 (ADR-0002 D5)",
+    "ipotesi (a) ADR-0002: $ find dist -name '*.js' -o -name '*.mjs' → vuoto; $ grep -rl '<script' dist → vuoto; dist/_astro contiene solo _slug_.lcEqPZD7.css",
+    "ipotesi (c) ADR-0002, con anteprima su porta 4321 e una sonda temporanea mai committata: robots.txt → HTTP 200; sitemap.xml → HTTP 200; legale/prova-rotte/ → HTTP 200; legale/prova-rotte (senza barra) → HTTP 404, redirect vuoto",
+    "i quattro comandi della tabella di CLAUDE.md per site/ funzionano come sono scritti: nessuna correzione necessaria. La riga «Dev sito» non è stata esercitata (processo che resta in esecuzione)"
+  ],
+  "esito": "condizioni di fine soddisfatte tranne l'ipotesi (b), che cade: vedi la voce di gate dello stesso minuto",
+  "umano_coinvolto": false
+}

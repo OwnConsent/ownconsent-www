@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-19T20:21:17+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Node locale ora v22.23.2, sopra il minimo del progetto: i quattro comandi di site/ possono uscire 0 in locale",
+  "contesto": "Il 15/09 la sessione aveva misurato node v20.20.2 in shell normale, di login e interattiva, sotto il minimo 22.12 dichiarato da CLAUDE.md (voce 2026-09-15/085153). La condizione di fine di L05 richiede che pnpm install, build, lint e astro check escano 0: si rimisura prima di delegare invece di fidarsi della misura vecchia.",
+  "evidenza": [
+    "$ node -v → v22.23.2",
+    "$ cat .nvmrc → 22.23.2",
+    "$ bash -lc 'nvm ls' → bash: line 1: nvm: command not found, exit=127",
+    "$ git log --oneline -1 origin/main → 41ff0a2 docs(plan): lotti della consegna 1 — sito pubblico (#8) (#33): il piano è su main",
+    "$ git push origin lotto/l05-impalcatura-site → ramo pubblicato prima di aprire qualunque worktree, come chiesto da Andrea"
+  ],
+  "esito": "L05 delegato a @frontend sul ramo lotto/l05-impalcatura-site; la misura del 15/09 resta valida per quel giorno, questa la aggiorna",
+  "umano_coinvolto": false
+}

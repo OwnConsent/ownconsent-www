@@ -22,8 +22,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTE_DA_SPIEGARE = ['/saas/', '/confronto/'];
 
@@ -44,9 +44,7 @@ test.describe('AC49: richiesta conteggiata, cosa non si conta, comportamento sul
     test(`AC49: ${rotta} spiega cos'è una richiesta conteggiata (scrittura di consenso: creazione o aggiornamento di una scelta registrata)`, async ({
       request,
     }) => {
-      const risposta = await request.get(rotta);
-      expect(risposta.status(), `GET ${rotta}`).toBe(200);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, rotta);
       const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
       expect(/scrittura\s+di\s+consenso/i.test(testo), '«scrittura di consenso»').toBe(true);
@@ -59,8 +57,7 @@ test.describe('AC49: richiesta conteggiata, cosa non si conta, comportamento sul
     test(`AC49: ${rotta} spiega che caricamenti del banner, letture della configurazione e risposte dalla cache non si contano`, async ({
       request,
     }) => {
-      const risposta = await request.get(rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, rotta);
       const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
       const nonSiConta = /non\s+(si\s+)?contan?o|non\s+vengono\s+conteggiat\w*|non\s+incidono\s+sul\s+conteggio/i;
@@ -76,8 +73,7 @@ test.describe('AC49: richiesta conteggiata, cosa non si conta, comportamento sul
     test(`AC49: ${rotta} spiega che superare il tetto non interrompe il servizio e non ci sono addebiti automatici per l'eccedenza`, async ({
       request,
     }) => {
-      const risposta = await request.get(rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, rotta);
       const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
       expect(
@@ -95,8 +91,7 @@ test.describe('AC49: richiesta conteggiata, cosa non si conta, comportamento sul
     test(`AC49: ${rotta} spiega che il cliente viene avvisato prima di raggiungere il tetto, e che un superamento ripetuto porta a un cambio di piano deciso da una persona`, async ({
       request,
     }) => {
-      const risposta = await request.get(rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, rotta);
       const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
       expect(
@@ -119,8 +114,7 @@ test.describe('AC49: richiesta conteggiata, cosa non si conta, comportamento sul
     test(`AC49: ${pagina.nome} (${pagina.rotta}) non mostra percentuali o soglie riferite ad avvisi/consumo/tetto, né il 120%`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const testo = $('body').text().replace(/\s+/g, ' ');
 
       expect(/120\s?%/.test(testo), 'nessun «120%» nel testo').toBe(false);

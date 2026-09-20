@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-20T16:06:48+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "segnaposto-identita-titolare come valore letterale dell'identita del titolare",
+  "contesto": "La spec issue-8.json elenca fra i segnaposto_dichiarati l'identita del titolare (ragione sociale, sede), fonte DP-20: la comunica Andrea, nessuna identita inventata. Il piano L04 chiede a questo lotto di scegliere il valore letterale nello stile di ADR-0002 D3 (una stringa che contiene la parola segnaposto), dichiararlo in cima all'informativa e aggiungerlo alla lista che il gate G3 dovra cercare e sostituire. Scegliere la stringa non e decidere l'identita.",
+  "alternative": [
+    { "opzione": "segnaposto-identita-titolare", "scelta_perche": "stile D3 (minuscolo, trattini, prefisso segnaposto-), un solo token greppabile, distinto dai tre segnaposto gia esistenti (segnaposto-nome-casella, segnaposto-dominio-casella.invalid, segnaposto-dominio-sito.example): un grep del gate G3 non produce falsi positivi sugli altri" },
+    { "opzione": "SEGNAPOSTO_TITOLARE fra parentesi quadre, come in contracts/data-map.json", "scartata_perche": "forma diversa da D3; il maiuscolo con underscore e la forma del data map, non quella dei segnaposto resi nelle pagine. La divergenza di forma fra i due file resta e va segnalata, non assorbita" },
+    { "opzione": "due segnaposto distinti, uno per la ragione sociale e uno per la sede", "scartata_perche": "la spec ne elenca uno solo per l'identita del titolare; moltiplicarli aggiungerebbe una voce alla lista di G3 senza che nessun criterio la chieda" },
+    { "opzione": "una ragione sociale verosimile con nota che e provvisoria", "scartata_perche": "e un'identita inventata in una pagina legale: vietato dalla spec (DP-20) e da CLAUDE.md regola 7" }
+  ],
+  "evidenza": [
+    "docs/spec/issue-8.json, segnaposto_dichiarati, voce identita del titolare",
+    "docs/adr/0002-struttura-site.md D3, tabella dei tre segnaposto",
+    "contracts/data-map.json, voce della casella di contatto: nota con SEGNAPOSTO_TITOLARE"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

@@ -13,8 +13,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const IDENTIFICATIVO_CMP = /\bcmp[\s_-]?id\b\s*[:#]?\s*\d+/i;
 
@@ -28,8 +28,7 @@ test.describe('AC7: nessuna registrazione IAB', () => {
     test(`AC7: ${pagina.nome} (${pagina.rotta}) non mostra un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const testo = $('body').text().replace(/\s+/g, ' ');
 
       expect(

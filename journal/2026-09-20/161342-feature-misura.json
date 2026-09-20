@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-20T16:13:42+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Le tre bozze verificate sull'HTML servito: contrassegno reso dalla rotta, nessun recapito, descrizioni distinte",
+  "contesto": "Verifica del lotto L04 fatta dalla sessione dopo la correzione del frontmatter. Le misure si fanno sull'HTML servito da astro preview, non sul sorgente.",
+  "evidenza": [
+    "$ pnpm build → 3 page(s) built in 719ms; dist/legale contiene cookie-policy, informativa-privacy, termini-di-servizio",
+    "rotte con barra finale su anteprima: legale/termini-di-servizio/ → HTTP 200; legale/informativa-privacy/ → HTTP 200; legale/cookie-policy/ → HTTP 200",
+    "contrassegno reso dalla rotta in tutte e tre: «Bozza — testo non definitivo, in attesa di approvazione»",
+    "meta description distinte nelle tre pagine (lette dall'HTML servito, non dal sorgente)",
+    "$ grep -c 'subject=' su ciascuna pagina → 0; link mailto presenti nelle tre pagine → nessuno: N3 resta aperto perché la rotta non rende alcun recapito",
+    "$ grep -ocE 'iab|identificativo cmp' su ciascuna pagina → 0 (AC7)",
+    "$ grep dei tre segnaposto di ADR-0002 D3 nei Markdown → nessuna riga (exit=1)",
+    "$ grep 'segnaposto-identita-titolare' → informativa-privacy.md riga 14, dichiarato come segnaposto",
+    "firme dei commit del ramo, misurate: 85f982b e 5137b68 «orchestrator»; e0f2dd1 senza riga Cantiere-Agent (persa dall'amend); a3398a8 «cantiere:qa-test». Nessuna dice «privacy»: il marcatore di ruolo continua a non corrispondere a chi lavora"
+  ],
+  "esito": "lotto verificato; resta aperto N3 e le decisioni di contenuto elencate nella PR",
+  "umano_coinvolto": false
+}

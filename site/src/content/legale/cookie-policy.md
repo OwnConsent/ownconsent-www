@@ -1,6 +1,6 @@
 ---
 titolo: Cookie policy (bozza)
-descrizione: Bozza della pagina sui cookie di OwnConsent: oggi il sito non imposta cookie e non scrive nel browser, quindi non c'è nulla da consentire. Testo non definitivo.
+descrizione: "Bozza della pagina sui cookie di OwnConsent: oggi il sito non imposta cookie e non scrive nel browser, quindi non c'è nulla da consentire. Testo non definitivo."
 bozza: true
 ---
 

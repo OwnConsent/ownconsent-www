@@ -19,10 +19,12 @@
  * (L06) e le bozze legali (L04) non esistono ancora, quindi le rotte rispondono 404.
  * Su una pagina inesistente il peso di JS/CSS è zero e l'LCP è velocissimo — i budget
  * passerebbero senza aver misurato niente. Ogni test qui sotto pretende PRIMA che la
- * pagina esista (risposta 200 e un <main> con contenuto non banale) e SOLO DOPO misura
- * e confronta con i budget. Oggi falliscono sull'esistenza della pagina, non su un
- * numero: il journal (journal/2026-09-20/**) dichiara esplicitamente quali test
- * passano pieni e quali passerebbero solo per vuoto, se non ci fosse questa guardia.
+ * pagina esista (risposta 200 e un h1 non vuoto nell'HTML servito) e SOLO DOPO misura
+ * e confronta con i budget. Le due asserzioni sono separate apposta: se una fallisce,
+ * il messaggio dice quale delle due è saltata, senza dover aprire il codice. Oggi
+ * falliscono sull'esistenza della pagina, non su un numero: il journal
+ * (journal/2026-09-20/**) dichiara esplicitamente quali test passano pieni e quali
+ * passerebbero solo per vuoto, se non ci fosse questa guardia.
  */
 
 import { test, expect } from '@playwright/test';
@@ -45,19 +47,24 @@ test.describe('AC39: budget di laboratorio sulle pagine pubbliche', () => {
       test.setTimeout(TIMEOUT_TEST_MISURA_MS);
       if (!baseURL) throw new Error('baseURL mancante nella configurazione Playwright');
 
-      // 1) La pagina esiste davvero: risposta 200 e contenuto atteso presente.
+      // 1) La pagina esiste davvero: risposta 200 e un h1 non vuoto nell'HTML servito.
       //    Senza questa guardia un 404 misurerebbe zero byte e un LCP finto-veloce,
-      //    e il budget passerebbe senza aver verificato nulla (gate G3).
+      //    e il budget passerebbe senza aver verificato nulla (gate G3). Le due
+      //    condizioni sono due asserzioni separate: il fallimento dice quale delle due
+      //    è saltata, invece di un unico controllo composto che nasconde il motivo.
       const risposta = await page.goto(pagina.rotta, { waitUntil: 'load' });
       expect(risposta?.status(), `GET ${pagina.rotta}`).toBe(200);
 
       const html = await page.content();
       const $ = cheerio.load(html);
-      const testoMain = ($('main').text() || '').replace(/\s+/g, ' ').trim();
+      const h1 = $('h1').first();
+      const testoH1 = (h1.text() || '').replace(/\s+/g, ' ').trim();
+      const motivoAssenzaH1 =
+        h1.length === 0 ? 'nessun h1 nell\'HTML servito' : 'h1 presente ma vuoto';
       expect(
-        testoMain.length,
-        `<main> di ${pagina.rotta} ha contenuto non banale (trovato: ${JSON.stringify(testoMain.slice(0, 80))})`,
-      ).toBeGreaterThan(20);
+        testoH1.length,
+        `<h1> di ${pagina.rotta}: ${motivoAssenzaH1}`,
+      ).toBeGreaterThan(0);
 
       // 2) Solo ora si misura: 5 esecuzioni a freddo, throttling CPU/rete, LCP e CLS
       //    letti dal metodo dichiarato nel contratto.

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T17:29:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "N3 verificato sulle pagine servite: un mailto nell'informativa, nessun oggetto, nessun recapito nelle altre due",
+  "contesto": "Misura dopo la chiusura di N3. La prima lettura era sbagliata e va registrata: l'anteprima era partita sulla porta 4326 perché la 4321 è occupata da un'altra sessione, e il curl interrogava il server di qualcun altro, con una dist vecchia.",
+  "evidenza": [
+    "prima lettura, errata: curl su porta 4321 → mailto 0 su tutte e tre, mentre dist/legale/informativa-privacy/index.html conteneva già il link. Il log dell'anteprima diceva «Preview server running at http://localhost:4326»",
+    "seconda lettura, con la porta presa dal log: legale/termini-di-servizio HTTP 200 mailto: 0 subject=: 0; legale/informativa-privacy HTTP 200 mailto: 1 subject=: 0; legale/cookie-policy HTTP 200 mailto: 0 subject=: 0",
+    "segnaposto residui nelle tre pagine servite: 0",
+    "link per esteso nell'informativa: <a href=\"mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid\">segnaposto-nome-casella@segnaposto-dominio-casella.invalid</a>",
+    "contrassegno ancora reso su tutte e tre: «Bozza — testo non definitivo, in attesa di approvazione»",
+    "$ pnpm build → 3 page(s) built, Complete!, exit=0; $ pnpm astro check → 0 errors, 0 warnings, exit=0"
+  ],
+  "cosa_si_e_imparato": "La porta dell'anteprima si legge dal log, non si assume: con più sessioni sulla stessa macchina un curl su una porta fissa può misurare il prodotto di qualcun altro e dare un risultato plausibile e falso.",
+  "esito": "N3 soddisfatto e misurato",
+  "umano_coinvolto": false
+}

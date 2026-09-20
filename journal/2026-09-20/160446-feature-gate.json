@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T16:04:46+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "N3 non è soddisfacibile da L04: la rotta delle bozze legali non rende nessun recapito, e il Markdown non può scriverlo",
+  "contesto": "Il piano dice che il recapito lo rende la rotta da site/src/dati/contatto.json e vieta a L04 di toccare i file di L05; la verifica del lotto dà per scontato che «l'indirizzo compare solo nell'HTML reso dalla rotta». La misura sul codice mergiato dice il contrario.",
+  "evidenza": [
+    "$ git show 'origin/main:site/src/pages/legale/[slug].astro' → il corpo rende BadgeDraft, l'h1 con voce.data.titolo e <Content />: nessun link di contatto, nessuna chiamata a mailto()",
+    "$ git show origin/main:site/src/lib/contatto.ts → la funzione mailto(modalita?) esiste e il commento dice «nessuna pagina legale passa una modalità, quindi il suo mailto non ha oggetto (DP-29)»: prevista, ma non usata dalla rotta",
+    "$ git show origin/main:site/src/content.config.ts → schema rigido e .strict(): titolo, descrizione, bozza: z.literal(true). Nessun campo per un recapito",
+    "piano, L04.non_tocca: «il recapito lo rende la rotta da site/src/dati/contatto.json (ADR-0002, aggiornamento del 14/09, DP-27 e DP-29), non il Markdown»"
+  ],
+  "chi_ha_deciso": "la sessione si ferma sulla parte N3 invece di far scegliere all'agente fra due violazioni (scrivere l'indirizzo nel Markdown, contro N2, o modificare un file di L05, contro il piano)",
+  "cosa_serviva": "una decisione di Andrea: chi rende il recapito nelle tre pagine legali. Per esempio estendere [slug].astro con un blocco di contatto che usa mailto() senza modalità (lavoro in territorio L05), oppure passare le bozze a MDX, oppure un segnaposto nel Markdown sostituito dalla rotta",
+  "esito": "L04 procede su tutto il resto; la scelta viene elencata nella PR, come chiesto da Andrea, invece di essere inventata dal lotto",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T19:19:27+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Prova-by-reversion sulla misura della piega di AC5: sa diventare rossa",
+  "contesto": "AC5 (e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts) passa oggi a entrambe le viewport, ma un test verde non dimostra da solo di saper fallire. Costruito uno smoke TEMPORANEO e NON committato (e2e/_tmp-smoke-piega-reversion.spec.ts, cancellato subito dopo la misura, senza toccare site/): stessa identica asserzione di AC5 (box.y + box.height <= viewport.height) su /saas/, prima senza modifiche (atteso verde) poi dopo aver spinto il contrassegno reso sotto la piega con page.evaluate + CSS transform: translateY(3000px) sull'elemento già presente nel DOM (nessuna lettura né modifica di site/, nessuna classe CSS: l'elemento è individuato per testo reso via page.getByText(/pagina dimostrativa/i), come fa AC5).",
+  "evidenza": [
+    "$ npx playwright test e2e/_tmp-smoke-piega-reversion.spec.ts --reporter=list",
+    "SOPRA la piega, 360x640: '✓ SMOKE: la misura PASSA quando il contrassegno è sopra la piega (360×640) (178ms)'",
+    "SOPRA la piega, 1280x800: '✓ SMOKE: la misura PASSA quando il contrassegno è sopra la piega (1280×800) (207ms)'",
+    "SOTTO la piega, 360x640: '✘ SMOKE: la misura FALLISCE quando il contrassegno è spinto sotto la piega (360×640)' -> Error: il contrassegno finisce dentro l'altezza della viewport (640px), senza scorrere — Expected: <= 640, Received: 3223",
+    "SOTTO la piega, 1280x800: '✘ SMOKE: la misura FALLISCE quando il contrassegno è spinto sotto la piega (1280×800)' -> Error: il contrassegno finisce dentro l'altezza della viewport (800px), senza scorrere — Expected: <= 800, Received: 3127",
+    "riepilogo reporter: '2 failed / 2 passed' su 4 test totali (2 viewport x 2 condizioni)",
+    "il messaggio d'errore nomina esplicitamente il lato sforato (il basso: 'finisce dentro l'altezza della viewport'), non un messaggio generico"
+  ],
+  "esito": "la misura della piega in AC5 sa diventare rossa a entrambe le viewport, col messaggio giusto. Smoke e2e/_tmp-smoke-piega-reversion.spec.ts cancellato dopo la misura (mai committato, mai in git status prima della cancellazione). AC5 stesso non modificato.",
+  "umano_coinvolto": false
+}

@@ -15,6 +15,7 @@
 
 import { test, expect } from '@playwright/test';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaPagina } from './guardia-esistenza';
 
 const VIEWPORT_MOBILE = { width: 360, height: 640 };
 const VIEWPORT_DESKTOP = { width: 1280, height: 800 };
@@ -29,7 +30,7 @@ for (const viewport of [VIEWPORT_MOBILE, VIEWPORT_DESKTOP]) {
       test(`AC5: ${pagina.nome} (${pagina.rotta}) mostra il contrassegno visibile senza scorrere`, async ({
         page,
       }) => {
-        await page.goto(pagina.rotta);
+        await guardiaEsistenzaPagina(page, pagina.rotta);
 
         // Non deve essere avvenuto alcuno scroll: la misura di visibilità è valida solo
         // rispetto alla posizione di caricamento della pagina.

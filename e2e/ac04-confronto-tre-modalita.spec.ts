@@ -21,6 +21,7 @@
 
 import { test, expect } from '@playwright/test';
 import * as cheerio from 'cheerio';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTA = '/confronto/';
 const MODALITA = ['SaaS', 'Hosted', 'On-premise'] as const;
@@ -58,9 +59,7 @@ test.describe('AC4: confronto delle tre modalità', () => {
   test('AC4: /confronto/ indica per ciascuna modalità cosa riceve il cliente (sezione dedicata non banale)', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    expect(risposta.status(), `GET ${ROTTA}`).toBe(200);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     for (const modalita of MODALITA) {
       const sezione = testoSezione($, modalita);
@@ -74,8 +73,7 @@ test.describe('AC4: confronto delle tre modalità', () => {
   test('AC4: /confronto/ indica come paga ciascuna modalità (SaaS canone mensile a volume, Hosted a taglia, On-premise licenza annuale)', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(vicini(testo, /\bsaas\b/i, /canone\s+mensile/i, 400), 'SaaS: canone mensile').toBe(true);
@@ -91,8 +89,7 @@ test.describe('AC4: confronto delle tre modalità', () => {
   test('AC4: /confronto/ indica chi registra la CMP presso IAB Europe per ciascuna modalità (SaaS: OwnConsent; On-premise: il cliente a proprio nome; Hosted: in definizione)', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(
@@ -116,8 +113,7 @@ test.describe('AC4: confronto delle tre modalità', () => {
   test('AC4: /confronto/ ha una sola riga «come si attiva» con una cella per modalità, e ognuna delle tre celle dice «scrivici»', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     const celleScrivici = $('td, th').filter((_, el) => /\bscrivici\b/i.test($(el).text()));
     expect(celleScrivici.length, 'tre celle contengono «scrivici», una per modalità').toBe(3);

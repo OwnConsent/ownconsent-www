@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T21:10:44+02:00",
+  "agente": "andrea",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Costo della consegna 1 dopo L05, L04, L06, L07",
+  "contesto": "Prima lettura di /cost sulle tre sessioni. Misura a listino API: il lavoro gira su abbonamento, quindi non e' una spesa sostenuta, ma e' quanto costerebbe a chi seguisse lo stesso metodo pagando a token.",
+  "evidenza": [
+    "sessione 1 (4 giorni, L04 e precedenti): 115.43 USD, 114 richieste, 1.01 USD per turno, ~800k token di contesto per richiesta",
+    "sessione 2 (L06): 36.73 USD, 256 richieste, 0.14 USD per turno, ~200k di contesto",
+    "sessione 3 (L07): 53.89 USD, 185 richieste, 0.29 USD per turno, ~235k di contesto",
+    "totale 206.05 USD per circa 11000 righe aggiunte",
+    "sessione 1: 607.2k token di output contro 91.1M letti dalla cache e 4.8M scritti"
+  ],
+  "cosa_si_e_imparato": "Il costo non dipende da quanto gli agenti scrivono ma da quanto contesto si rilegge a ogni turno, moltiplicato per i turni. Una sessione lunga quattro giorni costa sette volte per turno rispetto a una nata e chiusa nello stesso pomeriggio. La regola «una sessione per lotto» era dedotta dal comportamento degli agenti: ora ha un numero, 1.01 contro 0.14 USD per turno.",
+  "esito": "base di riferimento fissata: 35-55 USD per lotto di costruzione. Un lotto di verifica sopra i 60 USD segnala un mandato che fa ri-progettare invece di replicare.",
+  "umano_coinvolto": true
+}

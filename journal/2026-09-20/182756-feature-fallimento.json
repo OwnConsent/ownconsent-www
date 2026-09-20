@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T18:27:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Difetto di L05: il link «salta al contenuto» puntava a un id che non esisteva, e la rotta legale lo mascherava",
+  "contesto": "BaseLayout.astro, scritto in L05, porta il link di salto con href=#contenuto. Nessun elemento del layout aveva quell'id: l'unica occorrenza in site/src era l'h1 della rotta legale, anch'essa di L05. Finché esistevano solo le tre pagine legali il salto funzionava per caso, atterrando sull'h1; con le cinque pagine di L06 il difetto è diventato visibile, ma non è di L06.",
+  "evidenza": [
+    "$ grep -rn 'id=\"contenuto\"' site/src (su main, prima della correzione) → una sola riga: site/src/pages/legale/[slug].astro:49",
+    "$ grep -n '<main' site/src/layouts/BaseLayout.astro → riga 30: <main> senza id",
+    "$ grep -rn '#contenuto' site/src → BaseLayout.astro riga 28: <a class=\"salta-al-contenuto\" href=\"#contenuto\">",
+    "conseguenza sulle cinque pagine nuove: il link di salto non porta da nessuna parte (criterio di accessibilità del percorso da tastiera)",
+    "correzione: id=\"contenuto\" su <main> nel layout, e tolto dall'h1 della rotta legale, altrimenti le tre pagine legali avrebbero avuto due elementi con lo stesso id",
+    "misura dopo, sulle otto rotte servite (porta 4321 letta dal log dell'anteprima): id=\"contenuto\" presente esattamente 1 volta in ciascuna, ancora del link #contenuto in ciascuna, HTTP 200 su tutte",
+    "$ pnpm build → 8 page(s) built, Complete!, exit=0; $ pnpm astro check → 0 errors, 0 warnings, exit=0"
+  ],
+  "cosa_si_e_imparato": "La verifica di L05 fatta dalla sessione aveva controllato build, lint, area, assenza di JavaScript e rotte con barra finale: nessuna di quelle misure guarda se un'ancora interna ha una destinazione. Un id riferito e mai definito non rompe niente e non compare in nessun exit code: si vede solo interrogando l'HTML servito e contando le occorrenze. Il difetto è stato trovato da Andrea, non dal cantiere.",
+  "esito": "corretto in un commit su ramo proprio; attribuito a L05, non a L06",
+  "umano_coinvolto": true
+}

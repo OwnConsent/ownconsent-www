@@ -46,6 +46,6 @@ const htmlConRecapito = contieneSegnaposto
 ---
 <BaseLayout title={titolo} description={voce.data.descrizione} canonical={canonical}>
   <BadgeDraft />
-  <h1 id="contenuto">{voce.data.titolo}</h1>
+  <h1>{voce.data.titolo}</h1>
   {htmlConRecapito ? <div set:html={htmlConRecapito} /> : <Content />}
 </BaseLayout>

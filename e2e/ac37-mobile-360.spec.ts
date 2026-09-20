@@ -19,6 +19,7 @@
 
 import { test, expect } from '@playwright/test';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaPagina } from './guardia-esistenza';
 
 const VIEWPORT_MOBILE = { width: 360, height: 640 };
 
@@ -42,7 +43,7 @@ test.describe('AC37: mobile 360×640 con touch', () => {
 
   for (const pagina of PAGINE) {
     test(`AC37: ${pagina.nome} (${pagina.rotta}) non ha scorrimento orizzontale`, async ({ page }) => {
-      await page.goto(pagina.rotta);
+      await guardiaEsistenzaPagina(page, pagina.rotta);
 
       const { scrollWidth, clientWidth } = await page.evaluate(() => ({
         scrollWidth: document.documentElement.scrollWidth,
@@ -58,7 +59,7 @@ test.describe('AC37: mobile 360×640 con touch', () => {
     test(`AC37: ${pagina.nome} (${pagina.rotta}) ha testo del corpo con dimensione calcolata >= 16px`, async ({
       page,
     }) => {
-      await page.goto(pagina.rotta);
+      await guardiaEsistenzaPagina(page, pagina.rotta);
 
       const elementiPiccoli: ElementoDiTesto[] = await page.evaluate(() => {
         function eVisibile(el: Element): boolean {
@@ -99,7 +100,7 @@ test.describe('AC37: mobile 360×640 con touch', () => {
     test(`AC37: ${pagina.nome} (${pagina.rotta}) ha ogni elemento interattivo >= 24×24 CSS px oppure conforme alla spaziatura WCAG 2.5.8`, async ({
       page,
     }) => {
-      await page.goto(pagina.rotta);
+      await guardiaEsistenzaPagina(page, pagina.rotta);
 
       const elementi: ElementoInterattivo[] = await page.evaluate(() => {
         function eVisibile(el: Element): boolean {

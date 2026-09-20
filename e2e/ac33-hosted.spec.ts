@@ -21,8 +21,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { leggiDatiContatto } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTA = '/hosted/';
 
@@ -34,9 +34,7 @@ test.describe('AC33: pagina Hosted', () => {
   test('AC33: /hosted/ dice che l\'istanza ha risorse dedicate e dati separati dagli altri clienti', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    expect(risposta.status(), `GET ${ROTTA}`).toBe(200);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(/risorse\s+dedicat\w*/i.test(testo), 'risorse dedicate').toBe(true);
@@ -51,8 +49,7 @@ test.describe('AC33: pagina Hosted', () => {
   test('AC33: /hosted/ dice che il costo dipende dalla taglia di disco, memoria e CPU, con «da definire» per i valori non configurati', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(/\bdisco\b/i.test(testo), 'menziona il disco').toBe(true);
@@ -62,8 +59,7 @@ test.describe('AC33: pagina Hosted', () => {
   });
 
   test('AC33: /hosted/ dice che chi registra la CMP presso IAB Europe è «in definizione»', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(/\biab\s*europe\b/i.test(testo), 'menziona IAB Europe').toBe(true);
@@ -73,8 +69,7 @@ test.describe('AC33: pagina Hosted', () => {
   test('AC33: l\'ultimo blocco del contenuto principale di /hosted/, prima del footer, contiene «si attiva parlando con noi» e un mailto: con oggetto Hosted', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     const main = $('main');
     expect(main.length, 'la pagina ha un <main>').toBeGreaterThan(0);
@@ -101,8 +96,7 @@ test.describe('AC33: pagina Hosted', () => {
   });
 
   test('AC33: /hosted/ non contiene moduli né la dicitura «in arrivo»', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     expect($('form').length, 'nessun <form> nella pagina').toBe(0);
     const testo = $('body').text().replace(/\s+/g, ' ');

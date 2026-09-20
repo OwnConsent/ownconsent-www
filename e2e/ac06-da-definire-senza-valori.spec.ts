@@ -13,9 +13,10 @@
  * - build con la configurazione di prova: `e2e/fixtures/listino-di-prova.json` prende
  *   il posto di `listino.json` in una copia temporanea di `site/`+`contracts/`
  *   (ADR-0002 D4, `e2e/fixtures/copia-temporanea.ts`), costruita e servita su una porta
- *   diversa (4322). I valori di quella configurazione devono comparire nell'HTML
- *   servito dalla copia. I valori sono cifre ripetute (111111…, 222222…, 333333…):
- *   riconoscibili a colpo d'occhio come finti, non assomigliano a un prezzo plausibile.
+ *   ottenuta dal sistema operativo (mai scritta a mano qui: si usa `copia.baseURL`). I
+ *   valori di quella configurazione devono comparire nell'HTML servito dalla copia. I
+ *   valori sono cifre ripetute (111111…, 222222…, 333333…): riconoscibili a colpo
+ *   d'occhio come finti, non assomigliano a un prezzo plausibile.
  */
 
 import { test, expect, request as pwRequest, type APIRequestContext } from '@playwright/test';
@@ -27,7 +28,6 @@ import { costruisciCopiaConFixture, type CopiaTemporanea } from './fixtures/copi
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const PERCORSO_FIXTURE = path.join(DIR, 'fixtures', 'listino-di-prova.json');
-const PORTA_COPIA = 4322;
 
 const PAGINE_LISTINO = PAGINE.filter((pagina) => pagina.mostraPrezzi);
 
@@ -74,7 +74,6 @@ test.describe('AC6: configurazione di prova (copia temporanea, listino-di-prova.
     copia = await costruisciCopiaConFixture({
       fixture: 'listino',
       percorsoFixture: PERCORSO_FIXTURE,
-      porta: PORTA_COPIA,
     });
     contestoRichieste = await pwRequest.newContext({ baseURL: copia.baseURL });
   });

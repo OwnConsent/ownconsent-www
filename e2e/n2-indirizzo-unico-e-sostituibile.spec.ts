@@ -13,7 +13,8 @@
  *
  * 2. si sostituisce l'indirizzo con `e2e/fixtures/contatto-di-prova.json` in una copia
  *    temporanea di `site/`+`contracts/` (ADR-0002 D4, `e2e/fixtures/copia-temporanea.ts`),
- *    costruita e servita su una porta diversa (4323): mai una modifica sul posto.
+ *    costruita e servita su una porta ottenuta dal sistema operativo (mai scritta a
+ *    mano qui: si usa `copia.baseURL`): mai una modifica sul posto.
  *
  * 3. dopo: sulla copia, il nuovo indirizzo compare in ogni link di contatto con il
  *    proprio oggetto dove previsto, e il vecchio indirizzo non compare in nessun HTML
@@ -32,7 +33,6 @@ import { costruisciCopiaConFixture, type CopiaTemporanea } from './fixtures/copi
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const RADICE_REPO = path.resolve(DIR, '..');
 const PERCORSO_FIXTURE = path.join(DIR, 'fixtures', 'contatto-di-prova.json');
-const PORTA_COPIA = 4323;
 
 // N2.allora nomina esplicitamente solo queste due famiglie di pagine: le tre di
 // modalità (con oggetto di modalità) e le tre legali (senza oggetto). Home e Confronto
@@ -132,7 +132,6 @@ test.describe('N2: dopo la sostituzione — copia temporanea con contatto-di-pro
     copia = await costruisciCopiaConFixture({
       fixture: 'contatto',
       percorsoFixture: PERCORSO_FIXTURE,
-      porta: PORTA_COPIA,
     });
     contestoRichieste = await pwRequest.newContext({ baseURL: copia.baseURL });
   });

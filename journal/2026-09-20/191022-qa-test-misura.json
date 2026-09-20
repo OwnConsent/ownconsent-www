@@ -1,0 +1,13 @@
+{
+  "ts": "2026-09-20T19:10:22+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Guardia di esistenza applicata ai 6 file del gruppo B (ac07, ac08, ac33, ac34, ac37, ac41) — suite invariata",
+  "contesto": "Applicazione meccanica del modello di eaa8c30 (e2e/guardia-esistenza.ts): guardiaEsistenzaRequest nei test che usano la fixture request+cheerio, guardiaEsistenzaPagina nei test che usano page.goto (AC37 e la parte a viewport di AC8). Nessuna asserzione vera toccata, solo il recupero dell'HTML sostituito.",
+  "comando": "npx playwright test --reporter=list",
+  "output": "7 failed, 242 passed (21.6s); orfani dopo: pgrep -fc 'astro.mjs[ ]preview' -> 0",
+  "note": "I 7 rossi sono esattamente la baseline attesa e pre-esistente: 3 in e2e/ac04-confronto-tre-modalita.spec.ts (sezione dedicata non prescritta dalla spec, triage di un altro giro) e 4 in e2e/n2-indirizzo-unico-e-sostituibile.spec.ts (mailto: assente da /legale/termini-di-servizio/ e /legale/cookie-policy/, gate gia' segnalato da L04). Nessun rosso nuovo introdotto dalle modifiche di questo giro."
+}

@@ -1,0 +1,59 @@
+---
+// On-premise (docs/design/01-pagine.md, sezione «4. On-premise»): indicizzabile, mostra
+// prezzi → contrassegno «pagina dimostrativa» prima dell'h1. Soddisfa AC4 (colonna
+// On-premise) e AC34. La registrazione IAB la fa il cliente, a proprio nome.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BadgeDemo from '../components/comuni/BadgeDemo.astro';
+import BloccoChiusura from '../components/pagine/BloccoChiusura.astro';
+import ListinoStruttura from '../components/pagine/ListinoStruttura.astro';
+import { urlAssoluto } from '../lib/canonical';
+
+const titolo = 'On-premise — installa OwnConsent sul tuo hardware';
+const descrizione =
+  'OwnConsent On-premise: installi sul tuo hardware, licenza annuale, registri tu la CMP presso IAB Europe a tuo nome.';
+const canonical = urlAssoluto('/on-premise/');
+---
+
+<BaseLayout title={titolo} description={descrizione} canonical={canonical}>
+  <BadgeDemo />
+  <h1>On-premise: OwnConsent sul tuo hardware</h1>
+  <p class="lead">
+    Installi OwnConsent sul tuo hardware: il controllo resta interamente tuo.
+  </p>
+
+  <section>
+    <h2>Cosa ricevi</h2>
+    <p>Il cliente installa sul proprio hardware.</p>
+  </section>
+
+  <section>
+    <h2>Come paghi</h2>
+    <p>Il cliente paga una licenza annuale.</p>
+    <ListinoStruttura modalita="on-premise" />
+  </section>
+
+  <section>
+    <h2>Chi registra la CMP</h2>
+    <p>
+      La registrazione della CMP presso IAB Europe la fa il cliente, a proprio nome.
+    </p>
+  </section>
+
+  <BloccoChiusura
+    titolo="Pronto ad attivare On-premise?"
+    frase="Si attiva parlando con noi."
+    testoCta="Si attiva parlando con noi"
+    modalita="on-premise"
+  />
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--font-size-200);
+    color: var(--color-text-secondary);
+  }
+
+  section {
+    margin-block-end: var(--spacing-10);
+  }
+</style>

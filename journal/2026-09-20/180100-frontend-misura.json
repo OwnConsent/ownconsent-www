@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-20T18:01:00+02:00",
+  "agente": "frontend",
+  "issue": "8",
+  "lotto": "L06",
+  "pezzo": "1/5",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "CartaModalita.astro scritto e compilato; index.astro (Home) scritto e compilato in build statica",
+  "contesto": "Letto docs/design/00-sistema-e-componenti.md (sezione «Componente: carta modalità») e docs/design/01-pagine.md (sezione «1. Home»). Verificato che src/components/pagine/ non esiste ancora (nuova cartella, non un duplicato). Verificata l'infrastruttura del pezzo 0 (visitor Lightning CSS, virtual:token.css): presente e funzionante.",
+  "evidenza": [
+    "$ pnpm build → 4 page(s) built, nessun errore; /index.html generato insieme alle tre pagine legali, robots.txt, sitemap.xml"
+  ],
+  "esito": "Component e pagina Home compilano insieme in una build statica pulita. Procedo a committare i due pezzi separatamente come richiesto (prima il componente, poi la pagina), poi eseguo le misure complete (lint, astro check, grep D5, anteprima http, media query).",
+  "umano_coinvolto": false,
+  "nota": "Il difetto noto del link «salta al contenuto» (#contenuto assente da <main> di BaseLayout, segnalato in b6ff344) resta fuori dal perimetro di questo pezzo: index.astro non aggiunge un id che BaseLayout non prevede."
+}

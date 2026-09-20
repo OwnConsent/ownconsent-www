@@ -1,0 +1,62 @@
+---
+// Hosted (docs/design/01-pagine.md, sezione «3. Hosted»): indicizzabile, mostra prezzi →
+// contrassegno «pagina dimostrativa» prima dell'h1. Soddisfa AC4 (colonna Hosted) e AC33.
+// Chi registra la CMP è «in definizione»: non è una decisione di questo lotto (regola 7).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BadgeDemo from '../components/comuni/BadgeDemo.astro';
+import BloccoChiusura from '../components/pagine/BloccoChiusura.astro';
+import ListinoStruttura from '../components/pagine/ListinoStruttura.astro';
+import { urlAssoluto } from '../lib/canonical';
+
+const titolo = "Hosted — un'istanza OwnConsent dedicata a te";
+const descrizione =
+  'OwnConsent Hosted: istanza con risorse dedicate e dati separati dagli altri clienti, costo in base alla taglia di disco, memoria e CPU.';
+const canonical = urlAssoluto('/hosted/');
+---
+
+<BaseLayout title={titolo} description={descrizione} canonical={canonical}>
+  <BadgeDemo />
+  <h1>Hosted: un'istanza OwnConsent solo per te</h1>
+  <p class="lead">
+    Un'istanza con risorse dedicate: i tuoi dati non condividono spazio con quelli di altri
+    clienti.
+  </p>
+
+  <section>
+    <h2>Cosa ricevi</h2>
+    <p>
+      Un'istanza con risorse dedicate e dati separati da quelli degli altri clienti.
+    </p>
+  </section>
+
+  <section>
+    <h2>Come paghi</h2>
+    <p>Il costo dipende dalla taglia scelta: disco, memoria e CPU.</p>
+    <ListinoStruttura modalita="hosted" />
+  </section>
+
+  <section>
+    <h2>Chi registra la CMP</h2>
+    <p>
+      La registrazione della CMP presso IAB Europe per le istanze Hosted è in definizione.
+    </p>
+  </section>
+
+  <BloccoChiusura
+    titolo="Pronto ad attivare Hosted?"
+    frase="Si attiva parlando con noi."
+    testoCta="Si attiva parlando con noi"
+    modalita="hosted"
+  />
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--font-size-200);
+    color: var(--color-text-secondary);
+  }
+
+  section {
+    margin-block-end: var(--spacing-10);
+  }
+</style>

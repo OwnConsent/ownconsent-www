@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-20T18:12:00+02:00",
+  "agente": "frontend (sessione principale)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Pezzo 3: Hosted e On-premise misurate sul documento servito; un numero comparso nel testo era un'entita' HTML, non un prezzo",
+  "contesto": "Pezzo 3 di 5: site/src/pages/hosted.astro (AC4 colonna Hosted, AC33) e site/src/pages/on-premise.astro (AC4 colonna On-premise, AC34). Riusano BloccoChiusura e ListinoStruttura del pezzo 2.",
+  "evidenza": [
+    "$ pnpm build → Complete!, build=0 ; $ pnpm lint → lint=0 ; $ pnpm astro check → 0 errors ; controllo valori letterali di ADR-0002 D5 → 0 righe",
+    "Porta dell'anteprima letta dal log: localhost:4325",
+    "$ curl -o /dev/null -w '%{http_code}' sulle due rotte con barra finale → 200 e 200",
+    "AC33: il testo servito di Hosted contiene «Un'istanza con risorse dedicate e dati separati da quelli degli altri clienti», «Il costo dipende dalla taglia scelta: disco, memoria e CPU», «La registrazione della CMP presso IAB Europe per le istanze Hosted è in definizione»; ultimo blocco prima del footer: «Pronto ad attivare Hosted? Si attiva parlando con noi.»; mailto con ?subject=Hosted",
+    "AC34: On-premise contiene «Il cliente installa sul proprio hardware», «Il cliente paga una licenza annuale», «La registrazione della CMP presso IAB Europe la fa il cliente, a proprio nome»; mailto con ?subject=On-premise",
+    "AC5: contrassegno «pagina dimostrativa» presente su entrambe; AC12: script = 0 su entrambe; nessun form, nessun «in arrivo»",
+    "AC6: «da definire» 4 volte su Hosted (disco, memoria, CPU, piu' la ragione sociale del footer) e 2 volte su On-premise (licenza annuale, piu' il footer)",
+    "FALSO POSITIVO CORRETTO: la prima estrazione del testo dava un numero «39» su Hosted. Non era un prezzo: $ grep -oE '.{25}39.{25}' hosted.html → «<title>Hosted — un&#39;istanza OwnConsent dedic», cioe' l'entita' &#39; dell'apostrofo nel title, che il mio estrattore non decodificava. Rifatta la misura con le entita' decodificate: numeri nel testo = nessuno su tutte e quattro le pagine fatte finora (home, saas, hosted, on-premise), euro = 0"
+  ],
+  "cosa_si_e_imparato": "Misurare «non ci sono numeri nel testo» su HTML richiede di decodificare le entita' prima di cercare: altrimenti ogni apostrofo tipografico diventa un 39 e sembra un valore commerciale. Il controllo va scritto cosi' anche per @qa-test in L07, o produrra' un rosso falso.",
+  "esito": "pezzo 3 committato e pushato",
+  "umano_coinvolto": false
+}

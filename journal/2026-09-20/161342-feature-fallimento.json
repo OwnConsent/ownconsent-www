@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-20T16:13:42+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "Aver tolto la build dal mandato corto ha spostato a valle un difetto: frontmatter YAML rotto dai due punti nella descrizione",
+  "contesto": "Per far stare il lotto nel tetto dei turni la sessione ha tolto dal mandato di @privacy install, build e check, tenendoli per sé. Il risultato: tre commit spinti con una bozza che non si costruisce.",
+  "evidenza": [
+    "$ pnpm build → bad indentation of a mapping entry; Location: site/src/content/legale/cookie-policy.md:2:56; exit=1",
+    "riga 2 del file: descrizione: Bozza della pagina sui cookie di OwnConsent: oggi il sito … — i due punti non quotati chiudono la chiave YAML",
+    "correzione della sessione: valore messo fra virgolette doppie, testo invariato (git diff --stat → 1 insertion, 1 deletion)",
+    "$ pnpm build dopo la correzione → 3 page(s) built, Complete!, exit=0; $ pnpm astro check → 0 errors, 0 warnings; $ pnpm lint → exit=0"
+  ],
+  "cosa_si_e_imparato": "Il tetto dei turni non si compra togliendo le verifiche: il difetto non sparisce, cambia solo chi lo paga e quando. La prossima volta il mandato corto tiene dentro la sola build (un comando, un output) e lascia fuori il resto. Lo schema .strict() di ADR-0002 D7 non ha protetto niente qui: l'errore è a monte, nel parser YAML, prima che lo schema veda le chiavi.",
+  "esito": "corretto dalla sessione, non rimandato a @privacy: è sintassi, non contenuto",
+  "umano_coinvolto": false
+}

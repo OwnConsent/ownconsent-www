@@ -1,0 +1,41 @@
+{
+  "ts": "2026-09-20T16:21:11+02:00",
+  "agente": "architect (sessione principale)",
+  "issue": "8",
+  "lotto": "L06-prerequisito",
+  "stadio": "01-decisione",
+  "tipo": "decisione",
+  "titolo": "I breakpoint restano @custom-media nei componenti, risolti da un visitor di lightningcss; le definizioni generate si togliono",
+  "contesto": "L06 scrivera' cinque pagine di breakpoint e non puo' partire senza questa scelta. Il vincolo che orienta la decisione non e' «cosa compila» — compilano tre opzioni su sette forme provate — ma quale opzione trasforma un errore di scrittura in un errore di build invece che in un layout che non si applica. La misura D2 ha mostrato che l'opzione piu' snella e' anche l'unica che sbaglia in silenzio.",
+  "alternative": [
+    {
+      "opzione": "A2 — tutte le regole responsive concatenate nel foglio globale generato",
+      "scartata_perche": "compila (exit=0) ma le regole escono non scoped: `.piede` senza data-astro-cid contro `.piede[data-astro-cid-jo6i4kqk]` del componente. Cinque pagine di regole responsive in un unico foglio globale spostano la collisione di nomi dal compilatore alla convenzione, e separano la regola responsive dal componente che la possiede"
+    },
+    {
+      "opzione": "B1 — plugin Vite che inietta le definizioni in ogni blocco",
+      "scartata_perche": "non raggiunge il blocco: il compilatore Astro invoca lightningcss dentro il proprio hook load, prima di ogni plugin utente (voce 161000)"
+    },
+    {
+      "opzione": "C3 — @import di un file di definizioni generato su disco, in testa a ogni blocco <style>",
+      "scartata_perche": "funziona (exit=0), ma chiede una riga di @import in ogni blocco, con profondita' relativa diversa per cartella, e un file generato su disco da escludere dal versionamento. Dimenticare la riga e' un errore di build, quindi non e' pericoloso: e' solo attrito ripetuto in ogni file, moltiplicato per le pagine di L06. C2 ha inoltre dimostrato che l'import non puo' puntare al modulo virtuale (ENOENT), quindi il file su disco e' obbligatorio"
+    },
+    {
+      "opzione": "D1 — valori letterali dei breakpoint scritti a mano nei componenti",
+      "scartata_perche": "compila, ma il controllo committato di ADR-0002 D5 pretende zero righe da grep sui valori letterali e ne trova 2. E' esclusa da un artefatto gia' in repository, non da un giudizio di gusto"
+    },
+    {
+      "opzione": "D2 — visitor senza drafts.customMedia, definizioni non generate",
+      "scartata_perche": "e' la variante piu' snella e l'unica che sbaglia in silenzio: con un breakpoint inesistente la build esce 0 e spedisce @media (--bp-xl), che nessun browser interpreta. La regola non si applica mai e nulla lo segnala — il modo di rompersi peggiore per un layout responsive, perche' si vede solo guardando la pagina alla larghezza giusta"
+    }
+  ],
+  "evidenza": [
+    "Forma scelta, misurata in tutte e tre le posizioni d'uso: blocco <style> di un componente, foglio globale committato, condizione composta. $ pnpm build → Complete!, exit=0 ; output @media (width>=768px) scoped, @media (width>=1280px) dal foglio globale, @media (width>=1280px) and (orientation:landscape) dalla composta",
+    "Refuso: $ pnpm build → [lightningcss] Custom media query --bp-xl is not defined, Location: src/components/Footer.astro:7:0, exit=1 — anche annidato in una condizione composta",
+    "Documento servito da astro dev: $ curl -s http://localhost:4399/ | grep -o '@media[^{]*' → @media (width >= 768px), @media (width >= 1280px)",
+    "D3 dimostra che le definizioni @custom-media generate oggi non servono al controllo: l'errore forte viene da drafts.customMedia. Restano codice morto anche nella forma scelta, quindi si togliono dal generatore"
+  ],
+  "esito": "proposta in ADR-0004, in attesa dell'occhio di Andrea. La riproduzione resta fuori dal repository: in questa PR entrano solo ADR e journal, nessuna modifica a site/",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea decide sulla PR; la sessione propone la scelta misurata"
+}

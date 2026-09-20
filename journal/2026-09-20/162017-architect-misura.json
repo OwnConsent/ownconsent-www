@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-20T16:20:17+02:00",
+  "agente": "architect (sessione principale)",
+  "issue": "8",
+  "lotto": "L06-prerequisito",
+  "stadio": "01-decisione",
+  "tipo": "misura",
+  "titolo": "Quattro opzioni provate sulla riproduzione: due compilano, una compila e fallisce in silenzio, una viola un controllo gia' committato",
+  "contesto": "Andrea ha chiesto di provare ogni opzione e di riportare per ciascuna il comando e il suo output, non la conclusione. Tutte le prove girano nella stessa riproduzione minima fuori dal repository, con astro 7.3.3 e lightningcss 1.33.0, le versioni risolte di site/.",
+  "evidenza": [
+    "A1 — regole responsive in un foglio globale SEPARATO (src/styles/layout.css) con le definizioni in virtual:token.css: $ pnpm build → [lightningcss] Custom media query --bp-md is not defined, Location: src/styles/layout.css:7:0, exit=1. L'isolamento e' per FILE, non per blocco <style>: anche un .css globale non vede le definizioni di un altro file",
+    "A2 — regole responsive CONCATENATE nello stesso modulo generato delle definizioni: $ pnpm build → Complete!, exit=0. Output servito: @media (width>=768px){.piede{grid-template-columns:repeat(3,1fr)}}. Costo misurato: la regola esce NON scoped — `.piede` senza data-astro-cid, mentre lo stesso selettore scritto nel componente esce come .piede[data-astro-cid-jo6i4kqk]",
+    "B1 — plugin Vite che inietta le definizioni in ogni blocco: non raggiunge il blocco, exit=1 (voce 161000)",
+    "B2 — visitor di lightningcss passato in vite.css.lightningcss: $ pnpm build → [visitor] riscrivo --bp-md -> 768px, Complete!, exit=0. Output: @media (width>=768px){.piede[data-astro-cid-jo6i4kqk]{...}} — lo scoping di Astro e' conservato. Nessun @custom-media resta nell'output",
+    "B2, refuso — @media (--bp-xl) con --bp-xl assente dai token: $ pnpm build → [lightningcss] Custom media query --bp-xl is not defined, Location: src/components/Footer.astro, exit=1. Il refuso ferma la build e dice dove",
+    "C1 — @import di un file committato con le definizioni, in testa al blocco <style>: $ pnpm build → Complete!, exit=0, scoping conservato, nessun @import ne' @custom-media nell'output",
+    "C2 — lo stesso @import puntato al modulo virtuale generato: $ pnpm build → [lightningcss] ENOENT: no such file or directory, open 'virtual:token.css', exit=1. lightningcss risolve @import dal filesystem e non passa dal resolver di Vite: l'import non puo' puntare a cio' che genera il plugin",
+    "C3 — @import di un file GENERATO su disco prima della build: $ pnpm build → [c3] scritto src/generato/breakpoints.css, Complete!, exit=0. Funziona e mantiene una sola fonte, al prezzo di un file generato su disco e di una riga di @import da ricordare in ogni blocco, con profondita' relativa diversa per cartella",
+    "D1 — valori letterali scritti a mano nel componente: $ pnpm build → Complete!, exit=0, MA il controllo committato di ADR-0002 D5 li trova: $ grep -rnE '#[0-9a-fA-F]{3,8}\\b|[0-9.]+(px|rem|em)\\b' src --include='*.astro' --include='*.css' → Footer.astro:15: @media (min-width: 768px), righe trovate: 2, mentre D5 pretende zero righe",
+    "D2 — visitor SENZA drafts.customMedia e senza definizioni generate, con un refuso: $ pnpm build → Complete!, exit=0 e nell'output finisce @media (--bp-xl){...}, una media query che nessun browser interpreta. Il fallimento e' SILENZIOSO: la regola non si applica mai e niente lo segnala",
+    "D3 — visitor CON drafts.customMedia e senza definizioni generate, stesso refuso: $ pnpm build → [lightningcss] Custom media query --bp-xl is not defined, exit=1. Con un breakpoint valido: Complete!, exit=0. Quindi l'errore forte viene dalla bozza attiva, NON dalle definizioni @custom-media generate: quelle restano codice morto anche sotto il visitor",
+    "Condizione composta — @media (--bp-lg) and (orientation: landscape): un visitor che guarda solo il primo livello fallisce ([lightningcss] Custom media query --bp-lg is not defined, exit=1); un visitor ricorsivo sulle condizioni annidate esce Complete!, exit=0 e produce @media (width>=1280px) and (orientation:landscape). Prima forma dell'oggetto restituito rifiutata: [lightningcss] data did not match any variant of untagged enum MediaQueryOrRaw — Length va avvolto in { type: 'value', value: { unit, value } }",
+    "Refuso annidato nella condizione composta, con visitor ricorsivo: $ pnpm build → [lightningcss] Custom media query --bp-xl is not defined, Location: src/components/Footer.astro:7:0, exit=1",
+    "Documento servito da astro dev (non solo build): $ pnpm exec astro dev --port 4399 ; $ curl -s http://localhost:4399/ | grep -o '@media[^{]*' → @media (width >= 1280px) e @media (width >= 768px). Funziona anche in sviluppo, sia dal foglio globale sia dal blocco del componente",
+    "Sintassi emessa — lightningcss normalizza min-width in sintassi di intervallo: $ node lcss-test.mjs → senza targets: @media (width>=768px) ; safari 15: @media (min-width:768px) ; safari 16.4: @media (width>=768px) ; chrome 80: @media (min-width:768px). Il targets passato in vite.css.lightningcss NON ha effetto (output ancora width>=768px), mentre vite.build.cssTarget 'safari15' lo ha: $ pnpm build → @media (min-width:1280px) e @media (min-width:768px)"
+  ],
+  "esito": "restano in piedi A2, B2/D3 e C3. D1 e' esclusa da un controllo gia' committato, D2 dal fallimento silenzioso, A1/B1/C2 non compilano. Decisione nella voce 162530 e in ADR-0004.",
+  "umano_coinvolto": false
+}

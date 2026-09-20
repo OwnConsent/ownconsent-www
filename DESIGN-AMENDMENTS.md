@@ -49,6 +49,12 @@ nessuno**, perché l'ipotesi (b) di ADR-0002 è falsa: lightningcss elabora ogni
   svista del disegno: è lo stato di una funzionalità non ancora costruita.
 - Da smaltire: le regole responsive rientrano nel lotto che seguirà la decisione di
   @architect su come i componenti `.astro` usano i breakpoint.
+  **Aggiornamento 20/09/2026:** quella decisione è **ADR-0004** (proposta), che ha
+  riprodotto la smentita fuori dal repository e fissa il meccanismo — `@media (--bp-md)` nei
+  componenti, risolto da un `visitor` di Lightning CSS. Questa voce si chiude quando L06
+  mette i breakpoint e il footer torna a più di una colonna. ADR-0004 ha inoltre misurato
+  che l'isolamento è **per file**: la formulazione qui sopra («blocchi `<style>`») è più
+  stretta del vero, perché vale anche per un `.css` globale.
 
 **(b) Tre file di configurazione non previsti dal piano, ed effettivamente necessari.**
 Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
@@ -62,3 +68,29 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   **Annotazione:** `ci` è risultato verde anche **senza** questo file (run 35462349894,
   passi `site/` tutti `success`): non è indispensabile al runner. Serve a far installare
   allo stesso modo la macchina di sviluppo e il runner.
+
+## A03 — L04 tocca la rotta delle bozze legali, che il piano assegna a L05
+- Data: 20/09/2026
+- Classe: unshipped (funzionalità non ancora costruita)
+- Ratificata da: Andrea, 20/09/2026
+
+- Documento dice: il piano `docs/plan/issue-8.json` elenca per L04 i soli tre Markdown
+  sotto `site/src/content/legale/` più le voci di journal, e mette esplicitamente
+  `site/src/pages/legale/[slug].astro` fra i file che L04 non tocca, perché è di L05.
+- Prodotto fa: L04 modifica quella rotta. È l'unico modo per chiudere **N3** senza
+  violare N2: il Markdown porta il segnaposto `{{recapito}}` e la rotta lo sostituisce
+  con un `mailto:` all'indirizzo di `site/src/dati/contatto.json`, **senza oggetto
+  precompilato** (DP-29). Prima di questa modifica la rotta non rendeva alcun recapito e
+  N3 non era soddisfacibile da nessun lotto.
+- Deciso: vale la modifica. **L06 non è ancora partito**, quindi nessun lotto in corso
+  possiede quel file e non c'è conflitto; la divergenza si registra lo stesso, perché il
+  piano resta la fonte di chi possiede cosa.
+- Misura, sulle tre pagine servite da `astro preview` dopo la modifica:
+
+      legale/termini-di-servizio     HTTP 200  mailto: 0  subject=: 0
+      legale/informativa-privacy     HTTP 200  mailto: 1  subject=: 0
+      legale/cookie-policy           HTTP 200  mailto: 0  subject=: 0
+
+- Da smaltire: quando L06 partirà, il suo mandato deve sapere che la rotta contiene la
+  sostituzione del segnaposto; se il piano viene rigenerato, l'elenco dei file di L04 va
+  corretto di conseguenza.

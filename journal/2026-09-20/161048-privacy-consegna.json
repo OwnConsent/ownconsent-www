@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-20T16:10:48+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "Le tre bozze legali sono sul ramo: termini, informativa privacy, cookie policy",
+  "contesto": "Seconda parte di L04. Il giro precedente aveva consegnato i soli termini di servizio; questo giro ha aggiunto le due bozze mancanti, ciascuna committata e spinta subito dopo la scrittura per non perdere lavoro al tetto dei turni.",
+  "evidenza": [
+    "e0f2dd1 docs(site): bozza dell'informativa privacy (#8)",
+    "5137b68 docs(site): bozza della cookie policy (#8)",
+    "ramo lotto/l04-bozze-legali, entrambi i commit spinti su origin"
+  ],
+  "aperti": [
+    "N3: la rotta oggi non rende alcun recapito e le bozze non ne scrivono nessuno; la decisione e di Andrea",
+    "identita del titolare ancora a segnaposto-identita-titolare, da sostituire prima della pubblicazione",
+    "base giuridica e tempi di conservazione della posta elettronica non decisi",
+    "fornitori di posta e hosting, accordi art. 28 ed eventuali trasferimenti extra UE non noti",
+    "build, lint e astro check non eseguiti da questo giro: le verifiche le fa la sessione"
+  ],
+  "esito": "consegnato",
+  "umano_coinvolto": false
+}

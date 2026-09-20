@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-20T16:10:22+02:00",
+  "agente": "privacy",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Due bozze legali che descrivono lo stato di fatto e rimandano ogni scelta a una persona",
+  "contesto": "Restavano da scrivere informativa privacy e cookie policy, sul modello della bozza dei termini gia sul ramo. Lo stato di fatto misurato dalla sessione: sito statico, build senza file JavaScript, nessun cookie, nessuno storage, nessun modulo, unico canale la posta elettronica. L'informativa dichiara il titolare con il segnaposto letterale scelto dal giro precedente; nessuna delle due pagine scrive un recapito, perche l'indirizzo vive in un solo file di dati e lo rende la rotta.",
+  "alternative": [
+    { "opzione": "informativa che descrive solo la corrispondenza via posta, e cookie policy che dichiara l'assenza di cookie e storage, con elenco di cio che manca in entrambe", "scelta_perche": "dice il vero su cio che esiste oggi e non anticipa nessuna decisione di Andrea; le due descrizione sono distinte fra loro e da quella dei termini" },
+    { "opzione": "informativa con la tabella completa di finalita, basi giuridiche e retention gia compilate", "scartata_perche": "base giuridica e tempi di conservazione della posta non sono stati decisi da nessuno: compilarli sarebbe inventare. Sono finiti nell'elenco di cio che manca, insieme a DPO, fornitori di posta e hosting con accordi art. 28, trasferimenti extra UE e dati societari" },
+    { "opzione": "cookie policy con un elenco di cookie tecnici tipici e il banner della CMP descritto come se esistesse", "scartata_perche": "non esiste alcun cookie da elencare e il banner e fuori consegna; la pagina dice che oggi non c'e nulla da consentire e rimanda la riscrittura a quando lo stato di fatto cambiera" },
+    { "opzione": "aggiungere in fondo all'informativa un recapito per l'esercizio dei diritti", "scartata_perche": "l'indirizzo non si scrive nel Markdown; la sessione ha misurato che oggi la rotta non rende alcun recapito, quindi il criterio N3 resta aperto e lo decide Andrea. Il testo rinvia all'indirizzo pubblicato dal sito, senza risolvere ne aggirare il gate" }
+  ],
+  "evidenza": [
+    "site/src/content/legale/termini-di-servizio.md come modello di registro, lunghezza e sezione finale",
+    "site/src/content/legale/informativa-privacy.md, 59 righe, frontmatter a tre chiavi",
+    "site/src/content/legale/cookie-policy.md, 52 righe, frontmatter a tre chiavi"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

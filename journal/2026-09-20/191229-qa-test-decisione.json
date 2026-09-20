@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-20T19:12:29+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "applicazione meccanica della guardia di esistenza agli ultimi quattro file + 2 eccezioni motivate",
+  "contesto": "e2e/guardia-esistenza.ts esiste gia' e otto file la usano gia' (AC1, AC2, AC7, AC8, AC33, AC34, AC37, AC41). Restano da coprire: ac49, ac53, n1, n3 (normali) e ac03, ac04 (con eccezione). Il modello di riferimento e' git diff ca0f1ef~1 ca0f1ef -- e2e/ac07-nessuna-registrazione-iab.spec.ts: sostituisce `const risposta = await request.get(rotta); const $ = cheerio.load(await risposta.text());` con `const $ = await guardiaEsistenzaRequest(request, rotta);`, rimuove l'import diretto di cheerio quando non serve piu', e non tocca le asserzioni vere.",
+  "alternative": [
+    { "opzione": "riprogettare la guardia o generalizzarla per sitemap/robots", "scartata_perche": "il compito e' applicazione meccanica; guardia-esistenza.ts non e' mio da modificare, l'istruzione esplicita e' di non toccarlo" }
+  ],
+  "evidenza": ["git diff ca0f1ef~1 ca0f1ef -- e2e/ac07-nessuna-registrazione-iab.spec.ts mostra il pattern di sostituzione a due righe"],
+  "esito": "applicata",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

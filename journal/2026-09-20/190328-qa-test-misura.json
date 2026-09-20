@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-20T19:03:28+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Smoke temporaneo di e2e/guardia-esistenza.ts: pieno passa, vuoto e senza falliscono coi messaggi giusti",
+  "contesto": "Oggi tutte le 8 rotte esistono, quindi la guardia passerebbe sempre e un difetto al suo interno non si vedrebbe nella suite reale. Prova indipendente su un server HTTP di prova (node:http, tre rotte /pieno /vuoto /senza) con un config Playwright temporaneo senza webServer (playwright.smoke.config.ts) e un file di test temporaneo (e2e/_smoke-guardia.spec.ts): nessuno dei due committato, cancellati subito dopo l'esecuzione.",
+  "comando": "npx playwright test --config=playwright.smoke.config.ts --reporter=list",
+  "output": "Running 2 tests using 1 worker\n\n  ✓  1 e2e/_smoke-guardia.spec.ts:31:1 › smoke request: h1 pieno passa, h1 vuoto e nessun h1 falliscono coi messaggi giusti (33ms)\n  ✓  2 e2e/_smoke-guardia.spec.ts:60:1 › smoke page: stesso comportamento con guardiaEsistenzaPagina (136ms)\n\n  2 passed (664ms)",
+  "lettura": "guardiaEsistenzaRequest e guardiaEsistenzaPagina distinguono correttamente i tre casi: /pieno (h1 con testo) passa senza eccezioni; /vuoto (<h1></h1>) lancia con messaggio contenente 'h1 presente ma vuoto'; /senza (nessun elemento h1) lancia con messaggio contenente \"nessun h1 nell'HTML servito\". Verificato sia per la variante fixture request+cheerio sia per la variante fixture page (browser reale, chromium.launch()).",
+  "evidenza": [
+    "e2e/_smoke-guardia.spec.ts e playwright.smoke.config.ts cancellati con `rm -f` subito dopo l'esecuzione, prima di qualunque commit — mai entrati in `git status` tracciato"
+  ],
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-19T20:47:26+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Tenuta l'aggiunta di typescript-eslint lasciata non committata dal secondo giro",
+  "contesto": "Il secondo agente aveva modificato eslint.config.mjs, package.json e pnpm-lock.yaml per far analizzare anche i file .ts, senza committare né spiegare. La sessione decide se tenere o scartare.",
+  "alternative": [
+    { "opzione": "scartare le modifiche e lasciare eslint con le sole regole di @eslint/js", "scartata_perche": "i file .ts del lotto (canonical.ts, contatto.ts, rotte.ts, content.config.ts, le due rotte tecniche) resterebbero non analizzati: pnpm lint uscirebbe 0 senza guardarli, cioè un gate che non guarda" },
+    { "opzione": "tenerle", "scartata_perche": null }
+  ],
+  "evidenza": [
+    "$ git diff site/eslint.config.mjs → passa a tseslint.config(...), file .ts con tseslint.configs.recommended",
+    "$ git diff site/package.json → devDependencies: typescript-eslint ^8.70.0",
+    "$ pnpm lint con la modifica → eslint ., exit=0",
+    "i file di configurazione eslint.config.mjs e pnpm-workspace.yaml non erano elencati nel campo file del lotto L05: divergenza dal piano, dichiarata nella PR"
+  ],
+  "esito": "tenuta e committata; segnalata nella PR come file fuori dall'elenco del piano",
+  "umano_coinvolto": false
+}

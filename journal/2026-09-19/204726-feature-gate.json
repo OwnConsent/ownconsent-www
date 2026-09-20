@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-19T20:47:26+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "Ipotesi (b) di ADR-0002 smentita: @custom-media non è risolto dentro gli <style> dei file .astro, la build fallisce",
+  "contesto": "ADR-0002 dà per buono che i custom media generati da token-css.mjs valgano anche negli <style> dei componenti .astro. La sessione ha esercitato l'ipotesi inserendo temporaneamente «@media (--bp-md) { .prova-bp { color: var(--color-fg); } }» nello <style> di site/src/components/comuni/Footer.astro, poi ha ripristinato il file.",
+  "evidenza": [
+    "$ pnpm build → [ERROR] [vite] Build failed in 103ms; [lightningcss] Custom media query --bp-md is not defined; Location: site/src/components/comuni/Footer.astro:17:0; exit=1",
+    "prima prova, con il nome preso a grep dal sorgente («--bp-» senza chiave): stessa build fallita, ma per un nome non valido: ripetuta con il nome vero ricavato dai token (breakpoint base 360px, md 768px, lg 1280px → --bp-base, --bp-md, --bp-lg)",
+    "$ grep -rn '@custom-media' src → solo src/lib/token-css.mjs:98, dove i custom media vengono generati nel foglio globale",
+    "$ git diff --stat site/src/components/comuni/Footer.astro dopo il ripristino → vuoto",
+    "con il Footer ripristinato: $ pnpm build → exit=0"
+  ],
+  "chi_ha_deciso": "la regola del lotto L05 nel piano e CLAUDE.md: un lotto che trova una decisione di struttura sbagliata si ferma e torna ad @architect, non la adatta",
+  "cosa_serviva": "una decisione di @architect: come i componenti .astro usano i breakpoint (per esempio importando il foglio dei custom media in ogni blocco, o rinunciando ai custom media dentro i componenti a favore di classi di utilità nel foglio globale). Riguarda soprattutto L06, che scriverà le pagine",
+  "esito": "L05 si ferma qui: il resto è verde, ma l'ADR va corretto prima che L06 usi i breakpoint nei componenti",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,77 @@
+---
+// Intestazione e navigazione, identica su tutte le 8 pagine (docs/design/00).
+const rotte = [
+  { href: '/', etichetta: 'Home' },
+  { href: '/saas/', etichetta: 'SaaS' },
+  { href: '/hosted/', etichetta: 'Hosted' },
+  { href: '/on-premise/', etichetta: 'On-premise' },
+  { href: '/confronto/', etichetta: 'Confronto modalità e listino' },
+];
+const percorsoCorrente = Astro.url.pathname;
+---
+<header class="intestazione">
+  <a class="nome-sito" href="/">OwnConsent</a>
+  <nav aria-label="Principale">
+    <ul>
+      {
+        rotte.map((rotta) => {
+          const corrente = percorsoCorrente === rotta.href;
+          return (
+            <li>
+              <a href={rotta.href} aria-current={corrente ? 'page' : undefined} class:list={{ corrente }}>
+                {rotta.etichetta}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</header>
+<style>
+    .intestazione {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+    border-bottom: var(--border-width) solid var(--color-border-default);
+  }
+
+  .nome-sito {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-300);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    min-height: var(--touch-target-min-size);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  nav[aria-label='Principale'] ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-2) var(--spacing-4);
+    margin: 0;
+    padding: 0;
+  }
+
+  nav[aria-label='Principale'] a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+    min-height: var(--touch-target-min-size);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  nav[aria-label='Principale'] a:hover {
+    text-decoration: underline;
+  }
+
+  nav[aria-label='Principale'] a.corrente {
+    text-decoration: underline;
+    font-weight: var(--font-weight-semibold);
+  }
+</style>

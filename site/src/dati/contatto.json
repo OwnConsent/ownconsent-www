@@ -1,0 +1,5 @@
+{
+  "$segnaposto": "indirizzo: la parte prima di @ è il segnaposto del nome della casella, quella dopo è il segnaposto del dominio della casella (RFC 2606). Si sostituiscono al gate di pubblicazione G3 con i valori comunicati da Andrea.",
+  "indirizzo": "segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+  "oggetto": { "saas": "SaaS", "hosted": "Hosted", "on-premise": "On-premise" }
+}

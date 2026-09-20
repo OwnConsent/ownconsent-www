@@ -1,0 +1,50 @@
+---
+// Layout comune alle 8 pagine: html lang="it", meta, canonical, token CSS, focus,
+// intestazione e piè di pagina (AC1, AC2, ADR-0002 D5, D6). Ordine di tastiera in
+// docs/design/00-sistema-e-componenti.md: link "salta al contenuto" per primo.
+import 'virtual:token.css';
+import '../styles/focus.css';
+import '../styles/base.css';
+import Header from '../components/comuni/Header.astro';
+import Footer from '../components/comuni/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+}
+
+const { title, description, canonical } = Astro.props;
+---
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body>
+    <a class="salta-al-contenuto" href="#contenuto">Salta al contenuto</a>
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+<style>
+  .salta-al-contenuto {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    transform: translateY(-100%);
+    background: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    padding: var(--spacing-2) var(--spacing-4);
+  }
+
+  .salta-al-contenuto:focus {
+    transform: translateY(0%);
+  }
+</style>

@@ -1,0 +1,4 @@
+{
+  "$segnaposto": "url: dominio del sito, segnaposto dichiarato (ADR-0002 D3, RFC 2606). Si sostituisce al gate di pubblicazione G3 con il valore comunicato da Andrea.",
+  "url": "https://segnaposto-dominio-sito.example"
+}

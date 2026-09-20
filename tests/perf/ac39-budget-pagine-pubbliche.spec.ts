@@ -27,7 +27,7 @@
 
 import { test, expect } from '@playwright/test';
 import * as cheerio from 'cheerio';
-import { PAGINE } from '../e2e/pagine';
+import { PAGINE } from '../../e2e/pagine';
 import { leggiPerfBudgets, misuraPaginaInLaboratorio } from './misura-laboratorio';
 
 // Il metodo di laboratorio (5 esecuzioni, ciascuna con CPU 4x e rete limitata, cariche

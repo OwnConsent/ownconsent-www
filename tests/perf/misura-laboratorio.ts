@@ -29,7 +29,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import type { Browser, Page } from '@playwright/test';
 
-const RADICE_REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const RADICE_REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 function leggiJson<T>(percorsoRelativoAllaRadice: string): T {
   const percorsoAssoluto = path.join(RADICE_REPO, percorsoRelativoAllaRadice);

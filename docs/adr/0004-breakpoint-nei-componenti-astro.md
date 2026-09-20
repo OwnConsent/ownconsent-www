@@ -3,7 +3,7 @@
 - Stato: proposta
 - Data: 2026-09-20
 - Deciso da: @architect
-- Vincola: @frontend (L06 e seguenti), @design, @qa-test
+- Vincola: @frontend (L06 e seguenti), @design, @qa-test, @performance (peso del CSS emesso)
 - Modifica: ADR-0002 D5 (l'ipotesi sulle `@custom-media` negli `.astro` e la tabella delle
   regole di trasformazione)
 - Smaltisce: `DESIGN-AMENDMENTS.md` A02(a)
@@ -79,9 +79,12 @@ stato raggiunto.
 **I componenti e i fogli globali continuano a scrivere `@media (--bp-md)`. Il breakpoint è
 risolto da un `visitor` di Lightning CSS, passato in `vite.css.lightningcss`, costruito
 leggendo `contracts/design-tokens.json`. `drafts.customMedia` resta attivo. Le definizioni
-`@custom-media` oggi generate da `site/src/lib/token-css.mjs` si tolgono.**
+`@custom-media` oggi generate da `site/src/lib/token-css.mjs` si tolgono. I browser
+supportati sono fissati al punto 5 e la sintassi delle media query emesse ne segue, via
+`vite.build.cssTarget`.**
 
-Quattro parti, ognuna con la sua ragione misurata.
+Quattro parti sul meccanismo, ognuna con la sua ragione misurata, più il **punto 5** sui browser —
+che non dipende dal `visitor` ma vale per ogni media query che il sito spedisce.
 
 ### 1. La sintassi di scrittura non cambia
 
@@ -178,23 +181,60 @@ ADR-0002 D5 vanno corrette solo nella parte `@custom-media`.
 |---|---|
 | `site/src/lib/token-css.mjs` | non emette più le righe `@custom-media`; continua a emettere `--breakpoint-<k>` |
 | `site/src/lib/` (file nuovo) | il visitor, costruito dai token, ricorsivo sulle condizioni |
-| `site/astro.config.mjs` | `vite.css.lightningcss.visitor`; `drafts.customMedia` resta |
+| `site/astro.config.mjs` | `vite.css.lightningcss.visitor`; `drafts.customMedia` resta; `vite.build.cssTarget` dalla politica del punto 5 |
 | `docs/adr/0002-struttura-site.md` | D5: ipotesi segnata come smentita, tabella corretta |
 | `DESIGN-AMENDMENTS.md` | A02(a) si chiude quando L06 mette i breakpoint |
+| `CLAUDE.md` o `contracts/` | dove annotare la politica browser del punto 5 perché sia leggibile fuori da questo ADR: lo decide @architect con Andrea, non questa PR |
 
 L'attuazione **non è in questa PR**: qui entrano l'ADR e il journal. Il codice è di @frontend
 nel lotto che precede o apre L06, e i test di @qa-test.
 
 ### Cosa deve verificare @qa-test
 
-Tre criteri, tutti già misurati sulla riproduzione, quindi tutti scrivibili come test:
+Quattro criteri, tutti già misurati sulla riproduzione, quindi tutti scrivibili come test:
 
 1. un breakpoint valido in un blocco `<style>` produce la larghezza giusta nel documento
    **servito** (non nel sorgente): è la regola «misura, non dedurre» applicata allo stile reso;
 2. un riferimento a un breakpoint inesistente **fa fallire la build**, e il messaggio nomina
    il file — prova-by-reversion naturale: togliendo `drafts.customMedia` questo test diventa
    verde a torto, cioè la build passa;
-3. una condizione composta con un breakpoint annidato produce entrambe le condizioni.
+3. una condizione composta con un breakpoint annidato produce entrambe le condizioni;
+4. **nel CSS prodotto da `pnpm build` non compare sintassi di intervallo** (`(width>=`,
+   `(width <`, e le forme a intervallo con la lunghezza prima del nome).
+
+Il criterio 4 in forma eseguibile:
+
+    $ grep -rnE '\((width|height)[[:space:]]*[<>]|[<>]=?[[:space:]]*(width|height)[[:space:]]*[<>]' \
+        site/dist --include='*.css' --include='*.html'
+
+deve restituire **zero righe**. Va cercato sia nei `.css` sia negli `.html`, perché Astro
+mette in linea il CSS piccolo nel documento invece di emettere un foglio separato — cercare
+solo nei `.css` darebbe un verde vuoto.
+
+Misurato con la configurazione del punto 5:
+
+    occorrenze: 0
+
+**Prova-by-reversion**, togliendo la riga `build.cssTarget` e rifacendo la build:
+
+    $ pnpm build
+    [build] Complete!
+    exit=0                     ← la build resta VERDE
+    $ grep -rnE … dist --include='*.css' --include='*.html'
+    occorrenze: 3
+    # dist/index.html: @media (width>=1280px), @media (width>=768px),
+    #                  @media (width>=1280px) and (orientation:landscape)
+
+Rimessa la riga: `occorrenze: 0`.
+
+Due avvertenze per chi scrive il test, entrambe misurate:
+
+- **la build non diventa rossa** senza `cssTarget`. Il criterio 4 deve quindi essere un
+  controllo a sé sul CSS prodotto, non l'attesa di un fallimento di `pnpm build`: è l'unico
+  dei quattro criteri che non ha un errore del compilatore a difenderlo, ed è esattamente il
+  motivo per cui serve;
+- il pattern **non** fa falso positivo su `<meta name="viewport" content="width=device-width">`,
+  che è presente nel documento misurato: pretende un operatore di confronto accanto al nome.
 
 ## Alternative scartate
 
@@ -227,7 +267,19 @@ componenti, però, non vede niente di tutto questo: scrive `@media (--bp-md)`.
 non si toccano**. È la stessa proprietà di ritorno di ADR-0002 D5: i componenti consumano
 nomi, non meccanismi.
 
-## Una cosa misurata che questo ADR **non** decide
+## 5. Browser supportati, e la sintassi che ne consegue
+
+**Deciso da Andrea il 20/09/2026.** Questa sezione, nella prima stesura dell'ADR, era la
+domanda aperta «quali browser il sito dichiara di supportare» (regola 8: si apre, non si
+indovina). Andrea l'ha chiusa:
+
+> **ultime due versioni maggiori di Chrome, Firefox ed Edge, più Safari e iOS dalla 15.4.**
+
+Motivo dato, che è anche il motivo per cui la domanda non poteva restare aperta dentro L06:
+**una media query non supportata non degrada, sparisce.** Non c'è un ripiego: la regola
+semplicemente non si applica, e il layout resta quello di base senza che nulla lo segnali.
+
+### Perché la domanda esisteva
 
 Lightning CSS normalizza `min-width` in sintassi di intervallo, e quella sintassi è
 supportata da Safari solo dalla 16.4:
@@ -247,13 +299,79 @@ Lightning CSS sa abbassare la sintassi quando i target lo richiedono. Il `target
     @media (min-width:1280px)
     @media (min-width:768px)
 
-Vale per **qualunque** media query il sito spedisca, quindi non dipende da questa decisione e
-non viene deciso qui. Ma diventa visibile con L06, che è il primo lotto a spedirne: finché il
-valore non è fissato, ogni breakpoint esce in una sintassi che i browser più vecchi ignorano
-in silenzio — e una media query ignorata non degrada, sparisce. La domanda da chiudere
-(regola 8: si apre, non si indovina) è **quali browser il sito dichiara di supportare**, e
-`vite.build.cssTarget` è la manopola che ne esegue la risposta. Per @design e Andrea, non per
-un agente.
+Vale per **qualunque** media query il sito spedisca, non solo per quelle nate da un
+breakpoint: è per questo che la decisione sta qui ma non dipende dal `visitor`.
+
+### La configurazione
+
+La politica va in **`vite.build.cssTarget`**, e **non** in `vite.css.lightningcss.targets`,
+che è stato misurato senza effetto (sopra: con `targets` safari 15 passato lì, l'output
+restava `width>=768px`).
+
+I numeri non sono scritti a memoria. La politica è stata risolta in versioni concrete:
+
+    $ pnpm exec browserslist 'last 2 chrome versions, last 2 firefox versions, \
+        last 2 edge versions, safari >= 15.4, ios_saf >= 15.4'
+    chrome 151      firefox 154     ios_saf 26.6 … 15.4
+    chrome 150      firefox 153     safari  26.6 … 15.4
+    edge 151
+    edge 150
+    (dati di browserslist 4.29.0)
+
+Di quell'elenco a `cssTarget` serve il **pavimento**, cioè la versione più vecchia ammessa
+per ogni motore:
+
+```js
+// site/astro.config.mjs
+vite: {
+  build: {
+    // Browser supportati, deciso da Andrea il 20/09/2026.
+    cssTarget: ['chrome150', 'edge150', 'firefox153', 'safari15.4', 'ios15.4'],
+  },
+}
+```
+
+Misura, sulle tre media query della riproduzione (componente, foglio globale, condizione
+composta):
+
+    $ pnpm build
+    [build] Complete!
+    exit=0
+    @media (min-width:1280px)
+    @media (min-width:768px)
+    @media (min-width:1280px) and (orientation:landscape)
+
+La sintassi di intervallo è sparita da tutte e tre.
+
+**Ogni target è stato verificato da solo**, per non dare per buono che Vite li converta tutti
+— un target scartato in silenzio darebbe una copertura solo dichiarata:
+
+| `cssTarget` | prima media query emessa |
+|---|---|
+| `['ios15.4']` | `@media (min-width:1280px)` |
+| `['safari15.4']` | `@media (min-width:1280px)` |
+| `['safari16.4']` | `@media (width>=1280px)` |
+| `['chrome150','edge150','firefox153']` | `@media (width>=1280px)` |
+
+Due cose che si leggono da questa tabella: `ios` **è** onorato da Vite, e il pavimento che fa
+il lavoro è il **15.4** — dalla 16.4 Safari regge l'intervallo, e i tre motori evergreen da
+soli non abbassano niente. Se un domani la politica alzasse Safari alla 16.4, l'output
+tornerebbe a sintassi di intervallo **senza che nulla si rompa**: è la ragione per cui serve
+il criterio 4 qui sotto, che rende il cambiamento visibile invece che silenzioso.
+
+### Aggiornare «le ultime due versioni»
+
+`cssTarget` contiene numeri, la politica contiene «le ultime due»: i numeri invecchiano da
+soli. Per Chrome, Firefox ed Edge questo **non cambia l'output** — la tabella qui sopra lo
+mostra: da soli non abbassano nulla, e non lo faranno finché la politica resta sulle ultime
+due versioni. Non c'è quindi da rincorrerli a ogni rilascio. Ciò che conta davvero è il
+pavimento `safari15.4`/`ios15.4`, che è una data fissata da Andrea, non un bersaglio mobile.
+
+Derivare `cssTarget` da `browserslist` a ogni build sarebbe possibile, ma si è preferito
+tenere numeri espliciti: una dipendenza in più sul percorso della build, e l'output del
+sito che cambia quando si aggiorna `caniuse-lite`, sono un prezzo alto per un valore che
+cambia solo quando cambia una decisione di Andrea. Quando quella decisione cambia, si
+cambiano queste cinque stringhe — e il criterio 4 dice subito se l'effetto è quello atteso.
 
 ## Riproducibilità
 
@@ -263,7 +381,8 @@ separato e concatenato, plugin Vite in due varianti, visitor con e senza bozza a
 `@import` verso il modulo virtuale e verso un file generato, valori letterali), ognuna con il
 proprio comando e il proprio output. I comandi e gli output stanno nelle voci di journal del
 2026-09-20 — `160605` (smentita riprodotta), `160800` (gate), `161000` (fallimento del
-plugin Vite), `162017` (le sette forme), `162111` (la decisione).
+plugin Vite), `162017` (le sette forme), `162111` (la decisione), `172844` (`cssTarget`,
+i target verificati uno per uno e la prova-by-reversion del criterio 4).
 
 La riproduzione non entra nel repository: non è un artefatto del prodotto, e tenerla
 significherebbe mantenere un secondo progetto Astro. Ciò che deve sopravvivere sono i tre

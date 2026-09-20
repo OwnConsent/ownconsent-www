@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T17:00:59+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "F",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Come misurare js_iniziale_gzip_kb e css_gzip_kb per AC39: byte serviti via HTTP dal preview, non lettura della cartella di output su disco",
+  "contesto": "Il compito autorizza esplicitamente 'misurare il peso dell'artefatto di build (i file prodotti sotto la cartella di output)' come eccezione al divieto di leggere site/**. Serve un modo per pesare JS e CSS iniziali di ciascuna pagina senza indovinare né leggere il nome/percorso della cartella di output di Astro (che dipenderebbe da astro.config.mjs, file di sorgente vietato da questo lotto).",
+  "alternative": [
+    {
+      "opzione": "Leggere da disco i file sotto la cartella di output di Astro (tipicamente site/dist/) dopo la build",
+      "scartata_perche": "per sapere quale cartella è l'output servirebbe leggere astro.config.mjs (sorgente, vietato) oppure assumere per convenzione 'dist' senza verifica — una deduzione, non una misura (CLAUDE.md, 'misura, non dedurre')."
+    }
+  ],
+  "scelta": "Il server di preview (astro preview, avviato da playwright.config.ts) serve staticamente i file di build senza trasformazioni. Il test naviga la pagina realmente servita via HTTP, intercetta le risposte script/stylesheet stesso-origine caricate durante il caricamento iniziale con page.on('response'), legge i byte con response.body() (gli stessi byte dell'artefatto di build, letti dal documento servito, non dalla sorgente), e calcola il peso gzip in Node con zlib.gzipSync. Coerente con il metodo già usato nel resto del progetto: 'lo stile reso si estrae dal documento servito via HTTP, non si assume' (CLAUDE.md).",
+  "evidenza": ["contracts/perf-budgets.json: $metodo_laboratorio_pagine_pubbliche.strumento dichiara 'build di produzione servita in locale (astro preview)'"],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

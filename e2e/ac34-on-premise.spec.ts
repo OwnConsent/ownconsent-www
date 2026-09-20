@@ -16,8 +16,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { leggiDatiContatto } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTA = '/on-premise/';
 
@@ -27,9 +27,7 @@ function escapeRegExp(testo: string): string {
 
 test.describe('AC34: pagina On-premise', () => {
   test('AC34: /on-premise/ dice che il cliente installa sul proprio hardware', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    expect(risposta.status(), `GET ${ROTTA}`).toBe(200);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(
@@ -41,8 +39,7 @@ test.describe('AC34: pagina On-premise', () => {
   });
 
   test('AC34: /on-premise/ dice che si paga una licenza annuale', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(/licenza\s+annuale/i.test(testo), 'licenza annuale').toBe(true);
@@ -51,8 +48,7 @@ test.describe('AC34: pagina On-premise', () => {
   test('AC34: /on-premise/ dice che la registrazione della CMP presso IAB Europe la fa il cliente, a proprio nome', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     expect(/\biab\s*europe\b/i.test(testo), 'menziona IAB Europe').toBe(true);
@@ -66,8 +62,7 @@ test.describe('AC34: pagina On-premise', () => {
   test('AC34: l\'ultimo blocco del contenuto principale di /on-premise/, prima del footer, contiene «si attiva parlando con noi» e un mailto: con oggetto On-premise', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     const main = $('main');
     expect(main.length, 'la pagina ha un <main>').toBeGreaterThan(0);
@@ -94,8 +89,7 @@ test.describe('AC34: pagina On-premise', () => {
   });
 
   test('AC34: /on-premise/ non contiene moduli né la dicitura «in arrivo»', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     expect($('form').length, 'nessun <form> nella pagina').toBe(0);
     const testo = $('body').text().replace(/\s+/g, ' ');

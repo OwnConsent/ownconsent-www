@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T17:52:33+02:00",
+  "agente": "frontend",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "L06 pezzo 0/5 — attuazione ADR-0004: visitor, rimozione @custom-media da token-css.mjs, cssTarget",
+  "contesto": "Attuazione dei tre file previsti da ADR-0004 (visitor di Lightning CSS che risolve @media (--bp-<k>), rimozione delle righe @custom-media morte da site/src/lib/token-css.mjs, vite.build.cssTarget in site/astro.config.mjs). Cinque misure richieste dal task, ognuna con comando e output.",
+  "evidenza": [
+    "1) $ pnpm build (site/) -> ultima riga: '[build] Complete!', exit=0",
+    "1) $ pnpm lint (site/) -> nessun output, exit=0",
+    "1) $ pnpm astro check (site/) -> 'Result (20 files): - 0 errors - 0 warnings - 6 hints', exit=0 (i 6 hint sono avvisi preesistenti di deprecazione TS su tseslint.config e zod z, non toccati da questo lotto)",
+    "2) inserito temporaneamente in site/src/components/comuni/Footer.astro: '@media (--bp-md) { .piede { padding: var(--spacing-8); } }'; $ pnpm build -> exit=0; $ grep -rn 'min-width:768px' dist --include='*.css' --include='*.html' -> trovato in dist/_astro/_slug_.*.css: '.piede[data-astro-cid-nszrnf6m]{padding:var(--spacing-8)}' dentro '@media (min-width:768px){...}' — scoping Astro conservato ([data-astro-cid-nszrnf6m]); poi ripristinato con: git checkout -- site/src/components/comuni/Footer.astro",
+    "3) inserito temporaneamente in site/src/components/comuni/Footer.astro: '@media (--bp-xl) { .piede { padding: var(--spacing-8); } }' (--bp-xl non è un breakpoint dei token); $ pnpm build -> '[lightningcss] Custom media query --bp-xl is not defined  Location: .../src/components/comuni/Footer.astro:17:0', '[ELIFECYCLE] Command failed with exit code 1', exit=1; poi ripristinato con: git checkout -- site/src/components/comuni/Footer.astro",
+    "4) $ pnpm build (Footer.astro allo stato ripristinato, nessun @media in nessun componente di L05) -> exit=0; $ grep -rnE '\\((width|height)[[:space:]]*[<>]|[<>]=?[[:space:]]*(width|height)[[:space:]]*[<>]' dist --include='*.css' --include='*.html' -> nessuna riga, conteggio: 0. Nota: la build corrente non contiene ancora nessun @media reale (nessuna pagina di L06 è stata scritta in questo pezzo), quindi questo grep sul repository è banalmente zero; la prova che il visitor emette sintassi non-a-intervallo con cssTarget è nella misura (2) sopra ('min-width:768px', non 'width>=768px')",
+    "5) $ grep -rnE '#[0-9a-fA-F]{3,8}\\b|[0-9.]+(px|rem|em)\\b' src --include='*.astro' --include='*.css' (da site/) -> nessuna riga, conteggio: 0 (il visitor è .mjs in src/lib/, escluso da questo grep per costruzione: i numeri dei breakpoint restano nei token, non nei componenti)"
+  ],
+  "esito": "tutti e cinque i controlli superati; nessuna divergenza dall'ADR-0004 misurata",
+  "umano_coinvolto": false
+}

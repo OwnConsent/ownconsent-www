@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-20T17:52:15+02:00",
+  "agente": "frontend",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "La worktree indicata dal task (.claude/worktrees/l06) non è raggiungibile: sandbox per-agente",
+  "contesto": "Il task assegna esplicitamente la worktree /home/andreapernici/src/ownconsent/www/.claude/worktrees/l06, già sul ramo lotto/l06-pagine-vendita. `cd` lì e un comando git da quel percorso è stato rifiutato dal sandbox con: \"This agent is isolated in the worktree .../agent-af4c907155e1ff6fc, ... Refusing to run it\". L'harness mi ha assegnato una worktree diversa (agent-af4c907155e1ff6fc), nata da origin/main sul branch worktree-agent-af4c907155e1ff6fc.",
+  "cosa_si_e_imparato": "Un agente isolato in una worktree non può operare su un'altra worktree anche se il prompt lo istruisce esplicitamente a farlo: il sandbox vince sul testo del task. Soluzione: `git checkout -B lotto/l06-pagine-vendita origin/lotto/l06-pagine-vendita` dentro la worktree assegnata dall'harness. Git l'ha permesso nonostante `git branch -a` mostrasse un `+` (checked out altrove) accanto a quel ramo — verificato con `git worktree list` subito dopo, che mostra lo stesso branch su due worktree contemporaneamente (agent-af4c907155e1ff6fc e l06, stesso SHA 95c50a8). Il lavoro prosegue comunque nella worktree assegnata: è l'unica percorribile, e il branch/SHA di partenza coincidono con quelli richiesti.",
+  "evidenza": [
+    "comando: cd .../worktrees/l06 && git status  ->  errore del sandbox, comando rifiutato",
+    "comando: git checkout -B lotto/l06-pagine-vendita origin/lotto/l06-pagine-vendita (da agent-af4c907155e1ff6fc)  ->  \"Switched to and reset branch 'lotto/l06-pagine-vendita'\", \"Your branch is up to date with 'origin/lotto/l06-pagine-vendita'\"",
+    "comando: git worktree list  ->  sia agent-af4c907155e1ff6fc sia l06 risultano su [lotto/l06-pagine-vendita] a 95c50a8"
+  ],
+  "esito": "lavoro proseguito nella worktree assegnata dall'harness (agent-af4c907155e1ff6fc), sullo stesso branch e stesso punto di partenza richiesti dal task",
+  "umano_coinvolto": false
+}

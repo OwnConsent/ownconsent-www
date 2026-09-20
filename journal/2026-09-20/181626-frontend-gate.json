@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T18:16:26+02:00",
+  "agente": "frontend (sessione principale)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "04-verifica",
+  "tipo": "gate",
+  "titolo": "AC5 «contrassegno visibile senza scorrere» NON e' stato misurato: in questo ambiente non c'e' un browser",
+  "contesto": "La verifica di L06 nel piano chiede: «AC5: alle viewport 360x640 e 1280x800 il contrassegno «pagina dimostrativa» e nel primo schermo, misurato sugli elementi resi, non dedotto». «Visibile senza scorrere» e' una proprieta' della resa: richiede un browser che disponga il layout e dia le coordinate degli elementi. Non si deduce dall'HTML.",
+  "cosa_serviva": "un browser headless per misurare la posizione del contrassegno alle due viewport",
+  "chi_ha_deciso": "nessuno: mancanza di strumento, non una decisione",
+  "evidenza": [
+    "Tentativo con il browser di Playwright via MCP: $ browser_resize 360x640 → Error: async initializeServer: Chromium distribution 'chrome' is not found at /opt/google/chrome/chrome ; Run \"npx playwright install chrome\"",
+    "Nessun progetto di collaudo alla radice da cui prendere un browser gia' installato: $ ls package.json e2e playwright.config.* → nessun risultato ; $ pnpm exec playwright --version → ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL. Il progetto di collaudo alla radice e' di L07, non ancora costruito",
+    "Cio' che SI E' potuto misurare, sull'HTML servito, e' la precondizione strutturale e non la visibilita': il contrassegno e' il primo elemento del contenuto principale, prima dell'h1, su tutte e quattro le pagine con prezzi (saas, hosted, on-premise, confronto). Testo presente: «Pagina dimostrativa — i valori mostrati non sono definitivi»"
+  ],
+  "esito": "AC5 resta NON verificato da L06 e va verificato da chi ha il browser: L07 (collaudo) o L09 (accessibilita'). Non e' dichiarato soddisfatto. La struttura e' quella che il design prescrive, ma «primo elemento del DOM» non equivale a «visibile senza scorrere» e questo lotto non ha misurato la seconda cosa. Serve una decisione di Andrea: installare un browser in questo ambiente, oppure lasciare AC5 a L07.",
+  "umano_coinvolto": true,
+  "nota": "Anche AC37 (nessuno scorrimento orizzontale a 360px, dimensione del testo, area degli elementi interattivi) e AC40 (controllo WCAG automatico) richiedono lo stesso browser e restano a L07/L09, come il piano prevede."
+}

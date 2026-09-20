@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T16:45:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Esecuzione dei test del gruppo C (AC5, AC8, AC37): rosso atteso, per il motivo giusto",
+  "contesto": "L06 (pagine di vendita) e L04 (bozze legali) non sono ancora costruiti su questo ramo: le rotte /saas/, /hosted/, /on-premise/, /confronto/ e le tre /legale/*/ rispondono con la pagina di fallback di Astro, non con il markup atteso. L'esito atteso del lotto e' rosso (istruzioni L07); qui si verifica che sia il rosso giusto: fallimento per assenza di pagina/contenuto, non errore di sintassi o import rotto.",
+  "evidenza": [
+    "comando: pnpm exec playwright test e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts e2e/ac08-footer-legali-e-contrassegno-bozza.spec.ts e2e/ac37-mobile-360.spec.ts --reporter=list",
+    "output: exit=1",
+    "output: '49 failed' / '16 passed (13.7s)'",
+    "esempio di fallimento AC5/AC8: 'contrassegno «pagina dimostrativa»/«bozza» presente su <rotta>' non trovato — pagina di fallback senza il testo atteso",
+    "esempio di fallimento AC8: 'un elemento <footer> è presente su /' assente — la home servita e' ancora la pagina di fallback, senza footer",
+    "esempio di fallimento AC37: elemento <pre> con testo 'Path: /legale/cookie-policy/' a 15.6px calcolati (< 16px) — e' il markup di fallback di Astro/Vite per una rotta non trovata, non testo di corpo del sito",
+    "i 16 test passati sono vacui sulla pagina di fallback: nessuno scorrimento orizzontale (pagina minimale) e nessun elemento interattivo sotto misura (nessun elemento interattivo presente da controllare) — non indicano una feature funzionante"
+  ],
+  "esito": "rosso confermato, causa corretta: pagine/contenuto mancanti (L06/L04 non ancora costruiti), nessun errore di sintassi, import o configurazione nei tre file di test",
+  "umano_coinvolto": false
+}

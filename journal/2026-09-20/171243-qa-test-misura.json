@@ -1,0 +1,46 @@
+{
+  "ts": "2026-09-20T17:12:43+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "G",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Gruppo G: AC40 (WCAG A/AA automatico), D6 (anello di focus con alias D-2), riga E2E di CLAUDE.md — misure prima di scrivere i test",
+  "contesto": "Consegna del gruppo G, ultimo del lotto L07: AC40, il test dell'anello di focus (ADR-0002 D6, con la divergenza D-2 sull'alias focus-ring-on-inverse nel footer, gia' ratificata da Andrea il 19/09), e la riga E2E della tabella Comandi di CLAUDE.md. Vincolo di lettura rispettato: nessuna lettura di site/** durante questo giro; le sole letture a runtime sono site/src/dati/sito.json, site/src/dati/contatto.json, site/src/dati/listino.json e contracts/design-tokens.json (via e2e/pagine.ts::leggiDesignTokens, gia' esistente, riusata senza modifiche).",
+  "mappa_criterio_test": {
+    "AC40": "e2e/ac40-wcag-a-aa.spec.ts — @axe-core/playwright con withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']) su ciascuna delle 8 pagine di e2e/pagine.ts, guardia anti-404 prima dello scan (response.status()===200 e presenza di un elemento reale atteso), nessun filtro di violazioni.",
+    "D6_focus_ring_D2": "e2e/d6-anello-di-focus.spec.ts — su ognuna delle 8 pagine, viewport 360x640 e 1280x800, colorScheme light e dark, Tab su ogni elemento focalizzabile, lettura di outline-style/outline-width/outline-offset/outline-color via getComputedStyle; valore atteso letto a runtime da contracts/design-tokens.json (focus.ring-*, color.semantic.<tema>.focus-ring), con l'alias color.semantic.<tema>.focus-ring-on-inverse per gli elementi dentro <footer> (divergenza D-2, classe 2, gia' ratificata)."
+  },
+  "decisioni": [
+    {
+      "id": "D-2-alias-footer",
+      "decisione": "Il test confronta l'outline-color con focus-ring-on-inverse quando l'elemento attivo e' contenuto in un <footer>, e con focus-ring altrove. Non e' un gate: contracts/design-tokens.json contiene gia' l'alias (color.semantic.light.focus-ring-on-inverse = #F0AA2E / dark = #7A4B00), quindi il contratto non manca nulla.",
+      "verifica": "grep su contracts/design-tokens.json: chiave 'focus-ring-on-inverse' presente in color.semantic.light e color.semantic.dark, con la motivazione del contrasto scritta nel campo 'uso' di ciascuna."
+    },
+    {
+      "id": "guardia-anti-404",
+      "decisione": "Ogni test di AC40 e D6 asserisce prima che la pagina esista davvero (status 200 e un contenuto minimo atteso: <main> o almeno un elemento con role/testo noto), e solo dopo esegue axe o la scansione Tab. Senza questa guardia una pagina di errore minimale farebbe passare AC40 a vuoto (axe non trova violazioni su una pagina quasi bianca) e D6 non avrebbe elementi focalizzabili da leggere."
+    }
+  ],
+  "evidenza": [
+    "comando: npx playwright test --list ; output: 'Total: 209 tests in 21 files', exit=0",
+    "comando: pnpm exec playwright test --list ; output: 'Total: 209 tests in 21 files', exit=0 — identico a npx",
+    "comando: npx playwright test (suite intera, prima che i file di questo gruppo esistano) ; output riassunto da test-results/results.json: {'expected': 65, 'skipped': 0, 'unexpected': 144, 'flaky': 0} -> 144 test falliti, 65 passati. Nota metodologica: la prima misura con `npx playwright test 2>&1 | tail -40; echo EXIT=$?` aveva riportato EXIT=0 per errore mio (exit code di `tail`, non del comando in pipe); corretto leggendo test-results/results.json direttamente.",
+    "comando: pnpm exec playwright test e2e/ac37-mobile-360.spec.ts --reporter=list ; output: 8 failed, 16 passed, exit=1 (misurato con ${PIPESTATUS[0]}, non con tail in mezzo). Fallimento reale osservato: su ogni pagina la 404 di Astro contiene '<pre>Path: /...</pre>' a 15.6px, sotto i 16px minimi richiesti da AC37 — conferma indipendente che le pagine rispondono davvero 404 con un corpo minimale, coerente con quanto atteso per questo lotto.",
+    "comando: mv node_modules node_modules.bak && pnpm exec playwright --version ; output: pnpm ha rigenerato node_modules automaticamente (auto-install) e stampato 'Version 1.63.0', exit=0",
+    "comando: (stesso stato, node_modules assente) npx --yes playwright --version ; output: 'Version 1.63.0', exit=0 — nessuna differenza di comportamento osservata fra le due forme in questo ambiente",
+    "smoke non committato (poi cancellato) e2e/_smoke-temp.spec.ts, per provare la meccanica di axe e della lettura Tab+getComputedStyle contro una risorsa reale prima di fidarmi dei test finali: (1) page.goto('/robots.txt') -> status 200; (2) AxeBuilder su una pagina con contrasto deliberatamente insufficiente -> violations=['color-contrast','document-title','html-has-lang'], length>0; (3) page.setContent con <button style=\"outline: solid 2px #7A4B00\"> + Tab -> letto {tag:'BUTTON', outlineColor:'rgb(122, 75, 0)', outlineStyle:'solid'}, e una prova negativa (expect(outlineColor).toBe('rgb(0,0,0)')) lancia come deve: la lettura distingue un valore giusto da uno sbagliato, non passa a vuoto."
+  ],
+  "riga_e2e_claude_md": {
+    "richiesta": "Il compito chiedeva di eseguire sia `pnpm exec playwright test` sia `npx playwright test` e correggere la riga E2E di CLAUDE.md con quella che funziona, premettendo che gli altri agenti del lotto avessero usato npx perche' pnpm exec non avrebbe funzionato.",
+    "misura": "Entrambe le forme hanno funzionato in modo identico in questo ambiente: stessa lista di test (--list), stesso conteggio di falliti/passati sulla suite intera e sul singolo file, stesso comportamento di auto-install con node_modules assente. Non ho trovato alcuna differenza riproducibile fra le due invocazioni.",
+    "decisione": "CLAUDE.md non e' stato toccato: la riga attuale ('pnpm exec playwright test') e' gia' il comando che funziona, per quanto ho potuto misurare qui. Correggere la riga in assenza di una misura che lo imponga avrebbe violato la regola del metodo ('si ferma se la misura contraddice la descrizione, invece di adattare la misura alla descrizione'). Segnalo la divergenza fra la premessa del compito e la mia misura invece di assorbirla in silenzio; se qualcuno ha visto pnpm exec fallire altrove, e' una condizione d'ambiente che qui non si e' riprodotta (ambiente gia' misurato: node -v e pnpm -v coerenti con la toolchain dichiarata, corepack 0.34.6 presente, packageManager pnpm@12.4.1 in package.json)."
+  },
+  "gate_aperti": [],
+  "quali_test_passano_e_come": {
+    "nota": "Non ancora eseguibile alla lettera in questo momento del journal: i file dei test del gruppo G vengono scritti e committati dopo questa voce. Questa voce e' scritta prima di scriverli, come richiesto (journal per primo); il risultato reale della loro esecuzione va confermato con un secondo passaggio dopo la scrittura, riportato nel messaggio di consegna finale, non qui a memoria."
+  },
+  "esito": "misura raccolta, nessun gate necessario (l'alias D-2 e' gia' nel contratto), CLAUDE.md lasciato invariato per assenza di prova che lo imponga",
+  "umano_coinvolto": false
+}

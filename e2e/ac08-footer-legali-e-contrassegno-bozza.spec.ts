@@ -16,8 +16,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest, guardiaEsistenzaPagina } from './guardia-esistenza';
 
 const VIEWPORT_MOBILE = { width: 360, height: 640 };
 const VIEWPORT_DESKTOP = { width: 1280, height: 800 };
@@ -36,8 +36,7 @@ test.describe('AC8: il footer di ogni pagina ha i tre link legali, con risposta 
       test(`AC8: il footer di ${pagina.nome} (${pagina.rotta}) linka "${link.etichetta.source}" verso ${link.rotta}`, async ({
         request,
       }) => {
-        const risposta = await request.get(pagina.rotta);
-        const $ = cheerio.load(await risposta.text());
+        const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
         const footer = $('footer');
         expect(footer.length, `un elemento <footer> è presente su ${pagina.rotta}`).toBeGreaterThan(0);
 
@@ -56,8 +55,7 @@ test.describe('AC8: il footer di ogni pagina ha i tre link legali, con risposta 
 
   for (const link of LINK_LEGALI_ATTESI) {
     test(`AC8: la rotta legale ${link.rotta} risponde 200`, async ({ request }) => {
-      const risposta = await request.get(link.rotta);
-      expect(risposta.status(), `risposta per ${link.rotta}`).toBe(200);
+      await guardiaEsistenzaRequest(request, link.rotta);
     });
   }
 });
@@ -70,7 +68,7 @@ for (const viewport of [VIEWPORT_MOBILE, VIEWPORT_DESKTOP]) {
       test(`AC8: ${pagina.nome} (${pagina.rotta}) mostra il contrassegno «bozza» visibile senza scorrere`, async ({
         page,
       }) => {
-        await page.goto(pagina.rotta);
+        await guardiaEsistenzaPagina(page, pagina.rotta);
 
         const scrollY = await page.evaluate(() => window.scrollY);
         expect(scrollY, `nessuno scroll prima della misura su ${pagina.rotta}`).toBe(0);

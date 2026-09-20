@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T16:06:05+02:00",
+  "agente": "architect (sessione principale)",
+  "issue": "8",
+  "lotto": "L06-prerequisito",
+  "stadio": "01-decisione",
+  "tipo": "misura",
+  "titolo": "Ipotesi (b) di ADR-0002 smentita fuori dal repository: riproduzione minima con le stesse versioni di site/",
+  "contesto": "DESIGN-AMENDMENTS.md A02(a) riporta che @custom-media non e' risolto negli <style> dei file .astro, misurato in L05 su site/src/components/comuni/Footer.astro. Andrea ha chiesto di non fidarsi di quella misura ne' di proporre una soluzione a intuito: prima una riproduzione minima in una cartella temporanea fuori dal repository, poi una prova per ciascuna opzione. Questa voce registra la riproduzione della sola condizione di partenza (variante 0), prima di provare qualunque rimedio.",
+  "evidenza": [
+    "Riproduzione in /tmp/claude-1000/.../scratchpad/repro/base: plugin Vite che espone virtual:token.css con le @custom-media, layout che lo importa una volta, un solo componente con @media (--bp-md) nel proprio blocco <style>, vite.css.transformer 'lightningcss' e drafts.customMedia true — la stessa configurazione di site/astro.config.mjs",
+    "$ pnpm install → dependencies: + astro 7.3.3 ; devDependencies: + lightningcss 1.33.0",
+    "$ grep -nE 'lightningcss@1|astro@7' site/pnpm-lock.yaml → 1126: astro@7.3.3: ; 1635: lightningcss@1.33.0: — la riproduzione gira sulle stesse versioni risolte di site/, non su versioni vicine",
+    "$ pnpm build → [lightningcss] Custom media query --bp-md is not defined, Location: .../src/components/Footer.astro:7:0 ; [vite] Build failed in 93ms ; exit=1",
+    "$ node -v → v22.23.2 ; $ pnpm -v → 12.4.1"
+  ],
+  "esito": "ipotesi (b) di ADR-0002 (D5) smentita in modo indipendente: non e' un effetto del codice di site/, e' il comportamento di lightningcss sotto Astro con questa configurazione. Si procede a provare le quattro opzioni chieste da Andrea sulla stessa riproduzione.",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea: nessuna soluzione proposta a intuito, ogni opzione va provata con comando e output"
+}

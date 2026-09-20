@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-20T16:10:00+02:00",
+  "agente": "architect (sessione principale)",
+  "issue": "8",
+  "lotto": "L06-prerequisito",
+  "stadio": "01-decisione",
+  "tipo": "fallimento",
+  "titolo": "Un plugin Vite non riesce a iniettare le definizioni nei blocchi <style>: il compilatore Astro chiama lightningcss dentro il proprio hook load",
+  "contesto": "Seconda delle quattro opzioni chieste da Andrea: «una configurazione di lightningcss o un plugin che inietti le definizioni in ogni blocco». Provata come plugin Vite, in due forme.",
+  "evidenza": [
+    "Forma 1 — transform sugli id CSS (enforce 'pre', filtro su 'astro&type=style' e '.css'): il transform non viene mai chiamato con l'id del blocco. $ pnpm build → [lightningcss] Custom media query --bp-md is not defined, exit=1, e nessuna riga di log del plugin",
+    "Forma 2 — transform sul sorgente .astro, iniettando le definizioni dopo ogni <style ...>: nessuna riga di log, stesso errore, exit=1",
+    "Diagnosi misurata con un plugin che registra ogni id di resolveId/load/transform su file: 1363 righe, di cui 0 riferite a repro/B/src. $ grep -c 'repro/B/src' ids.log → (nessuna corrispondenza). Gli id visti sono solo moduli JS interni di Astro (prerender.js, devalue, zod)",
+    "L'errore punta a Footer.astro:7:0, cioe' al sorgente: lightningcss gira durante la compilazione del .astro, non su un modulo CSS separato della pipeline"
+  ],
+  "cosa_si_e_imparato": "Il compilatore Astro compila i blocchi <style> e invoca lightningcss dentro il proprio hook `load`, che nella catena dei plugin sta PRIMA dei plugin utente: quando l'errore viene lanciato nessun hook `transform` e' ancora stato raggiunto, e nessun plugin — nemmeno con enforce 'pre' — ha visto il file. Un plugin Vite non e' il punto di innesto giusto per questo problema: il punto di innesto e' dentro la chiamata a lightningcss, cioe' `vite.css.lightningcss`. Corollario che vale oltre questo caso: quando un hook non viene chiamato, conviene registrare tutti gli id che passano invece di inasprire il filtro — il filtro sbagliato e l'hook sbagliato hanno lo stesso sintomo.",
+  "esito": "opzione scartata nella forma «plugin Vite»; ripresa e riuscita nella forma «visitor di lightningcss» (voce 162017)",
+  "umano_coinvolto": false
+}

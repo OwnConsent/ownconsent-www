@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-20T16:42:35+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Gruppo D (AC9, AC10, AC12): percorso condiviso duplicato per file, navigazione via href reale",
+  "contesto": "I tre criteri condividono lo stesso percorso (docs/spec/issue-8.json: AC10 e AC12 dicono esplicitamente 'lo stesso percorso di AC9'): profilo pulito, apertura di ciascuna delle 8 pagine di e2e/pagine.ts (PAGINE), scorrimento fino in fondo, navigazione fra pagine coi link del sito, senza consenso espresso. Serve una sola implementazione del percorso, riusata da tre file di test diversi con asserzioni diverse in coda.",
+  "alternative": [
+    { "opzione": "file di supporto condiviso e2e/*.ts importato dai tre spec", "scartata_perche": "il lotto elenca esattamente 4 file da consegnare in questo gruppo; un quinto file di supporto aumenta la superficie da tracciare col budget di chiamate stretto, e la funzione di percorso e' piccola (~30 righe): la duplico invece di condividerla" },
+    { "opzione": "navigare fra le pagine con page.getByRole('link', { name: pagina.nome }) usando i nomi descrittivi di PAGINE (es. 'Confronto modalita' e listino', 'Termini di servizio (bozza)')", "scartata_perche": "quei nomi sono etichette di comodo per i test (docs/spec/issue-8.json + ADR-0002 D2), non e' garantito che coincidano col testo accessibile del link reale nel sito; userei un valore inventato senza averlo letto da nessun artefatto" },
+    { "opzione": "navigare con locator CSS a[href=\"<rotta>\"] sulla pagina corrente, cercando il link per il suo href reale", "scartata_perche": null }
+  ],
+  "evidenza": [
+    "docs/spec/issue-8.json: AC9.quando = 'apro ciascuna pagina pubblica, scorro fino in fondo e navigo fra le pagine con i link del sito, senza esprimere alcun consenso'",
+    "docs/spec/issue-8.json: AC10.dato = 'lo stesso percorso di AC9'; AC12.dato = 'lo stesso percorso di AC9, che comprende la pagina di confronto delle modalita''",
+    "resa_del_testo AC10: origine ammessa = baseURL di playwright.config.ts (unica origine di OwnConsent prima della pubblicazione)",
+    "playwright.config.ts (letto, non e' fra i quattro file vietati alla lettura, e' il file di configurazione del progetto di collaudo): use.baseURL = 'http://127.0.0.1:4321', nessun campo 'projects' -> browser di default chromium, indexedDB.databases() disponibile"
+  ],
+  "esito": "adottata l'opzione a[href]; il fixture built-in 'baseURL' di Playwright (non un letterale duplicato) e' la fonte dell'origine ammessa per AC10",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

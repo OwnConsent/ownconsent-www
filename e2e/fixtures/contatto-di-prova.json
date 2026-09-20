@@ -1,0 +1,5 @@
+{
+  "$nota": "Indirizzo alternativo di prova di N2 (docs/spec/issue-8.json), usato solo dalla copia temporanea di ADR-0002 D4 al posto di site/src/dati/contatto.json. Dominio riservato RFC 2606 (.test) che non risolve, diverso dal dominio della casella (segnaposto-dominio-casella.invalid) e dal dominio del sito (segnaposto-dominio-sito.example, ADR-0002 D3): nessuno dei tre e' sottostringa di un altro. Nessun indirizzo reale.",
+  "indirizzo": "casella-sostituita-n2@collaudo-l07-fixture.test",
+  "oggetto": { "saas": "SaaS", "hosted": "Hosted", "on-premise": "On-premise" }
+}

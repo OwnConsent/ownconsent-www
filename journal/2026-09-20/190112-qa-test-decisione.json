@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T19:01:12+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Guardia di esistenza estesa a 13 file: aiuto condiviso e2e/guardia-esistenza.ts, due eccezioni motivate",
+  "contesto": "Richiesta di Andrea: ogni test deve fare prima 200, poi h1 presente e non vuoto, poi l'asserzione vera — anche per i criteri in forma negativa, perché altrimenti 'non compare X' torna vera per il vuoto se la rotta si rompe. La forma approvata è già in tests/perf/ac39-budget-pagine-pubbliche.spec.ts (due asserzioni separate, messaggio che distingue 'nessun h1' da 'h1 presente ma vuoto'). 13 file elencati da Andrea non hanno ancora la guardia.",
+  "alternative": [
+    { "opzione": "duplicare la guardia in ognuno dei 13 file (come già fanno AC9/AC10/AC12/AC39/AC40/D6)", "scartata_perche": "Andrea chiede esplicitamente un aiuto condiviso in questo giro ('Primo lavoro: un aiuto condiviso e2e/guardia-esistenza.ts'), a differenza della decisione presa in 164235-qa-test-decisione.json per il gruppo D (dove la duplicazione era la scelta esplicita per non aggiungere un quinto file al lotto). Qui il lotto è diverso e la richiesta è diversa." },
+    { "opzione": "un'unica funzione con parametro 'modo' (request|page)", "scartata_perche": "due funzioni tipizzate separatamente (guardiaEsistenzaRequest, guardiaEsistenzaPagina) rendono l'errore di tipo esplicito a compile-time invece che a runtime, e il chiamante non deve passare un discriminante" }
+  ],
+  "evidenza": [
+    "tests/perf/ac39-budget-pagine-pubbliche.spec.ts righe 45-72 letto per estrarre la forma esatta (due expect separati, motivoAssenzaH1)"
+  ],
+  "esito": "creato e2e/guardia-esistenza.ts con guardiaEsistenzaRequest(request, rotta) -> Promise<CheerioAPI> e guardiaEsistenzaPagina(page, rotta) -> Promise<void>; applicato ai 13 file elencati sostituendo il fetch/goto manuale con la chiamata alla guardia, senza toccare le asserzioni vere. Due eccezioni NON forzate: e2e/ac03-sitemap-robots.spec.ts (sitemap.xml e robots.txt non sono HTML e non hanno h1 — applicato solo il controllo 200, già presente prima di questo lotto, nessuna modifica necessaria) ed e2e/ac04-confronto-tre-modalita.spec.ts (solo guardia aggiunta, i 3 test rossi restano rossi: triage delle asserzioni è di un altro giro, per istruzione esplicita).",
+  "umano_coinvolto": true,
+  "costo_token": null,
+  "durata_s": null
+}

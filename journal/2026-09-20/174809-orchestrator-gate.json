@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T17:48:09+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "02-avvio",
+  "tipo": "gate",
+  "titolo": "Il link «salta al contenuto» punta a #contenuto, che su nessuna pagina esiste dentro <main>: difetto di L05, fuori dal perimetro di L06",
+  "contesto": "Leggendo il layout per preparare le cinque pagine: BaseLayout.astro emette il link di salto verso #contenuto, ma il suo <main> non ha id. docs/design/01-pagine.md scrive <main id=\"contenuto\"> otto volte, una per pagina. L05 ha invece messo l'id sull'h1 della sola rotta legale, quindi il salto funziona sulle tre pagine legali e non funzionera' sulle cinque pagine di vendita, che non possiedono <main>.",
+  "cosa_serviva": "decidere dove vive l'ancora #contenuto, e correggere il file che la contiene",
+  "chi_ha_deciso": "nessuno: la decisione non e' di L06 e non e' stata presa in questo giro",
+  "evidenza": [
+    "$ grep -n 'salta-al-contenuto' site/src/layouts/BaseLayout.astro → riga 28: <a class=\"salta-al-contenuto\" href=\"#contenuto\">Salta al contenuto</a>",
+    "$ grep -rn 'id=\"contenuto\"' site/src/ → una sola occorrenza: site/src/pages/legale/[slug].astro:49: <h1 id=\"contenuto\">{voce.data.titolo}</h1>",
+    "$ grep -c 'main id=\"contenuto\"' docs/design/01-pagine.md → 8",
+    "Nel layout il markup e' <main> senza attributi, poi <slot />: nessuna pagina puo' aggiungere l'id dall'esterno dello slot"
+  ],
+  "esito": "L06 NON lo corregge: BaseLayout.astro e pages/legale/[slug].astro sono di L05 e stanno nel non_tocca di L06, e la correzione non serve a far stare in piedi le cinque pagine — il difetto esiste con o senza L06. Segnalato ad Andrea e in PR, da assegnare a un lotto di L05 o a L14. Se si mette l'id su <main>, va TOLTO dall'h1 di [slug].astro nello stesso commit: due id uguali nella stessa pagina legale sarebbero HTML non valido e un rischio per AC40.",
+  "umano_coinvolto": true,
+  "nota": "Registrato prima di cominciare le pagine, non a fine giro: e' il tipo di difetto che a lavoro finito si scambia per una scelta."
+}

@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-20T17:18:23+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "consegna",
+  "titolo": "L07 chiuso in rosso come previsto: 22 criteri, 22 test, e 62 dei 65 verdi sono verdi per vuoto",
+  "contesto": "Il lotto e' stato spezzato in sette gruppi affidati ad agenti nuovi, perche' il tetto_turni 110 del piano non esiste per l'ambiente, che ne concede 45. Questa voce chiude il lotto e riporta la misura finale eseguita dalla sessione.",
+  "evidenza": [
+    "$ npx playwright test --reporter=list → EXIT=1, 184 failed, 65 passed (28.1s)",
+    "$ git ls-tree -r --name-only origin/lotto/l07-collaudo-22-criteri -- e2e/ tests/perf/ → 22 file di criterio piu' e2e/pagine.ts, e2e/fixtures/ (3 file) e tests/perf/misura-laboratorio.ts",
+    "i 3 verdi veri: AC3 /sitemap.xml e /robots.txt (rotte costruite da L05, che esistono davvero) e N2 «l'indirizzo compare in un solo file sorgente di site/» (grep -rl -F → site/src/dati/contatto.json)",
+    "i 62 verdi per vuoto: criteri in forma negativa (AC7, AC49, AC53, «non contiene moduli» di AC33/AC34/N1, AC37, AC41) che su una rotta 404 sono veri senza verificare nulla",
+    "tutte e 8 le rotte rispondono 404: L06 (Home, SaaS, Hosted, On-premise, Confronto) e L04 (tre bozze legali) non hanno ancora costruito le pagine"
+  ],
+  "dod_soddisfatta": {
+    "un_test_per_criterio": "si: 22 criteri, 22 file di criterio, ogni test nomina l'id nel titolo",
+    "rosso_atteso": "si: EXIT=1, e i fallimenti sono su guardie di esistenza (200 atteso, 404 ricevuto), non su errori di sintassi o import",
+    "test_scritti_dalla_spec": "si, con due violazioni del divieto di lettura autodenunciate nel journal dagli agenti dei gruppi E e A",
+    "journal_durante": "parziale: il gruppo A non ha scritto la propria voce, si e' fermato al limite dopo il settimo commit. La sua mappa criterio-test e' derivata dai file committati e dichiarata tale",
+    "riga_e2e_di_claude_md": "non modificata: la misura ha contraddetto la premessa del mandato (vedi sotto)",
+    "budget_perf": "non misurabili: nessuna pagina raggiunge la misura, tutte fermate dalla guardia. AC39 e' dichiarato parziale"
+  },
+  "cosa_si_e_imparato": "Un criterio in forma negativa non puo' fallire su una pagina che non esiste: «non compare X» e' vero per vuoto. I gruppi D, E, F e G hanno anteposto una guardia di esistenza e infatti non hanno nemmeno un verde vacuo; i gruppi A, B e C no, e i 62 verdi vengono da li'. Non e' un difetto dei test presi uno per uno, ma una asimmetria che L08 deve guardare: quei 62 diventeranno significativi solo quando le pagine esisteranno, e fino ad allora non dicono niente. La guardia ha pero' un rovescio misurato dal gruppo F: se il codice non viene mai raggiunto, i difetti dello strumento non si manifestano. Due bug di percorso in tests/perf/ sono emersi solo provando la meccanica contro /robots.txt, che risponde 200 davvero.",
+  "esito": "L07 consegnato in rosso; PR aperta verso main, nessun merge. Restano per L08: l'asimmetria dei verdi per vuoto, eslint.config.js fuori perimetro, le due assunzioni dichiarate dal gruppo E su /confronto/ e sui mailto: di Home e Confronto",
+  "umano_coinvolto": false
+}

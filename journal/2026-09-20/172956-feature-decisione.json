@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T17:29:56+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L04",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "N3 chiuso con un segnaposto {{recapito}} nel Markdown sostituito dalla rotta, e una build che fallisce se non può sostituirlo",
+  "contesto": "Andrea ha scelto il meccanismo: segnaposto di contatto nel Markdown dell'informativa, sostituito dalla rotta con un mailto senza oggetto. Restavano due scelte di forma alla sessione.",
+  "alternative": [
+    { "opzione": "chiamare il segnaposto segnaposto-recapito, nello stile dei tre valori del gate G3", "scartata_perche": "il gate G3 cerca le stringhe che iniziano con «segnaposto-» per sostituirle a mano prima della pubblicazione: questo invece lo risolve la build, e comparirebbe come un falso positivo in quella lista. Scelto {{recapito}}, che non assomiglia agli altri" },
+    { "opzione": "sostituire in silenzio e lasciare la pagina senza mailto se l'HTML reso non è disponibile", "scartata_perche": "N3 uscirebbe non soddisfatto senza che nessuno se ne accorga. La rotta ora lancia un errore esplicito se il Markdown contiene il segnaposto e l'HTML reso manca: meglio una build rossa" },
+    { "opzione": "passare le bozze a MDX per importare un componente di contatto", "scartata_perche": "cambia il formato dei contenuti e tocca la configurazione di Astro, molto oltre il perimetro; il segnaposto risolve con due righe" }
+  ],
+  "evidenza": [
+    "site/src/content/legale/informativa-privacy.md riga 18: «Il recapito del titolare per le richieste sui dati personali è {{recapito}}»",
+    "site/src/pages/legale/[slug].astro: SEGNAPOSTO_RECAPITO, controllo su voce.body, errore se manca voce.rendered.html, sostituzione con mailto() senza modalità e indirizzo letto da contatto.json",
+    "le altre due bozze non contengono il segnaposto e restano senza recapito, come chiesto"
+  ],
+  "esito": "applicata; divergenza sul possesso della rotta registrata in DESIGN-AMENDMENTS.md come A03",
+  "umano_coinvolto": true
+}

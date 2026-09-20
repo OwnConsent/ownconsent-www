@@ -6,6 +6,8 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BadgeDraft from '../../components/comuni/BadgeDraft.astro';
 import { urlAssoluto } from '../../lib/canonical';
+import { mailto } from '../../lib/contatto';
+import contatto from '../../dati/contatto.json';
 
 export async function getStaticPaths() {
   const voci = await getCollection('legale');
@@ -19,9 +21,31 @@ const { voce } = Astro.props;
 const { Content } = await render(voce);
 const canonical = urlAssoluto(`/legale/${voce.id}/`);
 const titolo = `${voce.data.titolo} — OwnConsent`;
+
+// N3, DP-27, DP-29: il Markdown non scrive mai l'indirizzo, che N2 tiene in un solo
+// file di contenuto. Dove il testo ha bisogno del recapito mette il segnaposto
+// {{recapito}}, e lo sostituisce qui la rotta con un mailto: senza oggetto
+// precompilato. Il segnaposto non usa il prefisso «segnaposto-» dei tre valori del
+// gate G3: quelli li sostituisce una persona prima della pubblicazione, questo lo
+// risolve la build.
+const SEGNAPOSTO_RECAPITO = '{{recapito}}';
+const contieneSegnaposto = (voce.body ?? '').includes(SEGNAPOSTO_RECAPITO);
+const html = voce.rendered?.html;
+if (contieneSegnaposto && !html) {
+  throw new Error(
+    `N3: ${voce.id} contiene il segnaposto del recapito ma la rotta non ha l'HTML ` +
+      'reso: la pagina uscirebbe senza il mailto invece di fallire.',
+  );
+}
+const htmlConRecapito = contieneSegnaposto
+  ? html.replaceAll(
+      SEGNAPOSTO_RECAPITO,
+      `<a href="${mailto()}">${contatto.indirizzo}</a>`,
+    )
+  : null;
 ---
 <BaseLayout title={titolo} description={voce.data.descrizione} canonical={canonical}>
   <BadgeDraft />
   <h1 id="contenuto">{voce.data.titolo}</h1>
-  <Content />
+  {htmlConRecapito ? <div set:html={htmlConRecapito} /> : <Content />}
 </BaseLayout>

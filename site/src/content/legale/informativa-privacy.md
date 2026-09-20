@@ -15,6 +15,10 @@ Il titolare del trattamento è indicato in questa bozza con il segnaposto letter
 denominazione, sede e dati societari — lo comunica una persona prima della pubblicazione.
 Finché il segnaposto resta tale, questa pagina non individua alcun titolare.
 
+Il recapito del titolare per le richieste sui dati personali è {{recapito}}: è l'unico
+indirizzo del sito, reso da questa pagina a partire dal file di contenuto che lo
+definisce, e non porta alcun oggetto precompilato.
+
 ## Quali dati tratta questo sito
 
 Nessuno. Il sito è composto di pagine statiche servite già formate: non contiene codice

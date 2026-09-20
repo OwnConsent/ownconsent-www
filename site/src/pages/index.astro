@@ -1,0 +1,112 @@
+---
+// Home (docs/design/01-pagine.md, sezione «1. Home»): indicizzabile, senza prezzi →
+// nessun contrassegno «pagina dimostrativa».
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CartaModalita from '../components/pagine/CartaModalita.astro';
+import { urlAssoluto } from '../lib/canonical';
+
+const titolo = 'OwnConsent — gestione del consenso conforme per il web italiano';
+const descrizione =
+  'OwnConsent raccoglie e conserva le scelte di consenso dei tuoi visitatori, conforme a IAB TCF v2.2/v2.3, Google Consent Mode v2 e alle norme italiane ed europee. Scopri SaaS, Hosted e On-premise.';
+const canonical = urlAssoluto('/');
+
+const modalita = [
+  {
+    modalita: 'SaaS',
+    cosaRicevi: 'Configurazione e delivery a cura di OwnConsent.',
+    comePaghi: 'Canone mensile, piani per volume di richieste.',
+    chiRegistra: 'OwnConsent.',
+    href: '/saas/',
+  },
+  {
+    modalita: 'Hosted',
+    cosaRicevi: 'Istanza con risorse dedicate.',
+    comePaghi: 'In base alla taglia di disco, memoria e CPU.',
+    chiRegistra: 'In definizione.',
+    href: '/hosted/',
+  },
+  {
+    modalita: 'On-premise',
+    cosaRicevi: 'Installazione sul proprio hardware.',
+    comePaghi: 'Licenza annuale.',
+    chiRegistra: 'Il cliente, a proprio nome.',
+    href: '/on-premise/',
+  },
+];
+---
+
+<BaseLayout title={titolo} description={descrizione} canonical={canonical}>
+  <h1>La piattaforma di gestione del consenso per il web italiano</h1>
+  <p class="lead">
+    OwnConsent raccoglie e conserva le scelte di chi visita il tuo sito, conforme a IAB
+    TCF v2.2/v2.3, Google Consent Mode v2, al Garante per la protezione dei dati
+    personali (231/2021) e alle linee guida EDPB 2/2023. Pensato per web agency
+    italiane, publisher e l'ecosistema Audiweb/Audicom.
+  </p>
+
+  <section>
+    <h2>Tre modi di avere OwnConsent</h2>
+    <div class="griglia-modalita">
+      {
+        modalita.map((carta) => (
+          <CartaModalita
+            modalita={carta.modalita}
+            cosaRicevi={carta.cosaRicevi}
+            comePaghi={carta.comePaghi}
+            chiRegistra={carta.chiRegistra}
+            href={carta.href}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section>
+    <h2>Confronta le tre modalità</h2>
+    <p>
+      Le tre modalità coprono lo stesso servizio con un livello diverso di gestione e
+      responsabilità: il confronto completo mette le voci una accanto all'altra.
+    </p>
+    <a class="link-confronto" href="/confronto/">Vedi il confronto completo e il listino →</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--font-size-200);
+    line-height: var(--line-height-snug);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-8);
+  }
+
+  section {
+    margin: 0 0 var(--spacing-10);
+  }
+
+  .griglia-modalita {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+
+  @media (--bp-md) {
+    .griglia-modalita {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (--bp-lg) {
+    .griglia-modalita {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .link-confronto {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--touch-target-min-size);
+    color: var(--color-text-link);
+    font-weight: var(--font-weight-semibold);
+    text-decoration: underline;
+  }
+</style>

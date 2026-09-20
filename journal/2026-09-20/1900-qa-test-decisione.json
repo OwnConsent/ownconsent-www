@@ -1,0 +1,11 @@
+{
+  "ts": "2026-09-20T19:00:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Applicazione meccanica della guardia di esistenza a 6 file (gruppo B)",
+  "contesto": "Modello gia' approvato e committato in eaa8c30 su AC1/AC2 (e2e/guardia-esistenza.ts). Compito: applicare guardiaEsistenzaRequest/guardiaEsistenzaPagina in ac07, ac08, ac33, ac34, ac37, ac41, senza toccare le asserzioni vere. Commit per file, non a fine lotto, per il rischio di perdita di lavoro segnalato nel prompt.",
+  "note": "In AC8 la guardia viene applicata anche al test 'la rotta legale risponde 200': la sua asserzione vera coincide con meta' della guardia (200), quindi la sostituzione aggiunge solo il controllo h1 senza rimuovere nulla del criterio originale."
+}

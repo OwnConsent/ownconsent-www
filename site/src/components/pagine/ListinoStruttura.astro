@@ -1,0 +1,101 @@
+---
+// Struttura del listino, senza valori commerciali (AC6, DP-21). I valori vengono da
+// site/src/dati/listino.json, che in questa consegna è senza valori: dove manca un valore
+// si mostra «da definire» con il componente condiviso, mai un numero inventato e mai
+// «in arrivo». Nessun nome di piano o di taglia: solo la struttura.
+import ValoreDaDefinire from '../comuni/ValoreDaDefinire.astro';
+import listino from '../../lib/listino.mjs';
+
+interface Props {
+  modalita: 'saas' | 'hosted' | 'on-premise';
+}
+
+const { modalita } = Astro.props;
+
+// Ogni voce è un'etichetta più il valore configurato, se c'è. null = da definire.
+type Voce = { etichetta: string; valore: string | null };
+
+function voci(quale: Props['modalita']): Voce[] {
+  if (quale === 'saas') {
+    const piani = listino.saas.piani;
+    if (piani.length === 0) {
+      return [
+        { etichetta: 'Numero di piani', valore: null },
+        { etichetta: 'Tetto di richieste incluso nel piano', valore: null },
+        { etichetta: 'Canone mensile', valore: null },
+      ];
+    }
+    return piani.flatMap((piano, i) => [
+      { etichetta: `Tetto di richieste incluso nel piano ${i + 1}`, valore: piano.tetto_richieste ?? null },
+      { etichetta: `Canone mensile del piano ${i + 1}`, valore: piano.canone_mensile_eur ?? null },
+    ]);
+  }
+
+  if (quale === 'hosted') {
+    const taglie = listino.hosted.taglie;
+    if (taglie.length === 0) {
+      return [
+        { etichetta: 'Disco', valore: null },
+        { etichetta: 'Memoria', valore: null },
+        { etichetta: 'CPU', valore: null },
+      ];
+    }
+    return taglie.flatMap((taglia, i) => [
+      { etichetta: `Disco della taglia ${i + 1}`, valore: taglia.disco_gb ?? null },
+      { etichetta: `Memoria della taglia ${i + 1}`, valore: taglia.memoria_gb ?? null },
+      { etichetta: `CPU della taglia ${i + 1}`, valore: taglia.cpu ?? null },
+    ]);
+  }
+
+  return [{ etichetta: 'Licenza annuale', valore: listino['on-premise'].licenza_annuale_eur ?? null }];
+}
+
+const elenco = voci(modalita);
+---
+
+<dl class="listino-struttura">
+  {
+    elenco.map((voce) => (
+      <div class="riga">
+        <dt>{voce.etichetta}</dt>
+        <dd>{voce.valore === null ? <ValoreDaDefinire /> : voce.valore}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .listino-struttura {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    margin: 0;
+    padding: 0;
+  }
+
+  .riga {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+    border-block-end: var(--border-width) solid var(--color-border-default);
+    padding-block-end: var(--spacing-3);
+  }
+
+  .riga dt {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+  }
+
+  .riga dd {
+    margin: 0;
+  }
+
+  /* Da --bp-md l'etichetta e il valore stanno sulla stessa riga. */
+  @media (--bp-md) {
+    .riga {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: var(--spacing-6);
+    }
+  }
+</style>

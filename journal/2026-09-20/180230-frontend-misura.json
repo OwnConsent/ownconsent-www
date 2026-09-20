@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-20T18:02:30+02:00",
+  "agente": "frontend",
+  "issue": "8",
+  "lotto": "L06",
+  "pezzo": "1/5",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "index.astro (Home) compila; secondo commit del pezzo 1/5 in corso",
+  "contesto": "Nel primo commit (3a6e057, poi riscritto in 2a5b765) il marcatore di ruolo .git/cantiere-current-agent conteneva 'orchestrator' al momento del commit invece di 'frontend' scritto poco prima: un'altra sessione condivide lo stesso .git/ (il marcatore e' comune a tutte le worktree, per costruzione dell'hook) e lo ha sovrascritto nella finestra fra la mia scrittura e il commit. Corretto con git commit --amend -F <messaggio senza trailer>, che ha fatto rigenerare il trailer dall'hook con il marcatore corretto ('frontend') riscritto subito prima. Verificato con git log -1 --format=%B: Cantiere-Agent: frontend, Co-Authored-By: cantiere-frontend. Commit gia' pushato (2a5b765) prima di procedere.",
+  "evidenza": [
+    "$ pnpm build → 4 page(s) built, nessun errore, /index.html incluso"
+  ],
+  "esito": "Procedo a committare index.astro col marcatore rifissato subito prima del commit, e verifico il trailer prima di pushare.",
+  "umano_coinvolto": false,
+  "nota": "Race condition sul marcatore condiviso fra worktree: da segnalare, non e' un difetto di questo lotto ma un rischio del meccanismo di firma quando piu' sessioni girano in parallelo."
+}

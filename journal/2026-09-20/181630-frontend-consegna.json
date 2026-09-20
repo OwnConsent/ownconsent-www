@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-20T18:16:30+02:00",
+  "agente": "frontend (sessione principale)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "05-consegna",
+  "tipo": "consegna",
+  "titolo": "L06 chiuso in cinque pezzi: le cinque pagine di vendita, con due criteri lasciati aperti e dichiarati",
+  "contesto": "Le cinque pagine (Home, SaaS, Hosted, On-premise, Confronto) piu' i quattro componenti di pagina e l'infrastruttura dei breakpoint di ADR-0004. Mandato: pezzi piccoli, commit e push appena il pezzo sta in piedi.",
+  "dod_soddisfatta": [
+    "build, lint e typecheck puliti su site/: $ pnpm build → Complete!, exit=0 ; $ pnpm lint → exit=0 ; $ pnpm astro check → 0 errors, 0 warnings",
+    "controllo committato di ADR-0002 D5 sui valori letterali: 0 righe (una riga era comparsa per un commento che citava una larghezza in pixel: riscritto il commento, non indebolito il controllo)",
+    "budget di contracts/perf-budgets.json misurati sull'artefatto di build, come il file stesso prescrive per queste due voci: CSS gzip per pagina da 1,58 a 2,12 kB contro un budget di 25 ; file .js in dist: nessuno, contro un budget di 60 kB. La pagina piu' pesante e' confronto (2,12 kB)",
+    "AC1: le 8 rotte rispondono 200 sull'anteprima e l'HTML servito contiene h1, testo e i link alle tre modalita'",
+    "AC2: su tutte le 8 pagine lang=it, title e description non vuoti e diversi fra loro, canonical assoluto che punta alla pagina stessa sul dominio segnaposto",
+    "AC4: matrice completa nella tabella di confronto, verificata cella per cella sull'HTML servito; le tre celle di «Come si attiva» dicono «Scrivici»; nessuna delle 13 celle contiene un elemento interattivo",
+    "AC6: nel TESTO servito delle quattro pagine con prezzi non c'e' alcun numero e nessun simbolo di euro; «da definire» al posto di ogni valore",
+    "AC12: zero <script> in tutte le pagine",
+    "AC33, AC34, N1: frasi richieste alla lettera e mailto con l'oggetto giusto nell'ultimo blocco prima del footer; nessun form, nessun «in arrivo», nessuna «lista d'attesa»",
+    "AC49: tutte e sei le affermazioni richieste presenti sia su SaaS sia su Confronto; nessuna percentuale e nessuna soglia, perche' nel testo non c'e' alcun numero",
+    "AC53: nessun limite di frequenza presentato come caratteristica di piano; il tetto e' descritto come numero di scritture, non come velocita'",
+    "AC41: testi in italiano; nessuna data nelle cinque pagine, quindi nessun formato da verificare",
+    "journal scritto durante il lavoro, con ts da date -Is: 7 voci del 20/09 fra decisione, gate, misura, fallimento e consegna",
+    "cinque commit firmati, uno per pezzo, ognuno pushato appena il pezzo stava in piedi"
+  ],
+  "evidenza": [
+    "Porta dell'anteprima letta dal log a ogni misura, mai assunta: localhost:4325. La 4321 era occupata",
+    "Media query prodotte: @media (min-width:768px), @media (min-width:1280px), @media (prefers-color-scheme:dark). Nessuna sintassi di intervallo, coerente con la politica browser di ADR-0004 punto 5"
+  ],
+  "esito": "consegnato in PR, in attesa dell'occhio di Andrea. DUE COSE NON CHIUSE, entrambe dichiarate e non assorbite: (1) AC5 «visibile senza scorrere» non misurato, manca un browser in questo ambiente (voce 181626); (2) il link «salta al contenuto» punta a #contenuto che dentro <main> non esiste, difetto di L05 fuori dal perimetro di L06 (voce 174809). AC37, AC39 (LCP/CLS di laboratorio), AC40 e AC7 restano a L07/L09 come il piano prevede.",
+  "umano_coinvolto": true,
+  "nota": "Due agenti @frontend delegati si sono fermati al tetto dei 45 turni senza consegnare il rapporto. Il primo non aveva pushato e il suo commit era senza firma: recuperato e firmato. Il secondo aveva committato E pushato, come gli era stato chiesto esplicitamente, e non si e' perso niente. I pezzi 2, 3 e 4 li ha scritti la sessione principale."
+}

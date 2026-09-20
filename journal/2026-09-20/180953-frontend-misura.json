@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-20T18:09:53+02:00",
+  "agente": "frontend (sessione principale, dopo due agenti delegati fermati al tetto turni)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Pezzo 2: blocco di chiusura, struttura del listino e pagina SaaS misurati sul documento servito",
+  "contesto": "Pezzo 2 di 5: BloccoChiusura.astro, ListinoStruttura.astro e site/src/pages/saas.astro. La pagina regge AC4 (colonna SaaS), AC49, N1, AC5, AC6. Misure prese sul documento servito da astro preview, con la porta letta dal log.",
+  "evidenza": [
+    "$ pnpm build → Complete!, exit=0 ; $ pnpm lint → exit=0 ; $ pnpm astro check → 0 errors, 0 warnings, 6 hints, exit=0",
+    "Porta dell'anteprima LETTA DAL LOG, non assunta: $ grep -oE 'localhost:[0-9]+' preview.log → localhost:4325. La 4321 e' occupata da un'altra sessione: assumerla avrebbe misurato la dist di qualcun altro (successo in L04)",
+    "$ curl -s -o /dev/null -w '%{http_code}' http://localhost:4325/saas/ → 200",
+    "AC5: l'HTML servito contiene «Pagina dimostrativa — i valori mostrati non sono definitivi» come primo elemento del contenuto, prima dell'h1",
+    "N1: nel testo servito «Scrivici e ti attiviamo noi.» (paragrafo) e «Scrivici e ti attiviamo noi» (testo del bottone); $ grep -o 'mailto:[^\"]*' → mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=SaaS",
+    "N1: form=0, «in arrivo»=0, «lista d'attesa»=0",
+    "AC6: «da definire» compare 4 volte nel testo (3 righe del listino piu' la ragione sociale del footer); importi in euro = 0",
+    "AC49: estratto il solo TESTO visibile (via <style> e <script>, poi i tag) e cercate percentuali e soglie → nessuna. Cercato QUALUNQUE numero nel testo → nessuno. Prima passata con un grep crudo sull'HTML intero aveva dato 2 falsi positivi: erano due width:100% del CSS in linea, non percentuali di contenuto",
+    "AC12: $ grep -c '<script' → 0",
+    "Ultimo blocco del contenuto principale prima del footer: «Pronto ad attivare SaaS? Scrivici e ti attiviamo noi. Scrivici e ti attiviamo noi» seguito dai link del footer — l'ordine richiesto da N1",
+    "Controllo di ADR-0002 D5 sui valori letterali: 0 righe. Una riga era comparsa per un mio COMMENTO che citava «400px»: riscritto il commento invece di indebolire il controllo",
+    "Media query prodotte: @media (min-width:768px), @media (min-width:1280px), @media (prefers-color-scheme:dark) — forma min-width, nessuna sintassi di intervallo"
+  ],
+  "esito": "pezzo 2 committato e pushato subito dopo la misura",
+  "umano_coinvolto": false,
+  "nota": "BloccoChiusura non riscrive gli stili di CtaMailto (di L05, nel non_tocca): la larghezza del bottone si governa dal contenitore .azione, che passa a fit-content da --bp-md. Vedi la voce di tipo gate sullo stesso tema."
+}

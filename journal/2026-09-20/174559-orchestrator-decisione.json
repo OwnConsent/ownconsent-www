@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-20T17:45:59+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": "L06",
+  "stadio": "02-avvio",
+  "tipo": "decisione",
+  "titolo": "L06 attua anche l'infrastruttura di ADR-0004, che sta nel suo non_tocca: senza il visitor la prima @media fa fallire la build",
+  "contesto": "Il mandato chiede di scrivere i breakpoint come @media (--bp-md) risolti dal visitor «come fissato nell'ADR». Misurato sul ramo: l'infrastruttura di ADR-0004 NON e' implementata — site/astro.config.mjs non ha ne' visitor ne' cssTarget, e site/src/lib/token-css.mjs emette ancora le @custom-media che l'ADR dichiara codice morto. ADR-0004 dice che l'attuazione e' di @frontend «nel lotto che precede o apre L06». Quel lotto non esiste: quindi o lo apre L06, o L06 non puo' scrivere nessuna media query.",
+  "alternative": [
+    {
+      "opzione": "rispettare il non_tocca alla lettera e fermarsi, chiedendo un lotto separato per l'infrastruttura",
+      "scartata_perche": "il non_tocca di L06 esclude site/src/lib/** e site/src/layouts/** con la motivazione «(di L05)», cioe' per non duplicare lavoro e non collidere con un lotto che correva in parallelo. L05 e L04 sono entrambi chiusi e mergiati (718d54a, 95c50a8): la collisione che la regola preveniva non esiste piu'. Fermarsi costerebbe un giro intero per una ragione che non vale piu'"
+    },
+    {
+      "opzione": "scrivere le regole responsive senza breakpoint, rinviando il responsive a dopo",
+      "scartata_perche": "contraddice il mandato in modo diretto, e lascerebbe le cinque pagine nello stato in cui A02(a) ha lasciato il footer: una colonna su ogni schermo. Sarebbe una funzionalita' non costruita spacciata per lotto chiuso"
+    },
+    {
+      "opzione": "duplicare i valori dei breakpoint dentro i componenti per evitare di toccare lib/",
+      "scartata_perche": "viola il controllo committato di ADR-0002 D5 (zero valori letterali) ed e' esattamente l'alternativa che ADR-0004 ha scartato misurandola"
+    }
+  ],
+  "evidenza": [
+    "$ cat site/astro.config.mjs → plugins: [tokenCss()], css.lightningcss.drafts.customMedia: true; NESSUN visitor, NESSUN build.cssTarget",
+    "$ grep -n 'custom-media' site/src/lib/token-css.mjs → riga 98: customMedia.push(`@custom-media --bp-${k} (min-width: ${def.value});`) — ancora generate",
+    "$ git log --oneline -3 origin/main → 95c50a8 L04, 92d7f87 ADR-0004 (#36), 718d54a L05: i due lotti con cui L06 non doveva collidere sono chiusi",
+    "$ git merge-base --is-ancestor origin/main HEAD → esce 0: il ramo parte da origin/main aggiornato (regola_di_esecuzione 1)",
+    "Correzione di un riferimento del mandato: l'ADR dei breakpoint e' ADR-0004, non ADR-0003. $ git ls-tree --name-only origin/main docs/adr/ → 0003-contesto-ci.md, 0004-breakpoint-nei-componenti-astro.md. Un agente mandato a leggere ADR-0003 avrebbe letto le regole del contesto ci"
+  ],
+  "esito": "L06 apre con un pezzo 0 di infrastruttura (visitor, token-css, astro.config), dichiarato come sconfinamento consapevole del non_tocca e segnalato in PR. I cinque pezzi successivi restano dentro il perimetro dichiarato del lotto",
+  "umano_coinvolto": false,
+  "nota": "Lo sconfinamento e' su site/src/lib/** e site/astro.config.mjs. Non tocca site/src/dati/**, site/src/layouts/**, site/src/components/comuni/**, ne' site/src/content/legale/** di L04."
+}

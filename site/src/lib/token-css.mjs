@@ -23,6 +23,26 @@ function leggiToken() {
   return JSON.parse(raw);
 }
 
+// Riletto da site/src/lib/breakpoint-visitor.mjs (ADR-0004 punto 2): unico punto che apre
+// contracts/design-tokens.json per i breakpoint, riusato invece di duplicare la lettura.
+export function leggiBreakpointPx() {
+  const tokens = leggiToken();
+  const risultato = {};
+  for (const [k, def] of Object.entries(tokens.breakpoint)) {
+    if (!isDataKey(k)) continue;
+    assertForma(def, `breakpoint.${k}`);
+    const match = /^([0-9.]+)px$/.exec(String(def.value).trim());
+    if (!match) {
+      throw new Error(
+        `token-css: breakpoint.${k} non è in px (letto: "${def.value}"); ` +
+          `il visitor di Lightning CSS (ADR-0004) richiede breakpoint in px.`,
+      );
+    }
+    risultato[k] = Number(match[1]);
+  }
+  return risultato;
+}
+
 function assertForma(def, contesto) {
   if (typeof def !== 'object' || def === null || !('value' in def)) {
     throw new Error(`token-css: forma non riconosciuta per ${contesto}`);
@@ -90,18 +110,19 @@ export function generaTokenCss() {
     root.push(`  --focus-${k}: ${def.value};`);
   }
 
-  const customMedia = [];
   for (const [k, def] of Object.entries(tokens.breakpoint)) {
     if (!isDataKey(k)) continue;
     assertForma(def, `breakpoint.${k}`);
     root.push(`  --breakpoint-${k}: ${def.value};`);
-    customMedia.push(`@custom-media --bp-${k} (min-width: ${def.value});`);
   }
   root.push('}');
 
   const scuro = ['@media (prefers-color-scheme: dark) {', ':root {', ...righeColore(dark, 'color.semantic.dark'), '}', '}'];
 
-  return [...customMedia, root.join('\n'), scuro.join('\n')].join('\n\n') + '\n';
+  // Le @custom-media non si emettono più (ADR-0004 punto 4): il riferimento @media (--bp-<k>)
+  // nei componenti è risolto da site/src/lib/breakpoint-visitor.mjs dentro Lightning CSS,
+  // prima che la risoluzione delle @custom-media (drafts.customMedia) entri in gioco.
+  return [root.join('\n'), scuro.join('\n')].join('\n\n') + '\n';
 }
 
 export default function tokenCssPlugin() {

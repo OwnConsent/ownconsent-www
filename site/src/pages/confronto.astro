@@ -1,0 +1,77 @@
+---
+// Confronto modalità e listino (docs/design/01-pagine.md, sezione «5. Confronto modalità
+// e listino»): indicizzabile, mostra prezzi → contrassegno «pagina dimostrativa».
+// Soddisfa AC4 (tabella completa) e AC49.
+//
+// Nessun blocco di chiusura e nessun link mailto su questa pagina: non è fra quelle che
+// AC33/AC34/N1 lo richiedono, e l'attivazione passa dalla riga «Come si attiva» della
+// tabella. La sezione sul conteggio ripete per intero quanto dice SaaS, perché AC49
+// chiede che ciascuna delle due pagine lo spieghi da sé.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BadgeDemo from '../components/comuni/BadgeDemo.astro';
+import TabellaConfronto from '../components/pagine/TabellaConfronto.astro';
+import ListinoStruttura from '../components/pagine/ListinoStruttura.astro';
+import { urlAssoluto } from '../lib/canonical';
+
+const titolo = 'Confronto modalità e listino — SaaS, Hosted, On-premise';
+const descrizione =
+  'Confronta SaaS, Hosted e On-premise: cosa ricevi, come paghi, chi registra la CMP presso IAB Europe e come si attiva ciascuna modalità.';
+const canonical = urlAssoluto('/confronto/');
+---
+
+<BaseLayout title={titolo} description={descrizione} canonical={canonical}>
+  <BadgeDemo />
+  <h1>Confronta SaaS, Hosted e On-premise</h1>
+  <p class="lead">
+    Le tre modalità in cui puoi avere OwnConsent, a confronto: cosa ricevi, come paghi, chi
+    registra la CMP e come si attiva.
+  </p>
+
+  <TabellaConfronto />
+
+  <section>
+    <h2>Il listino, in struttura</h2>
+    <p>
+      Il listino non ha ancora valori: qui sotto c'è la struttura di ciascuna modalità, con
+      «da definire» al posto di ogni valore non ancora stabilito.
+    </p>
+
+    <h3>SaaS: piani per volume di richieste</h3>
+    <ListinoStruttura modalita="saas" />
+
+    <h3>Hosted: taglie di disco, memoria e CPU</h3>
+    <ListinoStruttura modalita="hosted" />
+
+    <h3>On-premise: licenza annuale</h3>
+    <ListinoStruttura modalita="on-premise" />
+  </section>
+
+  <section>
+    <h2>Come contiamo le richieste</h2>
+    <p>
+      Una richiesta conteggiata è una scrittura di consenso — cioè la creazione o
+      l'aggiornamento di una scelta registrata. I caricamenti del banner, le letture della
+      configurazione e le risposte dalla cache non si contano.
+    </p>
+    <p>
+      Superare il tetto non interrompe il servizio. Non ci sono addebiti automatici per
+      l'eccedenza. Ti avvisiamo prima che tu raggiunga il tetto; se il superamento si
+      ripete, ti proponiamo un cambio di piano, deciso da una persona.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--font-size-200);
+    color: var(--color-text-secondary);
+  }
+
+  section {
+    margin-block-start: var(--spacing-10);
+  }
+
+  section h3 {
+    margin-block-start: var(--spacing-6);
+  }
+</style>

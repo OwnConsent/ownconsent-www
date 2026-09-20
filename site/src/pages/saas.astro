@@ -1,0 +1,79 @@
+---
+// SaaS (docs/design/01-pagine.md, sezione «2. SaaS»): indicizzabile, mostra prezzi →
+// contrassegno «pagina dimostrativa» come primo elemento del contenuto, prima dell'h1.
+// Soddisfa AC4 (colonna SaaS), AC49, N1. Nessun modulo, nessuna data, nessuna lista
+// d'attesa, nessun «in arrivo»; nessuna percentuale e nessuna soglia numerica.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BadgeDemo from '../components/comuni/BadgeDemo.astro';
+import BloccoChiusura from '../components/pagine/BloccoChiusura.astro';
+import ListinoStruttura from '../components/pagine/ListinoStruttura.astro';
+import { urlAssoluto } from '../lib/canonical';
+
+const titolo = 'SaaS — OwnConsent in abbonamento, configurato per te';
+const descrizione =
+  'OwnConsent SaaS: configurazione e delivery a cura nostra, canone mensile a piani per volume di richieste, CMP registrata da OwnConsent presso IAB Europe.';
+const canonical = urlAssoluto('/saas/');
+---
+
+<BaseLayout title={titolo} description={descrizione} canonical={canonical}>
+  <BadgeDemo />
+  <h1>SaaS: OwnConsent in abbonamento</h1>
+  <p class="lead">
+    Ricevi configurazione e delivery a cura nostra: attivi la CMP senza gestire
+    infrastruttura.
+  </p>
+
+  <section>
+    <h2>Cosa ricevi</h2>
+    <p>
+      Configurazione e delivery gestite da OwnConsent: la piattaforma è pronta all'uso,
+      aggiornata e mantenuta da noi.
+    </p>
+  </section>
+
+  <section>
+    <h2>Come paghi</h2>
+    <p>
+      Canone mensile, a piani per volume di richieste. Una richiesta conteggiata è una
+      scrittura di consenso — cioè la creazione o l'aggiornamento di una scelta registrata.
+      I caricamenti del banner, le letture della configurazione e le risposte dalla cache
+      non si contano.
+    </p>
+    <ListinoStruttura modalita="saas" />
+  </section>
+
+  <section>
+    <h2>Se superi il tetto</h2>
+    <p>
+      Superare il tetto non interrompe il servizio. Non ci sono addebiti automatici per
+      l'eccedenza. Ti avvisiamo prima che tu raggiunga il tetto; se il superamento si
+      ripete, ti proponiamo un cambio di piano, deciso da una persona.
+    </p>
+  </section>
+
+  <section>
+    <h2>Chi registra la CMP</h2>
+    <p>
+      OwnConsent registra la CMP presso IAB Europe per conto tuo: nessun passaggio
+      amministrativo a tuo carico.
+    </p>
+  </section>
+
+  <BloccoChiusura
+    titolo="Pronto ad attivare SaaS?"
+    frase="Scrivici e ti attiviamo noi."
+    testoCta="Scrivici e ti attiviamo noi"
+    modalita="saas"
+  />
+</BaseLayout>
+
+<style>
+  .lead {
+    font-size: var(--font-size-200);
+    color: var(--color-text-secondary);
+  }
+
+  section {
+    margin-block-end: var(--spacing-10);
+  }
+</style>

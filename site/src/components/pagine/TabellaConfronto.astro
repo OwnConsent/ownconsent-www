@@ -1,0 +1,181 @@
+---
+// Tabella di confronto (docs/design/00-sistema-e-componenti.md, sezione «Componente:
+// tabella di confronto»). Soddisfa AC4. Tabella vera con caption, scope sulle
+// intestazioni; nessun elemento interattivo dentro le celle (il link mailto vive nel
+// blocco di chiusura delle pagine di modalità, non qui).
+//
+// Sotto --bp-lg la tabella non scorre in orizzontale (AC37): con il solo CSS passa a
+// blocchi impilati, lasciando il markup <table> intatto perché i lettori di schermo
+// continuino a leggere le relazioni fra intestazioni e celle. Il thead non si nasconde
+// con display:none — che lo toglierebbe anche a loro — ma con la tecnica «solo per
+// lettori di schermo». Ogni td porta data-etichetta nel markup, non aggiunto da
+// JavaScript, mostrato con ::before.
+const MODALITA = ['SaaS', 'Hosted', 'On-premise'] as const;
+
+const RIGHE = [
+  {
+    etichetta: 'Cosa ricevi',
+    celle: [
+      'Configurazione e delivery da OwnConsent',
+      'Istanza con risorse dedicate e dati separati',
+      'Installazione sul proprio hardware',
+    ],
+  },
+  {
+    etichetta: 'Come paghi',
+    celle: [
+      'Canone mensile, piani per volume di richieste',
+      'In base alla taglia di disco, memoria e CPU',
+      'Licenza annuale',
+    ],
+  },
+  {
+    etichetta: 'Chi registra la CMP presso IAB Europe',
+    celle: ['OwnConsent', 'In definizione', 'Il cliente, a proprio nome'],
+  },
+  {
+    // AC4: le tre celle dicono la stessa cosa. Testo semplice, non un link.
+    etichetta: 'Come si attiva',
+    celle: ['Scrivici', 'Scrivici', 'Scrivici'],
+  },
+];
+---
+
+<table class="confronto">
+  <caption>Confronto fra SaaS, Hosted e On-premise</caption>
+  <thead>
+    <tr>
+      <td class="angolo"></td>
+      {MODALITA.map((m) => <th scope="col">{m}</th>)}
+    </tr>
+  </thead>
+  <tbody>
+    {
+      RIGHE.map((riga) => (
+        <tr>
+          <th scope="row">{riga.etichetta}</th>
+          {riga.celle.map((cella, i) => (
+            <td data-etichetta={MODALITA[i]}>{cella}</td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  .confronto {
+    inline-size: 100%;
+    border-collapse: collapse;
+    text-align: start;
+  }
+
+  caption {
+    text-align: start;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-block-end: var(--spacing-4);
+  }
+
+  /* Layout a blocchi: è il comportamento di base, quello dello schermo più stretto. */
+  .confronto,
+  .confronto thead,
+  .confronto tbody,
+  .confronto tr,
+  .confronto th,
+  .confronto td {
+    display: block;
+  }
+
+  /* Il thead resta letto dai lettori di schermo, ma non occupa spazio visivo. */
+  .confronto thead {
+    position: absolute;
+    inline-size: var(--border-width);
+    block-size: var(--border-width);
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .confronto tbody tr {
+    border: var(--border-width) solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-4);
+    margin-block-end: var(--spacing-6);
+  }
+
+  .confronto tbody th[scope='row'] {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+    margin-block-end: var(--spacing-3);
+  }
+
+  .confronto td::before {
+    content: attr(data-etichetta);
+    display: block;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
+  }
+
+  .confronto td {
+    margin-block-end: var(--spacing-3);
+  }
+
+  .confronto td:last-child {
+    margin-block-end: 0;
+  }
+
+  /* Da --bp-lg: tabella vera a colonne. */
+  @media (--bp-lg) {
+    .confronto,
+    .confronto thead,
+    .confronto tbody,
+    .confronto tr,
+    .confronto th,
+    .confronto td {
+      display: revert;
+    }
+
+    .confronto {
+      display: table;
+    }
+
+    .confronto thead {
+      position: static;
+      inline-size: auto;
+      block-size: auto;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+    }
+
+    .confronto th,
+    .confronto td {
+      border-block-end: var(--border-width) solid var(--color-border-default);
+      padding: var(--spacing-4);
+      vertical-align: top;
+      text-align: start;
+    }
+
+    .confronto tbody th[scope='row'] {
+      background: var(--color-bg-surface);
+      margin-block-end: 0;
+    }
+
+    .confronto tbody tr {
+      border: 0;
+      border-radius: 0;
+      padding: 0;
+      margin-block-end: 0;
+    }
+
+    /* A colonne l'intestazione di colonna è visibile: l'etichetta ripetuta non serve. */
+    .confronto td::before {
+      content: none;
+    }
+
+    .confronto td {
+      margin-block-end: 0;
+    }
+  }
+</style>

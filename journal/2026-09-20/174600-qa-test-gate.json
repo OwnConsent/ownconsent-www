@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-20T17:46:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "H1",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "Verifica di freschezza del ramo (docs/HANDOFF.md) fallita all'apertura del gruppo H1: origin/main non e' antenato di HEAD",
+  "contesto": "Il mandato del gruppo H1 impone al passo 1: 'git merge-base --is-ancestor origin/main HEAD ; echo ancestor exit=$?' e 'Se l'ultimo non esce 0, fermati e riporta (docs/HANDOFF.md)'. docs/HANDOFF.md, regola 'nessun agente su un ramo che non discende da origin/main', prescrive lo stesso comando e dice: 'Se il comando esce con un codice diverso da 0, ci si rifiuta: quel ramo non si riusa.'",
+  "chi_ha_deciso": "nessuno finora: verifica meccanica del protocollo eseguita da questo agente, non ancora arbitrata da una persona ne' dall'orchestratore",
+  "cosa_serviva": "una decisione esplicita — rifiutare il ramo e riportare il lavoro utile su uno nuovo da origin/main, oppure un override motivato che accerti che la divergenza e' innocua per questo lotto specifico — prima che qualunque test del gruppo H1 venga scritto o committato su questo ramo",
+  "evidenza": [
+    "$ git fetch origin && git checkout lotto/l07-collaudo-22-criteri && git pull --rebase origin lotto/l07-collaudo-22-criteri → 'Already up to date', nessun commit locale non spinto",
+    "$ git merge-base --is-ancestor origin/main HEAD ; echo ancestor exit=$? → ancestor exit=1",
+    "$ git log --oneline -5 HEAD → cdb349d ... (testa attesa dal mandato, confermata)",
+    "$ git log --oneline -5 origin/main → 95c50a8 docs(site): L04 — bozze di termini... (#35); 92d7f87 docs(adr): ADR-0004 ...(#36); poi 718d54a feat(site): L05 — impalcatura di site/ (#8) (#34)",
+    "$ git merge-base origin/main HEAD → 718d54a: il punto di diramazione e' proprio il commit L05 con cui il ramo fu creato (coerente con la voce 2026-09-20/160534-feature-decisione.json, dove lo stesso controllo era uscito 0 a quel tempo)",
+    "$ git rev-list HEAD..origin/main → 95c50a8, 92d7f87 (2 commit su main non presenti sul ramo)",
+    "$ git rev-list origin/main..HEAD | wc -l → 49 (il ramo ha 49 commit propri non su main)",
+    "$ git diff --stat origin/main HEAD -- githooks → nessun output: gli hook non sono divergenti, il rischio concreto citato nella regola di HANDOFF.md (hook vecchio, firma illeggibile) non si manifesta qui",
+    "$ git config --get core.hooksPath → githooks",
+    "$ git diff --stat origin/main HEAD -- e2e tests site contracts (coda) → il ramo NON ha site/src/content/legale/*.md ne' la versione corrente di site/src/pages/legale/[slug].astro che main ha acquisito con 95c50a8 (L04 e' stato mergiato su main durante la costruzione di questo stesso lotto): la divergenza non e' solo doc-only sui file che il mio gruppo tocca, tocca anche site/ in un'area indirettamente rilevante per le 8 rotte pubbliche"
+  ],
+  "gate_aperti": [
+    "Il ramo lotto/l07-collaudo-22-criteri non discende piu' da origin/main (2 commit mancanti: 95c50a8, 92d7f87). Per la regola di docs/HANDOFF.md il ramo 'non si riusa' finche' non e' rifiutato o la divergenza non e' arbitrata da una persona/dall'orchestratore. Questo agente si e' fermato prima di scrivere o committare nessuno dei quattro file di test assegnati al gruppo H1 (e2e/guardia-esistenza.ts, ac07, ac49, ac53, ac41), per non costruire lavoro su un ramo che il protocollo dice di rifiutare."
+  ],
+  "esito": "lavoro del gruppo H1 non iniziato in attesa di decisione; nessun file del gruppo H1 scritto ne' committato; solo questa voce di journal viene committata",
+  "umano_coinvolto": false
+}

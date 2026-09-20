@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T16:46:39+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Gruppo D (AC9, AC10, AC12): rosso confermato, fallito sulla pagina mancante e non sul vuoto",
+  "contesto": "L06 (pagine di vendita) e L04 (bozze legali) non sono ancora consegnati: il servizio di anteprima non ha rotte. Rischio segnalato nel prompt del lotto: 'nessun cookie'/'nessuna richiesta a terzi'/'nessun evento' sono vere per vuoto su una pagina che non esiste, quindi ogni test verifica prima risposta 200 + contenuto reale (h1 visibile, body non vuoto) e solo dopo l'assenza di cookie/storage/richieste terze/evento.",
+  "alternative": [],
+  "evidenza": [
+    "comando: cd /home/andreapernici/src/ownconsent/www/.claude/worktrees/agent-a5b8719d0fcb6e71a && npx playwright test e2e/ac09-nessun-cookie-nessuno-storage.spec.ts e2e/ac10-nessuna-origine-terza.spec.ts e2e/ac12-nessun-evento-di-misurazione.spec.ts --reporter=list",
+    "output: '3 failed' — tutti e tre falliti su 'risposta 200 su /: Expected: 200, Received: 404', dentro eseguiPercorsoCondiviso(), prima di qualunque asserzione su cookie/storage/richieste/evento",
+    "nessuna delle tre asserzioni di merito (cookie/storage vuoti — AC9; nessuna origine terza — AC10; nessun evento modalita_confrontata — AC10/AC12) è stata raggiunta: il gate 'contenuto atteso presente' ha funzionato come progettato, il rosso di oggi non è un passaggio per vuoto travestito da successo"
+  ],
+  "esito": "AC9, AC10, AC12 rossi come atteso (esito diverso da 0), per pagina mancante e non per vuoto; nessuno dei tre test passa oggi, quindi non c'è da distinguere 'pieno' vs 'per vuoto' in questa consegna — la distinzione si misurerà quando L06/L04 saranno costruiti",
+  "umano_coinvolto": false,
+  "costo_token": null,
+  "durata_s": null
+}

@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-20T16:39:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Gruppo C — mappa criterio -> file di test (AC5, AC8, AC37)",
+  "contesto": "L07 gruppo C: scrivere i test per AC5, AC8, AC37 dai criteri di docs/spec/issue-8.json, senza leggere site/**. Le 8 pagine e le funzioni di lettura runtime vengono da e2e/pagine.ts (gia' sul ramo, prodotto dal gruppo A). Le viewport fissate dalla spec sono 360x640 e 1280x800; per AC37 la spec chiede anche emulazione touch.",
+  "alternative": [
+    { "opzione": "verificare 'visibile senza scorrere' leggendo classi CSS da site/", "scartata_perche": "vietato dal perimetro del lotto (CLAUDE.md regola 3, piano L07.scritti_dalla_spec): il gate ci misurerebbe se stesso" },
+    { "opzione": "misurare posizione elemento con boundingBox() del browser rispetto a viewportSize(), senza scroll", "scartata_perche": null }
+  ],
+  "evidenza": [
+    "docs/spec/issue-8.json: AC5 chiede il contrassegno 'pagina dimostrativa' sulle 4 pagine con mostra_prezzi=true, a 360x640 e 1280x800",
+    "docs/spec/issue-8.json: AC8 chiede footer con 3 link legali su tutte e 8 le pagine, risposta 200, e contrassegno 'bozza' sulle 3 pagine legali alle stesse due viewport",
+    "docs/spec/issue-8.json: AC37 chiede, a 360x640 con touch, nessuno scroll orizzontale, testo corpo >= 16px calcolati, ogni elemento interattivo >= 24x24 CSS px oppure conforme a WCAG 2.2 SC 2.5.8"
+  ],
+  "esito": "applicata",
+  "mappa_criterio_test": {
+    "AC5": "e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts",
+    "AC8": "e2e/ac08-footer-legali-e-contrassegno-bozza.spec.ts",
+    "AC37": "e2e/ac37-mobile-360.spec.ts"
+  },
+  "umano_coinvolto": false
+}

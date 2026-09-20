@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T18:57:52+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Infrastruttura del collaudo chiusa: 0 orfani, 0 copie residue, e la suite passa da 1.1m a 20.7s",
+  "contesto": "Chiusura dei difetti (a), (b1), (b2) e (b3). Il raccordo di porta su N2 l'ha fatto la sessione, non un agente: tre agenti di fila si sono fermati al limite di turni prima di arrivarci, e il cambio era identico a quello gia' applicato ad AC6. Le asserzioni di N2 non sono state toccate.",
+  "evidenza": [
+    "prima (porta fissa 4322/4323 nei file dei criteri): 14 failed, 235 passed (1.1m), orfani dopo 3",
+    "dopo (porta ottenuta dal sistema operativo): $ npx playwright test --reporter=list → 7 failed, 242 passed (20.7s), EXIT=1",
+    "$ pgrep -fc 'astro.mjs[ ]preview' dopo la suite → 0",
+    "$ ls -d /tmp/ownconsent-l07-* | wc -l → 0",
+    "il tempo scende da 1.1m a 20.7s: la contesa sulla porta fissa fra copie parallele costava piu' di tre volte il tempo di esecuzione",
+    "i 3 rossi di AC6 sulla copia sono spariti: erano collisione di porta, non difetto del criterio"
+  ],
+  "esito": "restano 7 rossi, tutti gia' attribuiti: 3 di AC4 (il test pretende una «sezione dedicata» per modalita' che la spec non prescrive — AC4 stesso descrive una tabella con una cella per modalita'), 4 di N2 che risalgono tutti allo stesso buco di prodotto (termini-di-servizio e cookie-policy non rendono nessun link mailto:, gate aperto da L04 il 20/09 alle 16:04). Nessuno dei due e' ancora confermato in contraddittorio",
+  "umano_coinvolto": false
+}

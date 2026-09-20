@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-20T19:30:20+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "consegna",
+  "titolo": "L07 con 8 rotte vive: 7 rossi su 252, guardia su tutti i criteri, infrastruttura chiusa con prova, AC5 dimostra di saper fallire",
+  "contesto": "Chiusura dei cinque punti chiesti da Andrea dopo il merge di L06. Il bersaglio «i verdi scendono da 65 a 3» non e' mai stato applicabile: era calcolato quando 5 rotte su 8 rispondevano 404, e nel frattempo L04 e L06 le hanno costruite. Si e' riportata la misura invece di adattarla.",
+  "evidenza": [
+    "$ npx playwright test --reporter=list → 7 failed, 245 passed (20.4s), EXIT=1",
+    "campo verificato vuoto prima: $ pgrep -fc 'astro.mjs[ ]preview' → 0; dopo → 0; copie in /tmp → 0",
+    "guardia di esistenza su 14 file su 14: AC1, AC2, AC4, AC5, AC7, AC8, AC33, AC34, AC37, AC41, AC49, AC53, N1, N3, piu' quelli che gia' l'avevano (AC6, AC9, AC10, AC12, AC39, AC40, D6, N2)",
+    "eccezione motivata su AC3: sitemap.xml e robots.txt non sono pagine HTML e non hanno un h1, quindi solo l'asserzione di stato (che c'era gia')",
+    "prova-by-reversion su AC5: sopra la piega 2 passed, sotto la piega 2 failed con «Expected: <= 640, Received: 3223» e «Expected: <= 800, Received: 3127», a entrambe le viewport",
+    "canale Chromium: nessun channel dichiarato in playwright.config.ts, verificato lanciando il browser → 153.0.8010.12",
+    "i tre modi di sbagliare misura: $ npx playwright test e2e/modi-di-sbagliare-misura.spec.ts → 3 passed (2.4s), EXIT=0"
+  ],
+  "dod_soddisfatta": {
+    "guardia_su_ogni_criterio": "si, 14 su 14 piu' le 8 preesistenti; una eccezione motivata (AC3)",
+    "infrastruttura": "si: porta ottenuta dal sistema operativo, niente riuso, --ignore-lock, chiudi() che ferma davvero. Suite da 1.1m a 20.4s, zero orfani, zero copie residue",
+    "ac5_sopra_la_piega": "si, e con la prova che la misura sa diventare rossa",
+    "tre_modi_di_sbagliare_misura": "si, ognuno con caso sano verde e caso malato rosso; il terzo con prova di contrasto che isola DOTALL come causa",
+    "rossi_residui": "7, tutti gia' attribuiti e nessuno introdotto da questo lavoro"
+  },
+  "cosa_si_e_imparato": "Nove agenti di fila si sono fermati al limite di 45 turni dell'ambiente. Quelli che committavano per file hanno salvato tutto; gli altri hanno lasciato lavoro che ha dovuto salvare la sessione. Ma la differenza piu' grande l'ha fatta il mandato, non l'agente: un mandato che faceva ri-progettare la soluzione a ogni file ha prodotto 2 file in 45 turni, lo stesso lavoro con «il modello e' deciso, copialo» ne ha prodotti 6. Il collo di bottiglia era mio.",
+  "esito": "i cinque punti sono chiusi. Restano 7 rossi: 3 di AC4 (il test pretende una «sezione dedicata» che la spec non prescrive — probabile difetto del test, triage non fatta) e 4 di N2 (due pagine legali non rendono nessun mailto: — buco di prodotto, gate aperto da L04 il 20/09 alle 16:04 e mai deciso)",
+  "umano_coinvolto": true
+}

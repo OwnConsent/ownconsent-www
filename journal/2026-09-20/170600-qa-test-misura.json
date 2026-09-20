@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-20T17:06:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "F",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "AC39 eseguito: tutte le 8 pagine falliscono sulla guardia anti-404, non su un budget; meccanica di misura verificata a parte con una risorsa 200 reale",
+  "contesto": "AC39 (tests/perf/ac39-budget-pagine-pubbliche.spec.ts) pretende prima la risposta 200 e un <main> non banale, e solo dopo misura JS/CSS gzip e la mediana di 5 esecuzioni di LCP/CLS contro contracts/perf-budgets.json.",
+  "comando": "npx playwright test tests/perf/ac39-budget-pagine-pubbliche.spec.ts --reporter=list",
+  "output_sintetico": "8 failed. Tutte e 8 le pagine (Home /, SaaS /saas/, Hosted /hosted/, On-premise /on-premise/, Confronto /confronto/, Termini /legale/termini-di-servizio/, Privacy /legale/informativa-privacy/, Cookie /legale/cookie-policy/) rispondono 404 sulla prima asserzione (riga 52, 'GET <rotta>' atteso 200, ricevuto 404), in ~0.1s ciascuna. Nessuna pagina raggiunge la misura di laboratorio.",
+  "divergenza_dalla_premessa_del_compito": "Il compito descriveva l'atteso come '404 sulle pagine di vendita (L06) e sulle bozze legali (L04)', lasciando intendere che Home/SaaS/Hosted/On-premise/Confronto (L05/L06 già impalcati) rispondessero 200. Misurato invece: 404 anche su Home (/). Segnalo la divergenza invece di assorbirla: L05 ('impalcatura di site/', commit 718d54a) ha creato solo la struttura di progetto, non ancora le 8 pagine con contenuto reale servibile — coerente con build+preview che parte (il webServer risponde su /robots.txt) ma senza rotte pubbliche costruite.",
+  "verifica_indipendente_della_meccanica_di_misura": {
+    "motivo": "Con tutte le 8 pagine a 404, il codice di misura (tests/perf/misura-laboratorio.ts: CDP CPU/rete, 5 esecuzioni a freddo, cattura risorse, mediana, peso gzip) non viene mai eseguito dal test AC39 — la guardia lo impedisce per costruzione. Eseguirlo comunque, anche fuori da una delle 8 pagine pubbliche, è l'unico modo per dimostrare che lo strumento funziona davvero e non solo che la guardia funziona.",
+    "comando": "test temporaneo (non committato) contro /robots.txt, una risorsa 200 reale servita dallo stesso webServer: misuraPaginaInLaboratorio(browser, baseURL, '/robots.txt')",
+    "output": "{\"rotta\":\"/robots.txt\",\"statoPrimaEsecuzione\":200,\"jsInizialeGzipKb\":0,\"cssGzipKb\":0,\"lcpMsMediana\":204,\"clsMediana\":0,\"lcpCampioniMs\":[192,208,208,204,196],\"clsCampioni\":[0,0,0,0,0],\"esecuzioni\":5}",
+    "lettura": "5 esecuzioni eseguite, mediana calcolata, throttling applicato (LCP ~200ms coerente con latency=150ms dichiarata dal contratto per una singola richiesta di testo semplice), peso gzip JS/CSS correttamente 0 su una risorsa senza script/css. Il meccanismo funziona; non è una misura di AC39 (robots.txt non è una delle 8 pagine pubbliche e non ha LCP/CLS significativi da confrontare con un budget)."
+  },
+  "chiavi_del_contratto_lette_a_runtime": {
+    "pagine_pubbliche.js_iniziale_gzip_kb": 60,
+    "pagine_pubbliche.css_gzip_kb": 25,
+    "pagine_pubbliche.lcp_ms_lab_mediana": 2500,
+    "pagine_pubbliche.cls_lab_mediana": 0.05,
+    "nota": "letti da leggiPerfBudgets() a runtime nel test, non copiati qui se non per riportare l'evidenza di questa voce di journal"
+  },
+  "esito_dichiarato": "AC39: test scritto e verificabile, ma verdetto oggi rosso per pagina mancante su tutte e 8 le pagine — nessun budget è stato realmente rispettato o violato, perché nessuna misura di laboratorio è arrivata a completarsi su una delle 8 pagine pubbliche. Nessun budget verde per vuoto: la guardia impedisce esattamente quell'esito. La misura di laboratorio vera e propria (peso gzip, LCP, CLS delle 8 pagine) resta da rifare non appena L06 pubblica contenuto reale sulle rotte.",
+  "misura_completa_o_parziale": "parziale: guardia anti-404 eseguita ed osservata su tutte le 8 pagine (rosso per assenza di pagina); meccanica di misura di laboratorio verificata indipendentemente su una risorsa 200 reale ma non su nessuna delle 8 pagine pubbliche, perché nessuna esiste ancora.",
+  "cosa_manca": "Le 8 pagine pubbliche devono rispondere 200 con contenuto (L06/L05 completi) prima che AC39 possa misurare davvero peso gzip, LCP e CLS e dare un verdetto di budget genuino.",
+  "evidenza": [
+    "npx playwright test tests/perf/ac39-budget-pagine-pubbliche.spec.ts --reporter=list -> 8 failed, tutti su 'expect(received).toBe(expected) // Expected: 200 Received: 404' alla riga 52",
+    "npx playwright test e2e/ac01-resa-lato-server.spec.ts --reporter=list -> stesso esito 404 su tutte le 8 pagine, confermando che non è un problema del test di L07 gruppo F ma dello stato del sito"
+  ],
+  "umano_coinvolto": false
+}

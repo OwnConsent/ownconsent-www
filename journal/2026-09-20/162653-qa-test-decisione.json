@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-20T16:26:53+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "L07 gruppo B — mappa criterio→test e convenzioni adottate",
+  "contesto": "Gruppo B copre AC4, AC33, AC34, N1, AC49, N3. Il gruppo A ha già consegnato il progetto di collaudo, e2e/pagine.ts e i test di AC1, AC2, AC3, AC7, AC41, AC53 sul ramo lotto/l07-collaudo-22-criteri. Nessuna pagina di vendita/legale esiste ancora (L06/L04 non fatti): l'esito atteso è rosso.",
+  "alternative": [
+    {
+      "opzione": "\"ultimo blocco del contenuto principale, prima del footer\" = ultimo figlio diretto di <main>",
+      "scartata_perche": null
+    },
+    {
+      "opzione": "\"ultimo blocco\" = ultimo elemento di testo visibile in tutto il body, footer escluso per tag",
+      "scartata_perche": "più fragile: se il footer non è un tag <footer> ma un div, il test non lo escluderebbe. Uso <main> perché AC1 (gruppo A) già usa $('main') come selettore del contenuto principale — coerenza con lo stile accettato sul ramo."
+    }
+  ],
+  "evidenza": [
+    "e2e/ac01-resa-lato-server.spec.ts usa $('main').text() come testo principale della pagina: stessa convenzione riusata qui per individuare il blocco di chiusura"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false,
+  "note": "Mappa criterio→test del gruppo B: AC4 -> e2e/ac04-confronto-tre-modalita.spec.ts (pagina /confronto/); AC33 -> e2e/ac33-hosted.spec.ts (pagina /hosted/); AC34 -> e2e/ac34-on-premise.spec.ts (pagina /on-premise/); N1 -> e2e/n1-saas-chiusura-e-mailto.spec.ts (pagina /saas/); AC49 -> e2e/ac49-richiesta-conteggiata-e-tetto.spec.ts (pagine /saas/ e /confronto/, più divieto di %/soglia su tutte le 8); N3 -> e2e/n3-pagine-legali-titolare-e-recapito.spec.ts (le 3 pagine legali). Letture consentite usate: leggiDatiContatto() per l'indirizzo e gli oggetti mailto per modalità; nessuna lettura di site/** oltre le 4 eccezioni. Aggiornamento in coda a fine lavoro se restano turni."
+}

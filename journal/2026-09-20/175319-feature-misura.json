@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-20T17:53:19+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Con L04 su main il bersaglio «i verdi scendono da 65 a 3» non vale piu': tre rotte su otto ora esistono, e i verdi vacui sono 38 su 122",
+  "contesto": "Andrea ha chiesto di mettere la guardia di esistenza su ogni test che passa su una rotta 404, prevedendo 65 verdi prima e 3 dopo. Quella previsione era fatta quando tutte e 8 le rotte rispondevano 404. Il merge di origin/main ha portato L04: le tre pagine legali ora esistono. Si riporta la misura invece di adattarla alla previsione (CLAUDE.md, «si ferma se la misura contraddice la descrizione»).",
+  "evidenza": [
+    "prima, a cdb349d, contro il server orfano del gruppo A: $ npx playwright test --reporter=list → 184 failed, 65 passed, EXIT=1",
+    "dopo il merge 002f544, contro la build del ramo: $ npx playwright test --reporter=list → 127 failed, 122 passed, EXIT=1",
+    "verdi per rotta citata nel titolo: informativa-privacy 26, termini-di-servizio 25, cookie-policy 25 (rotte che ESISTONO, verdi pieni); saas 7, on-premise 7, hosted 7, confronto 7, home 7 (rotte 404, verdi vacui)",
+    "verdi senza rotta nel titolo: 11, di cui 8 pieni (AC3 sitemap e robots, AC8 per le tre rotte legali, N2 file unico, N3 per informativa-privacy) e 3 vacui (le parti «non contiene moduli» di AC33, AC34 e N1, che stanno su rotte 404)",
+    "totale verdi vacui da chiudere: 35 con rotta + 3 senza = 38; verdi pieni 84"
+  ],
+  "esito": "il bersaglio corretto non e' «65 -> 3» ma «122 -> 84»: restano da chiudere 38 verdi sulle cinque rotte ancora 404 (home, saas, hosted, on-premise, confronto). La richiesta di Andrea resta valida parola per parola, cambia solo il conteggio. Ci si ferma e si riporta prima di far ripartire i gruppi H1 e H2 su un bersaglio che si e' mosso",
+  "umano_coinvolto": true
+}

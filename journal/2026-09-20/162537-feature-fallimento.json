@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-20T16:25:37+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "Il gruppo A ha consegnato sette commit e nessuna voce di journal: la mappa criterio-test non l'ha scritta chi ha fatto il lavoro",
+  "contesto": "Il mandato del gruppo A metteva il journal all'ottavo e ultimo posto della lista dei file, dopo i sette di codice. L'agente si e' fermato al limite di turni dopo il settimo: la regola del commit per file ha salvato tutto il codice e ha lasciato fuori esattamente l'unica cosa che stava in fondo. docs/JOURNAL.md dice che la voce si scrive mentre si lavora, non alla fine, e il mandato la trattava come un passaggio finale.",
+  "evidenza": [
+    "notifica di fine task: «stopped at its 45-turn limit», tool_uses=45, subagent_tokens=98377, nessun report consegnato",
+    "$ git log --oneline origin/main..origin/lotto/l07-collaudo-22-criteri → 7 commit dell'agente, da 4a7a4e9 a d1b100d, tutti spinti: la regola «un file, un commit, un push» ha tenuto dove quella del giro precedente aveva ceduto",
+    "$ git log --format='%h %(trailers:key=Cantiere-Agent,valueonly) %s' 3bf1d9c..d1b100d → tutti e sette firmati qa-test: riscrivere il marcatore prima di ogni commit compensa la sovrascrittura fra worktree",
+    "$ git status --porcelain → solo ?? test-results/: nessuna voce di journal scritta e non committata, proprio nessuna",
+    "$ git diff --stat 3bf1d9c..d1b100d → 7 file, 454 inserimenti: e2e/pagine.ts piu' sei spec"
+  ],
+  "cosa_si_e_imparato": "Mettere il journal in fondo alla lista dei file lo rende la prima cosa che salta quando i turni finiscono, ed e' l'unica che non si puo' recuperare dopo: il codice si rilegge, una decisione presa mezz'ora fa no. Nei gruppi successivi la voce di journal va chiesta come primo file del gruppo e aggiornata durante, non come ultimo. La mappa criterio-test qui sotto la derivo io dai file committati: e' una misura sui file, non il registro di chi ha lavorato, e va letta come tale.",
+  "mappa_criterio_test_derivata": {
+    "AC1": "e2e/ac01-resa-lato-server.spec.ts",
+    "AC2": "e2e/ac02-title-description-canonical.spec.ts",
+    "AC3": "e2e/ac03-sitemap-robots.spec.ts",
+    "AC7": "e2e/ac07-nessuna-registrazione-iab.spec.ts",
+    "AC41": "e2e/ac41-italiano-e-date.spec.ts",
+    "AC53": "e2e/ac53-nessun-limite-di-frequenza.spec.ts",
+    "supporto": "e2e/pagine.ts — 8 rotte da ADR-0002 D2, lettori runtime dei quattro file di dati consentiti"
+  },
+  "esito": "gruppo A spinto per intero; restano 16 criteri dei 22. Il journal del gruppo A resta mancante come fatto, non ricostruito: chi lo avrebbe scritto non c'era piu'",
+  "umano_coinvolto": false
+}

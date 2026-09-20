@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-20T16:16:54+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Il marcatore di ruolo e' uno solo per tutto il repository: con due lotti in parallelo le firme dei commit si sovrascrivono a vicenda",
+  "contesto": "L'hook githooks/prepare-commit-msg legge il ruolo da un file unico sotto --git-common-dir, scelto il 14/09 proprio perche' e' l'unico posto che la checkout principale e tutte le worktree collegate vedono. Quella condivisione, che ha risolto le firme mancanti nelle worktree, rende il marcatore una variabile globale: con L04 e L07 in lavorazione insieme, l'ultimo che scrive vince per tutti.",
+  "evidenza": [
+    "$ ls -l .git/cantiere-current-agent → No such file or directory: all'apertura della sessione il marcatore non esisteva, e il primo commit e' uscito senza firma (l'hook tratta l'assenza come «commit di una persona»)",
+    "$ printf 'feature\\n' > .git/cantiere-current-agent ; git commit --amend → Cantiere-Agent: feature su 99f522e",
+    "$ cat .git/cantiere-current-agent (dopo il giro di @qa-test) → orchestrator: non 'feature' che avevo scritto io, e non 'qa-test' che il mandato ordinava all'agente di scrivere",
+    "$ git worktree list → sei worktree sullo stesso repository, fra cui agent-a8ce8a1751e85c01b [lotto/l04-bozze-legali] locked e agent-ac5bd0ee615c12079 [lotto/l07-collaudo-22-criteri]"
+  ],
+  "esito": "la firma dei commit non e' affidabile quando due lotti lavorano insieme: va riscritta prima di ogni commit, oppure l'hook deve leggere il ruolo da qualcosa di locale alla worktree invece che dal .git condiviso. Decisione di struttura sull'hook: e' di @architect, non di questo lotto. Nel frattempo la sessione riscrive il marcatore prima di ogni proprio commit e lo verifica dopo",
+  "umano_coinvolto": false
+}

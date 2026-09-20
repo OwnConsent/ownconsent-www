@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-19T20:38:04+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L05",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "L05 fermo al limite di 45 turni senza commit, senza push e senza journal: 198k token vivevano in una worktree usa-e-getta",
+  "contesto": "Il mandato chiedeva commit incrementali, push appena possibile e arresto con report entro la 27ª chiamata, su un limite creduto di 30. Il limite reale dell'agente era 45 e l'agente ne ha usate 54 senza fermarsi né riportare. La sessione ha messo in salvo i file con un commit proprio prima di qualunque verifica.",
+  "evidenza": [
+    "notifica di fine task: «stopped at its 45-turn limit», tool_uses=54, subagent_tokens=198871, duration_ms=778996, nessun SubagentHandback",
+    "$ git log --oneline origin/main..origin/lotto/l05-impalcatura-site → vuoto: nessun push",
+    "$ git -C (worktree dell'agente) status --porcelain → una sola riga: ?? site/",
+    "nessuna voce di journal scritta dal lotto",
+    "contenuto trovato: 28 file sorgente sotto site/ più node_modules (230 MB) e dist/ (24 KB), entrambi ignorati da site/.gitignore",
+    "controlli della sessione prima di committare: contatto.json «segnaposto-nome-casella@segnaposto-dominio-casella.invalid», sito.json «https://segnaposto-dominio-sito.example» (RFC 2606); grep https? nei sorgenti → solo lo spazio dei nomi XML della sitemap; grep cookie/localStorage/sessionStorage/indexedDB/fonts/cdn → solo la rotta e il link della cookie policy; listino.json senza valori",
+    "$ git push origin lotto/l05-impalcatura-site → 41ff0a2..6fea569; $ bash .github/ci/area.sh site → area site/: presente (site/package.json), exit=0"
+  ],
+  "cosa_si_e_imparato": "Il tetto di turni che conta è quello dell'agente, non quello che scrivo nel mandato: un limite dichiarato più basso non ferma nessuno. Ciò che protegge il lavoro è il push, non la buona volontà: il giro successivo ha l'ordine di spingere appena c'è un commit. E un lotto senza journal non è a metà, è senza registro: la verifica ora deve ricostruire misure che nessuno ha scritto mentre accadevano.",
+  "esito": "file in salvo sul ramo (6fea569, non verificato); lotto passato a un @frontend nuovo per misure, journal e correzioni; un file di configurazione nascosto del gestore di pacchetti, dentro site/, è rimasto non tracciato nella worktree perché lo guardi una persona: l'hook ne blocca la lettura e il repository è pubblico",
+  "umano_coinvolto": true
+}

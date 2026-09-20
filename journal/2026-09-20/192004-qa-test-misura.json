@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-20T19:20:04+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Conferma indipendente: playwright.config.ts non dichiara channel, si usa il Chromium di Playwright",
+  "contesto": "Andrea ha chiesto «il Chromium di Playwright, non il canale chrome». Una sessione precedente aveva già misurato l'assenza di `channel` e la versione 153.0.8010.12. Rifatta la misura in modo indipendente prima di fidarsi del riportato.",
+  "evidenza": [
+    "$ grep -n \"channel\" playwright.config.ts -> (nessuna occorrenza, comando esce senza stampare nulla)",
+    "$ grep -rn \"channel\" e2e/ playwright.config.ts package.json -> (nessuna occorrenza in nessuno dei tre)",
+    "$ node -e \"require('@playwright/test').chromium.launch().then(b=>{console.log('browser version:', b.version()); b.close()})\" -> browser version: 153.0.8010.12",
+    "$ npx playwright --version -> Version 1.63.0"
+  ],
+  "esito": "confermato: nessun channel dichiarato in nessun file del progetto; il browser lanciato è il Chromium proprio di Playwright (153.0.8010.12), coerente con la misura riportata dalla sessione. Nessun finding nuovo.",
+  "umano_coinvolto": false
+}

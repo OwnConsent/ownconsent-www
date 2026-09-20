@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-20T19:18:01+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Guardia di esistenza aggiunta agli ultimi due file mancanti (AC4, AC5)",
+  "contesto": "e2e/guardia-esistenza.ts era già usata da 12 file. Mancavano e2e/ac04-confronto-tre-modalita.spec.ts (aveva solo l'asserzione 200, non l'h1) e e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts (page.goto diretto, nessuna guardia). Applicata guardiaEsistenzaRequest su tutti e 4 i request.get(ROTTA) di AC4 (stessa rotta, stesso pattern del diff cd8e2c2 su AC49) e guardiaEsistenzaPagina al posto di page.goto in AC5. Nessuna asserzione vera toccata in nessuno dei due file.",
+  "evidenza": [
+    "$ npx eslint e2e/ac04-confronto-tre-modalita.spec.ts e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts -> nessun output, pulito",
+    "$ npx playwright test e2e/ac04-confronto-tre-modalita.spec.ts e2e/ac05-contrassegno-pagina-dimostrativa.spec.ts --reporter=list -> 3 failed, 9 passed",
+    "i 3 rossi sono gli stessi 3 attesi su AC4 (sezione dedicata per modalità, non prescritta dalla spec: righe 59, 73, 89) — non nuovi rossi introdotti dalla guardia",
+    "AC5 tutta verde: 8 test (4 pagine con prezzi x 2 viewport) più il quarto test AC4 (scrivici) = 9 passed"
+  ],
+  "esito": "guardia applicata ai 14 file totali (12 preesistenti + 2), triage dei 3 rossi AC4 lasciato a un altro giro come da mandato",
+  "umano_coinvolto": false
+}

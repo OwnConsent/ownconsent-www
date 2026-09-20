@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-20T18:46:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "05-collaudo",
+  "tipo": "misura",
+  "titolo": "Difetto (b) di e2e/fixtures/copia-temporanea.ts: causa reale di (b1) e (b2), verificate separatamente",
+  "contesto": "Il commento in cima al file, lasciato da una sessione precedente, afferma che '--ignore-lock mantiene il processo in primo piano nel gruppo spawnato con detached:true, quindi il SIGTERM sul gruppo lo raggiunge davvero' e che 'si richiede --port 0 ... e si legge la porta reale dal messaggio che il processo stampa su stdout'. Il codice sotto quel commento non fa nessuna delle due cose: l'array di spawn e' ['preview', '--port', String(porta), '--host', '127.0.0.1'] (nessun --ignore-lock) e stdio e' 'ignore' (non si puo' leggere alcuno stdout). Il commento descrive un fix che non e' mai stato scritto nel codice: e' un'ipotesi presentata come fatto, esattamente quello che la consegna chiedeva di verificare invece di dare per buono.",
+  "alternative": [
+    {
+      "opzione": "fidarsi del commento ed evitare di riprodurre il comportamento del demone",
+      "scartata_perche": "e' proprio l'errore che la consegna segnala: il commento e' un'ipotesi non confermata"
+    },
+    {
+      "opzione": "per (b2), sospettare un bug nei test invece che nell'aiuto",
+      "scartata_perche": "la build manuale della copia (pnpm build in una copia rsync di site/+contracts/ con contatto.json sostituito) produce dist/ con il nuovo indirizzo e senza il vecchio: la sostituzione ARRIVA alla build. Il problema e' quindi nel 'preview' che la serve, non nel meccanismo di sostituzione ne' nei test"
+    }
+  ],
+  "evidenza": [
+    "PROVA (b1), riproduzione isolata: prima di qualunque azione di questo giro, 4 processi astro.mjs preview erano gia' vivi da una sessione precedente, con cwd cancellata: `for p in 24136 24162 24185 24208; do readlink /proc/$p/cwd; done` -> `/tmp/ownconsent-l07-kNBcOa/site (deleted)` x4 (stessa firma della PROVA 3 dell'handoff, ore dopo la fine di quella sessione: conferma diretta che il processo sopravvive, non solo al momento del test ma indefinitamente)",
+    "PROVA (b1), spawn identico al codice attuale (senza --ignore-lock): spawn('pnpm',['preview','--port','4322','--host','127.0.0.1'],{detached:true,stdio:'ignore'}) -> pid del gruppo (pnpm) 29461; il vero processo astro.mjs preview e' un pid diverso e non figlio del gruppo, 29578; `process.kill(-29461,'SIGTERM')` -> `kill ESRCH` (il gruppo del pnpm padre e' gia' terminato, pnpm si e' delegato e uscito) e pid 29578 resta vivo dopo 2s",
+    "PROVA (b1), stesso spawn CON --ignore-lock aggiunto: spawn('pnpm',['preview','--port','4399','--host','127.0.0.1','--ignore-lock'],{detached:true,stdio:'ignore'}) -> pid gruppo 30764; astro.mjs preview pid 30827 (figlio, stesso gruppo); `process.kill(-30764,'SIGTERM')` -> 'kill ok'; `pgrep -fa astro.mjs[ ]preview` dopo 2s -> nessun risultato. Il meccanismo descritto nel commento e' corretto in linea di principio, ma non era mai stato applicato all'array di spawn di questo file",
+    "PROVA (b2), build manuale: rsync di site/(senza node_modules/dist/.astro) + contracts/ in /tmp, sostituito src/dati/contatto.json con e2e/fixtures/contatto-di-prova.json, poi `pnpm install --frozen-lockfile && pnpm build` -> `grep -rl casella-sostituita-n2 dist/` trova saas/hosted/on-premise/legale-privacy; `grep -rl segnaposto-dominio-casella dist/` -> nessun risultato. La sostituzione arriva alla build",
+    "PROVA (b2), causa del rosso N2 osservato dall'handoff: gli orfani di (b1) restano in ascolto sulla PORTA FISSA che AC6/N2 riusano ad ogni esecuzione (4322, 4323, hardcoded in ac06-*.spec.ts e n2-*.spec.ts). Un'esecuzione successiva costruisce e prova a servire la NUOVA copia sulla stessa porta, ma la porta e' gia' occupata dall'orfano precedente: `attendiPronto()` in copia-temporanea.ts fa fetch solo sull'URL, non verifica quale processo risponde, quindi accetta la risposta 200/404 dell'orfano vecchio come se fosse la copia nuova. AC6 sembra passare per coincidenza (la fixture di AC6 e' identica a ogni run, quindi anche il vecchio orfano ha gia' i valori 'giusti'); N2 usa una fixture diversa a seconda del test, quindi il vecchio indirizzo servito dall'orfano non combacia con quello atteso e il test e' rosso, ma per il motivo sbagliato: non verifica se la sostituzione arriva alla build corrente, verifica solo cosa risponde una porta"
+  ],
+  "esito": "confermato: (b1) e' un fix descritto ma mai scritto (manca --ignore-lock nell'array di spawn di questo file); (b2) non e' un difetto del meccanismo di sostituzione ne' dei test, ma una conseguenza diretta di (b1): l'orfano che non muore resta a occupare la porta fissa e falsa il risultato del run successivo. Correggere (b1) (aggiungere --ignore-lock e attendere l'uscita reale del processo in chiudi()) chiude anche (b2), senza toccare i test",
+  "umano_coinvolto": false
+}

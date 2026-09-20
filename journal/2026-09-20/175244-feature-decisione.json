@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-20T17:52:44+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Il ramo di L07 aveva smesso di discendere da origin/main: riconciliato con un merge, non con un rebase ne' con un ramo nuovo",
+  "contesto": "L'agente del gruppo H1 si e' fermato al passo 1 del mandato: git merge-base --is-ancestor origin/main HEAD usciva 1. Mentre L07 era in lavorazione, su main erano atterrati L04 (#35) e ADR-0004 (#36). docs/HANDOFF.md dice «ci si rifiuta: quel ramo non si riusa», e l'agente ha fatto la cosa giusta a non decidere da solo se la divergenza fosse innocua.",
+  "alternative": [
+    { "opzione": "ramo nuovo da origin/main con il lavoro riportato, come dice la lettera di HANDOFF.md", "scartata_perche": "abbandonerebbe la PR #37 gia' aperta e 49 commit di storia con le voci di journal scritte durante il lavoro; il valore della regola e' che il ramo esegua gli strumenti correnti, non che il ramo sia giovane" },
+    { "opzione": "rebase del ramo su origin/main", "scartata_perche": "riscrive la storia di 49 commit e richiede un force-push su un ramo con una PR aperta: rischio sproporzionato rispetto al problema" },
+    { "opzione": "merge di origin/main dentro il ramo", "scartata_perche": "scelta: nessuna riscrittura, nessun force-push, PR #37 preservata, e la condizione della regola torna vera" }
+  ],
+  "evidenza": [
+    "$ git merge-base --is-ancestor origin/main HEAD → exit=1 prima del merge",
+    "$ git log --oneline HEAD..origin/main → 95c50a8 (L04, #35) e 92d7f87 (ADR-0004, #36)",
+    "$ git merge --no-edit origin/main → 002f544, nessun conflitto: L07 non tocca site/ e L04 non tocca il collaudo",
+    "$ git merge-base --is-ancestor origin/main HEAD → exit=0 dopo il merge",
+    "$ git diff --stat origin/main HEAD -- githooks → vuoto: gli hook sono allineati, cioe' il rischio concreto che la regola di HANDOFF.md cita (una worktree che esegue hook vecchi) non si era manifestato"
+  ],
+  "esito": "ramo riconciliato e spinto; il gruppo H1 puo' ripartire. La regola di HANDOFF.md andrebbe precisata: dice «si crea un ramo nuovo», ma la condizione che protegge e' «origin/main e' antenato», e un merge la soddisfa senza riscrivere la storia",
+  "umano_coinvolto": false
+}

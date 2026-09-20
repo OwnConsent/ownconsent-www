@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-20T16:05:34+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "L07 parte con site/ gia su main: il divieto di lettura diventa un vincolo attivo, non piu una condizione di fatto",
+  "contesto": "Il piano collocava L07 nell'onda 1, in parallelo a L04 e L06, quando site/ non esisteva: i test non potevano che nascere dalla spec. Dopo il merge di #34 site/ e su main e la sessione che delega puo aprirlo. La regola di L07.scritti_dalla_spec resta la stessa, ma ora va imposta a un agente che ha i file sotto mano.",
+  "alternative": [
+    { "opzione": "delegare L07 senza vincoli di lettura, ora che l'implementazione esiste", "scartata_perche": "L12 fa di questi test il contenuto del gate ci: un test scritto sui selettori di site/ descriverebbe l'implementazione e il gate misurerebbe se stesso. E' la ragione scritta in L07.scritti_dalla_spec, non una preferenza di questo giro" },
+    { "opzione": "rimandare L07 dopo L04 e L06 e scriverlo sul prodotto finito", "scartata_perche": "stessa obiezione, aggravata: sarebbe il prodotto a dettare i criteri invece della spec. E CLAUDE.md regola 3 separa chi scrive il codice da chi scrive i test di accettazione" },
+    { "opzione": "delegare con divieto esplicito di aprire site/** e le bozze legali, eccetto i quattro artefatti che la spec nomina come sorgente dei valori attesi", "scartata_perche": "scelta" }
+  ],
+  "evidenza": [
+    "$ git log --oneline -1 origin/main → 718d54a feat(site): L05 — impalcatura di site/ (#8) (#34): site/ e su main, la tentazione e reale",
+    "$ git merge-base --is-ancestor origin/main HEAD → exit=0 sul ramo lotto/l07-collaudo-22-criteri, come chiede docs/HANDOFF.md",
+    "piano, L07.non_tocca: «site/** anche in lettura mentre si scrivono i test»; restano leggibili solo site/src/dati/sito.json, contatto.json, listino.json e contracts/design-tokens.json",
+    "piano, L07.verifica: «alla fine del lotto pnpm exec playwright test esce diverso da 0 e ogni criterio ha almeno un test che fallisce per pagina mancante, non per errore di sintassi»"
+  ],
+  "esito": "L07 delegato a un @qa-test nuovo sul ramo lotto/l07-collaudo-22-criteri, pubblicato prima di aprire la worktree; i quattro file di dati sono nominati uno per uno nel mandato, tutto il resto di site/ e chiuso",
+  "umano_coinvolto": false
+}

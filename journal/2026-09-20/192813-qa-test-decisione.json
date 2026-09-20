@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T19:28:13+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "e2e/modi-di-sbagliare-misura.spec.ts: tre prove-by-reversion sul METODO di misura, non sul prodotto",
+  "contesto": "Richiesta esplicita di Andrea: mettere a test tre modi di sbagliare misura trovati davvero in L06/L07 — (1) build verde che non esercita il codice sotto esame, (2) entità HTML (&#39;) che falsificano una ricerca di cifre sul sorgente grezzo, (3) regex con DOTALL (flag s) che scavalca il confine fra due elementi. Non sono criteri di accettazione della issue #8: non hanno id AC*/N*. Rischio esplicito segnalato da Andrea: se nessuno li ha mai visti diventare rossi sul caso malato, sono una speranza, non una prova.",
+  "alternative": [
+    {
+      "opzione": "un solo assert per caso che verifica solo il comportamento sano",
+      "scartata_perche": "non e' una prova-by-reversion: non mostra mai il falso verde, quindi non prova che il test sa distinguere sano da malato"
+    },
+    {
+      "opzione": "riusare page.route() per simulare una route rotta del sito vero",
+      "scartata_perche": "la consegna vieta di toccare site/ per questo file; il caso malato va costruito in memoria (page.setContent o stringhe cheerio), non contro una route reale"
+    }
+  ],
+  "esito": "applicata: e2e/modi-di-sbagliare-misura.spec.ts, tre test, ciascuno con: (a) il modo sbagliato di misurare che, sul caso malato costruito esplicitamente, produce un falso verde -- dimostrato con un'asserzione esplicita, non assunto; (b) il modo giusto di misurare che sullo stesso caso malato fallisce in modo leggibile; (c) il modo giusto che sul caso sano passa e (per il caso 1) attraversa davvero il contenuto. Prima di scrivere il file, verificato con e2e/*.spec.ts esistenti che nessuno dei tre difetti e' presente nei test di L07 gia' scritti: nessun regex con flag 's' fuori dal file nuovo (grep mirato), e ogni ricerca di cifre nei file esistenti (AC6, AC41, guardia-esistenza.ts) passa da cheerio $('body').text() -- mai dal sorgente grezzo. Nessun finding da riportare su questo fronte.",
+  "umano_coinvolto": false
+}

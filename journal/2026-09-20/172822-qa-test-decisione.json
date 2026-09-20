@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-20T17:28:22+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "F",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Correzione puntuale gruppo F: la guardia anti-404 di AC39 controlla l'h1, non <main>, richiesta esplicita di Andrea",
+  "contesto": "Andrea ha chiesto che ogni test che misura un budget in tests/perf/ac39-budget-pagine-pubbliche.spec.ts asserisca PRIMA che la pagina risponda 200 e che l'HTML contenga l'h1 atteso, e solo dopo misuri, come due asserzioni separate cosi' il fallimento dica quale delle due e' saltata. La versione precedente aveva gia' due asserzioni separate ma la seconda controllava il testo di <main> (lunghezza > 20 caratteri), non l'h1.",
+  "cosa_e_cambiato": {
+    "commento": "Il commento all'inizio del file (righe ~18-26) e quello sopra la guardia (righe ~50-54) aggiornati: parlano di h1, non piu' di <main>.",
+    "guardia": "Sostituita la lettura di $('main').text().length>20 con: primo elemento h1 dell'HTML servito ($('h1').first()), testo normalizzato (spazi collassati, trim), un'unica asserzione expect(testoH1.length).toBeGreaterThan(0). Il messaggio dell'asserzione e' costruito con un ternario su h1.length===0 per distinguere i due sotto-casi richiesti da Andrea: 'nessun h1 nell'HTML servito' vs 'h1 presente ma vuoto', senza aggiungere una terza asserzione — restano esattamente due asserzioni di guardia (status 200, poi h1 non vuoto), come chiesto testualmente ('Scrivilo come due asserzioni separate')."
+  },
+  "assunzione_dichiarata": "La spec (AC39, contracts/perf-budgets.json, docs/spec/issue-8.json) non prescrive il testo di nessun h1 per nessuna pagina. 'h1 atteso' in questo compito e' stato interpretato, come esplicitamente indicato dalla richiesta stessa, come 'un elemento h1 presente e non vuoto nell'HTML servito' — la stessa formulazione di AC1 ('l'HTML servito contiene gia' l'h1'). Non e' stato letto alcun file sotto site/** per scoprire il testo reale degli h1: la regola L07.scritti_dalla_spec e il vincolo esplicito del compito lo vietano. Nessun gate necessario: la richiesta era soddisfacibile cosi' com'e' formulata.",
+  "verifica_1_rosso_dice_quale_asserzione": {
+    "comando": "npx playwright test tests/perf/ac39-budget-pagine-pubbliche.spec.ts --reporter=list",
+    "output": "8 failed. Tutte e 8 le rotte falliscono sulla riga 56 (prima asserzione), esempio: 'Error: GET /legale/cookie-policy/\\n\\nexpect(received).toBe(expected) // Object.is equality\\n\\nExpected: 200\\nReceived: 404' con freccia sulla riga 'expect(risposta?.status(), `GET ${pagina.rotta}`).toBe(200);'. Stesso pattern per Home, SaaS, Hosted, On-premise, Confronto, Termini di servizio, Informativa privacy, Cookie policy. La seconda asserzione (h1) non viene mai raggiunta, come atteso: le pagine di vendita (L06) e legali (L04) non esistono ancora a questo URL servito."
+  },
+  "verifica_2_seconda_asserzione_non_e_un_guscio": {
+    "metodo": "Smoke temporaneo e non committato: tests/perf/smoke-h1-TEMP.spec.ts (creato, eseguito, poi cancellato con rm prima del commit; verificato con git status --short che dopo la cancellazione risulta modificato solo ac39-budget-pagine-pubbliche.spec.ts). Tre casi via page.setContent: (a) <main><h1>Titolo pieno</h1></main>, (b) <main><h1></h1></main>, (c) <main><p>Niente h1 qui</p></main> (nessun h1). Stessa logica della guardia reale (cheerio, $('h1').first(), testo normalizzato, ternario sul messaggio).",
+    "comando": "npx playwright test tests/perf/smoke-h1-TEMP.spec.ts --reporter=list",
+    "output": "1 passed, 2 failed. (a) h1 pieno -> passa. (b) h1 vuoto -> fallisce con messaggio 'Error: <h1>: h1 presente ma vuoto'. (c) nessun h1 -> fallisce con messaggio 'Error: <h1>: nessun h1 nell'HTML servito'. I tre casi si distinguono e i messaggi sono quelli richiesti da Andrea: chi legge il rosso sa quale dei due motivi si e' verificato senza aprire il codice.",
+    "pulizia": "rm tests/perf/smoke-h1-TEMP.spec.ts e rm -rf test-results eseguiti prima di git add; git status --short conferma un solo file modificato nel repo."
+  },
+  "gate_aperti": [],
+  "esito": "modifica applicata a un solo file (tests/perf/ac39-budget-pagine-pubbliche.spec.ts), entrambe le verifiche richieste eseguite con comando e output riportati, nessun gate necessario",
+  "umano_coinvolto": false
+}

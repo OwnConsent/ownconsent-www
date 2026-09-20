@@ -12,3 +12,7 @@ dist/
 # un repository dentro il repository.
 .claude/*
 !.claude/settings.json
+
+# Progetto di collaudo alla radice (ADR-0002 D8): artefatti di Playwright.
+test-results/
+playwright-report/

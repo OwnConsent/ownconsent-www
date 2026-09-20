@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-20T16:16:54+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "Secondo lotto di fila fermo al limite di turni senza un solo push: l'ordine di spingere dopo il primo commit non serve se il primo commit non arriva mai",
+  "contesto": "Il mandato di L07 portava la correzione scritta dopo L05: «push subito dopo il PRIMO commit, e poi dopo ogni commit», con la misura di L05 citata per esteso. L'agente si e' fermato di nuovo al limite dell'ambiente con zero commit e zero push. La correzione era condizionata a un evento che non si e' verificato.",
+  "evidenza": [
+    "notifica di fine task: «stopped at its 45-turn limit», tool_uses=45, subagent_tokens=142918, duration_ms=404875, nessun report consegnato",
+    "$ git log --oneline origin/main..origin/lotto/l07-collaudo-22-criteri → fd36c5a, 99f522e: solo i due commit che avevo fatto io prima di delegare, nessuno dell'agente",
+    "$ git status --porcelain (worktree dell'agente) → ?? eslint.config.js, ?? journal/2026-09-20/161250-qa-test-fallimento.json, ?? package.json, ?? playwright.config.ts, ?? pnpm-lock.yaml",
+    "e2e/ e tests/perf/ non esistono: nessuno dei 22 criteri ha un test",
+    "$ git push origin lotto/l07-collaudo-22-criteri → fd36c5a..660bd08, salvataggio fatto dalla sessione come in L05"
+  ],
+  "cosa_si_e_imparato": "Una regola di salvataggio non va legata a un evento che l'agente controlla e puo' rinviare. «Spingi dopo il primo commit» lascia decidere all'agente quando comincia a committare, e l'impalcatura di un progetto di collaudo invita a finirla tutta prima di committarla. La correzione del prossimo giro non e' un'esortazione piu' forte: e' ridurre la taglia del compito sotto il limite di turni e imporre il commit sul singolo file, non sul gruppo. Il tetto_turni 110 scritto nel piano non esiste per l'ambiente, che ne concede 45: un numero nel piano non e' un vincolo eseguibile, e il piano va corretto.",
+  "esito": "file in salvo con 660bd08 (non verificati); L07 riparte spezzato in gruppi di criteri, ognuno con un agente nuovo e taglia sotto il limite",
+  "umano_coinvolto": false
+}

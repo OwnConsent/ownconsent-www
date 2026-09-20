@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-20T16:52:10+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Gruppo E (AC6, N2) — un solo aiuto di copia temporanea, due criteri",
+  "contesto": "L07 gruppo E: AC6 (listino senza valori + configurazione di prova) e N2 (indirizzo di contatto unico e sostituibile) sono gli unici due criteri che richiedono la copia temporanea di ADR-0002 D4. Letti docs/spec/issue-8.json (AC6, N2, rese N2 e segnaposto_dichiarati) e la procedura D3-D4 dell'ADR. Il webServer principale di playwright.config.ts (porta 4321) resta la build 'normale' con listino.json e contatto.json com'e' nel repository: serve solo per la meta' 'prima'/'da definire' di ciascun criterio. La meta' con valori sostituiti richiede una copia temporanea servita su una porta diversa, mai una modifica sul posto (D4 scarta esplicitamente quell'alternativa).",
+  "alternative": [
+    { "opzione": "per N2, costruire una copia temporanea anche per la ricerca 'prima' dell'indirizzo unico", "scartata_perche": "la ricerca 'prima' e i link mailto: 'prima' si leggono dal build normale gia' servito da playwright.config.ts (stessa build che alimenta gli altri criteri del ramo): una seconda copia qui sarebbe una build in piu' non richiesta dalla procedura D4, che riserva la copia alla sostituzione della fixture" },
+    { "opzione": "un aiuto di copia per AC6 e uno diverso per N2", "scartata_perche": "D4 dice esplicitamente 'un solo aiuto in e2e/, usato da due criteri reali'; i quattro passi (copia, sostituzione di UNA fixture, install, build+servizio su porta diversa) sono identici, cambia solo quale file viene sostituito" },
+    { "opzione": "verificare 'ogni link di contatto' su tutte le 8 pagine di e2e/pagine.ts", "scartata_perche": "N2.allora nomina esplicitamente solo le pagine SaaS/Hosted/On-premise (oggetto di modalita') e le pagine legali (senza oggetto): Home e Confronto non sono nominate, quindi il test non assume che abbiano un link mailto: sarebbe una lettura implicita di site/ per sapere se ce l'hanno" },
+    { "opzione": "porte 4322 (AC6) e 4323 (N2) per le due copie, distinte da 4321 e fra loro", "scartata_perche": null }
+  ],
+  "evidenza": [
+    "docs/spec/issue-8.json AC6.allora: 'al posto di ogni valore mancante compare da definire, e nell'HTML servito non compare alcun importo in euro ne' alcun numero di richieste, GB, memoria o CPU che non provenga dalla configurazione'",
+    "docs/spec/issue-8.json N2.allora: 'prima della modifica l'indirizzo compare in un solo file sorgente di site/... dopo la modifica e la nuova build il nuovo indirizzo compare in ogni link di contatto... e il vecchio non compare in nessun HTML servito'",
+    "docs/adr/0002-struttura-site.md D4: procedura in 4 passi (copia site/+contracts/ senza node_modules/dist/.astro con gli stessi percorsi relativi; sostituzione della sola fixture; pnpm install --frozen-lockfile; build e servizio su porta diversa); D8 rifiuta il workspace pnpm perche' la copia di site/ deve essere autosufficiente (lockfile dentro site/)",
+    "docs/adr/0002-struttura-site.md D3: contatto.json ha l'indirizzo scritto una volta sola, in un campo solo ('indirizzo'), non spezzato in nome+dominio: la ricerca N2 cerca quella stringa intera"
+  ],
+  "esito": "adottata",
+  "mappa_criterio_test": {
+    "AC6": "e2e/ac06-da-definire-senza-valori.spec.ts",
+    "N2": "e2e/n2-indirizzo-unico-e-sostituibile.spec.ts"
+  },
+  "aiuto_condiviso": "e2e/fixtures/copia-temporanea.ts",
+  "fixture": ["e2e/fixtures/listino-di-prova.json", "e2e/fixtures/contatto-di-prova.json"],
+  "umano_coinvolto": false
+}

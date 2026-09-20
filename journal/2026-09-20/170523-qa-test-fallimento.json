@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-20T17:05:23+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "gruppo": "F",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "Due bug di percorso trovati eseguendo il codice appena scritto, prima di fidarsi che 'funzionasse'",
+  "contesto": "Scritto tests/perf/misura-laboratorio.ts e tests/perf/ac39-budget-pagine-pubbliche.spec.ts guardando solo la spec, senza eseguire. Alla prima esecuzione (una sola pagina, come da istruzione) sono emersi due errori di percorso relativo, entrambi del tipo che una revisione a occhio difficilmente coglie.",
+  "tentativi": [
+    {
+      "cosa": "Import '../e2e/pagine' in tests/perf/ac39-budget-pagine-pubbliche.spec.ts",
+      "errore": "Cannot find module '.../tests/e2e/pagine' — e2e/ è alla radice del repo, non dentro tests/. Da tests/perf/ servono due livelli, non uno.",
+      "corretto_in": "'../../e2e/pagine'"
+    },
+    {
+      "cosa": "RADICE_REPO in tests/perf/misura-laboratorio.ts calcolata con path.resolve(dirname, '..') per analogia con e2e/pagine.ts",
+      "errore": "ENOENT su tests/contracts/perf-budgets.json: e2e/pagine.ts sta a un livello dalla radice quindi '..' basta, ma misura-laboratorio.ts sta a DUE livelli (tests/perf/), quindi serviva path.resolve(dirname, '..', '..'). Copiare il pattern di un file vicino senza verificarne la profondità ha prodotto il bug.",
+      "corretto_in": "path.resolve(dirname, '..', '..')"
+    }
+  ],
+  "cosa_si_e_imparato": "Il layout a due livelli di tests/perf/ rispetto a e2e/ (un livello) rompe l'analogia diretta con i pattern di percorso già visti in e2e/pagine.ts. Senza l'esecuzione (anche solo su un endpoint di comodo come /robots.txt, non una delle 8 pagine pubbliche) questi due bug sarebbero rimasti nel codice consegnato: la guardia anti-404 di AC39 li avrebbe comunque mascherati, perché fallisce prima di arrivare al codice rotto (il primo bug è a monte della guardia e l'ha bloccata subito con un errore di modulo; il secondo è a valle della guardia e su pagine 404 non viene mai raggiunto). Lo smoke test contro /robots.txt (una risorsa 200 reale, non una delle 8 pagine pubbliche) è stato l'unico modo per eseguire davvero quel percorso di codice ed è quello che ha rivelato il secondo bug.",
+  "evidenza": [
+    "npx playwright test tests/perf/ac39-budget-pagine-pubbliche.spec.ts -g Home: 'Cannot find module .../tests/e2e/pagine'",
+    "dopo la correzione dell'import, stesso comando: fallisce su guardia 404 (atteso), non più su import",
+    "smoke test locale (non committato) contro /robots.txt: 'ENOENT: no such file or directory, open .../tests/contracts/perf-budgets.json' prima della correzione di RADICE_REPO",
+    "dopo la correzione: SMOKE RISULTATO {\"rotta\":\"/robots.txt\",\"statoPrimaEsecuzione\":200,\"jsInizialeGzipKb\":0,\"cssGzipKb\":0,\"lcpMsMediana\":204,\"clsMediana\":0,\"lcpCampioniMs\":[192,208,208,204,196],\"clsCampioni\":[0,0,0,0,0],\"esecuzioni\":5}"
+  ],
+  "esito": "corretto nello stesso giro, prima del commit finale",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,26 @@
+{
+  "$nota": "Configurazione di prova di AC6 (docs/spec/issue-8.json), usata solo dalla copia temporanea di ADR-0002 D4 al posto di site/src/dati/listino.json. Valori inventati e riconoscibili come finti a colpo d'occhio (cifre ripetute per gruppo: 1 per SaaS, 2 per Hosted, 3 per On-premise) — non sono candidati di prezzo (CLAUDE.md: i prezzi non sono definiti, nessun agente inventa un importo).",
+  "saas": {
+    "piani": [
+      {
+        "nome": "Piano di prova AC6",
+        "tetto_richieste": 111111,
+        "canone_mensile_eur": "111111.11"
+      }
+    ]
+  },
+  "hosted": {
+    "taglie": [
+      {
+        "nome": "Taglia di prova AC6",
+        "disco_gb": 222222,
+        "memoria_gb": 222222,
+        "cpu": 222222,
+        "prezzo_eur": "222222.22"
+      }
+    ]
+  },
+  "on-premise": {
+    "licenza_annuale_eur": "333333.33"
+  }
+}

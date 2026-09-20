@@ -19,8 +19,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const MESI_INGLESI =
   /\b(January|February|March|April|May|June|July|August|September|October|November|December)\b/gi;
@@ -30,8 +30,7 @@ test.describe('AC41: italiano e formato data', () => {
     test(`AC41: ${pagina.nome} (${pagina.rotta}) non ha elementi marcati con una lingua diversa da it`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
 
       const linguaEstranea = $('[lang]').filter((_, el) => {
         const lang = ($(el).attr('lang') ?? '').toLowerCase();
@@ -47,8 +46,7 @@ test.describe('AC41: italiano e formato data', () => {
     test(`AC41: ${pagina.nome} (${pagina.rotta}) non ha date in formato ISO o con mese in inglese`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const testo = $('body').text();
 
       const dateIso = testo.match(/\b\d{4}-\d{2}-\d{2}\b/g) ?? [];
@@ -61,8 +59,7 @@ test.describe('AC41: italiano e formato data', () => {
     test(`AC41: ${pagina.nome} (${pagina.rotta}) — ogni data con separatore "/" è nel formato gg/mm/aaaa`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const testo = $('body').text();
 
       const dateConSlash = [...testo.matchAll(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/g)];

@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-20T18:52:51+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "05-collaudo",
+  "tipo": "decisione",
+  "titolo": "Ultimo pezzo del difetto di infrastruttura: porta fissa scritta a mano in copia-temporanea.ts e nei due file di criteri (4322, 4323)",
+  "contesto": "(b1) e (b2) del giro precedente sono chiusi (--ignore-lock nell'array di spawn, chiudi() attende l'uscita reale). Restava la porta fissa: con fullyParallel:true più copie temporanee (AC6 e la propria fixture, N2 e la propria) possono essere costruite in parallelo da worker diversi e contendersi la stessa porta hardcoded. Misurata la baseline PRIMA di ogni modifica di questo giro, campo verificato vuoto: $ pgrep -fc 'astro.mjs[ ]preview' -> 0. Poi $ npx playwright test --reporter=list -> 14 failed, 235 passed (1.1m), EXIT=1 (stesso numero della sessione precedente: riprodotto, non solo riportato). Dopo la suite: $ sleep 3; pgrep -fc 'astro.mjs[ ]preview' -> 2; $ ls -d /tmp/ownconsent-l07-* | wc -l -> 5. readlink /proc/<pid>/cwd sui due orfani: /tmp/ownconsent-l07-H8e0YC/site e /tmp/ownconsent-l07-yjSdsU/site, entrambi (deleted). Due copie hanno provato a servire sulla stessa porta fissa nello stesso momento: un processo vince il bind, l'altro fallisce attendiPronto() o resta a metà chiusura; il worker che perde comunque non ferma il proprio processo prima di finire, e chiudi() dell'altro non basta a far sparire quello vincente se il test che lo possedeva è già segnato fallito e non arriva a invocare afterAll con lo stesso ordine atteso.",
+  "alternative": [
+    {
+      "opzione": "porta fissa diversa per ogni file di criterio, scelta a mano (es. 4322 e 4323 restano, o se ne aggiungono altre)",
+      "scartata_perche": "è la richiesta esplicita del mandato a vietarla ('nessun numero di porta scritto a mano'), e comunque non risolve nulla in fullyParallel: con più worker che costruiscono più copie dello STESSO file di criterio in parallelo (Playwright può eseguire test dello stesso describe su worker diversi), la collisione si ripresenta sulla stessa costante"
+    },
+    {
+      "opzione": "leggere la porta dallo stdout del processo astro preview (richiede stdio:'pipe' invece di 'ignore', con --port 0)",
+      "scartata_perche": "cambia il modo in cui il processo figlio viene osservato (oggi 'ignore') e introduce un parsing di un messaggio JSON di Astro che potrebbe cambiare formato fra versioni; il journal della sessione precedente (172822/174600 circa, voce 'qa-test-misura' delle 16:46) aveva già misurato con successo che '--port 0' fa scegliere la porta al sistema operativo e Astro la stampa su stdout, ma leggere lo stdout di un processo detached con stdio:'pipe' aggiunge un canale da drenare per tutta la vita del processo (altrimenti il buffer si riempie e il processo si blocca) solo per questo scopo. Scartata a favore del mezzo già in produzione nello stesso repository per lo stesso problema"
+    },
+    {
+      "opzione": "bind-su-0 con net.createServer(), leggere la porta assegnata, chiudere il socket e passare quella porta a --port (scelta)",
+      "scartata_perche": "non scartata: è esattamente il mezzo già scelto e misurato per playwright.config.ts (funzione portaLibera(), stesso giro precedente, voce 185046 circa). Duplicata qui come funzione locale in copia-temporanea.ts invece di importarla da playwright.config.ts, perché importare il file di configurazione eseguirebbe anche il suo codice di modulo (lettura di OWNCONSENT_E2E_PORT, defineConfig()), un accoppiamento non necessario per una singola funzione di 15 righe"
+    }
+  ],
+  "evidenza": [
+    "$ pgrep -fc 'astro.mjs[ ]preview' (campo prima) -> 0",
+    "$ npx playwright test --reporter=list -> 14 failed, 235 passed (1.1m), EXIT=1 — stessi 14 rossi della sessione precedente (3 AC4, 3 AC6 sulla copia, 2 N2 build normale sulle pagine legali, 6 N2 sulla copia)",
+    "$ sleep 3; pgrep -fc 'astro.mjs[ ]preview' -> 2 orfani; $ ls -d /tmp/ownconsent-l07-* | wc -l -> 5 cartelle mai cancellate",
+    "readlink /proc/14434/cwd -> /tmp/ownconsent-l07-H8e0YC/site ; readlink /proc/14473/cwd -> /tmp/ownconsent-l07-yjSdsU/site: entrambi orfani da copie con porta fissa collisa"
+  ],
+  "esito": "scelto bind-su-0-poi-rilascio (stesso mezzo di playwright.config.ts::portaLibera, duplicato localmente in copia-temporanea.ts). FINESTRA DI RISCHIO dichiarata esplicitamente, non assorbita: fra la chiusura del socket di prova e l'avvio di 'astro preview --port <n>', un altro processo del sistema (incluso un'altra copia temporanea che chiede una porta nello stesso istante) potrebbe legarsi a quella porta per primo; in quel caso 'astro preview' fallirebbe l'avvio e attendiPronto() scadrebbe con errore esplicito (mai un falso positivo silenzioso, perché attendiPronto() già oggi verifica solo che RISPONDA quell'URL — il rischio residuo è un fallimento rumoroso di avvio, non una risposta sbagliata scambiata per quella giusta). Stessa finestra già accettata implicitamente da playwright.config.ts per il webServer principale: non è un rischio nuovo introdotto qui, è lo stesso rischio esteso al secondo punto del codice che ne aveva bisogno. Non ridotta con retry-su-bind perché il mandato non lo chiede e la sessione precedente non lo ha fatto per l'altro caso.",
+  "umano_coinvolto": false
+}

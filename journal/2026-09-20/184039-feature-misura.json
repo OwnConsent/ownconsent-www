@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T18:40:39+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Con L06 su main la suite gira contro 8 rotte vive: 11 rossi su 249, e il difetto (b) dell'infrastruttura NON e' chiuso",
+  "contesto": "Prima misura di L07 presa contro un server di cui si controlla la provenienza: il difetto (a) e' corretto (porta dal sistema operativo, niente riuso), quindi il numero significa qualcosa. Il difetto (b) invece e' ancora aperto, misurato e non dedotto.",
+  "evidenza": [
+    "campo verificato vuoto prima di misurare: $ pgrep -fc 'astro.mjs[ ]preview' → 0",
+    "$ npx playwright test --reporter=list → 11 failed, 238 passed (20.7s), EXIT=1",
+    "PROVA 1 (difetto a, chiusa): campo vuoto → suite avviata da sola → ac03 2 passed, EXIT=0, orfani dopo 0",
+    "PROVA 2 (difetto a, chiusa): due esecuzioni di fila, entrambe EXIT=0, orfani dopo 0: nessun riuso, nessuna porta occupata",
+    "PROVA 3 (difetto b, FALLITA): dopo AC6+N2 → $ pgrep -fc 'astro.mjs[ ]preview' → 5. I cinque cwd puntano a /tmp/ownconsent-l07-*/site marcati (deleted): chiudi() cancella la cartella ma non uccide il processo",
+    "i 5 rossi di N2 sulla copia temporanea fanno sospettare che la sostituzione della fixture non arrivi alla build: /saas/, /hosted/, /on-premise/ hanno il mailto nella build normale e falliscono sulla copia",
+    "i 2 rossi di N2 sulla build normale (termini-di-servizio, cookie-policy: nessun link mailto) coincidono con il gate aperto dalla sessione di L04 il 20/09 alle 16:04, voce 160446-feature-gate.json: «la rotta delle bozze legali non rende nessun recapito»",
+    "i 3 rossi di AC4 dicono «esiste una sezione per SaaS con contenuto» → Received 0: il test pretende una sezione dedicata per modalita', struttura che la spec non prescrive e che AC4 stesso descrive come tabella con una cella per modalita'"
+  ],
+  "esito": "difetto (a) chiuso con prova; difetto (b) aperto. Degli 11 rossi: 2 sono un buco di prodotto gia' segnalato come gate da L04, 3 sono con ogni probabilita' un difetto del test di AC4 che assume una struttura non prescritta, 6 vanno capiti insieme alla copia temporanea. Nessuno dei tre e' ancora confermato: la triage e' il giro successivo",
+  "umano_coinvolto": false
+}

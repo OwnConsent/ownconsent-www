@@ -19,8 +19,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { leggiDatiContatto } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTA_PRIVACY = '/legale/informativa-privacy/';
 const ROTTE_LEGALI = [
@@ -44,9 +44,7 @@ test.describe('N3: pagine legali — titolare e recapito unico', () => {
   test('N3: /legale/informativa-privacy/ identifica il titolare del trattamento (segnaposto dichiarato, testo non prescritto)', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA_PRIVACY);
-    expect(risposta.status(), `GET ${ROTTA_PRIVACY}`).toBe(200);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA_PRIVACY);
     const testo = ($('main').text() || $('body').text()).replace(/\s+/g, ' ');
 
     const dopo = testoDopoTitolare(testo);
@@ -56,8 +54,7 @@ test.describe('N3: pagine legali — titolare e recapito unico', () => {
   test('N3: /legale/informativa-privacy/ contiene un link mailto: all\'indirizzo unico di contatto, senza oggetto precompilato', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA_PRIVACY);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA_PRIVACY);
     const { indirizzo } = leggiDatiContatto();
 
     const attesoMailtoSenzaOggetto = new RegExp(`^mailto:${escapeRegExp(indirizzo)}$`, 'i');
@@ -73,8 +70,7 @@ test.describe('N3: pagine legali — titolare e recapito unico', () => {
     test(`N3: ${pagina.nome} (${pagina.rotta}) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const { indirizzo } = leggiDatiContatto();
 
       const hrefMailto = $('a[href^="mailto:"]')

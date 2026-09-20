@@ -1,0 +1,13 @@
+{
+  "ts": "2026-09-20T16:29:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "Race sul marcatore condiviso: il commit del journal (858bfd8) è firmato Cantiere-Agent: orchestrator, non qa-test",
+  "contesto": "Ho scritto 'qa-test' in .git/cantiere-current-agent, poi eseguito `git commit` in un comando separato subito dopo. Nell'intervallo un altro lotto in parallelo ha riscritto lo stesso file con 'orchestrator', e il git hook prepare-commit-msg ha letto quel valore. `git log -1 --format=%b` dopo il commit mostrava 'Cantiere-Agent: orchestrator'.",
+  "cosa_si_e_imparato": "Il marcatore va scritto e il commit va eseguito nella STESSA invocazione di Bash (stesso `&&`), non in due chiamate separate: due chiamate separate lasciano una finestra in cui un altro agente in un'altra worktree può sovrascrivere il file condiviso. Il commit 858bfd8 resta con l'attribuzione sbagliata: non l'ho corretto con un amend/force-push perché il ramo è condiviso con altri lotti in corso e la firma è una comodità (il journal resta la fonte autorevole del chi/perché, come da CLAUDE.md). Da qui in avanti: printf del marcatore + git add + git commit in un solo comando.",
+  "esito": "non_corretto_su_git_segnalato_qui",
+  "umano_coinvolto": false
+}

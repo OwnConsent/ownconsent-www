@@ -49,6 +49,12 @@ nessuno**, perché l'ipotesi (b) di ADR-0002 è falsa: lightningcss elabora ogni
   svista del disegno: è lo stato di una funzionalità non ancora costruita.
 - Da smaltire: le regole responsive rientrano nel lotto che seguirà la decisione di
   @architect su come i componenti `.astro` usano i breakpoint.
+  **Aggiornamento 20/09/2026:** quella decisione è **ADR-0004** (proposta), che ha
+  riprodotto la smentita fuori dal repository e fissa il meccanismo — `@media (--bp-md)` nei
+  componenti, risolto da un `visitor` di Lightning CSS. Questa voce si chiude quando L06
+  mette i breakpoint e il footer torna a più di una colonna. ADR-0004 ha inoltre misurato
+  che l'isolamento è **per file**: la formulazione qui sopra («blocchi `<style>`») è più
+  stretta del vero, perché vale anche per un `.css` globale.
 
 **(b) Tre file di configurazione non previsti dal piano, ed effettivamente necessari.**
 Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.

@@ -242,6 +242,16 @@ Regole di trasformazione, sulla forma scritta da L02:
   `customMedia` attiva). `lightningcss` è una dipendenza di build aggiunta da L05.
   **Ipotesi da misurare in L05:** che `@custom-media` venga risolto anche negli `<style>`
   dei file `.astro`. Se non succede, L05 si ferma e torna qui.
+
+  > **Ipotesi SMENTITA in L05, misurata di nuovo il 20/09/2026 — vedi ADR-0004.**
+  > Lightning CSS elabora ogni file isolato e non risolve le definizioni prese da un altro
+  > file: non solo negli `<style>` dei `.astro`, ma anche in un normale `.css` globale.
+  > `pnpm build` esce 1 con `Custom media query --bp-md is not defined`.
+  > Il ritorno previsto da questa riga è avvenuto: **ADR-0004** decide come i componenti
+  > usano i breakpoint (un `visitor` di Lightning CSS) e corregge la riga `breakpoint.<k>`
+  > della tabella qui sopra — le definizioni `@custom-media` **non** si generano più,
+  > `--breakpoint-<k>` resta. Fino all'attuazione di ADR-0004, in `site/` non c'è nessun
+  > `@media` (`DESIGN-AMENDMENTS.md` A02(a)).
 - Verifica dei valori a mano (L05 la esegue e annota l'output, L08 la ripete):
   `grep -rnE '#[0-9a-fA-F]{3,8}\b|[0-9.]+(px|rem|em)\b' site/src --include='*.astro' --include='*.css'`
   deve restituire zero righe.

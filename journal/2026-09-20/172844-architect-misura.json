@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T17:28:44+02:00",
+  "agente": "architect (sessione principale)",
+  "issue": "8",
+  "lotto": "L06-prerequisito",
+  "stadio": "01-decisione",
+  "tipo": "misura",
+  "titolo": "cssTarget dalla politica browser di Andrea: la sintassi di intervallo scompare, e il controllo ha la sua prova-by-reversion",
+  "contesto": "Andrea ha deciso i browser supportati il 20/09 — ultime due versioni maggiori di Chrome, Firefox ed Edge, piu' Safari e iOS dalla 15.4 — chiudendo la domanda che ADR-0004 aveva aperto e non deciso. Chiesto di configurare vite.build.cssTarget (non vite.css.lightningcss.targets, misurato senza effetto) e di aggiungere un criterio verificabile con prova-by-reversion.",
+  "evidenza": [
+    "Politica risolta in versioni concrete, non scritte a memoria: $ pnpm exec browserslist 'last 2 chrome versions, last 2 firefox versions, last 2 edge versions, safari >= 15.4, ios_saf >= 15.4' → chrome 151, chrome 150, edge 151, edge 150, firefox 154, firefox 153, ios_saf da 26.6 giu' fino a 15.4, safari da 26.6 giu' fino a 15.4. Dati di browserslist 4.29.0",
+    "Configurazione scelta: vite.build.cssTarget = ['chrome150','edge150','firefox153','safari15.4','ios15.4'] — il pavimento della politica, cioe' la versione piu' vecchia ammessa per ogni motore",
+    "$ pnpm build → Complete!, exit=0 ; media query emesse: @media (min-width:1280px), @media (min-width:768px), @media (min-width:1280px) and (orientation:landscape). La sintassi di intervallo e' sparita da tutte e tre",
+    "Ogni target verificato da solo, per non dare per buono che Vite li converta tutti: cssTarget=['ios15.4'] → @media (min-width:1280px) ; ['safari15.4'] → (min-width:1280px) ; ['safari16.4'] → (width>=1280px) ; ['chrome150','edge150','firefox153'] → (width>=1280px). Quindi ios e' davvero onorato da Vite (non scartato in silenzio) e il pavimento che fa il lavoro e' 15.4: dalla 16.4 Safari regge l'intervallo",
+    "CONTROLLO proposto a @qa-test: $ grep -rnE '\\((width|height)[[:space:]]*[<>]|[<>]=?[[:space:]]*(width|height)[[:space:]]*[<>]' dist --include='*.css' --include='*.html' → occorrenze: 0",
+    "PROVA-BY-REVERSION, togliendo la riga build.cssTarget e rifacendo la build: $ pnpm build → Complete!, exit=0 (la build resta VERDE) ; stesso controllo → occorrenze: 3, con dist/index.html che contiene @media (width>=1280px), @media (width>=768px), @media (width>=1280px) and (orientation:landscape)",
+    "Ripristinata la riga: occorrenze 0. Il meta viewport content=\"width=device-width\" e' presente nel documento e NON fa falso positivo: il pattern pretende un operatore di confronto accanto a width"
+  ],
+  "esito": "cssTarget fissato in ADR-0004 con la politica di Andrea; quarto criterio per @qa-test aggiunto, con la prova-by-reversion misurata. Da notare per chi implementa: senza cssTarget la build NON diventa rossa, quindi il criterio deve essere un controllo a se' sul CSS prodotto e non l'attesa di un fallimento di build",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 20/09/2026: ultime due versioni maggiori di Chrome, Firefox ed Edge, piu' Safari e iOS dalla 15.4, perche' una media query non supportata non degrada, sparisce"
+}

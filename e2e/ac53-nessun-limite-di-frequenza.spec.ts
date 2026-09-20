@@ -14,8 +14,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const LIMITE_DI_FREQUENZA =
   /\b(limite\s+di\s+frequenza|rate[\s-]?limit\w*|richieste\s+al\s+secondo|richieste\s+al\s+minuto|frequenza\s+delle\s+richieste|throttl\w*)\b/i;
@@ -25,8 +25,7 @@ test.describe('AC53: nessun limite di frequenza delle richieste', () => {
     test(`AC53: ${pagina.nome} (${pagina.rotta}) non presenta un limite di frequenza delle richieste`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      const $ = cheerio.load(await risposta.text());
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
       const testo = $('body').text().replace(/\s+/g, ' ');
 
       expect(

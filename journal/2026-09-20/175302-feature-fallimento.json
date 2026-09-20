@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-20T17:53:02+02:00",
+  "agente": "feature (sessione principale)",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "Il webServer di playwright.config.ts non regge Astro 7: tutte le misure di L07 venivano da un server orfano di un'altra worktree, cancellata",
+  "contesto": "Dopo il merge di origin/main la suite non partiva piu': «Error: Process from config.webServer exited early». Cercando la causa e' emerso che il server su 4321 non era mai stato avviato da chi eseguiva i test.",
+  "evidenza": [
+    "$ ss -ltnp | grep 4321 → node pid=3162",
+    "$ ps -o pid,lstart,args -p 3162 → avviato Sun Sep 20 16:23:59 2026, astro preview --port 4321, dalla worktree agent-ae0e7dea42944dd33 (gruppo A)",
+    "$ ls -l /proc/3162/cwd → punta a una cartella marcata (deleted): la worktree del gruppo A non esiste piu'",
+    "$ curl -o /dev/null -w '%{http_code}' sulla rotta di robots servita da quel processo → 404, cioe' il server non leggeva piu' nessun file",
+    "$ pnpm --dir site exec astro preview status → «Preview server running at 127.0.0.1:4326 (pid 3292, background)»: astro 7 avvia in background e il processo in primo piano esce con 0, che Playwright legge come «uscito subito»",
+    "$ pgrep -f 'astro.mjs preview' → quattro processi da /tmp/ownconsent-l07-FSNv7B, -XEL0eb, -8VuXOs, -dCXlLv: copie temporanee di AC6 e N2 rimaste accese, il loro chiudi() non ferma un server sganciato",
+    "$ pnpm --dir site exec astro preview --help → esiste --ignore-lock, «start even if another one is already running, without checking or writing the lock file»"
+  ],
+  "cosa_si_e_imparato": "Due difetti nei file consegnati da L07, entrambi trovati misurando e non leggendo. Primo: webServer lancia «astro preview», che in Astro 7 si sgancia e ritorna subito; con reuseExistingServer true su una porta fissa, chi esegue i test finisce per misurare il server di un'altra worktree invece della build del proprio ramo. Le misure dei gruppi A-G erano corrette per contenuto solo perche' tutte le worktree avevano lo stesso site/ finche' L04 non e' atterrato: era una coincidenza, non una garanzia. Secondo: e2e/fixtures/copia-temporanea.ts perde un server per ogni esecuzione di AC6 e N2, e in CI (L12) questo esaurirebbe le porte. La correzione plausibile e' --ignore-lock nel comando di webServer piu' un arresto esplicito nel chiudi(), ma e' L07 a doverla scrivere, non questa sessione.",
+  "esito": "server orfani fermati; misura rifatta contro la build del ramo. I due difetti restano aperti e vanno corretti prima che L12 faccia di questi test un gate",
+  "umano_coinvolto": false
+}

@@ -10,12 +10,29 @@
  *      `contatto.json` per N2) con un file di `e2e/fixtures/`;
  *   3. installa dal lockfile senza modificarlo (`pnpm install --frozen-lockfile`);
  *   4. costruisce e serve la copia su una porta diversa da quella del webServer
- *      principale (127.0.0.1:4321, playwright.config.ts).
+ *      principale (playwright.config.ts, ora anch'essa ottenuta dal sistema operativo,
+ *      non più 127.0.0.1:4321 fisso).
  *
  * Non modifica mai `site/` sul posto: D4 scarta esplicitamente quell'alternativa,
  * perché un test interrotto lascerebbe sporca la copia di lavoro condivisa dalle
  * worktree. Ogni chiamata lavora su una cartella temporanea propria e la cancella
  * in `chiudi()`.
+ *
+ * Due difetti corretti in questo giro (issue #8, L07, journal 2026-09-20):
+ *
+ * - `astro preview` in Astro 7 si sgancia in un processo demone anche senza
+ *   `--background`: il processo spawnato qui restava vivo ma "sganciato" dal
+ *   gruppo di processi che `fermaProcesso()` credeva di controllare, quindi
+ *   `chiudi()` non lo fermava davvero (misurato: `pgrep -f "astro.mjs preview"`
+ *   trovava processi ancora vivi dopo `chiudi()`). `--ignore-lock` mantiene il
+ *   processo in primo piano nel gruppo spawnato con `detached: true`, quindi il
+ *   `SIGTERM` sul gruppo lo raggiunge davvero.
+ * - Porta non più fissa: il parametro `porta` passato da chi chiama (AC6, N2) è
+ *   mantenuto solo per compatibilità di tipo con quelle chiamate esistenti (non
+ *   toccabili da questo agente) e non è più usato per avviare il server. Si
+ *   richiede `--port 0` (porta libera assegnata dal sistema operativo) e si legge
+ *   la porta reale dal messaggio che il processo stampa su stdout all'avvio
+ *   ("Local http://127.0.0.1:PORTA/"): letta, non presunta.
  */
 
 import { mkdtempSync, cpSync, rmSync, existsSync } from 'node:fs';

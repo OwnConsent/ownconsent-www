@@ -12,8 +12,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { leggiDatiContatto } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTA = '/saas/';
 
@@ -25,9 +25,7 @@ test.describe('N1: pagina SaaS — chiusura e mailto', () => {
   test('N1: l\'ultimo blocco del contenuto principale di /saas/, prima del footer, contiene «scrivici e ti attiviamo noi» e un mailto: con oggetto SaaS', async ({
     request,
   }) => {
-    const risposta = await request.get(ROTTA);
-    expect(risposta.status(), `GET ${ROTTA}`).toBe(200);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     const main = $('main');
     expect(main.length, 'la pagina ha un <main>').toBeGreaterThan(0);
@@ -54,8 +52,7 @@ test.describe('N1: pagina SaaS — chiusura e mailto', () => {
   });
 
   test('N1: /saas/ non contiene moduli, date, liste d\'attesa né la dicitura «in arrivo»', async ({ request }) => {
-    const risposta = await request.get(ROTTA);
-    const $ = cheerio.load(await risposta.text());
+    const $ = await guardiaEsistenzaRequest(request, ROTTA);
 
     expect($('form').length, 'nessun <form> nella pagina').toBe(0);
     expect($('input, textarea, select, button[type="submit"]').length, 'nessun controllo di modulo nella pagina').toBe(

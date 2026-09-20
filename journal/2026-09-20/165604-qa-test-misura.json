@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-20T16:56:04+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L07",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Gruppo E (AC6, N2): copia temporanea D4 costruita e servita con successo; rosso confermato, per il motivo giusto",
+  "contesto": "Eseguiti tutti i test di AC6 e N2 in un solo comando. L06 (pagine di vendita) e L04 (bozze legali) non sono ancora costruiti su questo ramo: le sei rotte coinvolte (/saas/, /hosted/, /on-premise/, /legale/*/) rispondono 404 sia sulla build normale (webServer principale, porta 4321) sia sulla copia temporanea (porte 4322/4323). L'esito atteso del lotto e' rosso; qui si verifica che sia il rosso giusto e, soprattutto per questo gruppo, che la procedura ADR-0002 D4 (copia, sostituzione fixture, pnpm install --frozen-lockfile, build, servizio su porta diversa) funzioni davvero end-to-end e non fallisca prima di arrivare alle asserzioni di merito.",
+  "evidenza": [
+    "comando: npx playwright test e2e/ac06-da-definire-senza-valori.spec.ts e2e/n2-indirizzo-unico-e-sostituibile.spec.ts --reporter=list",
+    "output: '20 failed' / '1 passed (7.7s)'",
+    "test passato (pieno, non per vuoto): \"N2: l'indirizzo di contatto compare in un solo file sorgente di site/\" — grep -rl sull'indirizzo reale trova esattamente site/src/dati/contatto.json, confermando D3 gia' rispettato nel sorgente attuale",
+    "esempio fallimento AC6 build normale: 'GET /saas/ — Expected: 200, Received: 404' — gate di contenuto atteso ha fermato il test prima di controllare «da definire»/assenza importi: nessun passaggio per vuoto",
+    "esempio fallimento AC6 copia con fixture: 'GET /saas/ sulla copia con fixture — Expected: 200, Received: 404' — la copia temporanea (porta 4322) e' stata costruita e servita correttamente (beforeAll non ha lanciato eccezioni: pnpm install --frozen-lockfile e pnpm build sono passati sulla copia), il 404 arriva dal server della copia stessa, non da un errore di installazione/build",
+    "esempio fallimento N2 'prima': 'N2: SaaS (/saas/) ha link mailto...' fallito su GET /saas/ 404, prima di qualunque controllo sui link mailto:",
+    "esempio fallimento N2 'dopo' (copia con contatto-di-prova.json, porta 4323): 'GET /saas/ sulla copia con fixture — Expected: 200, Received: 404' — anche questa seconda copia temporanea (fixture diversa, porta diversa) e' stata costruita e servita senza errori di processo"
+  ],
+  "esito": "rosso confermato per pagina/contenuto mancante (L06/L04 non ancora costruiti), non per errore di sintassi, import o configurazione; entrambe le copie temporanee di ADR-0002 D4 (una per AC6, una per N2) si costruiscono e si servono correttamente, quindi l'aiuto condiviso e2e/fixtures/copia-temporanea.ts e' verificato end-to-end; 1 solo test passa oggi (grep sul file unico di N2) ed e' un passaggio pieno, non per vuoto — nessun altro test di questo gruppo puo' ancora passare, ne' pieno ne' per vuoto, perche' tutti richiedono le pagine che ancora non esistono",
+  "umano_coinvolto": false
+}

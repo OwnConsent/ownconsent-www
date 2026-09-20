@@ -11,8 +11,8 @@
  */
 
 import { test, expect } from '@playwright/test';
-import * as cheerio from 'cheerio';
 import { PAGINE } from './pagine';
+import { guardiaEsistenzaRequest } from './guardia-esistenza';
 
 const ROTTE_MODALITA = ['/saas/', '/hosted/', '/on-premise/'];
 
@@ -21,14 +21,12 @@ test.describe('AC1: resa lato server', () => {
     test(`AC1: ${pagina.nome} (${pagina.rotta}) risponde 200 e l'HTML servito contiene h1, testo principale e i link a SaaS, Hosted, On-premise`, async ({
       request,
     }) => {
-      const risposta = await request.get(pagina.rotta);
-      expect(risposta.status(), `GET ${pagina.rotta}`).toBe(200);
-
-      const html = await risposta.text();
-      const $ = cheerio.load(html);
+      // Guardia di esistenza: 200 e un h1 non vuoto. Qui coincide con parte
+      // dell'asserzione vera di AC1 (che pretende esattamente questo), quindi non è
+      // una duplicazione: il testo dell'h1 restituito serve al confronto sotto.
+      const $ = await guardiaEsistenzaRequest(request, pagina.rotta);
 
       const h1 = $('h1').first().text().trim();
-      expect(h1.length, "l'HTML servito contiene un h1 non vuoto").toBeGreaterThan(0);
 
       const testoPagina = ($('main').text() || $('body').text()).trim();
       expect(

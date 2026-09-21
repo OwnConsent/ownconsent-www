@@ -91,6 +91,30 @@ jobs:
         working-directory: site
         run: pnpm astro check
 
+      # --- collaudo alla radice (ADR-0002 D8): solo se site/ e' presente, non
+      # e' un'area propria e non c'e' niente da collaudare senza una build di
+      # site/ (ADR-0003, sezione datata 21/09/2026, D3 punto 3). Forma piena
+      # `pnpm install --frozen-lockfile`, mai l'alias `pnpm i`: il selettore di
+      # tests/ci/test_ac06_ac07_site_steps.py (D9) distingue i due `pnpm
+      # install` per working-directory, non per verbo, e questo passo non porta
+      # working-directory: site.
+
+      - name: Progetto di collaudo (radice) — installazione dipendenze
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright — Chromium
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test di accettazione (e2e)
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:e2e
+
+      - name: Misura di laboratorio (AC39)
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:perf
+
       # --- api/ (solo se l'area e' presente) ---
 
       - name: api/ — Go (da api/go.mod)

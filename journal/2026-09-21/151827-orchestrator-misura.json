@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-21T15:18:27+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "ci e' davvero il required status check di main, con enforce_admins attivo",
+  "contesto": "Il mandato di questo giro cita il criterio 1 di L-CI: «Un contesto richiesto che non riporta blocca ogni merge per sempre». Prima di aggiungere passi al job ci serve sapere se quella frase descrive questo repository oggi o una precauzione teorica. ADR-0003 riporta una misura del 15/09 in cui main era «senza required status checks»: sei giorni dopo poteva non valere piu'. Misurato di nuovo invece di ereditare il dato.",
+  "evidenza": [
+    "$ gh api repos/OwnConsent/ownconsent-www/branches/main/protection --jq '{required: .required_status_checks.contexts, strict: .required_status_checks.strict, enforce_admins: .enforce_admins.enabled}'",
+    "-> {\"enforce_admins\":true,\"required\":[\"ci\"],\"strict\":false}",
+    "required_pull_request_reviews.required_approving_review_count = 0; allow_force_pushes.enabled = false",
+    "il check richiesto e' legato all'app_id 15368 (GitHub Actions)"
+  ],
+  "cosa_dice_la_misura": "La misura del 15/09 citata da ADR-0003 e' superata: una persona ha legato «ci» ai required status checks di main, come prevedeva AC21 della issue #25. Da adesso ogni passo aggiunto a quel job e' un passo che, se rosso o assente, blocca tutti i merge. Non e' una precauzione teorica: e' lo stato del repository. Conseguenza operativa per il resto del lotto: i passi nuovi vanno dentro il job ci con i salti sui passi (if sul passo), mai sul job, e mai in un job o in un workflow separato che diventerebbe un secondo contesto.",
+  "esito": "registrata; e' anche la ragione per cui la prova del gate rosso di fine lotto deve finire con mergeStateStatus BLOCKED e non con un semplice rosso di facciata",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-21T15:39:53+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "Il mio commit ha inghiottito il lavoro di @qa-test e lo ha firmato con il nome sbagliato",
+  "contesto": "Il mandato di questo giro dice «Una worktree per lotto: non lavorare nella checkout principale». L'ho letto come «non lavorare nella checkout principale» e ho messo me e @qa-test nella stessa worktree (.claude/worktrees/l12), sullo stesso ramo, con lo stesso indice git. Non e' lo stesso vincolo: la worktree e' per lotto, ma l'indice non e' condivisibile fra due processi che committano.",
+  "cosa_e_successo": "@qa-test ha fatto git add dei suoi due file (tests/ci/test_ac06_ac07_site_steps.py e il suo journal). Prima che eseguisse git commit, io ho fatto git add del mio file di journal nella stessa worktree e ho committato: il mio commit ha preso anche i suoi due file. Il suo git commit successivo ha trovato l'indice vuoto e ha stampato «nothing to commit», output che ha scambiato per normale finche' non ha guardato git log.",
+  "evidenza": [
+    "$ git show --stat aa8bae7  ->  journal/2026-09-21/153614-qa-test-misura.json | 23 ++, journal/2026-09-21/153619-orchestrator-misura.json | 23 ++, tests/ci/test_ac06_ac07_site_steps.py | 7 ++-",
+    "$ git log -1 --format='%s' aa8bae7  ->  «journal(L12): python3 e PyYAML gia' sul runner; costo misurato dei passi nuovi (#8)» — il messaggio parla solo del mio pezzo",
+    "$ git log -1 --format='%b' aa8bae7  ->  Cantiere-Agent: orchestrator / Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>",
+    "conseguenza verificabile: ./githooks/chi-ha-fatto-cosa.sh attribuisce a orchestrator la modifica di tests/ci/test_ac06_ac07_site_steps.py, che e' di qa-test"
+  ],
+  "cosa_si_e_imparato": [
+    "«Una worktree per lotto» e «una worktree per processo che committa» non sono la stessa regola, e ho trattato la prima come se garantisse la seconda. CLAUDE.md lo dice in generale: «suonano uguali non vuol dire sono la stessa cosa».",
+    "Un git commit che stampa «nothing to commit» dopo un git add andato a buon fine non e' un no-op innocuo: e' il segnale che qualcun altro ha committato il tuo indice. @qa-test l'ha letto come output normale, ed e' un modo di sbagliare misura che vale la pena conoscere.",
+    "La firma Cantiere-Agent non e' una decorazione quando due agenti lavorano vicini: e' l'unica cosa che dice, in git, chi ha scritto cosa. Qui dice il falso."
+  ],
+  "tentativo_di_correzione_fallito": "Ho provato a spezzare aa8bae7 in due commit con le firme giuste (git reset --soft c7e7033, poi due commit separati con CANTIERE_AGENT diverso). Bloccato dal classificatore dei permessi come azione distruttiva su git. Non ho cercato di aggirarlo: la riscrittura di storia gia' pushata e' una decisione di Andrea, non mia.",
+  "stato": "aa8bae7 resta com'e'. Questa voce e' la correzione: il journal e' la fonte autorevole di chi ha fatto cosa (CLAUDE.md, «la firma e' una comodita'; la fonte autorevole di perche' e' il journal»), e qui e' scritto che la modifica di tests/ci/test_ac06_ac07_site_steps.py in aa8bae7 e' di @qa-test, non mia. La prova del lavoro sta in journal/2026-09-21/153614-qa-test-misura.json, scritto da lui.",
+  "correzione_strutturale": "Da adesso l'agente che lavora nella worktree del lotto ci lavora da solo: io non faccio piu' git add ne' git commit in .claude/worktrees/l12 finche' @devops ha finito. Se devo scrivere una voce di journal mentre lui lavora, la scrivo dopo o in una worktree mia.",
+  "esito": "registrato, non nascosto; la firma sbagliata resta visibile in git e questa voce dice perche'",
+  "umano_coinvolto": false,
+  "serve_decisione_di_andrea": "se vale la pena spezzare aa8bae7 e riscrivere il ramo del lotto (force-with-lease su un ramo di lotto, non su main) per rimettere la firma giusta, oppure lasciare che sia il journal a portare l'attribuzione"
+}

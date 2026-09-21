@@ -94,3 +94,37 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
 - Da smaltire: quando L06 partirà, il suo mandato deve sapere che la rotta contiene la
   sostituzione del segnaposto; se il piano viene rigenerato, l'elenco dei file di L04 va
   corretto di conseguenza.
+
+## A04 — `vite.preview.strictPort` in `site/astro.config.mjs`, fuori dal perimetro del collaudo
+- Data: 21/09/2026
+- Classe: fuori-lista — divergenza di **perimetro**, non di merito: il documento non dice
+  una cosa diversa, dice che quel file non si tocca in questo lotto
+- Ratificata da: Andrea, 21/09/2026
+
+- Documento dice: l'issue #8 e il suo piano delimitano il collaudo a `playwright.config.ts`,
+  `e2e/` e `tests/perf/`. `site/astro.config.mjs` è configurazione del sito e appartiene ai
+  lotti di `site/`.
+- Prodotto fa: il collaudo chiede una porta libera al sistema operativo e la passa sia al
+  comando di `astro preview` sia all'URL che interroga (`playwright.config.ts`). Il
+  comportamento predefinito di `astro preview` è **ripiegare in silenzio** sulla porta
+  successiva quando quella chiesta è occupata — quindi Playwright resterebbe a interrogare
+  la porta chiesta, cioè il server di qualcun altro. È lo stesso difetto che la #42 ha
+  chiuso per la copia temporanea; sul `webServer` principale non si può chiudere da dentro
+  il perimetro, perché la porta stretta si configura in `site/astro.config.mjs`.
+- Misura, occupando la porta con `python3 -m http.server` e poi chiedendola:
+
+      senza strictPort   Port 41183 is in use, trying another one...
+                         astro v7.3.3 ready · Local http://127.0.0.1:41184/      processo vivo
+
+      con strictPort     Port 39737 is already in use   (altra esecuzione, altra porta libera)
+                         [ELIFECYCLE] Command failed with exit code 1            exit=1
+
+- Deciso: la riga entra, perché un collaudo che interroga il server sbagliato è peggio di
+  un collaudo che non parte. Autorizzata da Andrea il 21/09/2026.
+- Ambito effettivo, misurato e non dedotto: tocca **solo** `astro preview`. `astro dev`
+  continua a ripiegare (`--port 42263` occupata → `Dev server running at
+  http://127.0.0.1:42264`), perché legge `vite.server`; `astro build` non apre porte.
+- Da smaltire: quando un lotto di `site/` riprenderà in mano `astro.config.mjs`, la riga
+  va riletta lì — è una scelta del collaudo ospitata in un file del sito. Se il sito
+  vorrà un `preview` che ripiega, il collaudo dovrà smettere di passare la porta dal di
+  fuori, non il contrario.

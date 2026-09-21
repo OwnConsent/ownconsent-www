@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import net from 'node:net';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /**
  * Progetto di collaudo alla radice (ADR-0002 D8).
@@ -36,6 +38,12 @@ import net from 'node:net';
  *   nulla di significativo da riusare, e riusare per coincidenza un server orfano di
  *   un'altra worktree è esattamente il difetto misurato in questo giro.
  */
+
+/**
+ * Radice del progetto di collaudo: la cartella di QUESTO file, non `process.cwd()`.
+ * Serve ad ancorare `testIgnore` (vedi il commento sopra `testIgnore`).
+ */
+const RADICE = path.dirname(fileURLToPath(import.meta.url));
 
 /** Chiede al sistema operativo una porta libera su 127.0.0.1 e la restituisce. */
 async function portaLibera(): Promise<number> {
@@ -75,6 +83,48 @@ const PORTA = process.env.OWNCONSENT_E2E_PORT
 export default defineConfig({
   testDir: '.',
   testMatch: ['e2e/**/*.spec.ts', 'tests/perf/**/*.spec.ts'],
+  /*
+   * `testDir: '.'` fa della radice del repository la radice della raccolta, e `testMatch`
+   * non li ancora all'inizio del percorso: `e2e/**` combacia anche con
+   * `.claude/worktrees/<qualcosa>/e2e/`. Ogni worktree di un agente e' un checkout
+   * completo con il proprio `node_modules`, quindi i suoi file di test risolvono una
+   * *seconda copia* di `@playwright/test` e la raccolta muore prima di cominciare.
+   *
+   * Misurato in questa worktree, con una worktree annidata creata apposta:
+   *
+   *     $ pnpm exec playwright test --list          # nessuna worktree annidata
+   *     Total: 252 tests in 24 files                # exit=0
+   *
+   *     $ git worktree add --detach .claude/worktrees/prova-riproduzione HEAD
+   *     $ (cd .claude/worktrees/prova-riproduzione && pnpm install)
+   *     $ pnpm exec playwright test --list
+   *     Error: Requiring @playwright/test second time
+   *     Total: 0 tests in 0 files                   # exit=1
+   *
+   * Una occorrenza per file raccolto due volte: 24 con una worktree annidata, 208 sulla
+   * checkout principale con nove (misura di L08, ripresa nella #42). Finche' esiste una
+   * worktree, in locale la suite non parte: non e' rumore, e' un exit 1 con zero test.
+   *
+   * `node_modules/**` e' una guardia, non una correzione: oggi non cambia nulla, ed e'
+   * misurato. Sotto `node_modules/` e `site/node_modules/` ci sono 9 file `*.spec.ts`
+   * (di `entities`, `css-what`), ma nessuno sta in una cartella `e2e/` o `tests/perf/`,
+   * quindi `testMatch` non li prende gia' adesso. Il pattern serve al primo pacchetto
+   * che portera' i propri test in una cartella con quel nome: un test di un pacchetto
+   * non e' un test di questo repository.
+   *
+   * **Perche' il primo pattern e' ancorato a `RADICE` e il secondo no.** Playwright
+   * confronta `testMatch` e `testIgnore` con il percorso ASSOLUTO del file, e a un
+   * pattern relativo antepone `**\/`. Scritto `'**\/.claude/**'`, il pattern non esclude
+   * «la cartella `.claude` del progetto»: esclude qualunque percorso che *contenga* un
+   * segmento `.claude` — e la radice di ogni worktree di agente lo contiene, perche' le
+   * worktree stanno in `.claude/worktrees/`. Misurato: eseguito da dentro una worktree,
+   * `pnpm exec playwright test --list` rispondeva `No tests found`, `Total: 0 tests in 0
+   * files`, exit=1. Sarebbe stato verde sulla checkout principale e avrebbe spento la
+   * suite proprio dove lavorano gli agenti. `node_modules` invece resta non ancorato:
+   * nessun segmento del percorso di questo progetto si chiama cosi', e il pattern deve
+   * valere anche per `site/node_modules/`.
+   */
+  testIgnore: [path.join(RADICE, '.claude/**'), '**/node_modules/**'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,

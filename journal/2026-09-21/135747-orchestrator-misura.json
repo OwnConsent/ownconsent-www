@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-21T13:57:47+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Riprodotto in isolamento: una worktree annidata azzera la raccolta dei test",
+  "contesto": "La #42 e il triage L08 riportano 208 occorrenze di «Requiring @playwright/test second time» su HEAD nella checkout principale, che ha nove worktree in .claude/worktrees/. Quel numero veniva dal contesto della checkout di Andrea, non da un esperimento controllato: prima di toccare playwright.config.ts ho riprodotto il meccanismo in una worktree pulita, dove le worktree annidate le metto io e le conto.",
+  "evidenza": [
+    "worktree pulita, nessuna worktree annidata, dopo pnpm install alla radice e in site/: $ pnpm exec playwright test --list -> 'Total: 252 tests in 24 files', exit=0",
+    "$ git worktree add --detach .claude/worktrees/prova-riproduzione HEAD ; (cd .claude/worktrees/prova-riproduzione && pnpm install) -> 'Done in 93ms', node_modules/@playwright/test presente",
+    "stessa worktree, con la worktree annidata presente: $ pnpm exec playwright test --list -> 'Error: Requiring @playwright/test second time', poi 'Total: 0 tests in 0 files', exit=1",
+    "$ pnpm exec playwright test --list 2>&1 | grep -c 'Requiring @playwright/test second time' -> 24, una per ciascuno dei 24 file di test raccolti due volte: 24 qui con una worktree annidata, 208 nella checkout principale con nove",
+    "le due copie che il messaggio chiama First e Second stanno in due percorsi distinti: node_modules/.pnpm/playwright@1.63.0 della worktree, e lo stesso pacchetto dentro .claude/worktrees/prova-riproduzione/node_modules/.pnpm — due installazioni diverse, non lo stesso file caricato due volte"
+  ],
+  "esito": "meccanismo confermato: testDir '.' con testMatch 'e2e/**/*.spec.ts' raccoglie anche i checkout sotto .claude/worktrees/, e ogni checkout con node_modules proprio porta una seconda copia di @playwright/test. Non e' il numero 208 a contare: e' che la suite esce 1 con zero test raccolti, cioe' non parte.",
+  "umano_coinvolto": false
+}

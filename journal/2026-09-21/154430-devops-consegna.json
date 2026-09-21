@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T15:44:30+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "Cinque passi nuovi scritti in .github/workflows/ci.yml, tests/ci verde dopo ciascuno; in attesa del run sulla PR per le due misure di durata",
+  "contesto": "Passi aggiunti nell'ordine: (1) 'Collaudo del workflow (tests/ci)', senza if, subito dopo 'Rilevamento aree' (D7); (2) 'Progetto di collaudo (radice) — installazione dipendenze' (pnpm install --frozen-lockfile, forma piena, D9); (3) 'Playwright — Chromium' (pnpm exec playwright install --with-deps chromium); (4) 'Test di accettazione (e2e)' (pnpm test:e2e); (5) 'Misura di laboratorio (AC39)' (pnpm test:perf) — questi ultimi quattro con if: steps.rilevamento.outputs.site == 'presente', dopo il blocco site/ esistente e prima del blocco api/. Nessun job nuovo, nessun secondo contesto, nessuna cache, nessuna versione letterale di Node/pnpm/Playwright nel workflow, nessuna espressione secrets., ASTRO_TELEMETRY_DISABLED invariato a livello di job.",
+  "evidenza": [
+    "$ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' (dopo ciascuno dei 3 commit) -> Ran 55 tests in ~0.29-0.31s / OK, sempre",
+    "$ bash .github/ci/area.sh site -> area site/: presente (site/package.json)",
+    "$ bash .github/ci/area.sh api -> area api/: assente",
+    "$ grep -ni 'write|secrets\\.' .github/workflows/ci.yml -> nessuna riga",
+    "commit: 145c12f (passo tests/ci), dc23c86 (quattro passi legati a site/)"
+  ],
+  "dod_soddisfatta": "parziale: workflow scritto e tests/ci verde ad ogni passo (Definition of Done di L12, criterio 'verifica'); MANCANO ancora le due misure di durata (prima/dopo il job, e per passo) perche' richiedono un run reale della PR, che apre l'orchestrator/persona su richiesta di questo agente. D3 e D4 dell'ADR sono gia' decise (non piu' aperte in questo giro) quindi non c'e' altro gate bloccante noto.",
+  "esito": "ramo pushato (dc23c86), pronto per l'apertura della PR e la lettura delle misure dal run reale",
+  "umano_coinvolto": false
+}

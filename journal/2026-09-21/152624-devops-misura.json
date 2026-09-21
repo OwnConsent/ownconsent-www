@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-21T15:26:24+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Variabilita' di lcp_ms_lab_mediana su 5 esecuzioni consecutive dello stesso SHA sul runner di GitHub (ADR-0003 D3)",
+  "contesto": "PR di prova #45 (draft, NON MERGIARE), branch prova/l12-variabilita-laboratorio, workflow temporaneo .github/workflows/prova-l12-variabilita.yml (job id/name 'prova-variabilita'). Spec temporaneo tests/perf/prova-l12-stampa-variabilita.spec.ts stampa per pagina una riga JSON prefissata 'PROVA-L12'. Eseguito il job (run 35604798168) e poi rieseguito 4 volte con 'gh run rerun 35604798168', attendendo ciascuna con 'gh run watch'. Tutte e 5 le esecuzioni sono attempt dello stesso run id, sullo stesso SHA f9a75de9f4cce6a555ffe6869c80e78c9e42a197.",
+  "alternative": [],
+  "evidenza": [
+    "comando: gh api 'repos/OwnConsent/ownconsent-www/actions/runs/35604798168/jobs?filter=all' --jq '.jobs[] | {id,name,run_attempt,started_at,completed_at,html_url}' -> 5 job, run_attempt 1..5, stesso head sha, durate: attempt1 106349153173 2026-09-21T13:18:48Z->13:20:03Z (1m15s), attempt2 106349729398 13:20:28Z->13:21:29Z (1m1s), attempt3 106350198755 13:21:46Z->13:22:48Z (1m2s), attempt4 106350686765 13:23:08Z->13:24:08Z (1m0s), attempt5 106351152822 13:24:30Z->13:25:34Z (1m4s)",
+    "comando: gh run view 35604798168 --log | grep 'PROVA-L12 {' | sed -E 's/^[^\\t]+\\t[^\\t]+\\t//', eseguito dopo ciascuna delle 5 esecuzioni (prima di rieseguire la successiva) -> 8 righe per esecuzione, una per pagina di e2e/pagine.ts, salvate in /tmp/run1.txt..run5.txt",
+    "lcp_ms_lab_mediana per pagina sulle 5 esecuzioni (soglia contracts/perf-budgets.json pagine_pubbliche.lcp_ms_lab_mediana=2500): / [424,412,404,420,428] min=404 max=428 scarto=24; /saas/ [420,424,408,424,440] min=408 max=440 scarto=32; /hosted/ [428,408,432,416,424] min=408 max=432 scarto=24; /on-premise/ [420,408,432,420,420] min=408 max=432 scarto=24; /confronto/ [436,432,408,428,452] min=408 max=452 scarto=44; /legale/termini-di-servizio/ [424,412,392,412,420] min=392 max=424 scarto=32; /legale/informativa-privacy/ [436,428,396,432,420] min=396 max=436 scarto=40; /legale/cookie-policy/ [424,412,392,416,420] min=392 max=424 scarto=32",
+    "cls_lab_mediana costante a 0 su tutte le 8 pagine e le 5 esecuzioni (soglia 0.05); js_iniziale_gzip_kb costante a 0 su tutte le pagine ed esecuzioni (nessun JS lato client, ADR-0002 D9); css_gzip_kb costante a 1.507 su tutte le pagine ed esecuzioni",
+    "nessuna pagina attraversa mai la soglia lcp_ms_lab_mediana=2500: il valore massimo osservato (452 ms, /confronto/, attempt5) resta a oltre 2000 ms di margine dalla soglia",
+    "comando: cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> Ran 55 tests in 0.307s, OK (eseguito con il workflow temporaneo gia' presente in .github/workflows/, per verificare che tests/ci/test_d1_job_form.py resti verde)"
+  ],
+  "esito": "la variabilita' misurata su 5 esecuzioni consecutive dello stesso SHA e' piccola in valore assoluto (scarto massimo 44 ms su /confronto/) e nessuna pagina si avvicina alla soglia di 2500 ms: la condizione di riapertura di ADR-0001 ('si riapre se la stessa build supera e rientra nella soglia in esecuzioni consecutive della CI') non si verifica su questa build. Consegno la tabella completa e i link ai job a @architect per la decisione di D3: se AC39 diventa un passo del job ci",
+  "umano_coinvolto": false
+}

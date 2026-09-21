@@ -8,8 +8,8 @@
  *    (`grep -rl -F`, conta i file, non ne stampa le righe): è l'unica lettura di
  *    `site/` che N2 autorizza. Sulla build normale (webServer principale, porta 4321),
  *    ogni link di contatto sulle pagine SaaS/Hosted/On-premise è un mailto: con
- *    l'oggetto di modalità (?subject=SaaS|Hosted|On-premise), e sulle pagine legali è
- *    un mailto: senza oggetto precompilato (DP-29).
+ *    l'oggetto di modalità (?subject=SaaS|Hosted|On-premise), e ogni link di contatto
+ *    che compare su una pagina legale è un mailto: senza oggetto precompilato (DP-29).
  *
  * 2. si sostituisce l'indirizzo con `e2e/fixtures/contatto-di-prova.json` in una copia
  *    temporanea di `site/`+`contracts/` (ADR-0002 D4, `e2e/fixtures/copia-temporanea.ts`),
@@ -19,6 +19,16 @@
  * 3. dopo: sulla copia, il nuovo indirizzo compare in ogni link di contatto con il
  *    proprio oggetto dove previsto, e il vecchio indirizzo non compare in nessun HTML
  *    servito dalla copia.
+ *
+ * Come si legge N2 (decisione di Andrea del 20/09/2026). «Ogni link di contatto di ogni
+ * pagina è un mailto: a quell'unico indirizzo» è un'affermazione universale sui link che
+ * ci sono, non un obbligo che ce ne sia uno: dove non c'è nessun link di contatto,
+ * l'affermazione è vera a vuoto. L'esistenza del recapito la impone un ALTRO criterio, e
+ * solo su quattro pagine (mappa `MAILTO_RICHIESTO` qui sotto). Prima di quella decisione
+ * questo file pretendeva un mailto: su tutte le pagine legali e falliva su termini di
+ * servizio e cookie policy: sbagliava il test, non il prodotto — nessun criterio della #8
+ * impone un recapito su quelle due pagine, e N3 su di esse chiede soltanto che nessun
+ * mailto: abbia un oggetto precompilato e che non compaia un recapito diverso.
  */
 
 import { test, expect, request as pwRequest, type APIRequestContext } from '@playwright/test';
@@ -46,6 +56,19 @@ const ROTTA_MODALITA: Record<string, string> = {
 const PAGINE_DA_VERIFICARE = PAGINE.filter(
   (pagina) => ROTTA_MODALITA[pagina.rotta] !== undefined || pagina.rotta.startsWith('/legale/'),
 );
+
+// Rotta -> criterio che impone l'ESISTENZA di un recapito su quella pagina. N2 non la
+// impone su nessuna: la impongono N1 (/saas/), AC33 (/hosted/), AC34 (/on-premise/) e
+// N3 (/legale/informativa-privacy/). Le rotte assenti da questa mappa — fra cui
+// /legale/termini-di-servizio/ e /legale/cookie-policy/ — non hanno alcun criterio che
+// imponga loro un recapito: lì il test verifica com'è fatto un eventuale mailto:, non
+// che ce ne sia uno.
+const MAILTO_RICHIESTO: Record<string, string> = {
+  '/saas/': 'N1',
+  '/hosted/': 'AC33',
+  '/on-premise/': 'AC34',
+  '/legale/informativa-privacy/': 'N3',
+};
 
 function escapeRegExp(testo: string): string {
   return testo.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -99,7 +122,13 @@ test.describe('N2: prima della modifica — indirizzo unico e link mailto: della
       const { indirizzo, oggetto }: DatiContatto = leggiDatiContatto();
 
       const link = linkMailtoDi($);
-      expect(link.length, `almeno un link mailto: su ${pagina.rotta}`).toBeGreaterThan(0);
+      const criterioRecapito = MAILTO_RICHIESTO[pagina.rotta];
+      if (criterioRecapito !== undefined) {
+        expect(
+          link.length,
+          `${criterioRecapito} impone un link mailto: su ${pagina.rotta}`,
+        ).toBeGreaterThan(0);
+      }
 
       const chiaveModalita = ROTTA_MODALITA[pagina.rotta];
       const atteso = regexMailtoAtteso(indirizzo, chiaveModalita ? oggetto[chiaveModalita] : undefined);
@@ -154,7 +183,13 @@ test.describe('N2: dopo la sostituzione — copia temporanea con contatto-di-pro
 
       const $ = cheerio.load(html);
       const link = linkMailtoDi($);
-      expect(link.length, `almeno un link mailto: su ${pagina.rotta} sulla copia`).toBeGreaterThan(0);
+      const criterioRecapito = MAILTO_RICHIESTO[pagina.rotta];
+      if (criterioRecapito !== undefined) {
+        expect(
+          link.length,
+          `${criterioRecapito} impone un link mailto: su ${pagina.rotta}, anche sulla copia`,
+        ).toBeGreaterThan(0);
+      }
 
       const chiaveModalita = ROTTA_MODALITA[pagina.rotta];
       const atteso = regexMailtoAtteso(

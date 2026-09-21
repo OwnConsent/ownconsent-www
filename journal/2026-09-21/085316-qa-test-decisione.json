@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-21T08:53:16+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "N2 e' un'affermazione universale sui link che ci sono, non un obbligo di esistenza: l'esistenza del recapito la impongono N1, AC33, AC34 e N3",
+  "contesto": "Quattro dei sette rossi vengono da e2e/n2-indirizzo-unico-e-sostituibile.spec.ts: entrambi i cicli asserivano `link.length > 0` per ogni pagina di PAGINE_DA_VERIFICARE, comprese tutte e tre le legali. Il testo di N2 e': «ogni link di contatto di ogni pagina e' un mailto: a quell'unico indirizzo». E' un quantificatore universale sui link esistenti, vero a vuoto dove non ce ne sono. Nessun criterio della #8 impone un recapito su /legale/termini-di-servizio/ ne' su /legale/cookie-policy/: N3 impone il mailto: solo sull'informativa privacy, e sulle altre due chiede soltanto che nessun mailto: abbia ?subject= e che non compaia un recapito diverso. Misurato sulla build: termini-di-servizio e cookie-policy non hanno alcun href=\"mailto:\".",
+  "alternative": [
+    {
+      "opzione": "tenere l'asserzione di esistenza su tutte le pagine e aggiungere un mailto: alle due pagine legali mancanti",
+      "scartata_perche": "sarebbe cambiare il prodotto per far passare il test, cioe' aggiungere un requisito che nessun criterio esprime; decisione di Andrea del 20/09: ha ragione il prodotto, si corregge il test"
+    },
+    {
+      "opzione": "elencare a mano le rotte 'senza mailto' come eccezioni dentro i due cicli",
+      "scartata_perche": "duplica la lista in due punti e non dice perche'; una sola mappa rotta -> criterio che impone il recapito rende esplicito chi impone cosa e lascia le rotte assenti senza alcun obbligo"
+    },
+    {
+      "opzione": "togliere del tutto l'asserzione di esistenza",
+      "scartata_perche": "indebolirebbe N1, AC33, AC34 e N3, che l'esistenza del recapito la impongono davvero su quattro pagine"
+    }
+  ],
+  "evidenza": [
+    "$ grep -o 'href=\"mailto:[^\"]*\"' site/dist/<pagina>/index.html -> saas/hosted/on-premise/legale-informativa-privacy: 1 ciascuna; legale/termini-di-servizio e legale/cookie-policy: nessuna",
+    "docs/spec/issue-8.json N2.allora: «ogni link di contatto di ogni pagina e' un mailto: a quell'unico indirizzo»",
+    "docs/spec/issue-8.json N3.allora: il mailto: e' imposto solo sull'informativa privacy; sulle altre due legali si vieta ?subject= e un recapito diverso"
+  ],
+  "esito": "applicata: mappa MAILTO_RICHIESTO (/saas/ N1, /hosted/ AC33, /on-premise/ AC34, /legale/informativa-privacy/ N3); dove il recapito e' imposto l'asserzione di esistenza resta identica nella forza e cita il criterio; altrove nessuna asserzione di esistenza. Restano invariate «ogni mailto: e' verso l'indirizzo unico con l'oggetto atteso» e «il vecchio indirizzo non compare nell'HTML», quest'ultima su tutte le pagine.",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 20/09/2026"
+}

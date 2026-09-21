@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-21T15:17:12+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Piano per la misura di variabilita' richiesta da ADR-0003 D3 prima di scrivere ci",
+  "contesto": "ADR-0003 D3 rinvia la decisione se AC39 (budget di laboratorio) diventa un passo del job ci con scadenza al giro L12: serve la variabilita' misurata su 5 esecuzioni consecutive dello stesso SHA sul runner di GitHub, per pagina, di lcp_ms_lab_mediana. ADR-0001 aggiunge la condizione di riapertura del CPU throttling: si riapre se la stessa build supera e rientra nella soglia in esecuzioni consecutive della CI.",
+  "alternative": [
+    { "opzione": "riusare ci.yml con un job temporaneo al suo interno", "scartata_perche": "romperebbe D1/D2 dell'ADR-0003 e il test tests/ci/test_d1_job_form.py che pretende un solo job id/name 'ci' in tutto .github/workflows/" },
+    { "opzione": "eseguire la misura solo in locale sulla worktree", "scartata_perche": "il mandato e ADR-0003 D3 chiedono esplicitamente il runner di GitHub, non la macchina locale: la variabilita' di CPU tra macchine e' proprio il punto di ADR-0001" }
+  ],
+  "evidenza": [
+    "docs/adr/0003-contesto-ci.md D3 letto per intero, righe della scadenza citate nel mandato",
+    "docs/adr/0001-budget-pagine-pubbliche-laboratorio.md letto per intero, condizione di riapertura sul CPU throttling",
+    "contracts/perf-budgets.json: pagine_pubbliche.lcp_ms_lab_mediana = 2500 (soglia da confrontare)",
+    ".github/workflows/ci.yml: job id/name 'ci', checkout pinnato a 11d5960a326750d5838078e36cf38b85af677262 (v4.4.0), setup-node pinnato a 820762786026740c76f36085b0efc47a31fe5020 (v7.0.0)",
+    "e2e/pagine.ts: 8 pagine in PAGINE",
+    "site/src/pages: solo index, saas, hosted, on-premise, confronto, legale/[slug].astro esistono come file; le tre pagine legali dipendono da una content collection non ancora verificata"
+  ],
+  "esito": "procedo a scrivere .github/workflows/prova-l12-variabilita.yml con job id/name 'prova-variabilita', e uno spec temporaneo che stampa i valori per pagina; poi apro una PR draft di prova e la rieseguo 4 volte sullo stesso SHA",
+  "umano_coinvolto": false
+}

@@ -688,3 +688,201 @@ verrà rigenerato, l'elenco dei file di L12 va corretto di conseguenza.
 | @performance | `$lettura_ci` corretto (ratifica 1); nessuna soglia toccata; D3 resta aperta e la decide @architect con @performance e @devops |
 | @docs-writer | nessun vincolo nuovo: `docs/DEFINITION-OF-DONE.md` non cambia (AC20 verificato verde contro il workflow con i passi nuovi) |
 | @code-reviewer, @security | da questo giro `ci` esegue `tests/ci/`: una PR che tocca `.github/workflows/ci.yml` o `.github/ci/**` ha il proprio controllo statico dentro il gate, e un rosso di quel passo non si chiude allargando il predicato |
+
+## 2026-09-21 (seconda parte) — Premessa cambiata, poi **D3 e D4 decisi**
+
+Sezione aggiunta nello stesso giorno della precedente, quando è arrivata la misura che D3 e
+D4 aspettavano. Il corpo di D1–D8 e la sezione precedente restano com'è.
+
+### Premessa cambiata: `ci` **è** un required status check di `main`
+
+La sezione «Contesto» di questo ADR riporta, dal 15/09, «protezione di `main` **senza**
+required status checks». Non è più vero. Rimisurato oggi, non ereditato:
+
+    $ gh api repos/OwnConsent/ownconsent-www/branches/main/protection \
+        --jq '{required: .required_status_checks.contexts, strict: .required_status_checks.strict, enforce_admins: .enforce_admins.enabled}'
+    {"enforce_admins":true,"required":["ci"],"strict":false}
+
+Una persona ha eseguito il gate umano di AC21 (issue #25). Non riscrivo il «Contesto»: la
+misura del 15/09 era vera quel giorno, e cancellarla toglierebbe la traccia di che cosa si
+sapeva quando. Tre conseguenze da registrare:
+
+- **H1 non è più un'ipotesi.** Il check run sulla testa di `main` si chiama `ci`
+  (`[{"app": "github-actions", "conclusion": "success", "name": "ci"}]`) e la stringa
+  richiesta dalla protezione è `"ci"`: il nome del check run è il `name` del job, come D1
+  dava per probabile. Misurato, non più dedotto.
+- **Il percorso di deprecazione del nome (D1) è adesso attivo, non teorico.** «Rinominare
+  `ci` rompe la protezione senza che nulla fallisca» oggi descrive questo repository.
+- **La posta di ogni passo aggiunto al job è cambiata.** Prima un rosso di `ci` era
+  un'informazione; adesso è un merge che non avviene, per tutti. D3, D4 e D7 qui sotto si
+  decidono con questa posta.
+
+**D7, riesaminato con la premessa nuova: confermato.** Il rischio che la premessa aggiunge
+è che `python3` o PyYAML manchino sul runner e blocchino ogni merge. È contenuto, e la
+contenzione è misurabile: il passo arriva su `main` solo se è stato verde sulla PR di L12,
+e finché non ci arriva nessun'altra PR lo esegue. Resta il rischio differito — un'immagine
+del runner che smette di portare PyYAML — ed è esattamente la condizione di riapertura già
+scritta. Nessun cambiamento alla decisione.
+
+### D3 — deciso: **il test di laboratorio è un passo del job `ci`**
+
+**La misura che il rinvio chiedeva.** Provenienza: PR di prova #45 (draft, materiale usa e
+getta, non è un artefatto di questo repository), ramo `prova/l12-variabilita-laboratorio`,
+workflow temporaneo con job `prova-variabilita` (mai `ci`). Cinque esecuzioni sono i cinque
+attempt dello stesso run `35604798168`, tutti sullo SHA `f9a75de`, tutti `success`, durate
+1m15s, 1m01s, 1m02s, 1m00s, 1m04s. Browser: il Chromium incluso in Playwright, installato
+con `pnpm exec playwright install --with-deps chromium`; non il canale `chrome`. Le soglie
+nelle righe di log sono lette a runtime da `contracts/perf-budgets.json` da
+`tests/perf/misura-laboratorio.ts`, non trascritte.
+
+`lcp_ms_lab_mediana` per pagina, sulle 5 esecuzioni, soglia **2500 ms**:
+
+| rotta | 5 esecuzioni | min | max | scarto |
+|---|---|---|---|---|
+| `/` | 424 412 404 420 428 | 404 | 428 | 24 |
+| `/saas/` | 420 424 408 424 440 | 408 | 440 | 32 |
+| `/hosted/` | 428 408 432 416 424 | 408 | 432 | 24 |
+| `/on-premise/` | 420 408 432 420 420 | 408 | 432 | 24 |
+| `/confronto/` | 436 432 408 428 452 | 408 | 452 | 44 |
+| `/legale/termini-di-servizio/` | 424 412 392 412 420 | 392 | 424 | 32 |
+| `/legale/informativa-privacy/` | 436 428 396 432 420 | 396 | 436 | 40 |
+| `/legale/cookie-policy/` | 424 412 392 416 420 | 392 | 424 | 32 |
+
+Le altre tre grandezze sono costanti su tutte le pagine e tutte le esecuzioni:
+`cls_lab_mediana` = 0 (soglia 0.05), `js_iniziale_gzip_kb` = 0 (soglia 60: nessun
+JavaScript lato client, ADR-0002 D9), `css_gzip_kb` = 1.507 (soglia 25).
+
+**Che cosa dice, e che cosa non dice.** La condizione di riapertura scritta in ADR-0001
+(riga 71: «si riapre se la stessa build supera e rientra nella soglia in esecuzioni
+consecutive della CI») **non si verifica**: il massimo osservato è 452 ms contro 2500, e lo
+scarto massimo fra esecuzioni identiche è 44 ms. Perché una di queste pagine attraversasse
+la soglia per rumore, lo scarto dovrebbe essere circa **46 volte** quello misurato. Il gate
+non sfarfalla su questa build.
+
+Non dice altro, e lo dichiaro con le stesse parole con cui mi è stato consegnato: **non**
+dice che il rallentamento CPU 4× via CDP sia stabile in generale. La nota di ADR-0001
+sull'assenza dell'indice di benchmark che Lighthouse usa per correggerlo resta vera; con
+questo margine semplicemente non si vede. Vale per pagine senza JavaScript e con 1,5 KB di
+CSS: è la consegna 1, non il progetto.
+
+**Perché farlo entrare adesso, visto che il margine è di 55 volte.** È l'obiezione giusta:
+un budget che nessuna pagina rischia di sfiorare non fa da guardia a niente, oggi. Ma un
+gate serve nel momento in cui il numero cambia, e quel momento non si sa prevedere: è la PR
+che aggiunge un font, un'immagine grande, il primo `client:` — cioè una PR che parla
+d'altro, scritta da chi non sta guardando i budget. Se il gate c'è, quella PR vede il
+numero prima del merge; se non c'è, la regressione la scopre il traffico reale, cioè le
+persone. Il valore non è il margine di oggi: è cogliere la regressione quando arriverà.
+L'alternativa «lo mettiamo quando servirà» si traduce in «lo mettiamo dopo la prima
+regressione», e allora il gate arriva insieme al lavoro di rimediare.
+
+Il secondo motivo è che AC39 della issue #8 chiede che le pagine stiano entro le soglie
+dichiarate. Senza un gate, «rispetta i budget» è un aggettivo: vero quando qualcuno lo
+guarda, ignoto il resto del tempo.
+
+**Regole vincolanti per @devops (L12).**
+
+1. Il controllo dei budget è un **passo del job `ci`**, non un job separato e non un
+   workflow separato: nessun `needs`, nessun secondo contesto (D2, e la premessa qui
+   sopra — un secondo contesto andrebbe legato a mano alla protezione).
+2. **Un solo comparatore.** Il passo esegue il comando del test di L07
+   (`tests/perf/ac39-budget-pagine-pubbliche.spec.ts`, che legge
+   `contracts/perf-budgets.json` a runtime) e fallisce quando il test fallisce. Il workflow
+   **non** legge le soglie e non confronta niente: un `jq`, un `grep` o un numero copiato
+   dentro `.github/` è una violazione di questa regola e di ADR-0001.
+3. Il passo ha `if: steps.rilevamento.outputs.site == 'presente'`, che è l'unico `if` di
+   passo ammesso (D2, D6): senza `site/` non c'è niente da misurare.
+4. Browser: **solo Chromium**, installato con `pnpm exec playwright install --with-deps
+   chromium`. È il browser con cui la misura qui sopra è stata presa, ed è quello che il
+   metodo del contratto prescrive. Installare tutti i browser è tempo del runner speso per
+   niente.
+5. La versione di Playwright viene dal `package.json` e dal lockfile della radice, mai
+   scritta nel workflow (D5). Il passo di installazione dei browser non porta un numero di
+   versione.
+6. **Numero di passi**: uno, `pnpm exec playwright test`, che copre collaudo e laboratorio
+   con una sola build di `site/`. @devops può separarlo in `pnpm test:e2e` e
+   `pnpm test:perf` se misura il costo della seconda build e lo riporta nella PR: la
+   separazione non tocca nessuna delle regole 1–5. Quale criterio è fallito lo nomina il
+   report di Playwright, non il nome del passo.
+7. **Durata**: @devops misura la durata del job `ci` prima e dopo, dal log, e la riporta
+   nella PR. In questo ADR non entra nessun numero per il job `ci` completo, perché quel
+   numero oggi non esiste: il job di prova non eseguiva i test e2e.
+
+**Si riapre** al primo sfarfallio: se la stessa build supera e rientra nella soglia in
+esecuzioni consecutive di `ci` (ADR-0001, riga 71). Chi: @architect con @performance e
+@devops. E si riapre in un modo solo: il passo esce dal gate con una sezione datata. **Non**
+si riapre allargando la soglia — le soglie sono di @performance e si cambiano con il loro
+percorso, non per far tornare verde una PR.
+
+Costo del ritorno: togliere il passo dal job è una riga, e la protezione di `main` non si
+tocca perché il nome del contesto non cambia. È il motivo per cui questa decisione è
+reversibile e quella sul nome no.
+
+| Alternativa | Perché no |
+|---|---|
+| budget fuori da `ci`, eseguiti a mano o in un contesto separato | un contesto separato non è richiesto dalla protezione, quindi non fa da gate (F1, F2), e «a mano» vuol dire «quando qualcuno si ricorda». È la stessa forma del difetto che D7 ha appena chiuso |
+| aspettare che il margine si stringa | il gate arriverebbe insieme alla regressione da rimediare |
+| far confrontare le soglie al workflow | due implementazioni della stessa regola divergono in silenzio (ADR-0001) |
+| eseguire il laboratorio solo su `push` verso `main` | la regressione si scoprirebbe dopo il merge, cioè quando costa di più; e D1 vieta le condizioni sul job |
+| allargare `lcp_ms_lab_mediana` per stare larghi | non è una decisione di @architect: il contratto è di @performance, e il numero misurato non chiede nessuna modifica |
+
+### D4 — deciso: **ancora nessuna cache**
+
+**Le durate misurate**, che il rinvio chiedeva. Job di prova, senza nessuna cache, con
+checkout, setup-node, installazione di `site/`, installazione del progetto di radice,
+download di Chromium, build di `site/` e la sola misura di laboratorio: fra **1m00s e
+1m15s** su 5 esecuzioni. Per confronto: il job `ci` su `main` oggi dura **19 s** (run
+`35603251219`), e in locale l'intera suite è `252 passed (20.8s)`. Il pezzo più pesante fra
+i passi nuovi è il download del Chromium di Playwright, che senza cache si ripete a ogni
+esecuzione — **e la sua quota del minuto non è stata misurata separatamente**.
+
+**Decisione: nessuna cache.** Le prescrizioni di D4 restano in vigore parola per parola
+(setup-node senza `cache` e con `package-manager-cache: false`, setup-go con `cache:
+false`, golangci-lint-action con `skip-cache: true`, nessun `actions/cache`, `go test` con
+`-count=1`). **AC17 e AC18 restano non applicabili**, e chi verifica lo dichiara: lo
+verifica staticamente `tests/ci/test_ac17_ac18_no_cache.py`, che da oggi gira dentro `ci`
+(D7).
+
+Tre motivi, nell'ordine in cui pesano:
+
+1. **La premessa nuova sposta il rapporto costi-benefici dalla parte sbagliata.** `ci` è un
+   required check: una cache che ripristina uno stato vecchio o avvelenato produce un verde
+   **senza esecuzione**, ed è quel verde ad autorizzare un merge. È il difetto che il
+   criterio 8 della spec vieta, e dal 15/09 costa di più, non di meno.
+2. **Il beneficio non è misurato, il costo sì.** Una cache rende applicabili AC17 e AC18:
+   AC18 chiede una PR pubblica con una cache avvelenata, AC17 chiede `gh cache delete
+   --all`, distruttivo sullo stato condiviso e gate di una persona (piano,
+   `richiede_persona`). Pagare un costo certo per un risparmio che nessuno ha isolato è
+   esattamente lo scambio che questo progetto rifiuta.
+3. **Nessuno ha portato la durata come problema.** L'altra condizione di riapertura di D4
+   («una persona porta come problema la durata di `ci` su `main`») non si è verificata. Un
+   minuto su una PR non è un problema finché qualcuno non dice che lo è.
+
+**Compito per @devops in questo lotto**, perché la prossima riapertura parta da un numero e
+non da un'impressione: leggere dal log della PR di L12 la durata **separata** dei passi di
+installazione di `site/`, di installazione della radice, di `playwright install`, di build e
+di collaudo, e scriverle nel journal. Senza quella riga, fra un mese si ridiscuterà la cache
+con la stessa ignoranza di oggi.
+
+**Nuova scadenza** (quella vecchia, «al giro di L12», è consumata). Chi: @architect con
+@devops. Quando, al primo dei due: (a) una persona porta come problema la durata del job
+`ci` **completo** su `main`, misurata sui log di 5 esecuzioni consecutive con `site/`
+presente; (b) la durata del download dei browser, letta isolata dal log, supera la metà
+della durata del job. Cosa serve per decidere, invariato: quella durata isolata, e la prova
+che la procedura di AC18 dà un rosso con la cache scelta — se non lo dà, ci si ferma (spec,
+`rischi`).
+
+| Alternativa | Perché no |
+|---|---|
+| cache dei browser in `~/.cache/ms-playwright` | è la candidata concreta, ed è quella che il download rende tentante: ma rende applicabili AC17 e AC18, e il risparmio non è isolato. Si valuta alla riapertura, con il numero |
+| cache dello store pnpm sui due lockfile (ADR-0002, tabella dei lotti) | stesso costo, beneficio ancora minore: le due installazioni misurate in locale sono 170 ms e 86 ms |
+| immagine del runner con Chromium preinstallato | sposterebbe la versione del browser fuori dal lockfile, contro D5, e introdurrebbe una dipendenza da un'immagine di terzi |
+| decidere la cache adesso «tanto è reversibile» | non è reversibile allo stesso costo: accendere una cache fa tornare applicabili due criteri che chiedono una procedura distruttiva e un gate di persona |
+
+### Consumatori impattati, aggiornamento della seconda parte
+
+| Agente (lotto) | Impatto |
+|---|---|
+| @devops (L12) | D3 sblocca il passo del laboratorio, con le sette regole vincolanti; D4 conferma nessuna cache e assegna la misura delle durate separate; la premessa nuova rende ogni rosso di `ci` un merge bloccato per tutti |
+| @performance | il gate sui budget esiste da questo lotto; le soglie non sono state toccate e non si toccano per far tornare verde una PR; la riapertura di D3 al primo sfarfallio è sua insieme a @architect |
+| @qa-test | `tests/ci/test_ac17_ac18_no_cache.py` resta la verifica statica della non applicabilità di AC17 e AC18, e da oggi gira dentro `ci` |
+| @code-reviewer, @security | in una PR che tocca `.github/`: nessuna soglia copiata nel workflow, nessuna versione di Playwright scritta a mano, nessun input di cache |

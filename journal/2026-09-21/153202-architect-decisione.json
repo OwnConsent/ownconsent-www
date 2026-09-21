@@ -1,0 +1,46 @@
+{
+  "ts": "2026-09-21T15:32:02+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "D3: il laboratorio entra in ci. D4: ancora nessuna cache. E una premessa dell'ADR non era piu' vera",
+  "contesto": "Arrivata la misura che il gate D3 aspettava: 5 esecuzioni dello stesso SHA sul runner di GitHub (PR di prova #45, materiale usa e getta, run 35604798168 attempt 1-5, SHA f9a75de), con lcp_ms_lab_mediana per pagina e la durata di ogni esecuzione. Insieme e' arrivato un fatto che cambia la posta: main ha adesso «ci» fra i required status checks, mentre ADR-0003 riporta dal 15/09 una protezione senza required checks.",
+  "alternative": [
+    {
+      "opzione": "D3: budget fuori da ci, eseguiti a mano o in un contesto separato",
+      "scartata_perche": "un contesto separato non e' richiesto dalla protezione e quindi non fa da gate (F1, F2); «a mano» vuol dire «quando qualcuno si ricorda», che e' la stessa forma del difetto appena chiuso con D7"
+    },
+    {
+      "opzione": "D3: aspettare che il margine si stringa prima di mettere il gate",
+      "scartata_perche": "il gate arriverebbe insieme alla regressione da rimediare. Il valore di un budget non e' il margine di oggi: e' cogliere la regressione quando arrivera', nella PR che parla d'altro"
+    },
+    {
+      "opzione": "D3: due passi separati (test:e2e e test:perf)",
+      "scartata_perche": "non scartata del tutto: una sola invocazione costa una sola build di site/, quindi il default e' un passo; @devops puo' separarli se misura il costo della seconda build. Nessuna delle cinque regole vincolanti cambia"
+    },
+    {
+      "opzione": "D4: cache dei browser in ~/.cache/ms-playwright",
+      "scartata_perche": "e' la candidata concreta, ma rende applicabili AC17 e AC18 (PR pubblica con cache avvelenata; gh cache delete --all, distruttivo e gate di persona) e il risparmio non e' stato isolato dal log. Con ci ora required, una cache che ripristina uno stato vecchio produce un verde senza esecuzione, e quel verde autorizza un merge"
+    },
+    {
+      "opzione": "D4: decidere la cache adesso «tanto e' reversibile»",
+      "scartata_perche": "non e' reversibile allo stesso costo: accenderla fa tornare applicabili due criteri che chiedono una procedura distruttiva sullo stato condiviso"
+    }
+  ],
+  "evidenza": [
+    "$ gh api repos/OwnConsent/ownconsent-www/branches/main/protection --jq '{required: .required_status_checks.contexts, strict: .required_status_checks.strict, enforce_admins: .enforce_admins.enabled}'  ->  {\"enforce_admins\":true,\"required\":[\"ci\"],\"strict\":false}   (rimisurato da me, non ereditato)",
+    "5 esecuzioni sullo stesso SHA f9a75de, tutte success, durate 1m15s 1m01s 1m02s 1m00s 1m04s senza nessuna cache",
+    "lcp_ms_lab_mediana, 8 pagine x 5 esecuzioni: minimo assoluto 392 ms, massimo assoluto 452 ms, soglia 2500 ms",
+    "scarto massimo fra esecuzioni identiche sulla stessa pagina: 44 ms (/confronto/, 408-452). Perche' una pagina attraversasse la soglia per rumore, lo scarto dovrebbe essere ~46 volte quello misurato",
+    "cls_lab_mediana = 0 (soglia 0.05); js_iniziale_gzip_kb = 0 (soglia 60); css_gzip_kb = 1.507 (soglia 25), costanti su tutte le pagine e tutte le esecuzioni",
+    "la condizione di riapertura di ADR-0001 riga 71 («la stessa build supera e rientra nella soglia in esecuzioni consecutive») NON si verifica su questa build",
+    "nessun consumatore in codice legge $lettura_ci: $ grep -rn 'lettura_ci' --include='*.ts' --include='*.js' --include='*.mjs' --include='*.py' --include='*.astro' . --exclude-dir=node_modules  ->  nessuna riga (exit 1). Solo prosa in ADR, journal, piano e contratto",
+    "il comparatore unico esiste gia' nel repository: tests/perf/ac39-budget-pagine-pubbliche.spec.ts e tests/perf/misura-laboratorio.ts, che legge contracts/perf-budgets.json a runtime (riga 53)"
+  ],
+  "cosa_la_misura_non_dice": "Non dice che il rallentamento CPU 4x via CDP sia stabile in generale: la nota di ADR-0001 sull'assenza dell'indice di benchmark resta vera, e con 2048 ms di margine semplicemente non si vede. Vale per pagine senza JavaScript e con 1,5 KB di CSS. E non dice quanto durera' il job ci completo: il job di prova non eseguiva i test e2e, quindi in ADR non e' entrato nessun numero per ci.",
+  "esito": "applicate: sezione datata «2026-09-21 (seconda parte)» di docs/adr/0003-contesto-ci.md, con premessa cambiata (H1 non e' piu' un'ipotesi, il percorso di deprecazione del nome e' attivo), D3 con sette regole vincolanti per @devops, D4 con nuova scadenza e un compito di misura. Aggiornati $lettura_ci (il rimando a D3 diventa una risposta) e la voce A05 di DESIGN-AMENDMENTS.md",
+  "umano_coinvolto": true,
+  "chi_ha_deciso_fuori_da_qui": "una persona ha eseguito il gate umano di AC21 legando «ci» ai required status checks di main; la decisione D3 e D4 e' mia"
+}

@@ -34,7 +34,12 @@ def _ci_job():
 
 
 def _site_step(steps, predicate):
-    matches = [s for s in steps if predicate(s)]
+    # ADR-0003, D9 (21/09/2026): si stringe prima sull'oggetto (il passo gira in
+    # site/) e poi sul verbo (il predicato sul comando). Un secondo `pnpm install`
+    # fuori da site/ -- il progetto di collaudo alla radice, ADR-0002 D8 -- non deve
+    # confondersi con l'installazione di site/ solo perche' il comando "suona uguale".
+    candidati = [s for s in steps if s.get("working-directory") == "site"]
+    matches = [s for s in candidati if predicate(s)]
     assert len(matches) == 1, f"atteso un solo passo per il predicato, trovati {len(matches)}"
     return matches[0]
 

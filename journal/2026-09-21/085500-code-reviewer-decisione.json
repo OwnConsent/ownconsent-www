@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-21T08:55:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "I quattro rossi di N2: sbaglia il test, che legge un'affermazione universale come un obbligo di esistenza",
+  "contesto": "I quattro rossi sono la stessa asserzione ripetuta: «almeno un link mailto:» su /legale/termini-di-servizio/ e /legale/cookie-policy/, prima e dopo la sostituzione dell'indirizzo. Andrea ha deciso il 20/09 che ha ragione il prodotto e si corregge il test. Prima di applicare la decisione si e' verificato su quale frase della spec ciascuna delle due parti poggia, perche' una decisione applicata senza capirne la ragione si riapre alla prima occasione.",
+  "alternative": [
+    {
+      "opzione": "ha ragione il test: le pagine legali devono avere il recapito, quindi si aggiunge il mailto a termini e cookie policy",
+      "scartata_perche": "nessun criterio della spec lo impone. N2 dice «ogni link di contatto di ogni pagina e' un mailto: a quell'unico indirizzo»: e' universale sui link che esistono, non esistenziale. N3 chiede il recapito nell'informativa privacy (art. 13) e, sulle altre due, soltanto che non compaia un oggetto precompilato ne' un recapito diverso: due divieti, non un obbligo"
+    },
+    {
+      "opzione": "togliere del tutto le due pagine dall'elenco verificato da N2",
+      "scartata_perche": "perderebbe le asserzioni che su quelle pagine valgono davvero: che nessun mailto abbia ?subject= e che il vecchio indirizzo sparisca dall'HTML dopo la sostituzione"
+    }
+  ],
+  "evidenza": [
+    "spec N2.allora: «ogni link di contatto di ogni pagina e' un mailto: a quell'unico indirizzo; ... sulle pagine legali senza oggetto precompilato (DP-29)» — nessun «almeno un»",
+    "spec N3.allora: «l'informativa privacy ... contiene un link mailto: ... senza oggetto precompilato; in nessuna delle tre pagine legali un link mailto: ha un oggetto precompilato e nessuna contiene un recapito diverso»",
+    "l'esistenza del mailto e' imposta da AC33 (/hosted/), AC34 (/on-premise/), N1 (/saas/) e N3 (/legale/informativa-privacy/): quattro pagine, nessuna delle quali e' termini o cookie policy",
+    "$ npx playwright test e2e/n2-indirizzo-unico-e-sostituibile.spec.ts -> i 4 rossi sono tutti «Expected: > 0 Received: 0» sulla stessa riga, 102 e 155"
+  ],
+  "esito": "applicata la decisione di Andrea: si corregge il test. L'asserzione di esistenza resta dove un criterio la impone, con il criterio citato nel messaggio; altrove cade. Le asserzioni di divieto restano su tutte e tre le pagine legali. Resta aperto un punto separato, che la decisione sul test non chiude: il documento di design prescrive comunque una sezione «Contatti» su tutte e tre le pagine legali (voce di tipo gate).",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 20/09"
+}

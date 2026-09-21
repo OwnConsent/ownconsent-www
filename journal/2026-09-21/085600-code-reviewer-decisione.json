@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-21T08:56:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "I tre rossi di AC4: sbaglia il test, che legge come prosa una pagina che il criterio prescrive come tabella",
+  "contesto": "Ordine imposto dal mandato e rispettato: prima il criterio, poi il test. AC4 elenca quattro cose che la pagina di confronto deve indicare per ciascuna modalita', e al punto (4) dice testualmente «una sola riga della tabella, con una cella per modalita'»: il criterio presuppone una tabella. La sezione rese_del_testo della spec, per AC4, aggiunge che il testo non e' prescritto e che rendere vincolante una resa particolare «sarebbe aggiungere un requisito».",
+  "alternative": [
+    {
+      "opzione": "ha ragione il test: la pagina deve avere una sezione dedicata per ciascuna modalita', con un'intestazione che ne porti il nome",
+      "scartata_perche": "e' esattamente il requisito che la spec dichiara di non voler aggiungere. Il prodotto soddisfa AC4 con quattro righe di tabella — «Cosa ricevi», «Come paghi», «Chi registra la CMP presso IAB Europe», «Come si attiva» — e una cella per modalita', associata alla colonna da th[scope=col] e, nel layout impilato, da data-etichetta"
+    },
+    {
+      "opzione": "correggere solo la funzione vicini() allargando le finestre di prossimita'",
+      "scartata_perche": "non e' un problema di ampiezza: su una tabella appiattita per righe la prossimita' in caratteri non e' il meccanismo che associa una cella alla sua colonna. Allargare la finestra renderebbe il test verde per coincidenza, cioe' un test che non sa piu' fallire"
+    }
+  ],
+  "evidenza": [
+    "il quarto test di AC4, quello che verifica la riga «come si attiva» come tabella vera, e' VERDE: la tabella c'e' ed e' ben formata. Sono rossi solo i tre che la leggono come prosa",
+    "$ node -e \"... cheerio.load(site/dist/confronto/index.html); $('main').text()\" -> «...In base alla taglia di disco, memoria e CPULicenza annuale...» e «...OwnConsentIn definizione...»: cheerio incolla le celle senza separatore",
+    "sullo stesso testo, /\\bcpu\\b/ig -> 0 occorrenze e /\\bownconsent\\b/ig -> 1 sola occorrenza (l'occhiello), perche' il confine di parola cade dentro la saldatura fra due celle",
+    "site/src/components/pagine/TabellaConfronto.astro righe 15-38: le quattro righe e le tre celle per riga ci sono tutte, con i contenuti che AC4 elenca"
+  ],
+  "esito": "sbaglia il test in tutti e tre i casi: nessun finding per L14. Il test si riscrive leggendo la tabella per struttura (colonna della modalita' dal thead, riga dall'intestazione di riga, poi la cella), non per prossimita' nel testo appiattito. Limite dichiarato: l'etichetta di riga non e' prescritta dalla spec, il test ne accetta una famiglia e questo e' scritto nel commento.",
+  "umano_coinvolto": false
+}

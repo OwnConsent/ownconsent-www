@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-21T09:02:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "Correggere il test di N2 chiude il rosso ma non la divergenza: il documento di design prescrive una sezione «Contatti» su tutte e tre le pagine legali, il prodotto ce l'ha su una",
+  "contesto": "La decisione di Andrea del 20/09 riguarda il rapporto fra il TEST e i CRITERI della spec, e li' e' giusta: ne' N2 ne' N3 impongono un recapito su termini di servizio e cookie policy. Ma il test non e' l'unico artefatto committato che parla di quelle pagine. docs/design/01-pagine.md, prodotto dal lotto L02 e gia' ratificato, elenca la struttura attesa di ciascuna pagina «in ordine» e mette una sezione «Contatti» con il mailto senza oggetto precompilato in tutte e tre. Anche ADR-0002 DP-27 e' al plurale: «l'indirizzo di contatto va nelle pagine legali». Se si corregge solo il test, il rosso sparisce e la divergenza resta, non vista da nessuna misura: e' esattamente il modo in cui una divergenza si assorbe in silenzio.",
+  "chi_ha_deciso": "nessuno: il punto e' aperto e va portato ad Andrea",
+  "cosa_serviva": "una decisione su quale dei due artefatti vale per termini di servizio e cookie policy: il documento di design (che prescrive il recapito su tutte e tre) o la spec (che non lo impone su due). Non e' una decisione di un agente: tocca il contenuto di pagine legali, che la regola 7 del cantiere riserva a una persona.",
+  "evidenza": [
+    "docs/design/01-pagine.md, sezione «6. Termini di servizio (bozza)», punto 6: «Contatti» (identifica il titolare ... e da' lo stesso recapito dell'informativa privacy, DP-27: l'indirizzo unico di contatto del file di N2, come link mailto:... senza ?subject=)",
+    "docs/design/01-pagine.md, sezione «8. Cookie policy (bozza)», punto 6: «Contatti» (lo stesso recapito delle altre due pagine legali ... link mailto:... senza ?subject=, DP-29)",
+    "docs/adr/0002-struttura-site.md riga 442, DP-27: «L'indirizzo di contatto va nelle pagine legali: l'informativa deve identificare il titolare e dare un recapito (art. 13 GDPR). Stesso indirizzo, dallo stesso file di contenuto»",
+    "$ grep -o 'mailto:[^\"]*' site/dist/legale/termini-di-servizio/index.html -> nessun risultato",
+    "$ grep -o 'mailto:[^\"]*' site/dist/legale/cookie-policy/index.html -> nessun risultato",
+    "$ grep -o 'mailto:[^\"]*' site/dist/legale/informativa-privacy/index.html -> mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+    "$ grep -o '<h2[^>]*>[^<]*</h2>' site/dist/legale/termini-di-servizio/index.html -> «Che cosa e' OwnConsent», «Le tre modalita'», «Che cosa manca a questa bozza», «Trattamento dei dati personali», «Modifiche a questi termini»: mancano «Oggetto del servizio», «Legge applicabile e foro competente» e «Contatti» che il documento elenca"
+  ],
+  "esito": "il rosso si chiude applicando la decisione di Andrea (si corregge il test), e in parallelo si apre un finding di classe 1 per il rientro L15: il prodotto non ha una sezione che un documento committato prescrive. La correzione del test non e' la chiusura del punto e non va raccontata come tale.",
+  "umano_coinvolto": true
+}

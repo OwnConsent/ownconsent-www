@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-21T08:48:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Il modello di lavoro di L08 si decide prima di cominciare: due alberi di lavoro, cinque dimensioni fisse, un formato di finding solo",
+  "contesto": "L08 deve fare due cose che si disturbano a vicenda: il triage dei sette rossi (che secondo la decisione di Andrea del 20/09 porta a modificare e2e/) e la revisione avversariale di site/ e del progetto di collaudo (che legge e2e/). Se i revisori leggono lo stesso albero mentre i test cambiano sotto, misurano un bersaglio mobile. Vale anche la misura del 20/09: un mandato che fa ri-progettare a ogni elemento produce un terzo del lavoro di un mandato che fissa il modello e lo fa replicare.",
+  "alternative": [
+    {
+      "opzione": "revisione e correzione dei test nello stesso albero, in sequenza",
+      "scartata_perche": "serializza tutto il lotto e non elimina il rischio: un revisore che apre e2e/ a meta' correzione riporta righe che non esistono piu'"
+    },
+    {
+      "opzione": "far decidere a ogni revisore che cosa guardare",
+      "scartata_perche": "e' esattamente il mandato che il 20/09 ha prodotto 2 file in 45 turni invece di 6; il perimetro di ciascuno si fissa qui, una volta"
+    }
+  ],
+  "evidenza": [
+    "$ git worktree add .claude/worktrees/l08 lotto/l08-revisione-avversariale -> albero di lavoro del lotto, dove si correggono i test",
+    "$ git worktree add --detach .claude/worktrees/l08-ro 8288e81 -> albero di sola lettura fissato sul commit consegnato, dove leggono i revisori del collaudo",
+    "node_modules dei due alberi collegati con ln -s: i revisori possono eseguire, non solo leggere"
+  ],
+  "esito": "applicata: cinque dimensioni di revisione (contratti/ADR, contenuto contro spec e documento di design, codice di site/, i test misurano davvero il criterio, infrastruttura di collaudo), un solo formato di finding (file, riga, scenario concreto, comando e output che lo riproduce), scarto di quelli non riproducibili. Nessun revisore corregge: i rientri sono L14 e L15.",
+  "umano_coinvolto": false
+}

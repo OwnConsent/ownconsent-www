@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-21T09:25:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "Cinque revisori su cinque hanno toccato il tetto dei turni senza consegnare niente: il mandato diceva che cosa guardare, non quando fermarsi",
+  "contesto": "I cinque revisori sono partiti con un perimetro fissato e un formato di finding unico — la parte di mandato che il 20/09 aveva fatto la differenza fra 2 file e 6. Non e' bastato: tutti e cinque si sono fermati al tetto dei turni mentre stavano ancora indagando, nessuno aveva consegnato una riga, e la cartella scratch .work/8/ era vuota. Il primo aveva speso 52 chiamate di strumento.",
+  "cosa_si_e_imparato": "Fissare il perimetro non basta se non si fissa anche la condizione di uscita. Un revisore lasciato libero di decidere quando ha finito non finisce mai: ogni verifica ne apre un'altra, e il tetto arriva prima della consegna. La misura del 20/09 diceva «il modello e' deciso, copialo» sul COME si fa un elemento; manca il pezzo gemello sul QUANDO si smette e sul DOVE si salva. Il mandato di partenza chiedeva di salvare i finding solo nel messaggio finale: un messaggio finale che non arriva porta via tutto. La correzione applicata a meta' giro — «scrivi in .work/8/findings-X.json con il primo comando, poi continua» — e' arrivata dopo che tre agenti si erano gia' fermati.",
+  "evidenza": [
+    "cinque agenti, cinque notifiche «stopped at its 20-turn limit ... had produced no report»",
+    "revisore A: 52 chiamate di strumento in due tranche, 84k token, nessun finding consegnato",
+    "$ ls .work/8/ -> vuota dopo la prima tranche di tutti e cinque",
+    "il tetto e' 20 turni per tranche, non i 40 del campo tetto_turni del piano per il lotto: il piano conta i turni del lotto, l'ambiente li conta per agente"
+  ],
+  "esito": "corretto in corsa: a ogni revisore si e' chiesto di scrivere subito quello che aveva su file, chiudere al massimo uno o due finding in piu' e consegnare, dichiarando la copertura parziale invece di presumerla completa. Per il prossimo giro il mandato deve contenere fin dall'inizio tre righe: dove salvi (file scratch, aggiornato a ogni finding), quando smetti (numero di finding o fine del perimetro, quello che viene prima), e che una copertura parziale dichiarata e' una consegna valida.",
+  "umano_coinvolto": false
+}

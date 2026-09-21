@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T09:10:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "La firma dei commit non sa distinguere due ruoli che lavorano insieme: il marcatore e' uno solo per tutto il repository",
+  "contesto": "githooks/prepare-commit-msg legge il ruolo da $(git rev-parse --git-common-dir)/cantiere-current-agent. La correzione del 14/09 ha messo il marcatore li' apposta perche' le worktree collegate vedessero la stessa cartella .git e i commit dei subagenti non uscissero piu' senza firma. Ma --git-common-dir e' condiviso da TUTTE le worktree: un solo file per tutti. E il piano di questa issue prescrive l'opposto della condivisione — «Ogni lotto lavora in una worktree propria; i lotti della stessa onda partono insieme».",
+  "cosa_si_e_imparato": "Il fix del 14/09 ha scambiato un difetto con un altro: prima mancava la firma nelle worktree, ora la firma c'e' ma puo' essere di un altro ruolo. Con due agenti che committano insieme su due rami diversi — qui la sessione principale sul journal e un agente qa-test sui test — entrambi i commit prendono il valore che il marcatore aveva in quel momento. Non e' un caso limite: e' il modo di lavorare che il piano prescrive. Il marcatore andrebbe risolto per worktree (git rev-parse --git-dir, che nelle worktree collegate e' .git/worktrees/<nome>), con quello comune come ripiego.",
+  "evidenza": [
+    "$ cat \"$(git rev-parse --path-format=absolute --git-common-dir)/cantiere-current-agent\" -> orchestrator",
+    "$ git log -1 --format='%B' 023229a -> «Cantiere-Agent: orchestrator» su un commit di journal scritto per il lotto L08, il cui ruolo e' code-reviewer",
+    "githooks/prepare-commit-msg, funzione marcatore_ruolo(): usa --git-common-dir, condiviso fra worktree, e non --git-dir, che invece e' distinto per worktree"
+  ],
+  "esito": "non corretto in questo lotto: toccare il meccanismo di firma mentre due agenti stanno committando lo romperebbe sotto di loro, e githooks/ non e' nel perimetro di L08. La firma di questo giro resta «orchestrator» anche sui commit dei test: il ruolo vero di ogni voce e' nel campo «agente» del journal, che CLAUDE.md dichiara fonte autorevole («la firma e' una comodita'; la fonte autorevole di perche' e' il journal»). Segnalato ad Andrea come finding fuori perimetro.",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T15:43:08+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Forma dei cinque passi nuovi in ci: quale if, quale posizione, un comando per passo",
+  "contesto": "Il mandato mi chiede di ragionare sulla condizione del passo di tests/ci invece di riusarla a naso da quella di site/, e di stabilire il modello prima di scrivere. L'ADR-0003 (sezione datata 21/09/2026, D7 punto 2) e' gia' esplicito: 'Il passo non ha if: non e' un'area.' Il passo esegue tests/ci/**, che verifica la forma statica del workflow indipendentemente da quali aree sono presenti — condizionarlo su site presente lo spegnerebbe proprio quando site/ non c'e', cioe' smetterebbe di proteggere il caso in cui l'area manca.",
+  "alternative": [
+    { "opzione": "if: steps.rilevamento.outputs.site == 'presente' sul passo tests/ci", "scartata_perche": "tests/ci verifica la forma statica del workflow (D1, AC15-18, ecc.), non il contenuto di site/: smetterebbe di girare quando manca l'area che dovrebbe proteggere di piu' (un workflow senza site/ e' comunque un workflow da verificare)" },
+    { "opzione": "nessun if sul passo tests/ci (scelta)", "scartata_perche": "non scartata: e' quella prescritta da ADR-0003 D7 punto 2, coerente con 'il passo non e' un'area'" }
+  ],
+  "evidenza": [
+    "docs/adr/0003-contesto-ci.md righe 521-532 (D7, prescrizioni per @devops): posizione dopo 'Rilevamento aree' e prima del blocco site/, nessun if",
+    "docs/plan/issue-8.json, L12.verifica: 'i passi nuovi (installazione del progetto di radice, playwright test, misura di laboratorio) girano solo quando l'area site/ e presente' — riferito ai QUATTRO passi legati a site/ (radice, chromium, e2e, laboratorio), non al passo tests/ci, che e' distinto per costruzione (D7)"
+  ],
+  "esito": "modello fissato: 1) passo tests/ci subito dopo 'Rilevamento aree', senza if, un solo comando (stampa versioni + unittest discover); 2) i quattro passi legati a site/ (installazione radice, chromium, e2e, misura di laboratorio) vanno dopo il blocco site/ esistente, ciascuno con if: steps.rilevamento.outputs.site == 'presente' e un comando ciascuno, cosi' un fallimento non si confonde con un altro; e2e e laboratorio restano due passi distinti (pnpm test:e2e / pnpm test:perf, gia' definiti in package.json) invece di un pnpm exec playwright test unico, per poter riportare la durata separata richiesta dal mandato e da D4 — misuro il costo della seconda build come chiede D3 punto 6",
+  "umano_coinvolto": false
+}

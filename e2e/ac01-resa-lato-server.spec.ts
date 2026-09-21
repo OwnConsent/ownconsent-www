@@ -29,10 +29,15 @@ test.describe('AC1: resa lato server', () => {
       const h1 = $('h1').first().text().trim();
 
       const testoPagina = ($('main').text() || $('body').text()).trim();
+      // PROVA DEL GATE ROSSO — NON MERGIARE. Asserzione deliberatamente falsa:
+      // pretende che l'HTML servito NON contenga testo oltre all'h1, il contrario
+      // di quello che AC1 verifica davvero. Serve a vedere il contesto `ci`
+      // diventare rosso e a bloccare il merge. Un gate mai visto rosso e' una
+      // decorazione.
       expect(
         testoPagina.length,
-        "l'HTML servito contiene testo principale oltre al solo h1",
-      ).toBeGreaterThan(h1.length);
+        "PROVA DEL GATE ROSSO: asserzione falsa, l'HTML servito NON contiene testo oltre al solo h1",
+      ).toBeLessThan(h1.length);
 
       const hrefPresenti = $('a[href]')
         .map((_, el) => ($(el).attr('href') ?? '').split('#')[0])

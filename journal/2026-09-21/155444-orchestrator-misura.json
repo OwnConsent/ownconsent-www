@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-21T15:54:44+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Il gate sa dire rosso: ci FAILURE e mergeStateStatus BLOCKED su una PR con un criterio di accettazione rotto",
+  "contesto": "Richiesta esplicita del mandato, stesso metodo della #30: «Un gate mai visto rosso e' una decorazione». Verde su una PR che non rompe niente non dimostra che il gate funzioni: dimostra solo che non e' in mezzo. Serviva vedere il rosso, e vederlo arrivare dal passo nuovo.",
+  "metodo": "Ramo prova/l12-gate-rosso, ramificato dal ramo del lotto (339940d), con UNA sola modifica: in e2e/ac01-resa-lato-server.spec.ts l'asserzione su testoPagina.length passa da toBeGreaterThan(h1.length) a toBeLessThan(h1.length). E' un criterio di accettazione vero (AC1, resa lato server), non uno strumento del collaudo. PR di prova #47, aperta e poi chiusa senza merge.",
+  "evidenza": [
+    "$ gh pr view 47 --json mergeable,mergeStateStatus,statusCheckRollup  ->  mergeable=MERGEABLE  mergeStateStatus=BLOCKED  /  check ci -> FAILURE",
+    "$ gh run view 35607937428 --json conclusion,jobs  ->  JOB ci failure 2026-09-21T13:48:06Z -> 13:49:38Z",
+    "passi: 13 installazione radice success; 14 Playwright Chromium success; 15 Test di accettazione (e2e) FAILURE; 16 Misura di laboratorio (AC39) non eseguito",
+    "riga del log: 2026-09-21T13:49:35.5649475Z Error: PROVA DEL GATE ROSSO: asserzione falsa, l'HTML servito NON contiene testo oltre al solo h1",
+    "riga successiva: expect(received).toBeLessThan(expected)",
+    "2026-09-21T13:49:02.4126455Z  x  1 e2e/ac01-resa-lato-server.spec.ts:21:5 > AC1: resa lato server > AC1: Home ... (102ms) — otto pagine su otto rosse",
+    "run: https://github.com/OwnConsent/ownconsent-www/actions/runs/35607937428",
+    "confronto: sullo stesso albero senza l'asserzione falsa (PR #46, run 35607830711) il job ci e' success"
+  ],
+  "cosa_dice_la_misura": [
+    "Il rosso arriva dal passo nuovo, non da uno preesistente: ci era verde fino al passo 14 e fallisce al 15, che e' «Test di accettazione (e2e)», aggiunto da questo lotto.",
+    "mergeStateStatus passa a BLOCKED, quindi il rosso non e' decorativo: blocca davvero il merge, perche' ci e' required su main con enforce_admins attivo (misurato in 151827-orchestrator-misura.json).",
+    "Il passo 16, misura di laboratorio, NON viene eseguito quando il 15 e' rosso. E' una conseguenza della forma scelta (passi distinti in serie nello stesso job, senza continue-on-error, vietato da ADR-0003 D1) e va dichiarata: un rosso nei test di accettazione spegne la misura di laboratorio sullo stesso commit. Stesso effetto gia' registrato in ADR-0003 fra site/ e api/."
+  ],
+  "esito": "prova eseguita, PR #47 chiusa senza merge; evidenza allegata come commento a #47 e a #46",
+  "umano_coinvolto": false
+}

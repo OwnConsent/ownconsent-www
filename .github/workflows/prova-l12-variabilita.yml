@@ -1,0 +1,64 @@
+# PROVA — NON MERGIARE.
+#
+# Workflow temporaneo per il lotto L12 (issue #8), unico scopo: produrre la misura di
+# variabilita' richiesta da docs/adr/0003-contesto-ci.md, D3 ("il test di laboratorio
+# eseguito almeno 5 volte sullo stesso SHA sul runner di GitHub") prima che L12 scriva
+# una riga del job `ci`. Non entra in `ci`: id e name del job sono diversi da `ci` di
+# proposito, cosi' tests/ci/test_d1_job_form.py resta verde (un solo job id/name `ci`
+# in tutto .github/workflows/). Questo file si cancella con la chiusura della PR di
+# prova: chi ha aperto la PR chiude, non questo agente (mandato L12).
+#
+# Nessun segreto: solo checkout, setup-node, installazione delle dipendenze gia'
+# dichiarate nei lockfile committati, e l'esecuzione dello spec temporaneo di misura.
+
+name: PROVA L12 — variabilita' di laboratorio (NON MERGIARE)
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  # ADR-0002 D9, anticipato da ADR-0003 D4: nessuna telemetria di terzi.
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  prova-variabilita:
+    name: prova-variabilita
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Node.js (da .nvmrc)
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Versione Node in uso
+        run: node -v
+
+      - name: SHA verificato
+        run: git rev-parse HEAD
+
+      - name: corepack enable
+        run: corepack enable
+
+      - name: site/ — installazione dipendenze (frozen lockfile)
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: site/ — versione pnpm in uso
+        working-directory: site
+        run: pnpm -v
+
+      - name: radice — installazione progetto di collaudo (frozen lockfile)
+        run: pnpm install --frozen-lockfile
+
+      - name: Chromium di Playwright (con dipendenze di sistema)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Misura di laboratorio AC39 — stampa per pagina (PROVA, spec temporaneo)
+        run: pnpm exec playwright test tests/perf/prova-l12-stampa-variabilita.spec.ts

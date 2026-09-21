@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-21T15:22:29+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Stringere il selettore di _site_step su working-directory non indebolisce AC6: la prova per inversione resta rossa",
+  "contesto": "@devops mi gira la collisione misurata in journal/2026-09-21/151312-orchestrator-misura.json e mi chiede di scegliere fra (a) stringere il predicato di tests/ci e (b) scrivere il passo di radice con un alias che non collide. L'obiezione contro (a) e': se il selettore si sposta su working-directory, l'asserzione test_ciascun_passo_gira_in_site diventa vera per costruzione, cioe' una tautologia. Invece di dedurre se lo e', l'ho misurata.",
+  "metodo": "copia degli oggetti sotto test nello scratchpad (.github/workflows/, .github/ci/, docs/DEFINITION-OF-DONE.md, .nvmrc) e copia di tests/ci/; i file del repository non sono stati toccati (git status --porcelain elenca solo la voce di journal e tests/ci/__pycache__/, che c'era gia'). Varianti: A = workflow di oggi piu' quattro passi nuovi (install del collaudo alla radice con «pnpm install --frozen-lockfile», browser di Playwright, «pnpm exec playwright test», e il passo di tests/ci di D7); A2 = A in cui il passo di installazione di site/ perde «working-directory: site» e diventa «pnpm install --frozen-lockfile --dir site»; T-base = tests/ci di oggi; T-stretto = copia in cui _site_step filtra prima i passi con working-directory == 'site'.",
+  "evidenza": [
+    "1) $ cd T-base && CI_ROOT=<A> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.238s / FAILED (failures=5); AssertionError: atteso un solo passo per il predicato, trovati 2 (test_ac06_ac07_site_steps.py:38). Collisione riprodotta in modo indipendente da @devops",
+    "1bis) i 5 fallimenti sono tutti e soli quelli di _site_step: il passo nuovo di tests/ci e i tre passi di Playwright non rompono nessun altro test (AC13 corepack, AC15/AC16 permissions, AC17/AC18 cache, AC10/AC12 versioni, D1 forma del job, AC20 DoD restano verdi)",
+    "2) $ cd T-stretto && CI_ROOT=<A> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.236s / OK",
+    "3) controprova sul workflow di oggi: $ cd T-stretto && CI_ROOT=<worktree l12> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.223s / OK",
+    "4) prove-by-reversion sullo strumento: $ cd T-stretto && CI_ROOT=<A2> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.236s / FAILED (failures=5); AssertionError: atteso un solo passo per il predicato, trovati 0"
+  ],
+  "cosa_dice_la_misura": "La (4) e' il punto: spostare «gira in site/» dal corpo del test al selettore non fa sparire l'asserzione, perche' il selettore contiene gia' «assert len(matches) == 1». Se il passo di site/ esce da working-directory: site, i candidati diventano 0 e il test e' rosso lo stesso — cambia il messaggio, non la copertura. L'obiezione della tautologia non regge, e (a) e' una riparazione dello strumento, non un adattamento della misura alla descrizione. La (1bis) dice inoltre che il passo di tests/ci dentro ci non ha effetti collaterali sugli altri test e costa 0,24 s.",
+  "alternative": [
+    {
+      "opzione": "(b) il passo di radice usa «pnpm i --frozen-lockfile»",
+      "scartata_perche": "appoggia un invariante di accettazione a un alias del gestore di pacchetti: la prima persona che riscrive «pnpm i» in «pnpm install» trova un rosso con il messaggio «trovati 2», che non nomina la causa. Con D7 quel rosso diventa anche un gate sulle PR, e l'invito implicito e' ad allargare il predicato, cioe' esattamente cio' che il piano vieta a L12"
+    },
+    {
+      "opzione": "(c) selettore sul campo name del passo",
+      "scartata_perche": "renderebbe il name, che e' testo libero per gli umani, un'interfaccia; oggi nessun test lo legge e non c'e' motivo di cominciare"
+    }
+  ],
+  "esito": "decisione (a), scritta nella sezione datata di ADR-0003; chi modifica tests/ci e' @qa-test, non @devops e non io",
+  "umano_coinvolto": false
+}

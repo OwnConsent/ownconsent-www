@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T15:20:52+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Shipped: il workflow si chiama ci.yml, il job e il check run si chiamano «ci»; site-ci.yml non esiste",
+  "contesto": "ADR-0003, «Da ratificare» punto 1, e divergenza D-3 di docs/plan/issue-8.json: contracts/perf-budgets.json:33 ($lettura_ci) nomina .github/workflows/site-ci.yml. Prima di correggere il contratto misuro che cosa c'e' davvero in produzione, invece di fidarmi del piano.",
+  "evidenza": [
+    "$ git ls-tree -r --name-only origin/main -- .github/workflows/  ->  ci.yml, claude-nightly-maintenance.yml, claude-pr-review.yml, claude-release-comms.yml",
+    "$ git ls-tree -r --name-only origin/main -- .github/ | grep -c site-ci  ->  0",
+    "$ git show origin/main:.github/workflows/ci.yml | grep -n '^jobs:|^  ci:|name: ci'  ->  17:jobs:  18:  ci:  19:    name: ci",
+    "$ git rev-parse origin/main  ->  8135bffcb624ea07eb075e6fd04b74f4dfe18c3f",
+    "$ gh api 'repos/OwnConsent/ownconsent-www/commits/8135bffcb624ea07eb075e6fd04b74f4dfe18c3f/check-runs?filter=latest' --jq '[.check_runs[] | {name, app: .app.slug, conclusion}]'  ->  [{\"app\": \"github-actions\", \"conclusion\": \"success\", \"name\": \"ci\"}]"
+  ],
+  "cosa_dice_la_misura": "Il contesto che blocca le PR esiste, si chiama «ci» sia come job sia come check run, sta in .github/workflows/ci.yml, ed e' verde sulla testa di main. Il file .github/workflows/site-ci.yml non e' mai esistito su main. Il campo $lettura_ci nomina un artefatto inesistente: la divergenza e' reale e la classe e' «shipped vince».",
+  "esito": "via libera alla correzione del contratto come esecuzione della ratifica D-3, non come decisione nuova",
+  "umano_coinvolto": false
+}

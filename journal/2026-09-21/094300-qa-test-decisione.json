@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-21T09:43:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L14",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Perimetro del rientro di F13: solo le tre correzioni nominate da Andrea, dentro e2e/",
+  "contesto": "Andrea ha chiesto una PR piccola sul solo progetto di collaudo. F13 (journal 2026-09-21/090144) ha misurato che il commento di e2e/fixtures/copia-temporanea.ts righe 49-58 dichiara un fallimento rumoroso che non avviene: su porta occupata astro preview ripiega su un'altra porta, e attendiPronto() accetta qualunque stato sotto 500. AC6 e N2 possono girare interi contro il server di un'altra worktree e risultare verdi. Le correzioni chieste sono tre: porta stretta, identita' del server verificata, arresto che non lascia un ascoltatore vivo. Piu' il commento, che deve descrivere cio' che il codice fa.",
+  "alternative": [
+    {
+      "opzione": "chiudere nello stesso giro anche F15 (playwright.config.ts chiede la porta prima della build, copia-temporanea.ts dopo) e la stessa porta non stretta del webServer principale",
+      "scartata_perche": "e' lo stesso difetto ma su un altro file e su un altro percorso, e allargherebbe una PR che Andrea ha chiesto piccola. Segnalato invece di assorbito: il webServer principale di playwright.config.ts resta senza (G1) e la cosa e' scritta in chiaro in cima a copia-temporanea.ts."
+    },
+    {
+      "opzione": "correggere solo il commento, allineandolo al comportamento reale (il ripiego), e lasciare il codice com'e'",
+      "scartata_perche": "renderebbe onesto il documento e lascerebbe il difetto: AC6 e N2 continuerebbero a poter girare contro il server di un'altra worktree. Il commento e' la conseguenza della correzione, non il suo sostituto."
+    }
+  ],
+  "evidenza": [
+    "perimetro dichiarato prima di iniziare: e2e/fixtures/copia-temporanea.ts. Nessun file di site/ toccato, nessuna delle due chiamanti (AC6, N2) modificata: l'interfaccia costruisciCopiaConFixture({fixture, percorsoFixture}) -> {radice, baseURL, chiudi} resta identica",
+    "prova-by-reversion obbligatoria: con un server estraneo in ascolto sulla porta, la versione di prima dice verde e quella nuova fallisce"
+  ],
+  "esito": "applicata: perimetro chiuso alle tre correzioni nominate. Cio' che e' stato trovato fuori perimetro e' finito in voci di fallimento separate, non nel diff.",
+  "umano_coinvolto": true
+}

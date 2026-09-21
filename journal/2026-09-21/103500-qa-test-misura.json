@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-21T10:35:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L14",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Prova-by-reversion di F13 e F14: tre scenari, la versione di prima verde e la nuova rossa in tutti e tre",
+  "contesto": "Il difetto nella realta' dipende da una corsa — una porta presa fra il probe di portaLibera() e il listen di astro preview — e una corsa non si riproduce a comando. Per renderlo deterministico senza modificare il file sotto prova, il banco di prova sostituisce una cosa sola: net.createServer().address() riporta la porta che decido io invece di quella assegnata dal sistema operativo. portaLibera() esegue comunque il suo vero bind; cambia solo il numero che legge. Il file sotto prova viene importato tal quale, nella sua posizione vera (import.meta.url serve a risolvere la radice del repository).",
+  "cosa_si_e_imparato": "Il doppio giusto non e' quello che semplifica il codice sotto prova, e' quello che rende ripetibile la condizione esterna. Qui la condizione esterna e' «la porta che chiederai e' gia' di qualcun altro»: una riga di doppio, e il resto del percorso — copia, install, build, spawn, attesa — e' quello vero, compresi i quaranta secondi di build per ogni scenario. Primo tentativo sbagliato e registrato: il banco spegneva strictPort rattoppando fs.writeFileSync sul namespace del modulo, e non funzionava, perche' il file sotto prova importa writeFileSync per nome e non rilegge la proprieta' al momento della chiamata. Sostituito con un mutante esplicito (sed su strictPort), che dichiara di essere un mutante invece di fingersi il codice vero.",
+  "evidenza": [
+    "SCENARIO 1 — porta 46333 occupata da un server estraneo che risponde 200 a tutto con la pagina di una build senza la fixture (il caso peggiore: nemmeno un 404 a tradirlo).",
+    "  PRIMA (git show HEAD:e2e/fixtures/copia-temporanea.ts, d797f0c) -> «VERDE: la copia si dichiara pronta su http://127.0.0.1:46333» e, sulla stessa risposta, «GET (rotta saas) -> 200, contiene 111111.11: false». Uscita 0. La copia dichiara pronto un server che non e' la copia.",
+    "  DOPO -> «ROSSO: il server della copia temporanea e' uscito prima di essere pronto (codice 1, segnale null) ... Con vite.preview.strictPort questo e' cio' che accade se la porta richiesta e' occupata», con l'output del comando allegato («Port 46333 is already in use»). Uscita 1.",
+    "SCENARIO 2 — stesso estraneo, ma su un mutante del file nuovo con la SOLA (G1) spenta (sed 's/strictPort: true/strictPort: false/'), per misurare se (G2) regge da sola.",
+    "  -> «ROSSO: server della copia temporanea non pronto entro 120000ms ...: qualcosa risponde 200 su quella porta ma non e' questa copia: il marcatore «111111.11», che la build di questa copia contiene per forza, non compare nella risposta», e nell'output allegato si vede il ripiego: «Port 46333 is in use, trying another one...» seguito da «ready ... http://127.0.0.1:46334/». Le due correzioni reggono una senza l'altra, come chiedeva Andrea.",
+    "SCENARIO 3 — F14, interruzione: si costruisce la copia, si aspetta che il server sia pronto, si manda SIGINT al processo che l'ha costruita (il caso Ctrl-C: astro e' in un gruppo suo e il segnale non lo raggiunge).",
+    "  PRIMA -> prima: copie=0 preview=0; durante: copie=1 preview=1; dopo SIGINT: copie=1 preview=1, e pgrep -af 'astro.mjs[ ]preview' stampa un processo vivo «preview --port 33607» con la cwd in /tmp/ownconsent-l07-tg9FU2. Un orfano in ascolto e una copia in /tmp.",
+    "  DOPO -> prima: copie=0 preview=0; durante: copie=1 preview=1; dopo SIGINT: copie=0 preview=0, nessuna riga da pgrep, uscita 130.",
+    "PERCORSO FELICE — $ playwright test e2e/ac06-da-definire-senza-valori.spec.ts e2e/n2-indirizzo-unico-e-sostituibile.spec.ts --reporter=list -> «21 passed (9.8s)», con le due copie temporanee costruite e servite davvero; residui dopo la suite: copie=0 preview=0.",
+    "$ eslint e2e/fixtures/copia-temporanea.ts -> nessun rilievo (uscita 0)"
+  ],
+  "esito": "le tre garanzie (G1) porta stretta, (G2) identita' verificata e (G3) arresto senza superstiti sono ciascuna coperta da uno scenario in cui la versione precedente passa e quella nuova fallisce.",
+  "umano_coinvolto": false
+}

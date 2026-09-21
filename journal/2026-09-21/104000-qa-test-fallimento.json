@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T10:40:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L14",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "La suite di collaudo non parte affatto su questa macchina: testDir '.' raccoglie i checkout degli agenti dentro .claude/worktrees/",
+  "contesto": "Per misurare il percorso felice serviva eseguire AC6 e N2 sotto Playwright. Il comando fallisce prima di caricare un solo test.",
+  "cosa_si_e_imparato": "playwright.config.ts ha testDir: '.' e nessun testIgnore. .claude/worktrees/ contiene nove checkout completi di agenti, ognuno con il proprio e2e/ e il proprio node_modules: Playwright li raccoglie e carica una seconda copia di @playwright/test dalle loro dipendenze. In CI non succede, perche' il checkout non ha worktree annidate — ed e' proprio per questo che il difetto e' rimasto invisibile: il verdetto che conta (contesto ci) non lo vede, e chi lavora in locale sbatte contro un errore che non nomina mai le worktree.",
+  "evidenza": [
+    "$ playwright test e2e/ac06-da-definire-senza-valori.spec.ts -> «Error: Requiring @playwright/test second time», con il secondo require dentro .claude/worktrees/agent-af63fb3c649e95a35",
+    "misurato su HEAD, con la modifica di questa PR messa da parte con git stash: $ playwright test --list | grep -c 'Requiring @playwright/test second time' -> 208. Preesistente, non introdotto qui.",
+    "aggirato SOLO per la misura, con un file di configurazione temporaneo non committato che aggiunge testIgnore: ['**/.claude/**']; con quello, «21 passed (9.8s)»"
+  ],
+  "esito": "non corretto: Andrea ha chiesto una PR piccola su tre correzioni nominate, e testIgnore non e' una di quelle. Segnalato come rientro a se': una riga in playwright.config.ts (testIgnore su .claude/) chiude il caso. La correzione non e' stata assorbita in silenzio in questa PR.",
+  "umano_coinvolto": false
+}

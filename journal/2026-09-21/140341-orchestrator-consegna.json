@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-21T14:03:41+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "05-consegna",
+  "tipo": "consegna",
+  "titolo": "PR piccola: raccolta dei test ristretta alla radice vera, e porta stretta sull'anteprima del webServer principale",
+  "contesto": "Due difetti di infrastruttura misurati in L08 e nella #42, tutti e due fuori dal codice di prodotto. Lavorato in una worktree dedicata, con una worktree annidata creata apposta per riprodurre il primo difetto e rimossa a fine giro.",
+  "evidenza": [
+    "$ git worktree remove --force .claude/worktrees/prova-riproduzione ; $ pnpm exec playwright test --list -> 'Total: 252 tests in 24 files'",
+    "$ pnpm exec playwright test -> '252 passed (22.7s)', exit=0, eseguito con la worktree annidata ancora presente",
+    "$ pnpm exec eslint . (radice) -> exit=0",
+    "$ cd site && pnpm build -> exit=0 ; pnpm lint -> exit=0 ; pnpm astro check -> '0 warnings, 6 hints', exit=0",
+    "$ git diff --stat -> DESIGN-AMENDMENTS.md +34, playwright.config.ts +50, site/astro.config.mjs +16; 100 inserzioni, 0 cancellazioni"
+  ],
+  "dod_soddisfatta": [
+    "prova-by-reversion per entrambe le correzioni, con comando e output, nel corpo della PR e in journal/2026-09-21/135936 e /140206",
+    "build, lint e astro check puliti su site/; eslint pulito alla radice",
+    "divergenza di perimetro registrata in DESIGN-AMENDMENTS.md come A04, autorizzata da Andrea il 21/09/2026",
+    "voci di journal scritte durante il lavoro, ts da date -Is",
+    "nessuna misura di contracts/perf-budgets.json da riallegare: AC39 gira nella suite e passa (7 pagine, tutte verdi)"
+  ],
+  "dod_non_soddisfatta": [
+    "nessun test di accettazione scritto da @qa-test per queste due righe: sono configurazione dell'infrastruttura di collaudo, e un test che le verifichi dovrebbe creare una worktree annidata e occupare una porta dentro la suite. La prova resta la reversione eseguita a mano e allegata. Da riaprire se il difetto si ripresenta.",
+    "alla radice non esiste tsconfig.json: $ pnpm exec tsc --noEmit stampa l'aiuto ed esce 1. Misurato, non corretto qui: il typecheck della radice non esiste ancora e non e' questa la PR che lo introduce."
+  ],
+  "esito": "PR aperta, in attesa del gate di Andrea: il merge e' suo.",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea: autorizzazione del 21/09/2026 a toccare site/astro.config.mjs fuori dal perimetro dell'issue #8; merge riservato a lui."
+}

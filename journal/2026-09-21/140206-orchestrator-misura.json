@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-21T14:02:06+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Prova-by-reversion di vite.preview.strictPort, e verifica che dev e build non cambino",
+  "contesto": "playwright.config.ts chiede una porta libera al sistema operativo e la passa sia al comando di preview sia all'URL che interroga. Fra il momento in cui la porta viene liberata e quello in cui astro preview la prende c'e' una finestra: se qualcun altro la occupa, senza strictPort l'anteprima si sposta sulla porta successiva in silenzio e Playwright continua a interrogare quella chiesta, cioe' il server di qualcun altro. E' lo stesso difetto che la #42 ha chiuso per la copia temporanea; qui manca sul webServer principale. Prova: occupo la porta con python3 -m http.server e poi la chiedo ad astro preview.",
+  "evidenza": [
+    "senza strictPort: '$ astro preview --port 41183 --host 127.0.0.1 --ignore-lock' -> 'Port 41183 is in use, trying another one...' poi 'astro v7.3.3 ready in 16 ms / Local http://127.0.0.1:41184/'; il processo resta vivo (ucciso dal timeout della prova, exit=124)",
+    "con vite.preview.strictPort: '$ astro preview --port 39737 --host 127.0.0.1 --ignore-lock' -> 'Port 39737 is already in use', stack in httpServerStart di vite, '[ELIFECYCLE] Command failed with exit code 1', exit=1",
+    "astro dev non cambia, misurato con la stessa prova: '$ astro dev --port 42263 --host 127.0.0.1' con 42263 occupata -> 'Dev server running at http://127.0.0.1:42264' — ripiega ancora, perche' legge vite.server e non vite.preview",
+    "astro build non apre porte: $ pnpm build -> '8 page(s) built in 702ms', exit=0 con la riga gia' presente",
+    "$ pnpm lint -> exit=0 ; $ pnpm astro check -> '0 warnings, 6 hints', exit=0",
+    "suite viva dalla stessa worktree con la worktree annidata ancora presente: $ pnpm exec playwright test e2e/n3-pagine-legali-titolare-e-recapito.spec.ts -> webServer su porta 39095, '5 passed (3.5s)', exit=0"
+  ],
+  "esito": "applicata. Il fallimento e' rumoroso e immediato al posto di un server sbagliato interrogato per 180 secondi.",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 21/09/2026: la riga tocca site/astro.config.mjs, che sta fuori dal perimetro del collaudo dell'issue #8. Registrata in DESIGN-AMENDMENTS.md come A04."
+}

@@ -12,6 +12,22 @@ export default defineConfig({
   },
   vite: {
     plugins: [tokenCss()],
+    // `astro preview` deve fallire sulla porta occupata, non ripiegare su un'altra.
+    // Il collaudo chiede una porta libera al sistema operativo e la passa sia al comando
+    // sia all'URL che interroga (playwright.config.ts). Se fra le due cose qualcuno
+    // occupa quella porta, senza questa riga l'anteprima si sposta in silenzio sulla
+    // successiva e Playwright resta a interrogare la porta chiesta — cioe' il server di
+    // qualcun altro. Misurato, occupando la porta con un http.server e poi chiedendola:
+    //
+    //   senza strictPort:  "Port 41183 is in use, trying another one..."
+    //                      poi "astro v7.3.3 ready ... http://127.0.0.1:41184/"
+    //
+    // Tocca solo `astro preview`: `astro build` non apre porte e `astro dev` legge
+    // `vite.server`, non `vite.preview`. Fuori dal perimetro del collaudo (issue #8):
+    // autorizzato da Andrea il 21/09/2026, registrato in DESIGN-AMENDMENTS.md (A04).
+    preview: {
+      strictPort: true,
+    },
     css: {
       transformer: 'lightningcss',
       lightningcss: {

@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T13:58:34+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "testIgnore '**/.claude/**' scritto alla lettera spegne la suite dentro ogni worktree di agente",
+  "contesto": "La richiesta di Andrea diceva: aggiungi testIgnore per '**/.claude/**' e '**/node_modules/**'. L'ho scritto cosi' com'era e l'ho misurato, invece di darlo per buono.",
+  "evidenza": [
+    "con testIgnore: ['**/.claude/**', '**/node_modules/**'], eseguito dalla worktree: $ pnpm exec playwright test --list -> 'Error: No tests found', 'Total: 0 tests in 0 files', exit=1",
+    "prima della modifica, nella stessa worktree senza worktree annidate, la stessa riga di comando dava 'Total: 252 tests in 24 files', exit=0",
+    "la worktree vive in /home/andreapernici/src/ownconsent/www/.claude/worktrees/L09-porta-e-testignore: il segmento .claude sta nel percorso assoluto della radice stessa"
+  ],
+  "cosa_si_e_imparato": "Playwright confronta testMatch e testIgnore con il percorso ASSOLUTO del file, non con quello relativo a testDir: un pattern relativo viene trattato come se cominciasse con '**/'. E' la stessa ragione per cui 'e2e/**/*.spec.ts' raccoglieva le worktree annidate. Di conseguenza '**/.claude/**' non esclude «la cartella .claude del progetto»: esclude qualunque percorso che contenga un segmento .claude — e la radice di ogni worktree di agente lo contiene, perche' le worktree stanno dentro .claude/worktrees/. Scritto alla lettera, il rimedio sarebbe stato verde nella checkout principale e avrebbe azzerato la suite in ogni worktree, cioe' proprio dove lavorano gli agenti. Il pattern di .claude va ancorato alla cartella del file di configurazione; '**/node_modules/**' resta non ancorato perche' nessun segmento del percorso del progetto si chiama node_modules.",
+  "esito": "tentativo scartato; sostituito dalla versione ancorata a path.dirname(fileURLToPath(import.meta.url))",
+  "umano_coinvolto": false
+}

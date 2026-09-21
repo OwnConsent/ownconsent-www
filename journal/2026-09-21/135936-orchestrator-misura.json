@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T13:59:36+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Prova-by-reversion di testIgnore, e conteggio di cosa esclude davvero node_modules",
+  "contesto": "Rimessa la riga com'era (nessun testIgnore) con la worktree annidata prova-riproduzione presente, poi rimessa la versione ancorata. Stessa riga di comando, stesso stato del disco, solo la configurazione cambia.",
+  "evidenza": [
+    "senza testIgnore, worktree annidata presente: $ pnpm exec playwright test --list -> 'Error: Requiring @playwright/test second time', 'Total: 0 tests in 0 files', exit=1",
+    "con testIgnore ancorato, stessa worktree annidata presente: $ pnpm exec playwright test --list -> 'Total: 252 tests in 24 files', exit=0",
+    "252 e 24 sono gli stessi numeri della worktree pulita senza worktree annidate: il pattern esclude il checkout annidato e non tocca nient'altro",
+    "quanto pesa davvero '**/node_modules/**' oggi: $ find node_modules site/node_modules -name '*.spec.ts' | wc -l -> 9 (entities, css-what); $ find ... | grep -cE '(^|/)(e2e|tests/perf)/' -> 0"
+  ],
+  "esito": "la prova-by-reversion regge per il pattern di .claude. Per node_modules no, e lo dico: nessuno dei 9 file *.spec.ts sotto node_modules combacia gia' oggi con testMatch, quindi quel pattern non corregge niente di misurabile — e' una guardia per il primo pacchetto che mettera' i propri test in una cartella e2e/ o tests/perf/. Sta nella PR come guardia dichiarata, non come correzione.",
+  "umano_coinvolto": false
+}

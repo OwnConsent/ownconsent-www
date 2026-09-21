@@ -52,6 +52,16 @@ jobs:
             exit 1
           fi
 
+      # ADR-0003, sezione datata 21/09/2026, D7: verifica la forma statica del
+      # workflow (tests/ci/**). Non e' un'area (non dipende da site/ ne' da api/):
+      # nessun if, cosi' protegge anche i commit in cui site/ e' assente.
+      - name: Collaudo del workflow (tests/ci)
+        working-directory: tests/ci
+        run: |
+          python3 --version
+          python3 -c "import yaml; print('PyYAML', yaml.__version__)"
+          python3 -m unittest discover -s . -p 'test_*.py'
+
       # --- site/ (solo se l'area e' presente) ---
 
       - name: site/ — pnpm (corepack) e versione in uso

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-21T09:52:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L14",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Confermato F13 con comando proprio, e trovato il mezzo per stringere la porta senza toccare site/: vite.preview.strictPort passa attraverso astro",
+  "contesto": "Prima di scrivere il rimedio: riprodurre il difetto e misurare se esiste un modo di far fallire davvero l'avvio, invece di riconoscere un messaggio di log.",
+  "cosa_si_e_imparato": "Il ripiego non viene da Astro ma da Vite: l'unico file che contiene «is in use, trying another one» sta dentro il pacchetto vite@8.3.0, nessuno dentro astro/dist. Per questo `astro preview --help` non ha un flag di porta stretta: la leva e' nella configurazione Vite, e Astro la inoltra. Il rimedio quindi non e' leggere un messaggio ma togliere il ripiego: con strictPort il server stesso rifiuta di partire, ed esce con 1. Un processo che esce e' un fatto, una riga di log e' una parola.",
+  "evidenza": [
+    "$ node occupante.mjs 46111 -> «occupante estraneo in ascolto su 46111»",
+    "$ astro preview --port 46111 --host 127.0.0.1 --ignore-lock -> «Port 46111 is in use, trying another one...» poi «astro v7.3.3 ready in 17 ms / Local http://127.0.0.1:46112/»; EXIT=124 (ucciso dal timeout: era ancora vivo, non era fallito)",
+    "$ grep -rln 'is in use, trying another one' site/node_modules/.pnpm/ -> un solo file, dentro il pacchetto vite@8.3.0; $ grep -rln 'is in use' site/node_modules/astro/dist/ -> nessun risultato",
+    "$ astro preview --help -> nessun flag di porta stretta fra --port --host --open --ignore-lock --allowed-hosts --background",
+    "con un file di configurazione che estende quello della copia con vite.preview.strictPort: $ astro preview --config astro.preview-collaudo.config.mjs --port 46111 ... -> EXIT=1 e «Port 46111 is already in use»",
+    "stessa configurazione su porta libera: $ astro preview --config ... --port 46222 ... -> ready, e $ curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:46222/robots.txt -> 200",
+    "misurato anche che astro risolve --config relativo alla cwd e che il wrapper puo' importare ./astro.config.mjs: la build della copia resta quella vera, strictPort tocca solo il server di anteprima"
+  ],
+  "esito": "scelto: la copia temporanea scrive nella PROPRIA cartella un file di configurazione di sola anteprima e avvia `astro preview --config <quello>`. site/ non viene toccato, e la porta e' stretta al livello del server, non del test.",
+  "umano_coinvolto": false
+}

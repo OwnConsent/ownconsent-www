@@ -1,0 +1,39 @@
+{
+  "ts": "2026-09-21T10:05:00+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L14",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "Come si stringe la porta e come si verifica l'identita': il server rifiuta di partire, e il marcatore viene dalla fixture",
+  "contesto": "Dopo la misura delle 09:52, che ha mostrato dove sta la leva (vite.preview.strictPort, inoltrato da Astro) e che astro preview non ha un flag equivalente.",
+  "alternative": [
+    {
+      "opzione": "(G1) riconoscere la riga «Port N is in use, trying another one...» sullo stdout di astro preview e fallire li'",
+      "scartata_perche": "e' una parola, non un fatto: dipende dal testo che Vite stampa oggi. Con strictPort il processo ESCE con 1, e un processo uscito si osserva senza leggere niente. Misurato: uscita 1 e «Port 46333 is already in use»."
+    },
+    {
+      "opzione": "(G1) leggere dalla riga di ready la porta effettivamente legata e confrontarla con quella richiesta",
+      "scartata_perche": "stesso difetto in forma piu' elegante: se il formato della riga cambia, il confronto non si fa piu' e il caso felice fallisce per il motivo sbagliato. E comunque lascerebbe partire un server su una porta che nessuno voleva."
+    },
+    {
+      "opzione": "(G1) mettere strictPort in site/astro.config.mjs, che sistemerebbe anche il webServer principale",
+      "scartata_perche": "fuori dal perimetro: e' site/, e Andrea ha chiesto una PR sul collaudo. La copia scrive invece un involucro di configurazione nella PROPRIA cartella e avvia l'anteprima con --config su quello: site/ resta intatto e la build della copia resta quella vera."
+    },
+    {
+      "opzione": "(G2) far scrivere alla copia un file nonce in public/ e verificare quello: identita' perfetta, nessun'altra copia al mondo lo serve",
+      "scartata_perche": "aggiungerebbe alla build della copia un file che la build di site/ non ha, cioe' una divergenza dall'artefatto sotto prova, per un guadagno che (G1) gia' copre: l'unico caso che il nonce chiuderebbe in piu' e' due copie con la stessa fixture sulla stessa porta, che con la porta stretta non si verifica. Scelto invece il valore della fixture, come chiedeva Andrea."
+    },
+    {
+      "opzione": "(G2) tenere il marcatore scritto a mano nel file (l'indirizzo, il canone)",
+      "scartata_perche": "due posti da tenere allineati, e il giorno in cui la fixture cambia valore il controllo smette di poter fallire senza che nessuno se ne accorga. Il marcatore si legge dal file di fixture che il chiamante ha appena passato, e se non c'e' la costruzione si ferma prima di copiare qualunque cosa."
+    }
+  ],
+  "evidenza": [
+    "(G1) con l'involucro: porta occupata -> uscita 1 e «Port 46333 is already in use»; porta libera -> ready e 200 su robots.txt",
+    "(G2) marcatore per fixture: contatto -> il campo indirizzo di contatto-di-prova.json; listino -> saas.piani[0].canone_mensile_eur di listino-di-prova.json. Entrambi compaiono sulla stessa rotta (la pagina SaaS), quindi una sola rotta serve due criteri",
+    "(G3) registro di modulo delle copie vive piu' gestori su SIGINT/SIGTERM/SIGHUP e exit, pulizia sincrona perche' dentro exit non c'e' piu' un giro di event loop in cui completare una promessa"
+  ],
+  "esito": "applicata: (G1) e (G2) sono entrambe nel diff, e la prova-by-reversion le misura anche separatamente, perche' nessuna delle due copre il caso dell'altra.",
+  "umano_coinvolto": false
+}

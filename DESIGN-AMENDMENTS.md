@@ -180,3 +180,73 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   campo `$lettura_ci` è stato riletto e aggiornato di conseguenza — adesso dice che il
   comando del test **è** un passo del job `ci`, invece di rimandare a una domanda aperta.
   Verifica, come sopra: 24 chiavi prima, 24 dopo, una sola con valore diverso.
+
+## A06 — Il piano dava a L12 due percorsi; ADR-0003 gliene imponeva sette
+- Data: 21/09/2026
+- Classe: perimetro — il documento non dice una cosa diversa nel merito, dice che quei
+  file non si toccano in questo lotto. Stessa classe di A04
+- Ratificata da: Andrea, 21/09/2026
+
+- Documento dice: `docs/plan/issue-8.json` assegna a L12 due soli percorsi, e dichiara
+  vuoto l'elenco dei contratti da aggiornare per l'intera issue. Misurato sul piano
+  committato, non a memoria:
+
+      $ python3 -c "import json; d=json.load(open('docs/plan/issue-8.json')); \
+          l=[x for x in d['lotti'] if x['id']=='L12'][0]; \
+          print(l['file']); print(d['contratti_da_aggiornare'])"
+      ['.github/workflows/ci.yml', 'journal/2026-09-19/*-devops-*.json']
+      []
+
+  E mette `tests/ci/**` fra i file che L12 **non tocca**: «sono i test della issue #25
+  sulla forma del workflow. Se uno fallisce dopo la modifica, il lotto si ferma e torna
+  ad @architect».
+
+- Prodotto fa: il lotto ha toccato sette percorsi fuori da `journal/`.
+
+      $ git diff --name-only origin/main..HEAD -- . ':(exclude)journal'
+      .github/workflows/ci.yml
+      DESIGN-AMENDMENTS.md
+      contracts/perf-budgets.json
+      docs/adr/0001-budget-pagine-pubbliche-laboratorio.md
+      docs/adr/0002-struttura-site.md
+      docs/adr/0003-contesto-ci.md
+      tests/ci/test_ac06_ac07_site_steps.py
+
+- Perché: non è iniziativa di un agente. Lo impone `docs/adr/0003-contesto-ci.md`, che
+  aveva fissato quattro scadenze sul giro di L12 e le aveva scritte **prima** che il
+  piano esistesse:
+
+  - riga 186, D3: «Scadenza: il giro di L12 della issue #8, prima che L12 scriva una riga
+    di workflow. Senza una sezione datata di questo ADR, L12 non parte.» → `docs/adr/0003-*`
+  - riga 425: «`contracts/perf-budgets.json:33` … Correzione di @performance, tramite una
+    sezione di @architect, nel giro di L12.» → `contracts/perf-budgets.json` e, come
+    registro della ratifica, `DESIGN-AMENDMENTS.md` (voce A05)
+  - riga 429: «Serve una sezione datata in ADR-0002 al giro di L12» → `docs/adr/0002-*`
+  - riga 432: «Serve una nota datata in ADR-0001 al giro di L12.» → `docs/adr/0001-*`
+
+  Il settimo percorso, `tests/ci/test_ac06_ac07_site_steps.py`, è arrivato per la strada
+  che il piano stesso prescriveva: il lotto si è fermato, è tornato ad @architect, e
+  @architect ha deciso **D9** in una sezione datata, assegnando la modifica a @qa-test
+  (regola 3 del cantiere). La misura che ha aperto quel gate è in
+  `journal/2026-09-21/151312-orchestrator-misura.json`: con il passo di installazione
+  della radice scritto in forma piena, `tests/ci` passava da `Ran 55 tests / OK` a
+  `FAILED (failures=5)`, `AssertionError: atteso un solo passo per il predicato, trovati 2`.
+  Il test non è stato adattato alla modifica: è stato stretto sull'oggetto
+  (`working-directory: site`) invece che sul verbo, con tre prove-by-reversion.
+
+- Deciso: **era il piano a essere incompleto**, non il lotto a essere debordato. Il piano
+  è stato generato senza rileggere le scadenze che ADR-0003 aveva già fissato sul giro di
+  L12, e ha dichiarato `contratti_da_aggiornare: []` per un'issue che ne aveva uno da
+  correggere per iscritto. Vale quello che il lotto ha fatto.
+
+- Un terzo scarto, minore ma dello stesso tipo: il piano prevedeva per L12 voci di journal
+  in `journal/2026-09-19/` e solo di `@devops`. Le voci sono in `journal/2026-09-21/` e
+  sono di quattro ruoli — `orchestrator`, `architect`, `qa-test`, `devops` — perché il
+  lotto ha attraversato un gate di architettura e una modifica di test. La data nel piano
+  era una previsione, non un vincolo.
+
+- Da smaltire: quando il piano della issue #8 viene rigenerato, `L12.file` deve elencare i
+  sette percorsi e `contratti_da_aggiornare` non può restare vuoto. Più in generale, chi
+  genera un piano legge prima la tabella **Scadenze** degli ADR in vigore e porta nei lotti
+  i punti che scadono sul loro giro: è la seconda volta in questa issue che un lotto trova
+  un gate che il piano non aveva (la prima è A03).

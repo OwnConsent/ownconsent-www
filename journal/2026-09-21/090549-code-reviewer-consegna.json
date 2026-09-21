@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-21T09:05:49+02:00",
+ "agente": "code-reviewer",
+ "issue": "8",
+ "lotto": "L08",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "L08 chiuso: sette rossi triati e corretti nel test, 19 finding confermati e 7 scartati, un gate aperto per Andrea",
+ "contesto": "Il lotto chiedeva due cose: il triage in contraddittorio dei sette rossi e la revisione avversariale del diff di site/ e del progetto di collaudo. La prima ha comportato una deroga al piano, autorizzata da Andrea; la seconda ha prodotto un rapporto in .work/8/, non correzioni.",
+ "evidenza": [
+  "suite prima: $ npx playwright test --reporter=list -> 7 failed, 245 passed (42.3s), EXIT=1",
+  "suite dopo, misurata dalla sessione principale dopo aver rimosso l'albero annidato: «Running 252 tests using 8 workers», «252 passed (25.4s)», EXIT=0, zero righe con il segno di fallito",
+  "$ git diff --stat origin/main...HEAD -> solo e2e/ (due file) e journal/: site/ e tests/ intatti, come promesso dalla voce di gate sulla deroga",
+  "19 finding confermati e 7 scartati alla confutazione, ciascuno con il motivo scritto",
+  "quattro prove-by-reversion sulle correzioni dei test e quattro sui test che non sanno fallire: otto tentativi, otto riusciti"
+ ],
+ "dod_soddisfatta": {
+  "triage_dei_sette_rossi": "si: in tutti e sette sbaglia il test, con la fonte citata per ciascuno. Nessun finding per L14 da AC4",
+  "revisione_avversariale": "si, su cinque perimetri disgiunti, con ogni finding riverificato dalla sessione principale prima di entrare nel rapporto",
+  "comandi_di_verifica_di_ADR_0002": "si: D3, D5 e D6 rieseguiti con i comandi dell'ADR e output riportato nel rapporto, non la conclusione",
+  "finding_non_riproducibili_scartati": "si, 7, con il motivo accanto a ciascuno",
+  "niente_correzioni_fuori_dalla_deroga": "si: le uniche modifiche sono i due test che Andrea aveva deciso",
+  "journal_durante": "si, comprese quattro voci di fallimento e tre di gate",
+  "copertura_dichiarata_invece_che_presunta": "si, per tutti e cinque i perimetri, con l'elenco di cio' che non e' stato guardato"
+ },
+ "cosa_si_e_imparato": "La parte che ha reso avversariale la revisione non e' stata il numero dei revisori ma l'obbligo di riverificare ogni finding prima di scriverlo: tre dei sette scartati erano misure esatte con la premessa sbagliata, e sarebbero entrati nel rapporto come difetti veri. Il costo del ventaglio e' stato quasi tutto in indagine che non arrivava alla consegna: cinque revisori su cinque hanno toccato il tetto dei turni senza aver consegnato una riga, perche' il mandato diceva dove guardare e non quando smettere.",
+ "esito": "lotto chiuso, PR aperta. Restano di Andrea: la divergenza fra documento di design e prodotto sulle pagine legali (F03, F11, rientro L15) e il merge.",
+ "umano_coinvolto": true
+}

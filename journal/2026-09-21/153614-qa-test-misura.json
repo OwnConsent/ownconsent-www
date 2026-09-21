@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-21T15:36:14+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "D9: _site_step si stringe su working-directory == 'site'; quattro prove-by-reversion, tutte confermate",
+  "contesto": "Mandato di ADR-0003, sezione datata 21/09/2026, D9: il predicato letterale di _site_step (tests/ci/test_ac06_ac07_site_steps.py:36-38, prima della modifica) trova due passi non appena esiste un secondo `pnpm install` fuori da site/ -- il progetto di collaudo alla radice, ADR-0002 D8, che @devops deve ancora scrivere. Perimetro del mandato: solo la funzione _site_step, assert len(matches) == 1 invariato, nessun corpo di test modificato.",
+  "modifica": "tests/ci/test_ac06_ac07_site_steps.py, funzione _site_step: filtra prima i passi con working-directory == 'site', poi applica il predicato sul comando. L'assert len(matches) == 1 resta.",
+  "evidenza": [
+    "0) suite sugli originali dopo la modifica: $ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> Ran 55 tests in 0.292s / OK",
+    "A) selettore nuovo contro CI_ROOT=<copia del workflow di oggi, non modificato> -> Ran 55 tests in 0.213s / OK",
+    "B) selettore nuovo contro CI_ROOT=<copia con passo di radice aggiunto in forma piena, name: 'laboratorio — installazione dipendenze alla radice', run: pnpm install --frozen-lockfile, SENZA working-directory> -> Ran 55 tests in 0.213s / OK. Con il selettore vecchio (misura di @architect, journal/2026-09-21/152229-architect-misura.json) la stessa mutazione dava FAILED (failures=5), 'trovati 2': la correzione serve, misurata prima e dopo",
+    "C) controprova negativa (il selettore non deve diventare una tautologia): selettore nuovo contro CI_ROOT=<copia in cui il passo 'site/ — installazione dipendenze' perde working-directory: site> -> FAILED (failures=5): test_i_quattro_passi_esistono_e_sono_nellordine, test_i_quattro_passi_sono_comandi_distinti, test_installazione_usa_lockfile_congelato, test_ciascun_passo_e_condizionato_su_site_presente, test_ciascun_passo_gira_in_site -- tutti con AssertionError: 'atteso un solo passo per il predicato, trovati 0'",
+    "D) prova avversariale aggiuntiva, non richiesta esplicitamente dal mandato ma utile a escludere un modo in cui il selettore stretto potrebbe smettere di misurare: passo di radice per errore CON working-directory: site (collisione dentro l'oggetto, non solo sul verbo) -> FAILED (failures=5), 'trovati 2'. Il selettore nuovo non nasconde una vera collisione dentro site/, la segnala ancora"
+  ],
+  "cosa_dice_la_misura": "Le quattro prove confermano la decisione D9 dell'ADR: (A) e (B) mostrano che la correzione ripristina la misura di AC6/AC7 quando arriva il passo di radice previsto da ADR-0002 D8 (prima rossa con 'trovati 2', ora verde); (C) mostra che il selettore resta un gate reale, non una tautologia, perche' assert len(matches) == 1 e' ancora dentro la funzione e un passo di site/ che perde working-directory produce 'trovati 0', non un successo silenzioso; (D) mostra che il selettore stretto non ha aperto una scappatoia nuova (due passi entrambi in site/ restano una collisione rilevata). Nessuna delle quattro misure ha richiesto di allargare un assertIn o di rimuovere un test.",
+  "metodo": "CI_ROOT (tests/ci/helpers.py) puntato a copie mutate nello scratchpad, mai sugli originali del repository. Ogni copia porta gli oggetti sotto test necessari agli altri file di tests/ci/ (.github/workflows/*.yml, .github/ci/area.sh, docs/DEFINITION-OF-DONE.md, .nvmrc), altrimenti il discover fallisce su test non correlati (AC10/AC12 su .nvmrc mancante) e la misura diventa illeggibile: primo tentativo con solo ci.yml copiato ha dato 'failures=5, errors=3' non pertinenti, scartato e rifatto con la copia completa.",
+  "verifica_perimetro": "git diff -- tests/ci/test_ac06_ac07_site_steps.py tocca solo _site_step; nessun altro file di tests/ci/** modificato; git status --porcelain non mostra altro fuori da questo file e da tests/ci/__pycache__/ (non tracciato, preesistente).",
+  "esito": "modifica conforme al mandato D9(a); pronta per il commit sul ramo lotto/l12-ci-accettazione-e-laboratorio",
+  "umano_coinvolto": false
+}

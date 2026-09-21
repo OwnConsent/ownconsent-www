@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-21T15:36:19+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "python3 e PyYAML ci sono gia' sul runner, e i quattro passi nuovi costano 87 s misurati passo per passo",
+  "contesto": "@architect, chiudendo D7, ha lasciato un gate esplicito: «python3 e PyYAML sul runner NON sono misurati. Se PyYAML manca, il passo e' rosso e il lotto torna da me — niente pip install improvvisato». Invece di far scoprire il buco alla prima PR del lotto (dove un rosso blocca ogni merge, perche' ci e' required su main), ho aggiunto tre passi al workflow temporaneo della PR di prova #45: la versione di python3 e PyYAML, l'esecuzione vera di tests/ci sul runner, e la suite e2e. Serviva anche a sapere quanto costano davvero i passi nuovi, visto che finora avevo solo la durata del job di prova che eseguiva il solo laboratorio.",
+  "evidenza": [
+    "run 35606446465, PR di prova #45, SHA 67b3eec, esito success, job prova-variabilita 2026-09-21T13:34:12Z -> 13:35:48Z = 96 s",
+    "$ python3 -V                                   -> Python 3.12.3",
+    "$ python3 -c \"import yaml; print('PyYAML', yaml.__version__); print('da', yaml.__file__)\"  -> PyYAML 6.0.1 / da /usr/lib/python3/dist-packages/yaml/__init__.py",
+    "$ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'  (sul runner)  -> Ran 55 tests in 0.552s, OK",
+    "$ pnpm exec playwright test e2e                (sul runner)  -> 244 passed (33.6s)",
+    "durata dei passi, letta da gh run view --json jobs (non stimata): site/ install 4 s; radice install 2 s; playwright install --with-deps chromium 22 s; python3+PyYAML 0 s; tests/ci 1 s; e2e 34 s; laboratorio 28 s",
+    "confronto: il job ci su main oggi dura 19 s (run 35603251219)"
+  ],
+  "cosa_dice_la_misura": "Il gate di D7 e' chiuso senza toccare il workflow di produzione: python3 3.12.3 e PyYAML 6.0.1 sono gia' installati nell'immagine ubuntu-latest, in /usr/lib/python3/dist-packages, quindi il passo di tests/ci non aggiunge nessuna dipendenza di rete e costa 1 s. Il pezzo piu' caro dei passi nuovi non e' un test: e' il download del Chromium di Playwright, 22 s su 87 s totali di passi nuovi. E' il dato che rende concreta la riapertura di D4 quando qualcuno la chiedera': l'unica cosa che una cache farebbe risparmiare in modo visibile e' quella, non l'installazione delle dipendenze (4 s + 2 s dai lockfile congelati).",
+  "avvertenza": "Non e' ancora la durata del job ci dopo la modifica: questo job non eseguiva lint ne' astro check, e la somma dei passi non e' la durata del job (setup, post-passi e attesa del runner non ci sono dentro). Il numero prima/dopo del job ci si misura sulla PR del lotto, non si somma qui.",
+  "esito": "via libera a @devops per il passo di tests/ci; nessun ritorno ad @architect",
+  "umano_coinvolto": false
+}

@@ -60,5 +60,17 @@ jobs:
       - name: Chromium di Playwright (con dipendenze di sistema)
         run: pnpm exec playwright install --with-deps chromium
 
+      - name: PROVA D7 — python3 e PyYAML sul runner
+        run: |
+          python3 -V
+          python3 -c "import yaml, sys; print('PyYAML', yaml.__version__); print('da', yaml.__file__)"
+
+      - name: PROVA D7 — tests/ci sul runner
+        working-directory: tests/ci
+        run: python3 -m unittest discover -s . -p 'test_*.py'
+
+      - name: PROVA — test di accettazione (e2e)
+        run: pnpm exec playwright test e2e
+
       - name: Misura di laboratorio AC39 — stampa per pagina (PROVA, spec temporaneo)
         run: pnpm exec playwright test tests/perf/prova-l12-stampa-variabilita.spec.ts

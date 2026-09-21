@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-21T15:11:56+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "ADR-0003 D3 ferma L12 prima della prima riga di workflow",
+  "contesto": "Apertura del lotto L12 (docs/plan/issue-8.json): «il contesto ci esegue i test di accettazione e la misura di laboratorio». Leggendo docs/adr/0003-contesto-ci.md prima di scrivere codice (regola 2 del cantiere) si trova un rinvio con scadenza che scade esattamente su questo lotto.",
+  "chi_ha_deciso": "ADR-0003, D3, sezione «Rinvio con scadenza»: «Scadenza: il giro di L12 della issue #8, prima che L12 scriva una riga di workflow. Senza una sezione datata di questo ADR, L12 non parte.»",
+  "cosa_serviva": "Una sezione datata di ADR-0003 che decida se il test di laboratorio sui budget diventa un passo di ci (e quindi fa da gate) oppure resta fuori. La condizione dichiarata per decidere e': «il test di laboratorio eseguito almeno 5 volte sullo stesso SHA sul runner di GitHub (PR di prova), con i valori per pagina di lcp_ms_lab_mediana, con comando e output» (ADR-0003 D3; ADR-0001 riga 71). La riaprono @architect, con @performance e @devops.",
+  "altre_scadenze_che_cadono_su_questo_lotto": [
+    "D4, cache: «Quando: al giro di L12». Chi: @architect con @devops.",
+    "D7, ci esegue tests/ci/: «prima PR dopo il merge che modifica .github/workflows/ci.yml o .github/ci/**» — questa PR e' quella. Chi: @architect.",
+    "Da ratificare 1: contracts/perf-budgets.json:33 $lettura_ci nomina site-ci.yml (divergenza D-3 del piano, gia' ratificata da Andrea nel mandato di questo giro).",
+    "Da ratificare 2 e 3: sezione datata in ADR-0002 (tabella dei lotti, «due lockfile per la cache» per L12) e nota datata in ADR-0001 («la CI di L12»)."
+  ],
+  "evidenza": [
+    "$ git log --oneline -1  ->  8135bff (main, origin/main allineati)",
+    "$ awk '/^### D3/,/^### D5/' docs/adr/0003-contesto-ci.md  ->  «Senza una sezione datata di questo ADR, L12 non parte.»",
+    "$ grep -n 'D3, budget dentro o fuori' docs/adr/0003-contesto-ci.md  ->  tabella «Scadenze», riga «giro di L12 (issue #8), prima di scrivere il workflow»"
+  ],
+  "esito": "ordine del lavoro invertito rispetto al mandato: prima la misura di variabilita' sul runner con una PR di prova, poi la sezione datata di @architect, poi la scrittura di ci.yml da parte di @devops",
+  "umano_coinvolto": false
+}

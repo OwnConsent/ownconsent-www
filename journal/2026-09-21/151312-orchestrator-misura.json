@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T15:13:12+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Il passo di installazione del progetto di radice fa fallire 5 test di tests/ci, se scritto «pnpm install»",
+  "contesto": "docs/plan/issue-8.json, L12.non_tocca: «tests/ci/**: sono i test della issue #25 sulla forma del workflow. Se uno fallisce dopo la modifica, il lotto si ferma e torna ad @architect». Prima di scrivere il workflow ho verificato la collisione invece di dedurla: tests/ci/helpers.py espone CI_ROOT proprio per puntare i test a una copia mutata degli oggetti sotto test.",
+  "metodo": "copia di .github/workflows/, .github/ci/area.sh, docs/DEFINITION-OF-DONE.md e .nvmrc in una cartella dello scratchpad; passo nuovo inserito nella copia; test eseguiti con CI_ROOT=<copia>. Gli originali non sono stati toccati.",
+  "evidenza": [
+    "base, senza modifiche: $ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.315s / OK",
+    "variante A, passo «run: pnpm install --frozen-lockfile» alla radice: $ CI_ROOT=<copia> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.221s / FAILED (failures=5)",
+    "riga del fallimento: File tests/ci/test_ac06_ac07_site_steps.py, line 38, in _site_step -> AssertionError: atteso un solo passo per il predicato, trovati 2 (predicato: lambda s: 'pnpm install' in step_run_text(s))",
+    "variante B, quattro passi nuovi con «run: pnpm i --frozen-lockfile» piu' playwright install/test: $ CI_ROOT=<copia> python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.234s / OK"
+  ],
+  "cosa_dice_la_misura": "tests/ci identifica il passo di installazione di site/ per una sottostringa letterale del comando («pnpm install»), non per working-directory. Un secondo passo che installa il progetto di collaudo alla radice con lo stesso letterale rende il predicato ambiguo e AC6/AC7 non si misurano piu'. La variante B non tocca nessun test e lascia il predicato identificare ancora il passo giusto, ma appoggia un invariante dei test su un alias del gestore di pacchetti: e' una scelta di struttura, non di stile.",
+  "esito": "rimandato ad @architect insieme alle scadenze D3, D4 e D7: non scelgo io fra «il predicato di tests/ci si stringe su working-directory» (che significa modificare tests/ci, di @qa-test) e «il passo di radice usa una forma che non collide»",
+  "umano_coinvolto": false
+}

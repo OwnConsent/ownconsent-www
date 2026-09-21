@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-21T09:45:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Revisione avversariale: 25 finding proposti, 18 confermati, 7 scartati alla confutazione. Il piu' grave e' un commento che dichiara un fallimento rumoroso che non avviene",
+  "contesto": "Cinque revisori su perimetri disgiunti, ciascuno con l'obbligo di allegare comando e output. Ogni finding e' stato poi riverificato dalla sessione principale con un comando proprio, non accettato sulla parola: e' la parte che rende avversariale la revisione, non il numero dei revisori.",
+  "evidenza": [
+    "18 confermati: 4 test che non sanno fallire (AC6, N3, AC41, AC33), 2 difetti di infrastruttura di collaudo di gravita' alta, 1 divergenza documento-contro-prodotto sulle pagine legali, 11 fra prodotto e contratti",
+    "7 scartati alla confutazione, con il motivo scritto accanto a ciascuno",
+    "F13, il piu' istruttivo: e2e/fixtures/copia-temporanea.ts righe 49-58 dichiara che se la porta viene presa «astro preview fallisce l'avvio ... un fallimento rumoroso, mai una risposta sbagliata scambiata per quella giusta». Misurato: `pnpm --dir site preview --port 45999` su porta occupata -> «Port 45999 is in use, trying another one...» e «ready ... http://127.0.0.1:46000/»; attendiPronto() (riga 125) ritorna su qualunque `risposta.status < 500`, quindi accetterebbe il 404 di un processo estraneo",
+    "F14: `kill -INT` al gruppo di un'esecuzione lascia un astro preview orfano in ascolto e una copia in /tmp (misurato: prima copie=0 preview=0, dopo copie=1 preview=1). L'orfano di F14 e' l'occupante che innesca F13: i due difetti si alimentano",
+    "F15: la porta del webServer principale e' chiesta prima della build (playwright.config.ts:67 contro il comando alla riga 88), mentre e2e/fixtures/copia-temporanea.ts la chiede dopo (riga 208). Due punti dello stesso repository, stesso problema, ordini opposti",
+    "quattro prove-by-reversion su quattro tentativi sono riuscite: il prodotto guastato di proposito e il test ancora verde"
+  ],
+  "cosa_si_e_imparato": "Il valore della revisione non sta nel trovare piu' finding ma nel dover scartare i propri. Tre dei sette scartati erano misure esatte con la premessa sbagliata — il segnaposto del footer e' dichiarato dal documento di design, la CI mancante e' il lotto L12 gia' pianificato, i «6 avvisi» di astro check sono 6 hint nell'output del revisore stesso. Senza il passaggio di confutazione sarebbero entrati nel rapporto come difetti, e il rientro avrebbe speso tempo su tre cose che non lo erano.",
+  "esito": "18 finding in .work/8/findings-code-reviewer.json, ciascuno con file, riga, scenario concreto e la prova che lo riproduce; rientri proposti: 13 a L14, 2 a L15, 2 a L12, 1 fuori perimetro (githooks). Nessuno corretto in questo lotto, tranne i due test che Andrea aveva deciso.",
+  "umano_coinvolto": false
+}

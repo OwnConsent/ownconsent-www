@@ -1,0 +1,45 @@
+{
+  "ts": "2026-09-21T15:53:34+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "2026-09-21/155112-devops-misura.json",
+  "cosa_era_sbagliato": "La nota dentro `durata_job` diceva: «il job prima non eseguiva alcun passo di site/ ne' i cinque passi nuovi di L12 (site/ non ancora costruito su quel run); il salto non e' solo l'effetto dei cinque passi nuovi ma anche del blocco site/ preesistente (13s: corepack 2s, install 2s, build 2s, lint 1s, astro check 6s), gia' presente prima di L12 ma non ancora esercitato sul run del 19s». E' falsa: il blocco site/ era esercitato eccome sul run «prima», con tutti e cinque i passi in success.",
+  "come_lo_so": [
+    "$ gh run view 35603251219 --json jobs --jq '.jobs[] | \"JOB \\(.name) \\(.startedAt) -> \\(.completedAt)\", (.steps[] | \"  \\(.number) \\(.name) -> \\(.conclusion)  \\(.startedAt) \\(.completedAt)\")'",
+    "JOB ci 2026-09-21T13:04:16Z -> 2026-09-21T13:04:35Z",
+    "   6 Rilevamento aree                          -> success  13:04:19Z 13:04:20Z",
+    "   7 site/ — pnpm (corepack) e versione in uso -> success  13:04:20Z 13:04:21Z",
+    "   8 site/ — installazione dipendenze          -> success  13:04:21Z 13:04:24Z",
+    "   9 site/ — build                             -> success  13:04:24Z 13:04:26Z",
+    "  10 site/ — lint                              -> success  13:04:26Z 13:04:28Z",
+    "  11 site/ — astro check                       -> success  13:04:28Z 13:04:34Z",
+    "$ bash .github/ci/area.sh site  ->  area site/: presente (site/package.json)",
+    "$ git ls-tree -r --name-only 8135bff -- site/ | wc -l  ->  42",
+    "site/ e' su main da prima di questo lotto (8135bff, precedente a tutti i commit di L12): il run 'prima' non poteva vederla assente"
+  ],
+  "conto_rifatto": {
+    "prima_run_35603251219": {
+      "job_totale_s": 19,
+      "preambolo_s": 4,
+      "blocco_site_s": 14,
+      "resto_post_job_s": 1,
+      "dettaglio_site": "step7 1s + step8 3s + step9 2s + step10 2s + step11 6s = 14s"
+    },
+    "dopo_run_35607830711": {
+      "job_totale_s": 109,
+      "preambolo_s": 5,
+      "blocco_site_s": 13,
+      "passi_nuovi_L12_s": 88,
+      "resto_post_job_s": 3,
+      "dettaglio_passi_nuovi": "tests/ci 1s + installazione radice 1s + playwright chromium 21s + test e2e 35s + misura laboratorio 30s = 88s"
+    },
+    "confronto": "il blocco site/ non e' cresciuto: 14s prima, 13s dopo, scarto di 1s dentro la risoluzione del secondo dell'API di GitHub. Il preambolo e il resto post-job insieme spiegano solo 2s di rumore (21s dopo contro 19s prima su preambolo+resto, isolando il blocco site/). Tutto il resto del delta, 90s - 2s di rumore = 88s, coincide esattamente con la somma dei cinque passi nuovi gia' misurata nella voce 155112. Dichiarazione corretta: i passi nuovi di L12 sono TUTTO l'aumento misurabile del job ci, non una parte di esso"
+  },
+  "come_e_nato_lerrore": "Ho dedotto che il blocco site/ non fosse esercitato sul run 'prima' guardando solo il numero finale (19s, gia' in journal da un giro precedente) e la sua vicinanza al costo del solo preambolo che mi aspettavo, invece di leggere i passi di quel run con gh, che avevo gia' in mano (lo stesso run id era gia' citato nella voce che ho scritto). E' il 'misura, non dedurre' di CLAUDE.md mancato esattamente sul dato che era a una chiamata gh di distanza, non su un dato irraggiungibile: non ho controllato un'ipotesi verificabile perche' la conclusione (poco tempo attribuibile al preambolo) sembrava gia' plausibile senza guardare i passi.",
+  "conseguenza_per_chi_legge": "la voce 155112 attribuiva parte della crescita del job a un blocco preesistente che in realta' costa uguale (14s vs 13s), rendendo il peso dei passi nuovi apparentemente piu' piccolo di quanto sia. Il numero corretto sposta il sospetto dove deve stare per la riapertura di D4: il download di Chromium (21s) e i due passi di Playwright (e2e 35s + laboratorio 30s) sono la quasi totalita' dell'aumento, non il blocco site/",
+  "esito": "la voce 155112 resta dov'e' (non riscritta); questa voce la corregge con il conto giusto e la causa dell'errore",
+  "umano_coinvolto": false
+}

@@ -16,3 +16,4 @@ dist/
 # Progetto di collaudo alla radice (ADR-0002 D8): artefatti di Playwright.
 test-results/
 playwright-report/
+.cantiere-deny.local

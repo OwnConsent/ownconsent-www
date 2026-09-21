@@ -1,0 +1,37 @@
+{
+  "ts": "2026-09-21T15:54:45+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "consegna",
+  "titolo": "L12 consegnato: PR #46 aperta e ferma al gate di Andrea",
+  "cosa_e_entrato": [
+    ".github/workflows/ci.yml: cinque passi nuovi dentro il job ci, salti sui passi e mai sul job",
+    "tests/ci/test_ac06_ac07_site_steps.py: selettore _site_step stretto su working-directory (D9, @qa-test)",
+    "contracts/perf-budgets.json: $lettura_ci corretto (ratifica di D-3)",
+    "docs/adr/0003-contesto-ci.md: sezioni datate 21/09/2026 con D3, D4, D7, D9 e le tre ratifiche",
+    "docs/adr/0002-struttura-site.md e docs/adr/0001-*: sezioni e note datate",
+    "DESIGN-AMENDMENTS.md: voce A05",
+    "journal/2026-09-21/: voci di orchestrator, devops, architect, qa-test"
+  ],
+  "dod_soddisfatta": {
+    "tests_ci_verde_dopo_la_modifica": "Ran 55 tests / OK dopo ogni passo aggiunto, in locale e sul runner (Ran 55 tests in 0.552s)",
+    "area_sh": "bash .github/ci/area.sh site -> presente (site/package.json); api -> assente",
+    "contesto_ci_success_sulla_pr": "run 35607830711, job ci success, 2026-09-21T13:47:05Z -> 13:48:54Z",
+    "gate_visto_rosso": "run 35607937428, job ci failure, mergeStateStatus BLOCKED, PR #47 chiusa",
+    "soglie_lette_dal_contratto": "nessun confronto su soglie scritto in .github/; il comparatore resta il test di L07",
+    "telemetria_e_segreti": "ASTRO_TELEMETRY_DISABLED invariato a livello di job; grep -nEi 'write|secrets.' su ci.yml non stampa nulla",
+    "budget_perf": "AC39 verde dentro il job ci, con i valori per pagina misurati sul runner",
+    "journal_durante": "si, comprese due voci di fallimento e una di correzione"
+  },
+  "misura_di_durata": "job ci da 19 s (run 35603251219, main) a 109 s (run 35607830711, PR #46): +90 s, rapporto 5,7x. I passi nuovi sono 88 s di quei 90: tests/ci 1 s, installazione radice 1 s, Chromium 21 s, e2e 35 s, laboratorio 30 s. Il blocco site/ preesistente costa quanto prima (14 s -> 13 s). Non e' passato da venti secondi a dieci minuti, e il numero c'e'.",
+  "cosa_resta_ad_andrea": [
+    "il merge di #46 (regola 4: nessun merge di un agente)",
+    "la divergenza di perimetro: il piano da' a L12 solo ci.yml e il journal, con contratti_da_aggiornare vuoto, mentre ADR-0003 assegna al giro di L12 anche le correzioni a contratto e ADR. Registrata da @architect, NON ratificata",
+    "la firma sbagliata in aa8bae7 (vedi 153953-orchestrator-fallimento.json): riscrivere il ramo con --force-with-lease oppure lasciare l'attribuzione al journal"
+  ],
+  "cosa_va_segnalato_fuori_dal_lotto": "l'hook githooks/journal-check.sh controlla la checkout principale, che in questo modello di lavoro e' ferma e pulita per costruzione: ha segnalato «journal senza voci nuove» mentre le voci erano committate e pushate sul ramo del lotto dentro .claude/worktrees/l12. Misura: git status --porcelain journal/ nella checkout principale non stampa nulla, mentre git diff --name-only origin/main origin/lotto/l12-ci-accettazione-e-laboratorio -- journal/ elenca le voci. Non corretto qui: e' perimetro di un'altra PR.",
+  "umano_coinvolto": true,
+  "gate_finale": "l'occhio di Andrea"
+}

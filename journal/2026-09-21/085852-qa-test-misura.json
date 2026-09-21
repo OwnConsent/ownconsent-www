@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T08:58:52+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Prove-by-reversion della correzione AC4: quattro guasti al prodotto, ciascuno fa diventare rosso il test giusto",
+  "contesto": "La correzione sostituisce la lettura a prossimita' con la lettura della cella all'incrocio riga/colonna. Va provato che non e' un indebolimento: il test deve accorgersi sia di un fatto sbagliato in una cella, sia di un riordino delle colonne.",
+  "evidenza": [
+    "dopo la correzione, prodotto intatto: $ npx playwright test 'l08/e2e/ac04-' --reporter=list -> 4 passed (3.5s), EXIT=0",
+    "guasto (a) $ sed -i \\"s/'In base alla taglia di disco, memoria e CPU'/'In base alla taglia di disco, memoria e processore'/\\" site/src/components/pagine/TabellaConfronto.astro -> 1 failed, 3 passed; rosso il test «come paga» con «Error: Hosted: taglia di CPU»",
+    "guasto (b) OwnConsent -> Noi nella riga «Chi registra la CMP presso IAB Europe» -> 1 failed, 3 passed; rosso il test «chi registra» con «Error: SaaS: registra OwnConsent»",
+    "guasto (c) 'Configurazione e delivery da OwnConsent' -> 'Tutto' nella riga «Cosa ricevi» -> 1 failed, 3 passed; rosso il test «cosa riceve il cliente» con «Error: la cella «cosa riceve il cliente» di SaaS ha contenuto non banale (letto: «Tutto»)»",
+    "guasto (d) ordine delle colonne MODALITA da ['SaaS','Hosted','On-premise'] a ['SaaS','On-premise','Hosted'] -> 2 failed, 2 passed; rossi «Error: Hosted: taglia di disco» e «Error: Hosted: «in definizione»»: l'indice di colonna e' davvero letto dall'ordine dei th[scope=col], non presunto",
+    "ripristino: $ cp <backup> site/src/components/pagine/TabellaConfronto.astro ; $ git status --short site/ -> nessuna riga (pulito)"
+  ],
+  "esito": "la correzione non indebolisce: i tre test restano sensibili al contenuto di ciascuna cella e in piu' sono sensibili al riordino delle colonne, cosa che la lettura a prossimita' non vedeva",
+  "umano_coinvolto": false
+}

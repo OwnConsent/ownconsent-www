@@ -1,0 +1,57 @@
+{
+  "ts": "2026-09-21T15:51:12+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Durata del job ci prima/dopo e per-passo, dal run reale della PR #46; confronto con la PR di prova; conseguenza del run rosso #47",
+  "contesto": "Le due misure che mancavano alla consegna precedente (journal/2026-09-21/154430-devops-consegna.json). Letta con gh sul run reale, non copiata dal messaggio del coordinatore.",
+  "evidenza": [
+    "$ gh run view 35607830711 --json conclusion,jobs --jq '.jobs[] | .startedAt, .completedAt, (.steps[] | \"\\(.number) \\(.name) \\(.conclusion) \\(.startedAt) \\(.completedAt)\")'",
+    "job ci (PR #46, SHA 339940d): 2026-09-21T13:47:05Z -> 2026-09-21T13:48:54Z, conclusion success",
+    "7 Collaudo del workflow (tests/ci) success 13:47:10Z 13:47:11Z (1s)",
+    "13 Progetto di collaudo (radice) — installazione dipendenze success 13:47:24Z 13:47:25Z (1s)",
+    "14 Playwright — Chromium success 13:47:25Z 13:47:46Z (21s)",
+    "15 Test di accettazione (e2e) success 13:47:46Z 13:48:21Z (35s)",
+    "16 Misura di laboratorio (AC39) success 13:48:21Z 13:48:51Z (30s)",
+    "17-21 api/* skipped (area api/ assente in questa PR), 41-43 post-step",
+    "prima (gia' in journal, non rimisurato qui): run 35603251219 su main, 13:04:16Z -> 13:04:35Z = 19s"
+  ],
+  "durata_job": {
+    "prima_s": 19,
+    "dopo_s": 109,
+    "delta_s": 90,
+    "rapporto": "109/19 ≈ 5.7x",
+    "nota": "il job prima non eseguiva alcun passo di site/ ne' i cinque passi nuovi di L12 (site/ non ancora costruito su quel run); il salto non e' solo l'effetto dei cinque passi nuovi ma anche del blocco site/ preesistente (13s: corepack 2s, install 2s, build 2s, lint 1s, astro check 6s), gia' presente prima di L12 ma non ancora esercitato sul run del 19s"
+  },
+  "durata_passi_nuovi_s": {
+    "tests_ci": 1,
+    "installazione_radice": 1,
+    "playwright_chromium": 21,
+    "test_e2e": 35,
+    "misura_laboratorio": 30,
+    "somma": 88,
+    "resto_del_job": 21
+  },
+  "confronto_con_pr_di_prova": {
+    "riferimento": "run 35606446465, workflow temporaneo (non il job ci): site install 4s, radice install 2s, chromium 22s, python3+PyYAML 0s, tests/ci 1s, e2e 34s, laboratorio 28s",
+    "scarti_osservati": [
+      "tests/ci: prova 1s (python3+PyYAML 0s + suite 1s), job ci 1s (un solo passo combinato) — coincide",
+      "installazione radice: prova 2s, job ci 1s — scarto 1s, dentro il rumore di misurazione a risoluzione del secondo dell'API di GitHub",
+      "chromium: prova 22s, job ci 21s — scarto 1s",
+      "e2e: prova 34s, job ci 35s — scarto 1s",
+      "laboratorio: prova 28s, job ci 30s — scarto 2s"
+    ],
+    "perche_non_sono_lo_stesso_numero": "come gia' scritto in mandato: quel job di prova non eseguiva lint ne' astro check (mancano ~7s che il job ci invece esegue nel blocco site/), e la somma dei passi non e' la durata di un job — ci sono anche checkout, setup-node e i passi di versione/rilevamento aree che il job di prova non necessariamente replicava allo stesso modo. Gli scarti di 1-2s sui singoli passi sono compatibili con rumore di misura fra esecuzioni diverse del runner, non con una regressione: nessuno scarto supera il 10% del passo corrispondente tranne il caso limite del passo da 1s, dove 1s di scarto e' l'intera risoluzione della misura"
+    },
+  "conseguenza_run_rosso_35607937428": {
+    "cosa": "PR di prova #47 (asserzione falsa in AC1, NON mergiata), job ci: failure, 2026-09-21T13:48:06Z -> 13:49:38Z (92s)",
+    "dove": "step 15 'Test di accettazione (e2e)': failure, 13:48:56Z -> 13:49:35Z (39s). Step 16 'Misura di laboratorio (AC39)': skipped, non eseguito",
+    "verificato_con": "$ gh run view 35607937428 --json conclusion,jobs --jq '.jobs[] | .startedAt, .completedAt, (.steps[] | \"\\(.number) \\(.name) \\(.conclusion) \\(.startedAt) \\(.completedAt)\")' -> riga 15 'failure', riga 16 'skipped'",
+    "dichiarazione": "conseguenza della forma scelta per i passi nuovi (journal/2026-09-21/154308-devops-decisione.json): e2e e laboratorio sono due passi in serie nello stesso job, senza continue-on-error (vietato da D1/D2). Un fallimento del passo 15 interrompe l'esecuzione dei passi successivi del job, quindi il passo 16 non gira su quel commit: un rosso nei test di accettazione spegne la misura di laboratorio sullo stesso commit, non la esegue e non la fallisce. E' lo stesso effetto che ADR-0003 gia' registra fra site/ e api/ ('un rosso di site/ salta le verifiche di api/'), qui ricorre fra e2e e laboratorio all'interno dello stesso blocco condizionato su site presente. Non e' un difetto da correggere in questo lotto: nessuna regola di D1-D9 chiede che un passo successivo giri comunque dopo un fallimento (continue-on-error e' esplicitamente vietato), quindi l'alternativa sarebbe solo continue-on-error sul passo 15, che violerebbe D1. Si dichiara, non si corregge qui"
+  },
+  "correzione_alla_consegna_precedente": "nessuna: journal/2026-09-21/154430-devops-consegna.json non conteneva numeri di durata (dichiarava solo che mancavano), quindi questa misura non lo smentisce: lo completa",
+  "esito": "le due misure mancanti sono ora raccolte con comando e output; nessuna regressione trovata rispetto alla PR di prova; la conseguenza del run rosso e' dichiarata",
+  "umano_coinvolto": false
+}

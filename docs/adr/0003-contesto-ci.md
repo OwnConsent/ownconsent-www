@@ -453,3 +453,238 @@ legge oggi `$lettura_ci`. Non serve un percorso di deprecazione, salvo quello de
 | @devops (L12) | nessun `site-ci.yml`; budget dentro o fuori `ci` da decidere prima di scrivere (D3); cache solo dopo la riapertura di D4 |
 | @performance (L12) | correzione di `$lettura_ci` (D3) |
 | @code-reviewer, @security | regole di D1, D4 e D8 come elementi di revisione; la fissazione a SHA delle action di terze parti resta alla revisione di @security, e questo ADR non la decide |
+
+## 2026-09-21 — Giro di L12 (issue #8): D7 deciso, D9 sulla collisione con `tests/ci`, ratifiche 1–3. **D3 e D4 restano aperte**
+
+Sezione aggiunta, non riscrittura: il corpo di D1–D8 qui sopra resta com'è. Scritta da
+@architect nel giro di L12 della issue #8. Vincola in questo giro **@devops (L12)** e
+**@qa-test**.
+
+**Che cosa questa sezione non decide.** Non decide **D3** (il test di laboratorio dentro o
+fuori `ci`) e non decide **D4** (cache). Tutte e due chiedono una misura che sta girando
+adesso — il test di laboratorio eseguito 5 volte sullo stesso SHA sul runner di GitHub, con
+i valori per pagina di `lcp_ms_lab_mediana` e la durata di ciascuna esecuzione — e
+scriverle prima del numero sarebbe adattare la decisione alla descrizione. Restano aperte,
+con la stessa scadenza di prima, e la frase «senza una sezione datata di questo ADR, L12
+non parte» di D3 **resta in vigore**: L12 non scrive la riga del laboratorio finché non
+arriva la sezione D3 datata. Quello che L12 può fare da ora è tutto il resto, cioè quanto
+sta sotto.
+
+### Stato delle scadenze che cadevano su questo giro
+
+| Punto | Stato dopo questa sezione |
+|---|---|
+| D3, budget dentro o fuori `ci` | **aperto**, in attesa della misura di variabilità sul runner. Sezione datata separata |
+| D4, cache | **aperto**, in attesa della durata misurata su 5 esecuzioni. Sezione datata separata |
+| D7, `ci` esegue `tests/ci/` | **deciso: sì**, sotto |
+| Da ratificare 1 (`$lettura_ci`) | **eseguita**, sotto |
+| Da ratificare 2 (ADR-0002) | **eseguita**, sezione datata del 21/09/2026 in `docs/adr/0002-struttura-site.md` |
+| Da ratificare 3 (ADR-0001) | **eseguita**, nota datata del 21/09/2026 in `docs/adr/0001-budget-pagine-pubbliche-laboratorio.md` |
+
+La riga di D7 nella tabella «Scadenze» qui sopra è superata da questa sezione. Le righe di
+D3 e D4 no: quelle valgono ancora.
+
+### D7 — deciso: **`ci` esegue `tests/ci/`**
+
+Il rinvio di D7 si riapre perché si è verificata la condizione scritta: questa è la prima
+PR dopo il merge della #25 che modifica `.github/workflows/ci.yml`.
+
+**I due motivi del rinvio, riesaminati.**
+
+1. «Il workflow di una PR è quello presente nel suo commit (F5), quindi una PR può
+   indebolire insieme `ci` e `tests/ci/`, ed eseguirli non protegge da quel caso.»
+   **Il fatto resta vero; come motivo non regge.** F5 non è cambiata, e nessun controllo
+   automatico può proteggere da una PR che modifica insieme l'oggetto e il suo strumento di
+   misura: quello è il lavoro della revisione, non di un check. Ma il rinvio lo usava per
+   negare una protezione che nessuno aveva chiesto. La protezione che serve è un'altra: una
+   PR che tocca `ci.yml` **in buona fede** e rompe un invariante di `tests/ci` senza
+   accorgersene. Quel caso oggi non è più ipotetico — è successo in questo stesso lotto,
+   sul primo passo nuovo che L12 voleva scrivere, ed è stato trovato solo perché @devops ha
+   misurato a mano invece di dedurre (`journal/2026-09-21/151312-orchestrator-misura.json`;
+   riprodotto in `journal/2026-09-21/152229-architect-misura.json`). Un invariante che
+   regge solo se l'agente di turno si ricorda di eseguire una suite a mano non è un
+   invariante: è una speranza.
+2. «CI3 viene dopo CI1, ed eseguirli chiederebbe a CI3 di modificare il file di CI1.»
+   **Scaduto.** CI1 e CI3 sono mergiati tutti e due; `tests/ci/**` e
+   `.github/workflows/ci.yml` sono su `main` da prima di questo lotto. Oggi il file lo
+   modifica @devops dentro L12, e il passo sta nel proprio file: nessun confine di ruolo
+   viene attraversato. La regola 3 del cantiere resta soddisfatta — @devops aggiunge il
+   passo che *esegue* i test, non li scrive.
+
+**Condizione dell'ADR, verificata.** «Nessun permesso oltre a quelli di AC15»:
+`permissions: contents: read` non cambia. I test di `tests/ci/` leggono file dal
+filesystem e invocano `git rev-parse --show-toplevel`; non fanno rete, non usano `gh`, non
+installano nulla. Gli script di verifica remota con `gh` citati da D7 non stanno in
+`tests/ci/` (la cartella contiene solo `helpers.py`, i `test_*.py` e
+`procedure-github.md`).
+
+**Prescrizioni per @devops (L12).**
+
+1. Un solo passo, senza `if`, senza `continue-on-error`, con
+   `working-directory: tests/ci`, che esegue
+   `python3 -m unittest discover -s . -p 'test_*.py'`. Niente `pytest`: la libreria
+   standard basta, e aggiungerne una sarebbe una dipendenza in più su `ci`.
+2. **Posizione**: subito dopo il passo «Rilevamento aree» e prima del blocco di `site/`.
+   Motivo: il log porta già lo SHA verificato e lo stato delle due aree — le righe su cui
+   si appoggiano AC4 e AC5 — prima che il gate nuovo possa diventare rosso; e i test
+   riguardano la forma statica del workflow, che non dipende da quali aree sono presenti.
+   Il passo non ha `if`: non è un'area. È l'unica estensione all'ordine fissato da D2, ed è
+   questa sezione ad ammetterla.
+3. **Costo misurato**: 0,24 s in locale su 55 test
+   (`journal/2026-09-21/152229-architect-misura.json`, punto 2), contro i 19 s attuali del
+   job (`journal/2026-09-21/151513-orchestrator-misura.json`). Da rimisurare dal log del
+   runner e da riportare nella PR, non da dedurre.
+4. **Dipendenze non misurate sul runner**: `python3` e PyYAML. Nella shell degli agenti
+   sono `3.12.3` e `6.0.1` (`$ python3 -c 'import sys, yaml; print(sys.version.split()[0],
+   yaml.__version__)'` → `3.12.3 6.0.1`); **sul runner di GitHub nessuno le ha misurate**.
+   Il passo stampa le due versioni prima di eseguire i test, come `node -v` fa per AC10, e
+   la riga di log è la misura. Se PyYAML manca, il passo è rosso e **il lotto si ferma e
+   torna ad @architect**: nessun `pip install` improvvisato, perché introdurrebbe in `ci`
+   una versione che non viene da un file dell'area (D5) e una dipendenza di rete che oggi
+   il job non ha.
+5. **Conseguenza da mettere in conto**: da questo passo in poi, una PR che rompe un
+   invariante di `tests/ci` è rossa. Compresa quella di L12: finché D9 qui sotto non è
+   applicata, il passo di installazione del collaudo alla radice rende `ci` rosso.
+
+**Si riapre** se il passo produce rossi non riconducibili a una modifica di `.github/`
+(cioè se diventa instabile), oppure se PyYAML risulta assente sul runner. Chi:
+@architect con @devops. Costo del ritorno: togliere quattro righe dal workflow.
+
+| Alternativa | Perché no |
+|---|---|
+| lasciare D7 rinviato al giro di L07 | L07 è chiuso; la scadenza «prima PR che modifica `ci.yml`» è questa, e rinviare un rinvio scaduto è farlo restare per inerzia |
+| eseguirli in un job separato | D2 vieta i job separati senza sezione, e qui non c'è nessuna ragione (servizi, runner diverso, durata) che li giustifichi: 0,24 s |
+| eseguirli solo quando la PR tocca `.github/` | sarebbe un `if` di passo fuori da quelli ammessi da D2, e un filtro che decide da sé quando misurare |
+| aggiungere `pytest` | una dipendenza nuova su `ci` per zero funzionalità in più; il comando misurato è quello della libreria standard |
+
+### D9 — come `tests/ci` identifica i passi di `site/`: il selettore si stringe
+
+**Il problema, misurato.** `tests/ci/test_ac06_ac07_site_steps.py` individua i quattro
+passi di `site/` con una sottostringa letterale del comando (`_site_step`, riga 36:
+`"pnpm install" in step_run_text(s)`), e pretende che il predicato dia **un solo** passo.
+Il progetto di collaudo alla radice (ADR-0002, D8) ha un proprio `package.json` e un
+proprio lockfile, quindi L12 deve installarlo con un secondo `pnpm install`. Da quel
+momento il predicato dà due passi e AC6/AC7 non si misurano più:
+
+    $ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'
+    Ran 55 tests in 0.315s
+    OK                                    (workflow di oggi)
+
+    $ CI_ROOT=<copia con il passo di radice> python3 -m unittest discover -s . -p 'test_*.py'
+    Ran 55 tests in 0.238s
+    FAILED (failures=5)
+    AssertionError: atteso un solo passo per il predicato, trovati 2
+
+**Decisione: (a) — il selettore di `_site_step` si stringe sui passi con
+`working-directory: site`.** Il difetto sta nello strumento, non nel comando: due passi
+che fanno cose diverse — installare `site/` e installare il collaudo alla radice — vengono
+confusi perché il selettore guarda il verbo e non l'oggetto. «Suonano uguali» non vuol dire
+«sono la stessa cosa».
+
+**L'obiezione contro (a), e perché non regge.** Spostare `working-directory` dal corpo del
+test al selettore sembra rendere tautologica l'asserzione `test_ciascun_passo_gira_in_site`.
+Misurato, non dedotto: non lo rende, perché il selettore contiene già
+`assert len(matches) == 1`. Con il selettore stretto e un workflow in cui il passo di
+`site/` esce da `working-directory: site`, i candidati diventano **0** e il test è rosso lo
+stesso:
+
+    $ CI_ROOT=<copia in cui il passo di site/ perde working-directory> \
+        python3 -m unittest discover -s . -p 'test_*.py'
+    Ran 55 tests in 0.236s
+    FAILED (failures=5)
+    AssertionError: atteso un solo passo per il predicato, trovati 0
+
+Cambia il messaggio, non la copertura. Quindi (a) è una riparazione dello strumento, non un
+adattamento della misura alla descrizione — che è ciò che il piano vieta a L12
+(`docs/plan/issue-8.json`, `L12.non_tocca`). Evidenza completa, con i quattro passaggi:
+`journal/2026-09-21/152229-architect-misura.json`.
+
+**Chi lo modifica, e con quale mandato.** `tests/ci/**` è di **@qa-test** (regola 3 del
+cantiere: chi scrive il codice non scrive i test). Non lo tocca @devops e non lo tocco io.
+Mandato, stretto:
+
+1. Perimetro: solo `tests/ci/test_ac06_ac07_site_steps.py`, solo la funzione `_site_step`.
+   Nessuna asserzione nel corpo dei test cambia, nessun test viene rimosso, nessun
+   `assertIn` diventa più permissivo.
+2. Il selettore filtra prima i passi con `working-directory == "site"` e **mantiene**
+   `assert len(matches) == 1`. Se quell'assert sparisce, la modifica è un indebolimento e
+   il mandato è violato.
+3. Prove-by-reversion, da rifare sul file vero e da allegare alla PR, con `CI_ROOT` che
+   `tests/ci/helpers.py` espone già per questo: (i) selettore nuovo contro il workflow di
+   oggi → 55 verdi; (ii) selettore nuovo contro una copia del workflow con il passo di
+   radice → 55 verdi; (iii) selettore nuovo contro una copia in cui il passo di `site/`
+   esce da `working-directory: site` → rosso. Senza (iii) non è una correzione: è una
+   speranza.
+4. Nota per @qa-test: dopo la modifica, `test_ciascun_passo_gira_in_site` resta vero per
+   costruzione. Non va sostituito con «nessun passo fuori da `site/` esegue `pnpm
+   install`», che da questo lotto in poi sarebbe **falso** per disegno. Se lo si vuole
+   rendere di nuovo informativo, lo si fa in un giro proprio, non dentro L12.
+
+**Sequenza, e cosa NON è ammesso nel frattempo.** Il commit di @qa-test arriva sul ramo di
+L12 **prima** che @devops scriva il passo di installazione alla radice. Fino ad allora L12
+non scrive quel passo. Con il selettore stretto, @devops scrive il comando nella forma
+piena, `pnpm install --frozen-lockfile`, e il passo di radice **non** porta
+`working-directory: site`.
+
+| Alternativa | Perché no |
+|---|---|
+| (b) il passo di radice usa `pnpm i --frozen-lockfile` | fa dipendere un invariante di accettazione da un alias del gestore di pacchetti. La prima persona che riscrive `pnpm i` in `pnpm install` trova un rosso il cui messaggio («trovati 2») non nomina la causa, e con D7 quel rosso è un gate su ogni PR: l'invito implicito è ad allargare il predicato, cioè proprio la mossa che il piano vieta. Misurato verde (`journal/2026-09-21/151312-orchestrator-misura.json`, variante B): funziona, e per questo è pericoloso. **Non è un ripiego autorizzato**: usarla richiede un'altra sezione datata |
+| (c) selettore sul campo `name` del passo | promuoverebbe a interfaccia un testo libero scritto per chi legge il log; oggi nessun test lo legge, e non c'è motivo di cominciare |
+| non installare il collaudo alla radice | è il progetto separato di ADR-0002 D8, con lockfile proprio: senza `pnpm install` alla radice non esistono né i test e2e né la misura di laboratorio |
+| lasciare `tests/ci` com'è e non far partire L12 | il difetto è nello strumento e non sparisce aspettando; il costo della riparazione è una funzione di tre righe |
+
+Costo del ritorno: il commit di @qa-test si revoca da solo. Se il selettore stretto
+dovesse risultare sbagliato, si torna al predicato letterale e al passo di radice con una
+forma non collidente, con una sezione nuova.
+
+### Ratifica 1 — `contracts/perf-budgets.json`, `$lettura_ci`: **eseguita**
+
+Il punto 1 di «Da ratificare» è chiuso. Il campo nominava `.github/workflows/site-ci.yml` e
+attribuiva alla CI il confronto; tutte e due le cose sono superate. Misura sulla testa di
+`main` (`8135bff`): `git ls-tree -r --name-only origin/main -- .github/workflows/` elenca
+`ci.yml` e i tre workflow agentici e nessun `site-ci.yml`; `git show
+origin/main:.github/workflows/ci.yml | grep -n 'name: ci'` stampa `19:    name: ci`; il
+check run sulla testa di `main` si chiama `ci` ed è `success`. Il campo ora nomina `ci.yml`
+e il job `ci`, dice che il comparatore è **uno solo** (il test di L07, ADR-0001) e che la
+CI esegue il comando senza rileggere il file né reimplementare il confronto, e rimanda a D3
+per stabilire se quel comando sia un passo di `ci`.
+
+Nessuna soglia toccata, nessuna chiave rimossa o rinominata: 24 chiavi prima, 24 dopo, una
+sola con valore diverso, verificato confrontando il file prima e dopo. La modifica è
+**esecuzione** della divergenza D-3 di `docs/plan/issue-8.json`, già ratificata da Andrea,
+non una decisione nuova di @architect su un contratto di @performance; ed è la strada che
+D3 aveva scritto («la correzione passa da una sezione di @architect nel giro di L12»).
+Registrata come voce **A05** di `DESIGN-AMENDMENTS.md`, classe `shipped-vince`.
+
+### Divergenza di perimetro rispetto al piano — segnalata, non assorbita
+
+`docs/plan/issue-8.json` assegna a L12 i soli file `.github/workflows/ci.yml` e
+`journal/2026-09-19/*-devops-*.json`, e ha `contratti_da_aggiornare: []`. Questo giro tocca
+invece `contracts/perf-budgets.json`, `DESIGN-AMENDMENTS.md`, `docs/adr/0001-*`,
+`docs/adr/0002-*`, `docs/adr/0003-*` e — per mano di @qa-test —
+`tests/ci/test_ac06_ac07_site_steps.py`, che il piano elenca fra i `non_tocca` di L12.
+
+È una divergenza di **perimetro**, non di merito, imposta dagli artefatti in vigore: le
+scadenze di questo ADR cadono tutte sul giro di L12, e D3 dice che senza una sezione datata
+L12 non parte. Il piano descrive il lotto come se le scadenze non esistessero. La segnalo e
+non la assorbo. Due precisazioni:
+
+- la parte che riguarda `contracts/perf-budgets.json` è **già ratificata** (D-3, voce A05);
+- la parte che riguarda `tests/ci/**` è coperta dal `non_tocca` stesso, che prescrive
+  proprio questo esito: «se uno fallisce dopo la modifica, il lotto si ferma e torna ad
+  @architect». Il lotto si è fermato, è tornato qui, e la modifica la fa @qa-test con il
+  mandato di D9 — non @devops adattando il test.
+
+Il resto — ADR e `DESIGN-AMENDMENTS.md` — è lavoro di @architect, che il piano non aveva
+previsto in questo lotto. Va all'occhio di Andrea come divergenza di perimetro: se il piano
+verrà rigenerato, l'elenco dei file di L12 va corretto di conseguenza.
+
+### Consumatori impattati, aggiornamento del 21/09/2026
+
+| Agente (lotto) | Impatto di questa sezione |
+|---|---|
+| @devops (L12) | passo di `tests/ci` in `ci`, con posizione, comando e misura delle versioni (D7); forma piena `pnpm install --frozen-lockfile` per il passo di radice, **dopo** il commit di @qa-test (D9); D3 e D4 ancora chiuse: nessuna riga sul laboratorio e nessuna cache finché non arrivano le due sezioni datate |
+| @qa-test | mandato di D9 su `tests/ci/test_ac06_ac07_site_steps.py`, `_site_step` soltanto, con le tre prove-by-reversion |
+| @performance | `$lettura_ci` corretto (ratifica 1); nessuna soglia toccata; D3 resta aperta e la decide @architect con @performance e @devops |
+| @docs-writer | nessun vincolo nuovo: `docs/DEFINITION-OF-DONE.md` non cambia (AC20 verificato verde contro il workflow con i passi nuovi) |
+| @code-reviewer, @security | da questo giro `ci` esegue `tests/ci/`: una PR che tocca `.github/workflows/ci.yml` o `.github/ci/**` ha il proprio controllo statico dentro il gate, e un rosso di quel passo non si chiude allargando il predicato |

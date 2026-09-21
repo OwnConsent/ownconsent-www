@@ -464,3 +464,41 @@ Annotazione, non riscrittura: il testo di D6 qui sopra resta com'è.
 - **Chi la legge**: L05 (definisce la custom property nello scope del footer), L07 (attende
   per ogni elemento l'alias in vigore per il suo contesto), L09 (verifica a tastiera).
   Divergenza D-2 di `docs/plan/issue-8.json`.
+
+## Aggiornamento del 2026-09-21 — la riga di L12 nella tabella dei lotti, al giro di L12
+
+Annotazione, non riscrittura: il testo di D8, di D9 e della tabella dei lotti qui sopra
+resta com'è. Scritta da @architect nel giro di L12 (issue #8), come ratifica del punto 2 di
+«Da ratificare» di `docs/adr/0003-contesto-ci.md`.
+
+La riga della tabella dei lotti dice: «@devops (L12) | Node ≥ 22.12, corepack, **due
+lockfile per la cache**, `ASTRO_TELEMETRY_DISABLED=1` (D8, D9)». Tre delle quattro voci
+valgono ancora; le altre due si leggono così.
+
+**Telemetria: il vincolo è già in vigore, ma da CI1, non da L12.** `ASTRO_TELEMETRY_DISABLED`
+è nell'`env` del job `ci` da prima di questo lotto, e vale anche quando `site/` è assente
+(ADR-0003, D4). Misura sulla testa di `main` (`8135bff`):
+
+    $ git show origin/main:.github/workflows/ci.yml | grep -n 'ASTRO_TELEMETRY_DISABLED\|env:'
+    21:    env:
+    24:      ASTRO_TELEMETRY_DISABLED: "1"
+
+Nessuna contraddizione con D9: la prescrizione è la stessa, è solo arrivata un lotto prima.
+L12 non deve aggiungerla, e non deve rimuoverla.
+
+**«Due lockfile per la cache»: presupposto non in vigore, e non è questa sezione a
+deciderlo.** I due lockfile esistono davvero — `git ls-tree -r --name-only origin/main --
+pnpm-lock.yaml site/pnpm-lock.yaml` stampa tutti e due — ma la frase presuppone che `ci`
+usi una cache, e oggi non ne usa nessuna: ADR-0003 D4 la esclude e il workflow lo mostra
+(`package-manager-cache: false`, `cache: false`, `skip-cache: true`, nessun
+`actions/cache`). Quindi la voce **non è adottata** in questa consegna.
+
+Attenzione a che cosa questa sezione *non* dice: non dice che la cache è esclusa per
+sempre. Il rinvio di D4 in ADR-0003 si riapre proprio al giro di L12 e in questo momento è
+**aperto**, in attesa della durata misurata su 5 esecuzioni sul runner. Se D4 si chiuderà a
+favore di una cache, questa riga della tabella torna pertinente e i due lockfile sono le
+chiavi da usare; se si chiuderà contro, la riga resta non adottata. La decisione sta lì,
+non qui.
+
+**Chi la legge**: @devops (L12), che dalla tabella non deve dedurre di dover configurare
+una cache. Ratifica del punto 2 di ADR-0003, «Da ratificare».

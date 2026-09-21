@@ -1,0 +1,41 @@
+{
+  "ts": "2026-09-21T15:27:20+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "D7 deciso: il job ci esegue tests/ci/. Uno dei due motivi del rinvio e' scaduto, l'altro non era un motivo",
+  "contesto": "ADR-0003 D7 rinviava l'esecuzione di tests/ci dentro ci «al primo dei due eventi: la prima PR dopo il merge della #25 che modifica .github/workflows/ci.yml o .github/ci/**, oppure il giro di L07». L07 e' chiuso e questa PR modifica ci.yml: la scadenza e' caduta due volte.",
+  "alternative": [
+    {
+      "opzione": "lasciare D7 rinviato",
+      "scartata_perche": "la condizione di riapertura si e' verificata; rinviare un rinvio scaduto e' farlo restare per inerzia (CLAUDE.md, «le esclusioni motivate hanno una data di scadenza»)"
+    },
+    {
+      "opzione": "eseguirli in un job separato",
+      "scartata_perche": "D2 vieta i job separati senza sezione datata, e non c'e' nessuna delle ragioni che la giustificherebbero (servizi, altro runner, durata): il costo misurato e' 0,24 s"
+    },
+    {
+      "opzione": "eseguirli solo se la PR tocca .github/",
+      "scartata_perche": "sarebbe un if di passo fuori da quelli ammessi da D2, e un filtro che decide da solo quando misurare"
+    },
+    {
+      "opzione": "usare pytest invece di unittest",
+      "scartata_perche": "una dipendenza in piu' su ci per zero funzionalita' in piu'; il comando misurato e' quello della libreria standard"
+    }
+  ],
+  "riesame_dei_due_motivi_del_rinvio": [
+    "Motivo 1, «una PR puo' indebolire insieme ci e tests/ci, ed eseguirli non protegge da quel caso»: il fatto (F5) resta vero, ma nega una protezione che nessuno aveva chiesto. Nessun check protegge da una PR che tocca insieme l'oggetto e il suo strumento: quello e' lavoro della revisione. La protezione che serve e' contro la PR in buona fede che rompe un invariante senza accorgersene — caso non piu' ipotetico: e' successo in questo lotto ed e' stato trovato solo perche' @devops ha misurato a mano.",
+    "Motivo 2, «CI3 viene dopo CI1, ed eseguirli chiederebbe a CI3 di modificare il file di CI1»: scaduto. CI1 e CI3 sono mergiati; oggi ci.yml lo modifica @devops dentro L12 e il passo sta nel proprio file. La regola 3 resta soddisfatta: @devops aggiunge il passo che esegue i test, non li scrive."
+  ],
+  "evidenza": [
+    "condizione dell'ADR verificata: «nessun permesso oltre a quelli di AC15» — permissions: contents: read non cambia; tests/ci legge file e invoca git rev-parse, niente rete, niente gh, nessuna installazione",
+    "tests/ci contiene solo helpers.py, i test_*.py e procedure-github.md: nessuno script gh",
+    "costo: Ran 55 tests in 0.236s contro 19 s di durata attuale del job (run 35603251219)",
+    "dipendenze non misurate sul runner: python3 e PyYAML. Nella shell degli agenti: $ python3 -c 'import sys, yaml; print(sys.version.split()[0], yaml.__version__)' -> 3.12.3 6.0.1"
+  ],
+  "cosa_resta_a_rischio": "python3 e PyYAML sul runner di GitHub non sono misurati. Il passo li stampa prima di eseguire i test; se PyYAML manca, il passo e' rosso e L12 si ferma e torna ad @architect. Nessun pip install improvvisato: introdurrebbe in ci una versione che non viene da un file dell'area (D5) e una dipendenza di rete che oggi il job non ha.",
+  "esito": "applicata: sezione datata 2026-09-21 di docs/adr/0003-contesto-ci.md, con posizione del passo, comando, costo e condizione di riapertura",
+  "umano_coinvolto": false
+}

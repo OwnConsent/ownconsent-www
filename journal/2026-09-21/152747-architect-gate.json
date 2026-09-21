@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-21T15:27:47+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "gate",
+  "titolo": "D3 e D4 restano aperte: mi fermo perche' manca la misura sul runner, non perche' manchi un'opinione",
+  "contesto": "Le sei scadenze di ADR-0003 che cadono sul giro di L12 sono state affrontate tutte. Quattro si chiudono in questo giro (D7, ratifiche 1, 2, 3) piu' la decisione nuova D9 sulla collisione con tests/ci. Due no.",
+  "chi_ha_deciso": "ADR-0003, D3: «Cosa serve per decidere: la variabilita' misurata, cioe' il test di laboratorio eseguito almeno 5 volte sullo stesso SHA sul runner di GitHub (PR di prova), con i valori per pagina di lcp_ms_lab_mediana, con comando e output. E' la condizione gia' scritta in ADR-0001, riga 71.» ADR-0003, D4: «Cosa serve: la durata dei passi di installazione letta dai log, e la prova che la procedura di AC18 da' un rosso con la cache scelta».",
+  "cosa_serviva": "La misura che @devops sta eseguendo su una PR di prova: 5 esecuzioni del test di laboratorio sullo stesso SHA sul runner, con i valori per pagina di lcp_ms_lab_mediana e la durata di ciascuna esecuzione. Senza quel numero, scrivere D3 vorrebbe dire scegliere se un gate e' stabile senza sapere quanto oscilla: sarebbe dedurre. Per D4, la durata dei passi di installazione dai log.",
+  "cosa_so_gia_e_non_basta": [
+    "in locale: pnpm exec playwright test -> 252 passed (20.8s), reale 21,3 s, con 8 pagine x 5 esecuzioni (journal/2026-09-21/151513-orchestrator-misura.json)",
+    "durata attuale del job ci su main: 19 s (run 35603251219)",
+    "nessuno dei due numeri viene dal runner di GitHub, che e' piu' lento e su cui va aggiunto il download di Chromium. La domanda di D3 non e' «quanto dura» ma «quanto oscilla lcp_ms_lab_mediana fra esecuzioni identiche»: un gate che boccia una build per rumore blocca i merge senza dire niente su nessuna build"
+  ],
+  "cosa_L12_non_puo_fare_intanto": "Nessuna riga di workflow sul test di laboratorio e nessuna cache. La frase di D3 «senza una sezione datata di questo ADR, L12 non parte» resta in vigore per quella parte. Il resto (passo di tests/ci, passo di installazione alla radice dopo il commit di @qa-test, Playwright) e' sbloccato dalla sezione di oggi.",
+  "esito": "in attesa della misura; le sezioni datate D3 e D4 si scrivono quando arriva, non prima",
+  "umano_coinvolto": false
+}

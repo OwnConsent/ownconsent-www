@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-21T16:21:44+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "il commit aa8bae707c6da5a6b3950b99096cc66f212d474d, non una voce di journal; l'incidente e' gia' registrato in 2026-09-21/153953-orchestrator-fallimento.json, questa voce ne e' la correzione di attribuzione",
+  "titolo": "aa8bae7 e' firmato orchestrator ma e' un commit misto: due dei tre file sono di @qa-test",
+  "cosa_era_sbagliato": "Il commit aa8bae7 porta il trailer «Cantiere-Agent: orchestrator» e un messaggio che parla solo del lavoro dell'orchestrator («python3 e PyYAML gia' sul runner; costo misurato dei passi nuovi»). Contiene pero' anche il lavoro di @qa-test sul selettore di tests/ci. Chiunque legga la firma attribuisce all'orchestrator una modifica a un test di accettazione che non ha scritto.",
+  "attribuzione_file_per_file": [
+    {"file": "tests/ci/test_ac06_ac07_site_steps.py", "righe": "+6 -1", "autore_reale": "qa-test", "cosa": "selettore _site_step stretto su working-directory: site, mandato D9 di ADR-0003; assert len(matches) == 1 lasciato intatto"},
+    {"file": "journal/2026-09-21/153614-qa-test-misura.json", "righe": "+23", "autore_reale": "qa-test", "cosa": "le sue prove-by-reversion sul selettore"},
+    {"file": "journal/2026-09-21/153619-orchestrator-misura.json", "righe": "+23", "autore_reale": "orchestrator", "cosa": "python3 e PyYAML sul runner, costo misurato dei passi nuovi"}
+  ],
+  "come_lo_so": [
+    "$ git show --numstat --format= aa8bae7  ->  23 0 journal/2026-09-21/153614-qa-test-misura.json / 23 0 journal/2026-09-21/153619-orchestrator-misura.json / 6 1 tests/ci/test_ac06_ac07_site_steps.py",
+    "$ git show --format='%(trailers:key=Cantiere-Agent)' aa8bae7  ->  Cantiere-Agent: orchestrator",
+    "il contenuto di ciascun file dice da se' di chi e': la voce 153614 e' firmata «agente: qa-test» al suo interno, la 153619 «agente: orchestrator»",
+    "$ ./githooks/chi-ha-fatto-cosa.sh  ->  «7 orchestrator, 5 devops, 4 architect», e nessuna riga per qa-test: il suo lavoro e' invisibile allo strumento della firma"
+  ],
+  "perche_e_successo": "Ho messo me e @qa-test nella stessa worktree, quindi sullo stesso indice git. Lui aveva fatto git add dei suoi due file; io ho fatto git add del mio e ho committato per primo, portandomi via anche i suoi. Il suo git commit successivo ha trovato l'indice vuoto e ha stampato «nothing to commit». Diagnosi completa in 153953-orchestrator-fallimento.json.",
+  "decisione_il_commit_non_si_riscrive": {
+    "chi_ha_deciso": "Andrea, 21/09/2026",
+    "motivo": "Un commit misto non ha una firma giusta: qualunque firma gli si metta sarebbe falsa per una parte del suo contenuto. Spezzarlo a posteriori non ricostruirebbe due commit che sono esistiti, ne fabbricherebbe due che non sono mai esistiti, con messaggi e confini decisi adesso guardando il risultato: sarebbe una ricostruzione, cioe' esattamente cio' che docs/JOURNAL.md vieta quando dice che un registro riscrivibile in silenzio non e' una prova ma un racconto.",
+    "conseguenza_accettata": "githooks/chi-ha-fatto-cosa.sh continuera' ad attribuire all'orchestrator la modifica di tests/ci/test_ac06_ac07_site_steps.py, e a non mostrare nessun commit per qa-test in questo lotto. Il dato giusto e' questa voce."
+  },
+  "cosa_si_e_imparato": "La firma Cantiere-Agent regge un'ipotesi implicita che nessuno aveva scritto: che un commit abbia un solo autore. L'ipotesi si rompe appena due agenti condividono un indice, e si rompe in silenzio — nessun hook se ne accorge, perche' dal punto di vista di git il commit e' perfettamente valido. La regola operativa che ne segue, gia' applicata dal resto di questo lotto: un indice git, un processo che committa. La worktree per lotto non basta.",
+  "esito": "aa8bae7 resta com'e'; l'attribuzione autorevole e' questa voce (CLAUDE.md: «la firma e' una comodita'; la fonte autorevole di perche' e' il journal»)",
+  "umano_coinvolto": true
+}

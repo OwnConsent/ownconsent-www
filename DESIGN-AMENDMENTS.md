@@ -173,7 +173,10 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   (`contracts/README.md`). La modifica è eseguita da @architect come ratifica già decisa
   (D-3), non come decisione nuova, ed è la strada che ADR-0003 aveva scritto per questo
   campo («la correzione passa da una sezione di @architect nel giro di L12»).
-- Da smaltire: niente resta aperto sul nome. Resta aperto **D3** di ADR-0003 (il test di
-  laboratorio dentro o fuori `ci`), che è una decisione, non una divergenza, e si chiude
-  con la misura di variabilità sul runner; quando si chiude, questo campo va riletto per
-  verificare che la frase di rimando a D3 sia ancora quella giusta.
+- Da smaltire: **niente**. Sul nome non restava nulla di aperto. Restava aperta **D3** di
+  ADR-0003 (il test di laboratorio dentro o fuori `ci`), che è una decisione e non una
+  divergenza: si è chiusa lo stesso giorno, con la misura di variabilità sul runner
+  (5 esecuzioni sullo stesso SHA, scarto massimo 44 ms su una soglia di 2500 ms), e il
+  campo `$lettura_ci` è stato riletto e aggiornato di conseguenza — adesso dice che il
+  comando del test **è** un passo del job `ci`, invece di rimandare a una domanda aperta.
+  Verifica, come sopra: 24 chiavi prima, 24 dopo, una sola con valore diverso.

@@ -1,0 +1,16 @@
+{
+  "ts": "2026-09-21T15:44:02+02:00",
+  "agente": "devops",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Quattro passi legati a site/ aggiunti dopo il blocco site/, prima di api/: tests/ci resta verde",
+  "contesto": "Aggiunti in coda al blocco site/ (dopo 'site/ — astro check', prima di '--- api/'): installazione del progetto di collaudo alla radice (pnpm install --frozen-lockfile, forma piena, nessun working-directory: site), Playwright Chromium (pnpm exec playwright install --with-deps chromium), test di accettazione (pnpm test:e2e) e misura di laboratorio (pnpm test:perf), tutti e quattro con if: steps.rilevamento.outputs.site == 'presente'.",
+  "evidenza": [
+    "$ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.311s / OK",
+    "il selettore _site_step (D9) non ha trovato collisioni: nessuno dei quattro passi nuovi porta working-directory: site, quindi test_ac06_ac07_site_steps.py continua a trovare esattamente un match per ciascuno dei quattro predicati di site/"
+  ],
+  "esito": "verde dopo la modifica; nessun ritorno ad @architect necessario",
+  "umano_coinvolto": false
+}

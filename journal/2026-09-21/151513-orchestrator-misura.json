@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-21T15:15:13+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Base locale prima di toccare ci: 252 test verdi in 20,8 s, job ci a 19 s",
+  "contesto": "Prima di proporre che ci esegua il collaudo serve sapere due cose che nessuno aveva misurato: (a) se la suite e' verde su main oggi — un contesto richiesto e permanentemente rosso blocca i merge quanto uno che non riporta; (b) quanto dura oggi il job, per poter dire di quanto cresce.",
+  "evidenza": [
+    "worktree .claude/worktrees/l12 su lotto/l12-ci-accettazione-e-laboratorio, staccato da origin/main 8135bff",
+    "$ cd site && pnpm install --frozen-lockfile  ->  Done in 170ms using pnpm v12.4.1",
+    "$ pnpm install --frozen-lockfile (radice)    ->  Done in 86ms using pnpm v12.4.1",
+    "$ pnpm exec playwright test                   ->  252 passed (20.8s); real 0m21.309s; exit=0  (inizio 2026-09-21T15:13:53+02:00, fine 2026-09-21T15:14:14+02:00)",
+    "il tempo comprende il webServer, cioe' pnpm --dir site build e astro preview su porta chiesta al sistema operativo",
+    "misura di laboratorio AC39, per pagina, dal log: Home 6.1s, SaaS 6.1s (8 pagine, 5 esecuzioni ciascuna)",
+    "durata attuale del job ci su main, run 35603251219 (push, 2026-09-21): startedAt 13:04:16Z, completedAt 13:04:35Z  ->  19 s",
+    "$ cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'  ->  Ran 55 tests in 0.315s / OK"
+  ],
+  "cosa_dice_la_misura": "La suite e' verde e costa circa 21 s di orologio in locale, non minuti: l'ipotesi «mettere il collaudo dentro ci lo fa diventare lento» non regge in locale. Resta da misurare sul runner, che e' piu' lento e dove va aggiunto il download di Chromium. La durata del job passa da 19 s a un numero che non conosco: si misura, non si stima.",
+  "esito": "via libera a misurare sul runner con una PR di prova (gate D3)",
+  "umano_coinvolto": false
+}

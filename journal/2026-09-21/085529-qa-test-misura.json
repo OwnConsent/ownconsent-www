@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-21T08:55:29+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Prova-by-reversion della correzione N2: tolto il recapito dall'informativa, diventano rossi i due test dell'informativa e nessun altro",
+  "contesto": "La correzione toglie l'asserzione di esistenza del mailto: dove nessun criterio lo impone. Va provato che non e' un indebolimento: dove il recapito e' imposto, il test deve ancora accorgersi della sua sparizione.",
+  "evidenza": [
+    "prima della correzione: $ npx playwright test 'l08/e2e/n2-' --reporter=list -> 4 failed (termini-di-servizio e cookie-policy, nei due cicli), 9 passed",
+    "dopo la correzione, prodotto intatto: $ npx playwright test 'l08/e2e/n2-' --reporter=list -> 13 passed (10.5s), EXIT=0",
+    "guasto temporaneo del PRODOTTO: $ sed -i 's/e {{recapito}}: e l/e quello pubblicato dal sito: e l/' site/src/content/legale/informativa-privacy.md (il segnaposto {{recapito}} e' cio' che rende il mailto:)",
+    "con il prodotto guasto: $ npx playwright test 'l08/e2e/n2-' --reporter=list -> 2 failed, 11 passed, EXIT=1; i due rossi sono «N3 impone un link mailto: su /legale/informativa-privacy/» (riga 129, primo ciclo) e «... anche sulla copia» (riga 190, secondo ciclo); termini-di-servizio, cookie-policy, saas, hosted, on-premise restano verdi",
+    "ripristino: $ cp <backup> site/src/content/legale/informativa-privacy.md ; $ git status --short site/src/content/legale/informativa-privacy.md -> nessuna riga (pulito)"
+  ],
+  "esito": "la correzione non indebolisce: l'asserzione di esistenza resta viva e sensibile esattamente sulle quattro pagine dove un criterio la impone",
+  "umano_coinvolto": false
+}

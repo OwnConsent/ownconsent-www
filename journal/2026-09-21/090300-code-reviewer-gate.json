@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T09:03:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "L08 tocca e2e/, che il piano gli vieta: la deroga e' di Andrea e va scritta, non data per scontata",
+  "contesto": "docs/plan/issue-8.json, lotto L08, campo non_tocca: «site/**, e2e/**, tests/**: i finding si scrivono, non si correggono (i rientri sono L14 e L15)». Il mandato di questo giro chiede invece di correggere i test rossi dove sbaglia il test. Le due cose si contraddicono: o si ignora il piano in silenzio, o si registra chi ha derogato e perche'.",
+  "chi_ha_deciso": "Andrea, nel mandato di apertura di questo giro (decisione del 20/09 sui quattro rossi di N2, e istruzione esplicita «se sbaglia il test si corregge il test» per i tre di AC4)",
+  "cosa_serviva": "che la deroga fosse esplicita e limitata: L08 modifica e2e/ e soltanto e2e/. site/ e tests/ restano intatti, i finding su site/ si scrivono e basta, i rientri restano L14 e L15.",
+  "evidenza": [
+    "$ git diff --name-only origin/main...HEAD (a fine lotto) deve mostrare solo e2e/ e journal/",
+    "il piano resta com'e': non lo si riscrive per farlo concordare con una deroga puntuale, altrimenti la prossima volta la deroga sembrera' la regola"
+  ],
+  "esito": "deroga registrata e applicata nei limiti detti. Se qualcuno, leggendo il piano, trovera' in questa PR una modifica a e2e/ che il piano vieta, questa voce gli dice chi l'ha autorizzata.",
+  "umano_coinvolto": true
+}

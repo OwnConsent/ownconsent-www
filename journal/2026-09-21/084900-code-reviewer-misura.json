@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T08:49:00+02:00",
+  "agente": "code-reviewer",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "I sette rossi si riproducono in un albero pulito: 7 falliti, 245 passati, EXIT=1",
+  "contesto": "Prima di giudicare i sette rossi lasciati da L07 si verifica che esistano ancora, su origin/main aggiornato (8288e81) e in una worktree nuova con le dipendenze installate da lockfile. Se il numero non si riproduce, il triage sarebbe stato fatto su una misura di qualcun altro.",
+  "evidenza": [
+    "$ npx playwright test --reporter=list -> 7 failed, 245 passed (42.3s), EXIT=1",
+    "3 su e2e/ac04-confronto-tre-modalita.spec.ts: riga 59 (sezione dedicata, Expected: > 30 Received: 0), riga 73 (Hosted: taglia di CPU, Expected: true Received: false), riga 89 (SaaS: OwnConsent registra la CMP, Expected: true Received: false)",
+    "4 su e2e/n2-indirizzo-unico-e-sostituibile.spec.ts, tutti sulla stessa asserzione (riga 102 e riga 155, 'almeno un link mailto:', Expected: > 0 Received: 0): /legale/termini-di-servizio/ e /legale/cookie-policy/, prima e dopo la sostituzione dell'indirizzo",
+    "il quarto test di AC4 (riga 116, la riga «come si attiva» con tre celle «Scrivici») passa: il difetto non e' nella tabella"
+  ],
+  "esito": "misura confermata, identica a quella del journal di L07 del 20/09 (7 falliti, 245 passati). Il triage parte da qui.",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-21T08:56:13+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "AC4 si legge sulla struttura della tabella, non sulla prossimita' nel testo della pagina",
+  "contesto": "Tre dei sette rossi vengono da e2e/ac04-confronto-tre-modalita.spec.ts, che leggeva /confronto/ come prosa mentre AC4 punto (4) prescrive una tabella («una sola riga della tabella, con una cella per modalita'»). Due difetti misurati: testoSezione() cercava un h1..h4 il cui testo fosse esattamente il nome della modalita', intestazioni che la pagina non ha e non deve avere (rese_del_testo/AC4: il testo non e' prescritto, renderlo vincolante «sarebbe aggiungere un requisito»); vicini() lavorava su $('main').text(), che incolla le celle senza separatore, per cui l'HTML servito contiene «...taglia di disco, memoria e CPULicenza annuale...» e «...OwnConsentIn definizione...» e le regex con \\b su cpu e ownconsent non corrispondono.",
+  "alternative": [
+    {
+      "opzione": "aggiungere separatori nella lettura del testo (per esempio inserire uno spazio fra le celle) e tenere vicini()",
+      "scartata_perche": "la prossimita' in caratteri su una tabella appiattita per righe non e' il modo in cui una tabella associa una cella alla sua colonna: verrebbe verde per coincidenza e resterebbe fragile a ogni riordino"
+    },
+    {
+      "opzione": "chiedere al prodotto un h2 per modalita' su /confronto/",
+      "scartata_perche": "aggiungerebbe alla spec un requisito di resa che la #8 non esprime; e AC4 (4) parla esplicitamente di righe e celle di una tabella"
+    },
+    {
+      "opzione": "fissare gli indici di colonna a 0/1/2 scritti a mano",
+      "scartata_perche": "renderebbe il test cieco a un riordino delle colonne: l'indice si ricava dall'ordine dei th[scope=col], letto, non presunto"
+    }
+  ],
+  "evidenza": [
+    "$ npx playwright test 'l08/e2e/ac04-' --reporter=list -> 3 failed, 1 passed (il quarto test, quello delle tre celle «Scrivici» nella stessa riga, e' verde: legge gia' la struttura)",
+    "HTML servito di /confronto/: <thead><tr><td class=\"angolo\"></td><th scope=\"col\">SaaS</th><th scope=\"col\">Hosted</th><th scope=\"col\">On-premise</th></tr></thead> e quattro <tr> con th[scope=\"row\"] «Cosa ricevi», «Come paghi», «Chi registra la CMP presso IAB Europe», «Come si attiva»",
+    "docs/spec/issue-8.json rese_del_testo/AC4: «la pagina lo indica per ciascuna modalita'; il testo non e' prescritto»"
+  ],
+  "esito": "applicata: una sola funzione cellaDi($, etichettaRiga, modalita) che trova la tabella dai tre th[scope=col], ricava l'indice di colonna dal loro ordine, trova la riga dal th[scope=row] e restituisce il testo della td a quell'indice, fallendo con un messaggio che dice quale delle quattro cose manca. vicini() e testoSezione() rimosse: niente codice morto.",
+  "umano_coinvolto": false
+}

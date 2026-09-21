@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-21T09:01:27+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Conteggio finale della suite dopo le due correzioni: 252 passed, 0 failed",
+  "contesto": "Verifica di chiusura delle due correzioni (N2 e AC4). Il comando esclude l'albero di sola lettura annidato .claude/worktrees/l08-ro, che playwright.config.ts includerebbe nella scansione e che porta ancora i test precedenti alla correzione.",
+  "evidenza": [
+    "prima: $ npx playwright test --reporter=list -> 7 failed, 245 passed, EXIT=1 (misura della sessione principale, albero senza l08-ro)",
+    "dopo: $ npx playwright test '^(?!.*l08-ro)' --reporter=list -> «Running 252 tests using 8 workers», «252 passed (29.3s)», EXIT=0",
+    "$ npx eslint e2e -> nessun output, EXIT=0",
+    "typecheck: non eseguibile, il progetto di collaudo non ha tsconfig.json ne' @types/node (voce di fallimento dello stesso giro)"
+  ],
+  "esito": "0 rossi e 0 nuovi rossi: nessun test e' stato adattato al risultato, i quattro guasti temporanei al prodotto hanno mostrato che le asserzioni corrette restano sensibili",
+  "umano_coinvolto": false
+}

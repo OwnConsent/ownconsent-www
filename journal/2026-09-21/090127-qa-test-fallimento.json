@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-21T09:01:27+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": "L08",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "Tre cose che non hanno funzionato al primo colpo: la suite conta 504 test, il filtro per percorso, e il typecheck che non esiste",
+  "contesto": "Correzione dei sette rossi di L08 nell'albero di lavoro .claude/worktrees/l08, che contiene al proprio interno l'albero di sola lettura .claude/worktrees/l08-ro.",
+  "evidenza": [
+    "$ npx playwright test --list -> «Total: 504 tests in 48 files», di cui 252 sotto .claude/worktrees/l08-ro/e2e/: playwright.config.ts ha testDir '.' e testMatch 'e2e/**/*.spec.ts', quindi la scansione entra nell'albero annidato e conta due volte ogni test",
+    "$ npx playwright test --reporter=list -> 7 failed, 497 passed, EXIT=1: i sette rossi sono tutti e soli i file dell'albero di sola lettura (3 in l08-ro/e2e/ac04-..., 4 in l08-ro/e2e/n2-...), che porta ancora i test precedenti alla correzione e non va toccato",
+    "$ npx playwright test '^e2e/' --list -> «No tests found»: i filtri posizionali sono regex sul percorso ASSOLUTO, non su quello relativo alla radice del progetto; funziona 'l08/e2e/n2-' oppure '^(?!.*l08-ro)'",
+    "$ npx tsc --noEmit -p . -> «error TS5057: Cannot find a tsconfig.json file at the specified directory: '.'»: il progetto di collaudo alla radice non ha ne' tsconfig.json ne' @types/node fra le devDependencies; compilando i file a mano tutti gli errori sono «Cannot find module 'node:fs'» e simili, nessuno nei due file corretti"
+  ],
+  "cosa_si_e_imparato": "Una worktree annidata dentro un'altra non e' invisibile a chi scansiona per percorso: playwright.config.ts la include nella suite. Finche' l08-ro esiste, il conteggio onesto della suite di questo albero si ottiene con un filtro che la esclude, e i sette rossi residui sono un artefatto dell'albero annidato, non un difetto del prodotto o dei test corretti. Segnalato alla sessione principale: e' una decisione di infrastruttura (ignorare .claude/ in testMatch) che non spetta a questa correzione.",
+  "esito": "aggirato con un filtro esplicito, non corretto: modificare playwright.config.ts o l'albero di sola lettura e' fuori dal mandato di questa correzione",
+  "umano_coinvolto": false
+}

@@ -353,3 +353,38 @@ Chiusura nel contratto (giro R-L01b, commit `d5e8331`):
 Restano aperte due note, che non bloccano il merge di questo ADR:
 - **N3**, come si pesano JS e CSS per pagina. Blocca il confronto sui pesi in L07 e le annotazioni in L05 e L06.
 - **N4**, quanto attendere prima di concludere la lettura del LCP.
+
+## Nota del 2026-09-21 — «la CI di L12» è il job `ci`
+
+Nota datata, non riscrittura: il testo di «Come la CI legge le soglie» qui sopra resta
+com'è. Scritta da @architect nel giro di L12 (issue #8), come ratifica del punto 3 di «Da
+ratificare» di `docs/adr/0003-contesto-ci.md`.
+
+La frase «la CI di L12 esegue quel comando e fallisce quando il test fallisce. Non
+reimplementa il confronto» **resta valida parola per parola**. Cambia solo a che cosa
+rimanda «la CI»: quando questo ADR è stato scritto, il contesto di integrazione non
+esisteva e il piano della issue #8 prevedeva per L12 un workflow proprio,
+`.github/workflows/site-ci.yml`. Quel file non è mai esistito. Il contesto è stato
+costruito dopo, con la PR #26 e ADR-0003, ed è il job `ci` di `.github/workflows/ci.yml`.
+Misura sulla testa di `main` (`8135bff`):
+
+    $ git ls-tree -r --name-only origin/main -- .github/ | grep -c site-ci
+    0
+    $ git show origin/main:.github/workflows/ci.yml | grep -n 'name: ci'
+    19:    name: ci
+
+Il campo `$lettura_ci` di `contracts/perf-budgets.json`, che nominava `site-ci.yml` e
+attribuiva il confronto alla CI, è stato corretto nello stesso giro: vedi la voce **A05**
+di `DESIGN-AMENDMENTS.md` e la ratifica 1 nella sezione datata del 21/09/2026 di ADR-0003.
+Il principio di questo ADR — **un solo comparatore**, il test di L07, e nessun confronto
+reimplementato altrove — è quello che il contratto adesso dice.
+
+**Quello che questa nota non dice.** Non dice che il comando del test è un passo del job
+`ci`. Se il test di laboratorio entri in `ci`, e quindi faccia da gate su ogni pull request,
+o resti fuori, lo decide ADR-0003 D3, che al momento in cui questa nota è scritta è ancora
+**aperta**: aspetta la condizione di misura che questo stesso ADR ha fissato alla riga 71
+(«si riapre se la stessa build supera e rientra nella soglia in esecuzioni consecutive
+della CI»), cioè il test eseguito 5 volte sullo stesso SHA sul runner. In qualunque modo si
+chiuda, il comparatore resta uno solo: è questo il vincolo che vale su L07 e L12.
+
+**Chi la legge**: @devops (L12), @qa-test (L07), @performance.

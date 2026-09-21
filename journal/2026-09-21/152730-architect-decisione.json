@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-21T15:27:30+02:00",
+  "agente": "architect",
+  "issue": "8",
+  "lotto": "L12",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Ratifiche 1-3 eseguite, e la divergenza di perimetro di L12 segnalata invece che assorbita",
+  "contesto": "ADR-0003, «Da ratificare: artefatti esistenti che questo ADR contraddice o sposta, senza modificarli», punti 1, 2 e 3: tutti e tre dichiarano di scadere «al giro di L12».",
+  "alternative": [
+    {
+      "opzione": "riscrivere il corpo degli ADR-0001 e 0002 invece di annotarli in fondo",
+      "scartata_perche": "una decisione presa in una data si legge con il contesto di quella data; riscrivere il corpo cancella la traccia di che cosa si sapeva quando. Il repository e' anche un corso: la correzione e' la parte che vale"
+    },
+    {
+      "opzione": "assorbire in silenzio il fatto che L12 tocchi contratti e ADR, che il piano non prevede",
+      "scartata_perche": "CLAUDE.md: «la divergenza si segnala, non si assorbe in silenzio». Il piano assegna a L12 i soli .github/workflows/ci.yml e journal, e contratti_da_aggiornare e' vuoto"
+    },
+    {
+      "opzione": "dichiarare «due lockfile per la cache» di ADR-0002 semplicemente superato",
+      "scartata_perche": "sarebbe decidere D4 di straforo. La voce e' non adottata perche' oggi non c'e' cache, ma D4 e' aperta: se si chiudera' a favore di una cache, quella riga torna pertinente"
+    }
+  ],
+  "evidenza": [
+    "ratifica 1: $ git ls-tree -r --name-only origin/main -- .github/ | grep -c site-ci -> 0; $ git show origin/main:.github/workflows/ci.yml | grep -n 'name: ci' -> 19:    name: ci; check run sulla testa di main: name «ci», conclusion «success»",
+    "ratifica 1, non regressione del contratto: 24 chiavi prima, 24 dopo, chiavi identiche, una sola con valore diverso ($lettura_ci)",
+    "ratifica 2: $ git show origin/main:.github/workflows/ci.yml | grep -n 'ASTRO_TELEMETRY_DISABLED|env:' -> 21:    env:  24:      ASTRO_TELEMETRY_DISABLED: \"1\"",
+    "ratifica 2: $ git ls-tree -r --name-only origin/main -- pnpm-lock.yaml site/pnpm-lock.yaml -> pnpm-lock.yaml, site/pnpm-lock.yaml (i due lockfile esistono; e' la cache che non c'e')",
+    "ratifica 2: $ git show origin/main:.github/workflows/ci.yml | grep -n -i cache -> package-manager-cache: false, cache: false, skip-cache: true, e un nome di passo; nessun actions/cache"
+  ],
+  "divergenza_di_perimetro": "Il piano assegna a L12 solo .github/workflows/ci.yml e le voci di journal, con contratti_da_aggiornare vuoto. Questo giro tocca contracts/perf-budgets.json, DESIGN-AMENDMENTS.md, i tre ADR e — per mano di @qa-test — tests/ci/test_ac06_ac07_site_steps.py, che il piano elenca fra i non_tocca di L12. E' imposta dagli artefatti in vigore: tutte le scadenze di ADR-0003 cadono sul giro di L12, e D3 dice che senza sezione datata L12 non parte. Registrata nella sezione datata di ADR-0003 e portata all'occhio di Andrea: non e' ratificata.",
+  "esito": "applicate: contracts/perf-budgets.json ($lettura_ci), DESIGN-AMENDMENTS.md (A05), sezione datata in ADR-0002, nota datata in ADR-0001, ratifica 1 registrata nella sezione datata di ADR-0003",
+  "umano_coinvolto": false
+}

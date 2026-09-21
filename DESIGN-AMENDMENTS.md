@@ -128,3 +128,52 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   va riletta lì — è una scelta del collaudo ospitata in un file del sito. Se il sito
   vorrà un `preview` che ripiega, il collaudo dovrà smettere di passare la porta dal di
   fuori, non il contrario.
+
+## A05 — `$lettura_ci` nomina `site-ci.yml`, che non è mai esistito: vale `ci.yml`, job `ci`
+- Data: 21/09/2026
+- Classe: shipped-vince
+- Ratificata da: Andrea — divergenza **D-3** di `docs/plan/issue-8.json`, sezione
+  `divergenze`; eseguita da @architect nel giro di L12 (issue #8)
+
+- Documento dice: `contracts/perf-budgets.json`, campo `$lettura_ci`: «La CI (L12,
+  `.github/workflows/site-ci.yml`) legge le soglie per chiave da questo file **e le
+  confronta** con l'output del test di laboratorio di L07». Due affermazioni, entrambe
+  superate: il nome del workflow e un confronto fatto dalla CI.
+- Prodotto fa: il contesto che blocca le PR è il job `ci` di `.github/workflows/ci.yml`,
+  costruito dopo il contratto con la PR #26 e ADR-0003. Nessun `site-ci.yml` è mai
+  esistito. E il confronto lo fa **un solo comparatore**, il test di L07, non la CI
+  (ADR-0001, «Come la CI legge le soglie»).
+- Misura, sulla testa di `main` (`8135bff`), letta con un comando e non a memoria:
+
+      $ git ls-tree -r --name-only origin/main -- .github/workflows/
+      .github/workflows/ci.yml
+      .github/workflows/claude-nightly-maintenance.yml
+      .github/workflows/claude-pr-review.yml
+      .github/workflows/claude-release-comms.yml
+
+      $ git ls-tree -r --name-only origin/main -- .github/ | grep -c site-ci
+      0
+
+      $ git show origin/main:.github/workflows/ci.yml | grep -n '^jobs:\|^  ci:\|name: ci'
+      17:jobs:
+      18:  ci:
+      19:    name: ci
+
+      $ gh api 'repos/OwnConsent/ownconsent-www/commits/8135bff…/check-runs?filter=latest' \
+          --jq '[.check_runs[] | {name, app: .app.slug, conclusion}]'
+      [{"app": "github-actions", "conclusion": "success", "name": "ci"}]
+
+- Deciso: vale il prodotto. Il campo `$lettura_ci` è riscritto: nomina `ci.yml` e il job
+  `ci`, dice che il comparatore è uno solo e che la CI non rilegge il file né
+  reimplementa il confronto, e rimanda a ADR-0003 D3 per stabilire se il comando del test
+  sia un passo di `ci`. **Nessuna soglia è stata toccata, nessuna chiave rimossa o
+  rinominata**: 24 chiavi prima, 24 dopo, una sola con valore diverso (`$lettura_ci`),
+  verificato confrontando il file prima e dopo.
+- Nota di proprietà: `contracts/perf-budgets.json` è di @performance
+  (`contracts/README.md`). La modifica è eseguita da @architect come ratifica già decisa
+  (D-3), non come decisione nuova, ed è la strada che ADR-0003 aveva scritto per questo
+  campo («la correzione passa da una sezione di @architect nel giro di L12»).
+- Da smaltire: niente resta aperto sul nome. Resta aperto **D3** di ADR-0003 (il test di
+  laboratorio dentro o fuori `ci`), che è una decisione, non una divergenza, e si chiude
+  con la misura di variabilità sul runner; quando si chiude, questo campo va riletto per
+  verificare che la frase di rimando a D3 sia ancora quella giusta.

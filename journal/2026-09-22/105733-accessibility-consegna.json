@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-22T10:57:33+02:00",
+  "agente": "accessibility",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "consegna",
+  "titolo": "L09 chiuso: 32/32 combinazioni misurate, 2 finding confermati, PR aperta verso main",
+  "contesto": "Lotto di verifica (non correzione): 5 controlli WCAG 2.2 AA da tastiera su 8 pagine x 2 viewport x 2 temi = 32 combinazioni, che AC40/D6/AC37 (automatici, gia' in e2e/) non vedono. Interrotto due volte dal tetto di 20 turni dell'ambiente (non dal tetto di 50 del piano); ripreso sullo stesso compito entrambe le volte per decisione dell'orchestrator, con lo stato messo al sicuro via commit+push ad ogni tappa (b36e0bd, 542c667).",
+  "alternative": [],
+  "evidenza": [
+    "32/32 combinazioni misurate con .work/8/l09/misura.mjs, aggregate in .work/8/l09/risultati-32.json, riassunte con .work/8/l09/analisi.mjs (nessun dump grezzo riletto)",
+    "C1 ordine del focus: 32/32 conformi. C3 nessuna trappola: 32/32 conformi. C5 contrasto anello footer: 96/96 letture conformi (D-2 verificata a runtime, non dedotta)",
+    "C2 focus sempre visibile: 0/32 senza anomalie — anello del link 'Salta al contenuto' tagliato dalla viewport e coperto dall'header su ogni combinazione (finding 1)",
+    "C4 link di salto: su tutte le 32 combinazioni il focus DOM non si sposta mai su <main> (activeElement=BODY, tabindex=null); su 3/8 pagine (confronto, termini-di-servizio, cookie-policy) il Tab successivo atterra nel footer, saltando tutto il contenuto (finding 2)",
+    "2 finding scritti in .work/8/l09/findings-accessibility.json, entrambi con scenario concreto, criterio_wcag e misura (comando+output)",
+    "anteprima fermata: kill del processo astro preview sulla porta 53463 (pid 5337), verificato con ps aux che non e' piu' in ascolto"
+  ],
+  "esito": "PR aperta verso main dal ramo lotto/l09-wcag-tastiera, come da mandato. Rientri (correzione dei 2 finding) sono di L14, non di questo lotto.",
+  "dod_soddisfatta": "si — percorso critico completabile da tastiera su tutte e 8 le pagine (nessuna trappola, ordine di lettura rispettato), contrasto dell'anello verificato nei due temi (footer incluso, D-2). Due finding di gravita' 'alta' restano aperti (anello del link di salto coperto/tagliato; focus DOM che non raggiunge <main> dal link di salto): non sono correzioni di questo lotto (verifica, non correzione), sono consegnati come finding per L14. Nessuna violazione bloccante nel senso stretto del mandato (impedisce di completare il percorso): il percorso resta completabile, ma i due finding riguardano criteri AA/A espliciti (2.4.11, 2.4.1) e vanno chiusi prima della pubblicazione.",
+  "umano_coinvolto": true
+}

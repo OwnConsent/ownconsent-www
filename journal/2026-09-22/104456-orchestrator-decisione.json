@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-22T10:44:56+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Modello di lavoro di L13 deciso prima di cominciare: un ramo spinto, una worktree, un agente, primo caso /saas/ poi replica",
+  "contesto": "L13 e' un lotto di verifica su HTML servito (8 pagine, title/description/canonical/sitemap/robots/ordine dei titoli). AC2 e AC3 hanno gia' test verdi in e2e/ac02-*.spec.ts e e2e/ac03-*.spec.ts: rifarli non aggiunge informazione. Il valore del lotto sta in cio' che quei test non guardano.",
+  "alternative": [
+    { "opzione": "far lavorare l'agente nella checkout principale", "scartata_perche": "in L12 due agenti sullo stesso indice git si sono mangiati il lavoro; la checkout principale e' di Andrea" },
+    { "opzione": "ramo creato dentro la worktree dall'agente", "scartata_perche": "il ramo deve esistere su origin prima che la worktree si apra, altrimenti l'agente non sa dove spingere e il lotto resta locale" },
+    { "opzione": "scrivere i finding a fine giro", "scartata_perche": "un elenco ricostruito dal risultato perde i casi che non hanno retto; ogni finding si scrive su file appena trovato" },
+    { "opzione": "far correggere all'agente cio' che trova", "scartata_perche": "L13 non tocca site/ (perimetro del piano); le correzioni sono di L14 e di chi possiede quei file" }
+  ],
+  "evidenza": [
+    "git push -u origin lotto/l13-controllo-seo-html-servito -> '* [new branch] lotto/l13-controllo-seo-html-servito'",
+    "git worktree add .claude/worktrees/l13-seo lotto/l13-controllo-seo-html-servito -> 'HEAD is now at 7532799'",
+    "docs/plan/issue-8.json, lotto L13: file = ['journal/2026-09-19/*-seo-*.json'], non_tocca = ['site/**', 'e2e/**']"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

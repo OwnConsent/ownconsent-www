@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-22T11:02:14+02:00",
+  "agente": "seo",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "consegna",
+  "titolo": "L13 chiuso: 3 finding (F01 barra finale, F02 buco AC40 sull'ordine dei titoli, F03 buco AC7 su head/meta), 3 ipotesi smentite, copertura dichiarata sulle 8 pagine + sitemap + robots",
+  "contesto": "Perimetro del piano: journal/2026-09-22/*-seo-*.json, non_tocca site/**, e2e/**. Nessuna correzione applicata: solo misura e registrazione, come da mandato.",
+  "coperto": [
+    "8 pagine servite (curl su http://127.0.0.1:33595, porta letta da .work/8/l13/preview.log): title, meta description, canonical, html lang, ordine dei titoli h1..h6 — un solo metodo (html.parser Python, .work/8/l13/estrai.py) fissato su /saas/ e replicato identico sulle altre 7",
+    "duplicazione nascosta di title/description/canonical (secondo elemento oltre al primo che AC2 legge): verificata assente su tutte e 8, con grep indipendente dal parser",
+    "nona pagina indicizzabile fuori sitemap: verificata assente (8 file html in dist, 8 loc in sitemap, 3 contenuti in site/src/content/legale/ per 3 rotte legali)",
+    "meta robots / X-Robots-Tag come esclusione silenziosa: verificata assente su tutte e 8",
+    "sitemap.xml e robots.txt: 8 loc uguali ai canonical, nessun Disallow",
+    "barra finale: canonical, sitemap e OGNI link interno delle 8 pagine (non a campione, grep completo su tutti gli href) usano sempre la barra; comportamento senza barra misurato su tutte e 8 le rotte (F01)",
+    "AC40 e ordine dei titoli: verificato con l'API di axe-core 4.13.0 che heading-order e page-has-heading-one sono tag best-practice, esclusi dai tag WCAG scelti da AC40 (F02)",
+    "AC7 e il documento servito: verificato che il test legge solo $('body').text(), mai head/meta; la meta description di /saas/ contiene la formula 'registrat* ... IAB Europe' che la stessa regex di AC7 catturerebbe se fosse nel body (F03), con l'ambiguità di merito segnalata e non decisa (CLAUDE.md regola 7)"
+  ],
+  "non_coperto": [
+    "title/description lunghezza (50-60 / 140-160 caratteri): misurata per curiosità (34-63 / 115-195 caratteri sulle 8 pagine) ma NON riportata come finding — nessun artefatto committato la richiede, sarebbe un requisito nuovo aggiunto da un agente",
+    "Open Graph e dati strutturati: esclusi per mandato (non_goal dichiarati della spec)",
+    "riverifica di AC2/AC3 con gli stessi test esistenti: non rieseguiti, si fida del verde dichiarato dal mandato — la copertura di questo lotto è complementare, non sovrapposta",
+    "contenuto sostanziale delle pagine legali (oltre alla formula IAB di /saas/): fuori dal perimetro SEO di L13, già oggetto del rientro L15"
+  ],
+  "dod_soddisfatta": "parziale — verifica completata sul perimetro dichiarato (8 pagine + sitemap + robots, metodo unico replicato, 3 finding con prova comando+output, journal scritto durante il lavoro); nessuna correzione applicata (fuori mandato); PR aperta verso main, in attesa del merge di Andrea",
+  "esito": "lotto chiuso lato @seo",
+  "umano_coinvolto": false
+}

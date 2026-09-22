@@ -1,0 +1,19 @@
+{
+ "ts": "2026-09-22T10:55:39+02:00",
+ "tipo": "fallimento",
+ "agente": "design",
+ "lotto": "L10",
+ "issue": "8",
+ "titolo": "La misura del primo caso ha guardato nel posto sbagliato: le media query di breakpoint ESISTONO, inlinate nell'HTML",
+ "cosa_dicevo": "Il primo caso (finding D02, campo causa_comune) afferma: «Nel CSS servito non esiste NESSUNA media query di breakpoint: l'unica e' prefers-color-scheme... il visitor di Lightning CSS e' montato ma nessun componente lo usa». La misura a sostegno era: grep -o \"@media[^{]*{\" site/dist/_astro/*.css | sort | uniq -c -> 1 @media (prefers-color-scheme:dark){",
+ "perche_era_sbagliata": "Il grep guardava solo i fogli di stile esterni. Astro inlina nell'HTML gli stili con scope di componente sotto una certa soglia — e' lo stesso fatto che il finding F11... no, F16 di L08 registra per il budget del CSS («lo stile che Astro inlina nell'HTML: oggi da 212 a 845 byte gzip per pagina restano fuori dalla misura»). Le regole di breakpoint dei componenti stanno tutte li'.",
+ "misura_corretta": {
+  "comando_a": "grep -o \"@media[^{]*{\" site/dist/_astro/*.css | sort | uniq -c",
+  "output_a": "1 @media (prefers-color-scheme:dark){",
+  "comando_b": "grep -roh \"@media[^{]*{\" site/dist --include=*.html | sort | uniq -c",
+  "output_b": "2 @media (min-width:1280px){ ; 8 @media (min-width:768px){",
+  "dove": "site/dist/index.html (.griglia-modalita: 2 colonne da 768px, 3 da 1280px); site/dist/saas|hosted|on-premise/index.html (.riga: flex-direction row da 768px; .blocco-chiusura: row + space-between da 768px, .azione width fit-content); site/dist/confronto/index.html (.riga da 768px; da 1280px la tabella torna display:table, thead clip-path:none, td::before content:none). Le tre pagine legali non contengono nessuna media query: non hanno componenti con breakpoint."
+ },
+ "conseguenza": "768px e 1280px sono breakpoint.md e breakpoint.lg di contracts/design-tokens.json: il meccanismo di ADR-0004 e' effettivamente in uso. Il fatto di D02 resta vero (h1 e' 36px anche a 1280 e font-size.700 non e' usato da nessuna regola), ma la sua spiegazione («nessun componente usa i breakpoint») non regge: i componenti che li usano sono cinque. Non riscrivo D02, che non e' mio: lo segnalo qui e lo ripeto nella consegna, perche' chi lo legge non prenda per buona la parte sbagliata.",
+ "effetto_sul_mio_lavoro": "Ogni prescrizione responsive va misurata sul reso: non posso piu' dedurre «non c'e' il breakpoint, quindi la resa desktop manca». Alcune ci sono (tabella, blocco di chiusura, griglia delle carte), altre no (h1, intestazione, pie' di pagina)."
+}

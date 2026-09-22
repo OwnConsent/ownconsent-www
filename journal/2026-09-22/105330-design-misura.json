@@ -1,0 +1,13 @@
+{
+ "ts": "2026-09-22T10:53:49+02:00",
+ "tipo": "misura",
+ "agente": "design",
+ "lotto": "L10",
+ "issue": "8",
+ "titolo": "Le sette pagine restanti misurate in un giro solo, con la stessa sonda della Home",
+ "comando": "for x in \"saas /saas/\" \"hosted /hosted/\" \"onpremise /on-premise/\" \"confronto /confronto/\" \"termini /legale/termini-di-servizio/\" \"privacy /legale/informativa-privacy/\" \"cookie /legale/cookie-policy/\"; do set -- $x; node .work/8/l10/misura.mjs http://localhost:4321 \"$1\" \"$2\"; done",
+ "output": "sette righe, ciascuna «<slug>: 360x640-light, 360x640-dark, 1280x800-light, 1280x800-dark -> .work/8/l10/evidenza». 28 file di evidenza + 42 schermate. Tutte le risposte HTTP 200 sull'URL con barra finale (nessun redirect): /saas/, /hosted/, /on-premise/, /confronto/, /legale/termini-di-servizio/, /legale/informativa-privacy/, /legale/cookie-policy/.",
+ "anteprima": "curl -s -o /dev/null -w '%{http_code}' http://localhost:4321/ -> 200. Porta letta da .work/8/l10/anteprima.log: «Preview server running at http://localhost:4321 (pid 3675)», non assunta.",
+ "figli_di_main_contati": "saas 8, hosted 7, onpremise 7, confronto 6, termini 15, privacy 3, cookie 13. Il 3 della pagina privacy e' il primo numero da guardare: le altre due bozze legali hanno 13 e 15 figli diretti di main, questa tre.",
+ "perche": "Misurare tutte e sette prima di confrontare, invece di alternare misura e confronto: cosi' l'evidenza e' scattata contro uno stato unico dell'anteprima e i confronti fra pagine (per esempio quante colonne ha la tabella a 360 e a 1280) sono fatti sugli stessi dati."
+}

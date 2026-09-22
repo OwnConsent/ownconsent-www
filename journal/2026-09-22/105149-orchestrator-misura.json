@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-22T10:51:49+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L10",
+ "stadio": "04-collaudo",
+ "tipo": "misura",
+ "titolo": "Primo caso: la Home misurata alle due viewport. Due differenze, e una causa comune che riguarda tutte e otto le pagine",
+ "contesto": "Il primo caso serve a fissare il metodo, non solo a chiudere una pagina. La sonda apre il documento servito da astro preview, estrae gli stili calcolati e i rettangoli rispetto alla piega, e scatta le schermate. Quello che ha trovato sulla Home dice anche cosa cercare sulle altre sette.",
+ "evidenza": [
+  "$ node .work/8/l10/misura.mjs http://localhost:4321 home / -> home: 360x640-light, 360x640-dark, 1280x800-light, 1280x800-dark",
+  "D01 — a 360x640: h1 bottom=332, lead bottom=542, prima carta top=662 con viewport alta 640. Il documento prescrive «titolo, lead e prima carta visibili senza scorrere»: la carta comincia 22px sotto la piega. Confermato anche a occhio sulla schermata home-360x640-piega.png, dove sotto il lead si vede solo l'h2 «Tre modi di avere OwnConsent»",
+  "D02 — a 1280x800 l'h1 e' 36px, come a 360x640. I token dicono font-size.600 (36px) «h1 sotto il breakpoint md» e font-size.700 (48px) «h1 dal breakpoint md in su»",
+  "causa comune, misurata sul foglio servito: $ grep -o \"@media[^{]*{\" site/dist/_astro/*.css | sort | uniq -c -> «1 @media (prefers-color-scheme:dark){». E' l'unica media query dell'intero CSS: nel prodotto non esiste NESSUNA regola di breakpoint",
+  "il meccanismo per scriverle pero' c'e': site/astro.config.mjs monta creaBreakpointVisitor() (ADR-0004). Non e' «non si puo'», e' «non e' stato fatto»",
+  "$ python3 docs/design/contrast-check.py -> TUTTE LE COPPIE OBBLIGATORIE PASSANO, exit 0; focus ring su inverse (footer) #F0AA2E / #17191C 8.80:1 contro soglia 3.0:1",
+  "anello di focus misurato sul documento servito: footer rgb(240,170,46) = focus-ring-on-inverse, nav rgb(122,75,0) = focus-ring. La divergenza D-2 del piano e' rispettata dal prodotto",
+  "conformi e non piu' da ridiscutere sulla Home: ordine dei figli di main, gerarchia dei titoli senza salti, un solo h1, zero script, zero tabindex positivi, zero bersagli sotto 24x24, zero testo sotto 16px, zero scorrimento orizzontale a entrambe le viewport, tre carte su una riga a 1280 e una per riga a 360"
+ ],
+ "cosa_cercare_nelle_altre": "Ogni prescrizione del documento che dipende da un breakpoint va misurata e non dedotta: contrassegno «in linea» a 1280, CTA a larghezza piena sotto 400px e automatica da md, blocco di chiusura su una riga da md, e soprattutto la tabella di confronto, che il documento vuole a blocchi sotto 400px e a colonne da lg. Senza media query quel doppio comportamento non puo' venire da un breakpoint: o viene da un altro meccanismo, o una delle due rese non c'e'.",
+ "esito": "primo caso chiuso, metodo fissato",
+ "umano_coinvolto": false
+}

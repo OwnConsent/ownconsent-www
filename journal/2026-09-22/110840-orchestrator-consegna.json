@@ -1,0 +1,36 @@
+{
+ "ts": "2026-09-22T11:08:40+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L10",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "L10 chiuso: 8 pagine su 8 confrontate alle due viewport, 7 finding, 6 conformita', 1 finding scartato e 1 misura del primo caso corretta",
+ "contesto": "Il lotto chiedeva l'evidenza documento-contro-prodotto delle 8 pagine a 360x640 e 1280x800, con ogni differenza classificata secondo le tre classi di CLAUDE.md. Non chiedeva correzioni: i finding rientrano in L14 (site/ fuori dalle bozze) e L15 (le tre bozze legali).",
+ "evidenza": [
+  "32 file di evidenza (8 pagine x 2 viewport x 2 temi) e 55 schermate sotto .work/8/l10/, prodotti da un'unica sonda .work/8/l10/misura.mjs: gli stili sono calcolati sul documento servito via HTTP da astro preview, non assunti",
+  "porta dell'anteprima letta dal log e non assunta: «Preview server running at http://localhost:4321 (pid 3675)»",
+  "7 finding (D01..D07) in .work/8/l10/findings-design.json, ciascuno con documento_dice, prodotto_fa, misura (comando e output), scenario concreto e classe proposta",
+  "6 conformita' verificate (C01..C06), scritte con la stessa cura dei difetti: la tabella di confronto ha davvero le due rese prescritte, i contrassegni sono sopra la piega su tutte e quattro le pagine che li portano, i due temi coincidono al byte con i token",
+  "1 finding scartato alla riverifica dall'agente stesso (margine del contrassegno a 1280: il margine chiesto c'e', e' il padding di main, 63+24=87), registrato in journal/2026-09-22/112000-design-fallimento.json e non nel rapporto",
+  "$ python3 docs/design/contrast-check.py -> 36 coppie, TUTTE LE COPPIE OBBLIGATORIE PASSANO, exit 0",
+  "$ git diff --name-only origin/main...HEAD -> solo journal/2026-09-22/: site/, contracts/ e docs/design/ intatti, come un lotto di verifica deve lasciarli"
+ ],
+ "classificazione": "Un solo finding su sette sta dentro la lista chiusa (D02, classe 1). Gli altri sei sono dichiarati fuori-lista, ciascuno con l'esclusione delle tre classi una per una. Non e' una scorciatoia: le tre classi presuppongono che il documento abbia una posizione e che il prodotto sia costruito o in produzione. Qui il caso ricorrente e' un terzo — il documento dice una cosa, il prodotto ne fa un'altra, e nessuno dei due e' evidentemente in torto. Questo lotto lo registra; la decisione e' di Andrea.",
+ "dod_soddisfatta": {
+  "otto_pagine_confrontate": "si, 8 su 8, a 360x640 e 1280x800",
+  "stili_calcolati_dal_documento_servito": "si, via HTTP da astro preview, mai dal sorgente",
+  "schermate": "si, piega e pagina intera per ogni pagina e viewport, piu' l'anello di focus",
+  "ogni_differenza_classificata": "si, con le tre classi di CLAUDE.md o dichiarata fuori-lista con il perche'",
+  "nessuna_divergenza_migliorativa": "si: la tentazione su D07 e' stata scartata e registrata nel journal invece che nel rapporto",
+  "contrasto_dei_contrassegni": "si, calcolato sui colori resi (10.20:1 demo, 9.90:1 bozza, nei due temi) e con docs/design/contrast-check.py",
+  "due_divergenze_note_non_riscoperte": "si: footer a una colonna (A02a) e «Contatti» mancante (F03/L15) citate come note N01 e N02",
+  "niente_correzioni": "si: nessun file di site/ o contracts/ toccato",
+  "journal_durante": "si, sette voci, di cui due di fallimento e una di correzione",
+  "copertura_dichiarata_invece_che_presunta": "si: sei voci in non_guardato, fra cui gli stati hover/active, la fascia 768-1279 e i meta, che sono di L13"
+ },
+ "costo_di_cantiere": "L'agente del lotto ha raggiunto il tetto dei turni (45, tetto_turni del piano) prima di scrivere la propria consegna: due voci di journal erano gia' su disco ma non committate, e la copertura non era compilata. Il filo principale non l'ha ripreso — docs/HANDOFF.md: l'esito sta nell'artefatto, non nell'agente — e ha chiuso leggendo findings-design.json e le voci di journal. L'artefatto ha retto: nulla e' andato perso. Il tetto pero' era stretto per otto pagine.",
+ "cosa_si_e_imparato": "La cosa piu' utile del giro non e' un finding: e' che l'agente ha riverificato la misura che gli era stata data come premessa e l'ha smentita. Se il mandato avesse detto «i breakpoint non ci sono, verifica le conseguenze» invece di «ogni prescrizione responsive va misurata, non dedotta», D07 e C03 non sarebbero esistiti e il rapporto avrebbe portato una falsita' del filo principale, firmata da @design.",
+ "umano_coinvolto": true,
+ "gate_aperto_per_andrea": "Tutti e sette i finding. Sei sono fuori-lista: la lista chiusa delle classi non li copre e la decisione non e' di un agente. In piu': D06 tocca contracts/design-tokens.json (percorso @architect + ADR) e D03 registra una contraddizione interna a docs/design/00-sistema-e-componenti.md."
+}

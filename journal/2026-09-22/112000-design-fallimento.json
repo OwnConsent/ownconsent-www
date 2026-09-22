@@ -1,0 +1,13 @@
+{
+ "ts": "2026-09-22T11:05:56+02:00",
+ "tipo": "fallimento",
+ "agente": "design",
+ "lotto": "L10",
+ "issue": "8",
+ "titolo": "Un finding scartato alla riverifica: il margine del contrassegno a 1280 non e' sbagliato, avevo misurato la cosa sbagliata",
+ "cosa_credevo_di_aver_trovato": "docs/design/00-sistema-e-componenti.md, componente «contrassegno pagina dimostrativa», comportamento «A 1280x800»: «badge in linea, larghezza minima quanto il testo, margine `spacing.6` dal bordo del contenuto». Sul reso il contrassegno ha margin-top 0px e margin-bottom 16px, e left=16 cioe' allineato al bordo sinistro dell'h1. Nessuno dei tre valori e' 24px, che e' spacing.6. Stavo per scriverlo come finding: un token citato per nome dal documento e un valore reso diverso.",
+ "perche_non_regge": "Il margine che il documento chiede c'e', e non e' un margine del contrassegno: e' il padding di <main>. main ha padding-top 24px = spacing.6, e l'intestazione e' alta 63px a 1280: il contrassegno comincia a top=87 = 63+24. Cioe' e' esattamente a spacing.6 dal bordo superiore del contenuto. In orizzontale e' a filo del bordo del contenuto, allineato con l'h1 — che e' la lettura piu' sensata di «dal bordo del contenuto» per un elemento in linea in cima alla pagina, non un rientro aggiuntivo.",
+ "misura_che_lo_scarta": "stili['main'].padding-top = 24px; stili['header.intestazione'].rettangolo.altezza = 63 a 1280x800; stili['main > p.badge'].rettangolo.top = 87. 63 + 24 = 87.",
+ "cosa_imparo": "La frase del documento e' ambigua — «margine spacing.6 dal bordo del contenuto» non dice quale bordo — e io stavo per risolvere l'ambiguita' nel modo che faceva nascere un finding. Un finding che vive solo se si sceglie una fra due letture possibili non e' un finding: e' una lettura. Lo scrivo qui invece che in findings-design.json, come chiede il mandato del lotto.",
+ "resta_vero_che": "la frase e' ambigua. Non e' una divergenza, e' una imprecisione del documento: se qualcuno dovesse riscrivere quel componente da zero leggendo solo quella riga, non saprebbe se il margine va sul contrassegno o sul contenitore. Lo segnalo come nota per una sessione di design, non come finding."
+}

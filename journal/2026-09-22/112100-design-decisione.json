@@ -1,0 +1,12 @@
+{
+ "ts": "2026-09-22T11:05:56+02:00",
+ "tipo": "decisione",
+ "agente": "design",
+ "lotto": "L10",
+ "issue": "8",
+ "titolo": "Cinque finding, tutti classificati «fuori-lista», e perche' non e' una scorciatoia",
+ "decisione": "D03, D04, D05, D06 e D07 portano tutti classe_proposta «fuori-lista». Non e' pigrizia nel classificare: e' che la lista chiusa di CLAUDE.md presuppone qualcosa che qui non c'e'.",
+ "ragionamento": "Le tre classi ammesse sono: (1) funzionalita' non ancora costruita, (2) il documento fallisce un requisito di accessibilita', (3) documento contro meccanismo gia' in produzione. La classe 3 e' fuori gioco per tutti: il sito non e' pubblicato, non esiste un meccanismo in produzione che possa vincere. La classe 1 e' fuori gioco per D03, D04, D06 e D07 perche' in ognuno di quei casi la cosa e' costruita e resa — non c'e' uno stato vuoto da disegnare, c'e' uno stato pieno che non coincide col documento. Per D05 la classe 1 c'e' addirittura in positivo: le bozze legali usano un elenco «Che cosa manca a questa bozza» che e' esattamente lo stato vuoto disegnato bene. La classe 2 e' quella su cui ho dovuto stare piu' attento: nessuno dei cinque fallisce un criterio WCAG. D06 sembrava il caso (un bersaglio alto 17px) ma WCAG 2.5.8 esenta esplicitamente il bersaglio in linea dentro una frase: non e' il prodotto a violare la norma, e' contracts/design-tokens.json a dichiarare un invariante assoluto che il prodotto non mantiene. Chiamarlo «accessibilita'» sarebbe stato comodo e falso.",
+ "cosa_resta_a_chi_decide": "«fuori-lista» non e' un verdetto: e' la dichiarazione che la lista chiusa non copre il caso e che percio' la decisione e' di Andrea, come il mandato del lotto prescrive. Per ciascuno dei cinque ho scritto il campo perche_fuori_lista con l'esclusione di ognuna delle tre classi, una per una, invece di dire genericamente che non rientrano.",
+ "tentazione_scartata": "Su D07 (l'elenco del listino senza spec di componente) la tentazione era proporre un valore: una larghezza massima, un punto di guida, un allineamento diverso. Non l'ho fatto. «Migliorativo non e' una classe» e un lotto di verifica che propone soluzioni smette di essere una verifica. Ho misurato la distanza fra etichetta e valore — 1052px — e mi sono fermato li'."
+}

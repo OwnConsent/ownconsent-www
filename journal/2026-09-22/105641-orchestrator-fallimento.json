@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-22T10:56:41+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "L'agente @seo ha esaurito il tetto di turni avendo misurato tutto e scritto niente: nessun finding su file, nessuna voce di journal, nessun commit",
+  "contesto": "Il brief diceva «ogni finding si scrive su file appena trovato» e «committa le voci man mano». L'agente ha invece completato l'intera raccolta delle misure prima di scrivere la prima riga, ed e' finito il budget con il materiale solo in .work/ (scratch, gitignored) e l'indice pulito.",
+  "cosa_si_e_imparato": "Dire «scrivi durante» nel brief non basta: l'istruzione compete con la pulsione a completare la misura, e la misura vince. La prossima volta il brief va ordinato come una sequenza con un punto di consegna intermedio obbligatorio — primo caso misurato, finding del primo caso scritto e committato, POI le altre sette rotte — invece di enunciare la regola e lasciare all'agente l'ordine delle operazioni. La perdita qui e' stata contenuta perche' .work/ e' sopravvissuto nella worktree; se il giro fosse stato in una worktree usa-e-getta, 570 secondi di misure sarebbero spariti.",
+  "evidenza": [
+    "git log --oneline main..HEAD -> una sola riga, cceb72b, la voce dell'orchestrator: nessun commit dell'agente",
+    "ls journal/2026-09-22/ -> solo 104456-orchestrator-decisione.json",
+    "ls .work/8/findings-seo.json -> assente",
+    "find .work/8/l13 -type f | wc -l -> 30 file di misura presenti (8 pagine + sitemap + robots, corpi e header, estratti, misura della barra finale)",
+    "tail .work/8/l13/preview.log -> '{\"message\":\" astro  v7.3.3 ready in 22 ms\\n┃ Local    http://127.0.0.1:33595/\"...}': la porta e' stata letta dal log come prescritto"
+  ],
+  "esito": "l'agente viene ripreso sullo stesso materiale, con l'ordine delle operazioni invertito: prima si scrive, poi si misura ancora"
+}

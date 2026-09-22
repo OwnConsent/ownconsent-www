@@ -1,0 +1,16 @@
+{
+ "ts": "2026-09-22T11:08:07+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L10",
+ "stadio": "04-collaudo",
+ "tipo": "correzione",
+ "corregge": "2026-09-22/105149-orchestrator-misura.json (e il campo causa_comune del finding D02)",
+ "titolo": "La misura del primo caso guardava solo i fogli esterni: le media query di breakpoint ci sono, inlinate nell'HTML",
+ "cosa_era_sbagliato": "Avevo scritto, con il comando a sostegno, che «nel prodotto non esiste NESSUNA regola di breakpoint» e che il visitor di ADR-0004 era montato ma inutilizzato. Il comando era «grep -o \"@media[^{]*{\" site/dist/_astro/*.css»: guarda i fogli di stile esterni e non gli stili con scope di componente, che Astro inlina dentro l'HTML.",
+ "come_lo_so": "@design l'ha riverificata invece di darla per buona, e ha rifatto la misura nel posto giusto: «$ grep -roh \"@media[^{]*{\" site/dist --include=*.html | sort | uniq -c» -> «2 @media (min-width:1280px){», «8 @media (min-width:768px){». Rifatta anche dal filo principale con lo stesso comando e lo stesso output. 768 e 1280 sono breakpoint.md e breakpoint.lg.",
+ "cosa_resta_vero": "Il fatto del finding D02 non cambia: h1 a 36px a entrambe le viewport, e «grep -roh \"font-size:var(--font-size-700)\" site/dist | wc -l» -> 0. Cambia la spiegazione. Il finding porta ora un campo «correzione» accanto al testo sbagliato, che resta leggibile.",
+ "cosa_si_e_imparato": "Il difetto non e' stato grep: e' stato fermarsi al primo posto dove la risposta poteva stare. «Misura, non dedurre» non finisce quando un comando stampa qualcosa: finisce quando si e' guardato dove la cosa cercata potrebbe essere, e qui l'inlining degli stili era gia' registrato nel repository — e' il finding F16 di L08, che lo nomina per il budget del CSS. La parte che ha retto e' il metodo di cantiere, non la mia misura: aver detto all'agente «ogni prescrizione responsive va misurata, non dedotta» ha prodotto proprio la riverifica che ha smentito chi gliel'aveva detto.",
+ "esito": "la voce superata resta, questa la corregge",
+ "umano_coinvolto": false
+}

@@ -1,0 +1,13 @@
+{
+  "ts": "2026-09-22T11:01:24+02:00",
+  "agente": "seo",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Tre ipotesi di 'punto cieco' di AC2/AC3 non hanno retto alla misura: nessun secondo title/description/canonical, nessuna nona pagina orfana, nessun X-Robots-Tag/meta robots",
+  "contesto": "Il mandato indicava tre direzioni da confermare o smentire, non da dare per vere: (1) un secondo elemento title/description/canonical che il test (che legge solo il primo con cheerio) non vedrebbe; (2) una nona pagina HTML indicizzabile emessa dalla build ma assente dalla sitemap attesa; (3) un meta robots=noindex o un header X-Robots-Tag che escluderebbe una pagina senza toccare le righe Disallow di robots.txt.",
+  "cosa_si_e_imparato": "Nessuna delle tre regge sul prodotto attuale. (1) grep -o su tag distinti (title/meta description/canonical/html lang/h1) sulle 8 pagine servite: conteggio 1 su tutte, tutte e otto le volte — non solo con il parser Python ma anche con grep indipendente, per escludere un bug del mio stesso parser. (2) find site/dist -name '*.html' restituisce esattamente 8 file, uno per rotta di sitemap.xml, nessuno in più; site/src/pages/legale/[slug].astro genera le pagine da getCollection('legale') e site/src/content/legale/ ha esattamente 3 file .md, uno per rotta legale — non c'è una quarta voce che genererebbe una pagina orfana. (3) nessuna delle 8 risposte HTTP porta X-Robots-Tag negli header salvati, e robots_meta è [] su tutte e 8 nell'estrazione: nessun <meta name=\"robots\"> nell'HTML servito. Il valore di queste tre misure è documentare la copertura reale, non solo quella dichiarata: senza rifarle non avrei potuto scrivere nella consegna 'controllato e non trovato' invece di 'non controllato'.",
+  "esito": "ipotesi smentite, nessun finding da queste tre direzioni",
+  "umano_coinvolto": false
+}

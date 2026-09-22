@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-22T11:00:44+02:00",
+  "agente": "seo",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Le 8 pagine servite hanno esattamente un title, una description, un canonical, un lang=it e headings senza salti; sitemap.xml e robots.txt coerenti; solo /saas/ porta nella description la formula che AC7 vieta",
+  "contesto": "Ipotesi da confermare o smentire prima di dichiarare copertura: (1) un secondo title/description/canonical nascosto in una pagina; (2) una nona pagina indicizzabile non elencata in sitemap; (3) un meta robots/X-Robots-Tag che esclude una pagina senza toccare robots.txt; (4) l'ordine dei titoli, non coperto da AC2/AC3.",
+  "evidenza": [
+    "$ for f in home saas hosted on-premise confronto termini privacy cookie; do grep -o '<title' / 'meta name=\"description\"' / 'rel=\"canonical\"' / '<html[^>]*lang=' / '<h1' .work/8/l13/html/${f}.html | wc -l; done -> title=1 description=1 canonical=1 lang-attr=1 h1=1 su tutte e 8 le pagine, nessuna eccezione",
+    "$ find site/dist -type f -name '*.html' | sort -> esattamente 8 file (confronto, hosted, index, legale/{cookie-policy,informativa-privacy,termini-di-servizio}, on-premise, saas): stesso numero e stessi percorsi delle 8 rotte di sitemap.xml, nessuna pagina indicizzabile in più",
+    "$ cat .work/8/l13/html/sitemap.xml -> 8 <loc> uguali (stringa per stringa) ai canonical letti dagli 8 estratti; $ cat .work/8/l13/html/robots.txt -> 'User-agent: * / Allow: /' + riga Sitemap, nessun Disallow",
+    "$ cat .work/8/l13/headers/{home,saas,hosted,on-premise,confronto,termini,privacy,cookie}.txt -> nessuna con header X-Robots-Tag; python3 .work/8/l13/estrai.py su tutte e 8 -> robots_meta: [] su tutte, nessun <meta name=\"robots\"> in nessuna pagina",
+    "ordine titoli (livelli, da estratto-*.json): / -> [1,2,3,3,3,2]; /saas/ -> [1,2,2,2,2,2]; /hosted/ -> [1,2,2,2,2]; /on-premise/ -> [1,2,2,2,2]; /confronto/ -> [1,2,3,3,3,2]; /legale/termini-di-servizio/ -> [1,2,2,2,2,2]; /legale/informativa-privacy/ -> [1,2,2,2,2,2]; /legale/cookie-policy/ -> [1,2,2,2,2]; un solo h1 per pagina, nessun salto di livello su nessuna delle 8",
+    "$ node -e \"require('axe-core').getRules(['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']).map(r=>r.ruleId)\" (axe-core 4.13.0) non include 'heading-order' né 'page-has-heading-one' (entrambe tag ['cat.semantics','best-practice']): e2e/ac40-wcag-a-aa.spec.ts (TAG_WCAG_A_AA riga 29) non le esercita mai, quindi AC40 non copre l'ordine dei titoli (finding F02)",
+    "python3 su .work/8/l13/estratto-*.json -> descriptions[0] per pagina: solo /saas/ contiene 'IAB Europe' insieme a una forma di 'registrat*' ('CMP registrata da OwnConsent presso IAB Europe'); /on-premise/ ha 'registri tu la CMP presso IAB Europe a tuo nome' (verbo 'registri', non 'registrat*'); le altre 6 non menzionano 'IAB Europe' vicino a registrat/certificat/approvat",
+    "grep -n \"body\" e2e/ac07-nessuna-registrazione-iab.spec.ts -> riga 32: 'const testo = $(\\'body\\').text()...', nessuna lettura di head/title/meta/canonical: la formula di /saas/ (site/src/pages/saas.astro riga 14) non è mai sotto il controllo del test AC7 perché vive in <meta name=\"description\">, non nel body (finding F03)"
+  ],
+  "esito": "misurato",
+  "umano_coinvolto": false
+}

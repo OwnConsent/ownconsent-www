@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-22T10:59:28+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "correzione",
+  "corregge": "2026-09-22/105733-accessibility-consegna.json",
+  "titolo": "Il pid dell'anteprima nella voce di consegna e' sbagliato, e «verificato con ps aux che non e' piu' in ascolto» e' una conclusione, non una misura",
+  "cosa_era_sbagliato": "L'ultima riga di «evidenza» dice: «anteprima fermata: kill del processo astro preview sulla porta 53463 (pid 5337), verificato con ps aux che non e' piu' in ascolto». Due difetti. (1) Il pid e' 5271, non 5337: il file che lo registra, .work/8/l09/anteprima.pid, contiene «pid: 5271». (2) ps aux elenca processi, non socket in ascolto: da ps non si puo' concludere «non e' piu' in ascolto». La sostanza regge — l'anteprima di L09 e' davvero spenta — ma la frase e' proprio il difetto che CLAUDE.md nomina: riportare la conclusione invece del comando e del suo output.",
+  "come_lo_so": "Verificato dalla worktree di L09 dopo la consegna. `cat .work/8/l09/anteprima.pid` stampa «pid: 5271». `ss -ltnp | grep 53463` non stampa nulla: nessun listener su quella porta. `ps aux | grep '[a]stro preview'` stampa una riga sola, un processo avviato con --port 0, e la lettura del suo cwd via /proc lo colloca nella worktree del lotto L13, non in questa: e' l'anteprima di un altro lotto e da qui non si tocca.",
+  "evidenza": [
+    "ss -ltnp: 127.0.0.1:53463 assente; presenti 127.0.0.1:4321 (node pid 3675) e 127.0.0.1:33595 (node pid 7078, anteprima del lotto L13)",
+    "un'anteprima altrui occupava la porta 4321 mentre L09 misurava: e' la ragione per cui la porta si chiede al sistema operativo e si rilegge dal log invece di scrivere 4321 a mano"
+  ],
+  "esito": "la voce di consegna resta dov'e', questa la corregge; nessuna conseguenza sui due finding, verificati a parte sui dati grezzi"
+}

@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-22T10:52:15+02:00",
+  "agente": "accessibility",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Primo caso (Home, 360x640, chiaro): due difetti dello strumento, trovati leggendo l'output riga per riga come chiede il mandato, confermati anche dall'orchestrator sullo stesso file",
+  "contesto": "Prima passata di .work/8/l09/misura.mjs su Home/360x640/chiaro, scritta in .work/8/l09/prova-primo-caso.json. Il mandato chiede di convincersi che ogni campo misuri quello che si crede prima di replicare su 32 combinazioni: la lettura riga per riga ha trovato due difetti dello strumento, non del sito.",
+  "alternative": [],
+  "evidenza": [
+    "difetto 1 — stato condiviso fra controlli: misuraOrdineEFocusVisibile() partiva dalla stessa pagina lasciata da verificaSkipLink() (che aveva premuto Invio sul link di salto, spostando scroll e il punto di partenza della navigazione sequenziale dentro <main>), senza una page.goto() nuova in mezzo. Risultato misurato: numeroFocalizzabili=14 ma ordineFocus.sequenzaTab ha solo 6 voci, idx da 8 a 13 — gli 8 elementi precedenti (header, link di salto compresi) non sono mai stati visti dal Tab in questa passata. divergenzaDom=true e divergenzaVisivo=true erano quindi confronti fra una sequenza di 6 elementi e una di 14: falsi, non un finding sull'ordine di lettura.",
+      "difetto 2 — indice perso dopo una navigazione fresca: misuraTrappola() fa una propria page.goto() (corretto, isola lo stato) ma non richiama prepara() dopo, che e' la funzione che scrive l'attributo data-l09-idx usato da descrittoreElemento() per identificare l'elemento attivo. Risultato misurato: trappola.giro1 e trappola.giro2 sono array di 14 valori tutti null; stessiElementi=true e indietroEInverso=true risultavano veri per costruzione (null===null), non perche' la sequenza sia stata davvero confrontata: il controllo 3 (trappola da tastiera) oggi non misura nulla.",
+    "correzione applicata: ogni page.goto() dentro una sotto-misura e' ora seguita da una chiamata a prepara(page) prima di leggere qualunque idx; misuraOrdineEFocusVisibile() ha una propria page.goto() pulita invece di ereditare lo stato di verificaSkipLink()"
+  ],
+  "cosa_si_e_imparato": "In una passata che incatena piu' controlli sullo stesso oggetto page, lo stato (scroll, punto di partenza della navigazione sequenziale, attributi temporanei scritti da prepara()) non e' implicito: va azzerato esplicitamente prima di ogni sotto-misura con un caricamento pulito, e ogni attributo scritto per identificare gli elementi va riscritto dopo ogni nuova navigazione, non solo la prima volta. Un controllo che produce array di null o sequenze piu' corte del numero di elementi dichiarati non e' un dato scarso: e' un segnale che lo strumento sta leggendo uno stato sbagliato, da fermare subito (come da CLAUDE.md, 'ti fermi se la misura contraddice la descrizione') prima di generare le altre 31 combinazioni con lo stesso difetto.",
+  "esito": "corretto in misura.mjs prima di rieseguire il primo caso",
+  "umano_coinvolto": true
+}

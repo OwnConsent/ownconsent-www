@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-22T10:52:05+02:00",
+  "agente": "accessibility",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Porta dell'anteprima presa dal sistema operativo, letta dal log, identita' del server verificata prima di misurare",
+  "contesto": "Il mandato vieta una porta scritta a mano (rischio di misurare l'anteprima di un'altra worktree, gia' successo nella #42).",
+  "alternative": [],
+  "evidenza": [
+    "comando: python3 -c \"import socket; s=socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.bind(('127.0.0.1', 0)); print(s.getsockname()[1]); s.close()\" -> output: 53463",
+    "comando: nohup pnpm --dir site preview --host 127.0.0.1 --port 53463 --ignore-lock > .work/8/l09/anteprima.log 2>&1 & -> pid 5271",
+    "output di .work/8/l09/anteprima.log: {\"message\":\" astro  v7.3.3 ready in 19 ms\\n┃ Local    http://127.0.0.1:53463/\",...} — la porta in ascolto e' 53463, la stessa presa dal bind, confermata dal log e non assunta",
+    "comando: curl -s -i http://127.0.0.1:53463/robots.txt -> Sitemap: https://segnaposto-dominio-sito.example/sitemap.xml",
+    "comando: cat site/src/dati/sito.json -> \"url\": \"https://segnaposto-dominio-sito.example\" — stesso segnaposto, identita' del server confermata come il build di questa worktree, non quello di un'altra"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

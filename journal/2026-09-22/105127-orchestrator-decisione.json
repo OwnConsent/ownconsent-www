@@ -1,0 +1,33 @@
+{
+ "ts": "2026-09-22T10:51:27+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L10",
+ "stadio": "04-collaudo",
+ "tipo": "decisione",
+ "titolo": "Modello di lavoro di L10 deciso prima di cominciare: un ramo spinto, una worktree, una sonda sola, primo caso validato poi replicato",
+ "contesto": "L10 chiede l'evidenza documento-contro-prodotto delle 8 pagine a 360x640 e 1280x800. Otto pagine per due viewport sono sedici confronti: se il modo di farne uno non e' fissato prima, i sedici non sono confrontabili fra loro e la copertura non si puo' dichiarare.",
+ "alternative": [
+  {
+   "opzione": "un agente per pagina, otto worktree",
+   "scartata_perche": "L12 ha misurato che due agenti sullo stesso indice git si mangiano il lavoro; otto worktree sullo stesso lotto moltiplicano il costo senza dividere il perimetro, che e' uno solo. Il piano dice «un lotto, una worktree, un agente»"
+  },
+  {
+   "opzione": "confronto a occhio pagina per pagina, con schermate e lettura del documento",
+   "scartata_perche": "CLAUDE.md: «stile reso -> si estraggono i computed style dal documento servito via HTTP, non si assumono». Una schermata non dice se l'h1 e' font-size.600 o font-size.700"
+  },
+  {
+   "opzione": "una sonda sola che estrae, e il giudizio separato da chi legge l'evidenza",
+   "scartata_perche": "scelta: la sonda non giudica, cosi' la misura resta rifacibile e il confronto con il documento resta un atto leggibile"
+  }
+ ],
+ "decisione": "Ramo lotto/l10-evidenza-documento-prodotto creato da origin/main e SPINTO su origin prima di aprire la worktree; worktree in .claude/worktrees/l10 su quel ramo; un solo agente @design ci lavora. La sonda .work/8/l10/misura.mjs e' scritta e validata sul primo caso (Home) dal filo principale, poi replicata invariata sulle altre sette pagine. Ogni finding si scrive in .work/8/l10/findings-design.json appena trovato, con python3 nota.py.",
+ "evidenza": [
+  "$ git merge-base --is-ancestor origin/main lotto/l10-evidenza-documento-prodotto -> exit 0 (docs/HANDOFF.md, regola del ramo che discende da origin/main)",
+  "$ git push -u origin lotto/l10-evidenza-documento-prodotto -> * [new branch] lotto/l10-evidenza-documento-prodotto",
+  "anteprima: porta letta dal log, non assunta. $ pnpm preview -> {\"message\":\"Preview server running at http://localhost:4321 (pid 3675)\"}",
+  "$ pnpm build -> 8 page(s) built in 906ms, Complete!"
+ ],
+ "esito": "applicata",
+ "umano_coinvolto": false
+}

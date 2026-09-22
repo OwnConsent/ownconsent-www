@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-22T10:45:01+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Modello di lavoro di L09 fissato prima di cominciare: una passata strumentata, 32 combinazioni, giudizio umano sull'aggregato",
+  "contesto": "L09 verifica WCAG 2.2 AA da tastiera sulle 8 pagine servite. Il perimetro dichiarato da Andrea e': ordine del focus, focus sempre visibile, nessuna trappola, il link «salta al contenuto» (corretto in f7ffc19 / PR #39) che deve portare davvero a <main>, e il contrasto dell'anello di focus nel footer (ADR-0002 D6 con la divergenza D-2 gia' ratificata: dentro <footer> l'anello atteso e' focus-ring-on-inverse). E' un lotto di VERIFICA: si trova e si registra, non si corregge; i finding rientrano in L14.",
+  "alternative": [
+    {
+      "opzione": "guidare il browser a mano, combinazione per combinazione, con lo strumento interattivo",
+      "scartata_perche": "8 pagine x 2 viewport x 2 temi = 32 passate; ogni passata e' una sequenza di Tab lunga quanto gli elementi focalizzabili della pagina. Il costo e' in contesto dell'agente, non in tempo macchina, e la misura non resterebbe riproducibile da chi legge."
+    },
+    {
+      "opzione": "aggiungere test a e2e/ e farli girare con il progetto di collaudo",
+      "scartata_perche": "L09 dichiara non_tocca: site/**, e2e/**. I test di accettazione sono di @qa-test (regola 3 del cantiere): un finding di L09 diventa un test in L07/L14, non in questo lotto."
+    },
+    {
+      "opzione": "una sola passata strumentata per combinazione, che registra tutto cio' che serve ai cinque controlli, e giudizio dell'agente sull'aggregato",
+      "scartata_perche": "scelta"
+    }
+  ],
+  "evidenza": [
+    "ramo lotto/l09-wcag-tastiera creato da origin/main (753279965d04233b756eabb9bf7ea4becbbdaa80) e spinto su origin prima di aprire la worktree",
+    "git merge-base --is-ancestor origin/main lotto/l09-wcag-tastiera -> exit=0",
+    "worktree .claude/worktrees/l09, un solo agente dentro: due agenti sullo stesso indice git si mangiano il lavoro (misurato in L12)",
+    "gia' coperto dall'automatico, non si rifa': AC40 (axe-core, e2e/ac40-wcag-a-aa.spec.ts), gli stili calcolati dell'anello (e2e/d6-anello-di-focus.spec.ts), la misura 24x24 / WCAG 2.5.8 a 360x640 (e2e/ac37-mobile-360.spec.ts, riga 100)"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true
+}

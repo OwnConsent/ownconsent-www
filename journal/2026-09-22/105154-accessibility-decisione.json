@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-22T10:51:54+02:00",
+  "agente": "accessibility",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Una passata strumentata per combinazione, scritta in .work/8/l09/misura.mjs, chromium di @playwright/test con node puro",
+  "contesto": "Il mandato chiede 5 controlli su 8 pagine x 2 viewport x 2 temi = 32 combinazioni, senza toccare site/** o e2e/**. e2e/pagine.ts (PAGINE, leggiDesignTokens) e' l'unica fonte delle 8 rotte e dei token: va letto da li', non ricopiato. e2e/pagine.ts e' TypeScript; node 22.23 non lo esegue direttamente senza un loader.",
+  "alternative": [
+    { "opzione": "riscrivere l'elenco delle 8 pagine e i valori dei token a mano nello script di misura", "scartata_perche": "duplica la fonte unica che il mandato indica (e2e/pagine.ts) e rischia deriva silenziosa se i segnaposto cambiano al gate G3" },
+    { "opzione": "aggiungere uno spec a e2e/ che usa gli stessi helper", "scartata_perche": "e2e/** e' nel non_tocca di L09; i test di accettazione sono di @qa-test (regola 3 del cantiere), un finding di L09 diventa test in L14" },
+    { "opzione": "node --experimental-strip-types per importare e2e/pagine.ts as-is da .work/8/l09/misura.mjs", "scartata_perche": "scelta" }
+  ],
+  "evidenza": [
+    "node --experimental-strip-types -e \"import('./e2e/pagine.ts').then(m => console.log(m.PAGINE.length))\" -> stampa 8",
+    "script scritto in .work/8/l09/misura.mjs (scratch, in .gitignore): una funzione per controllo (skip link, ordine+focus visibile, trappola, contrasto footer), aggregate in un JSON per combinazione"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

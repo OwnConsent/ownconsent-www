@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-22T11:01:08+02:00",
+  "agente": "seo",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Nessuna delle 7 rotte con percorso risponde con redirect quando richiesta senza barra finale: 404 secco, conferma di L05",
+  "contesto": "ADR-0002 D2: canonical, sitemap e link interni usano sempre la barra finale (misurato nella voce precedente: vero su tutte e 8 le pagine). Resta da misurare cosa risponde il server alla forma SENZA barra, che un link esterno, un bookmark o un motore di ricerca può comunque generare.",
+  "evidenza": [
+    "python3 con urllib.request su http://127.0.0.1:33595 (porta letta da .work/8/l13/preview.log), per ciascuna delle 8 rotte, con e senza barra finale (script e output completo in .work/8/l13/misura-trailing-slash.txt):",
+    "/ -> 200 | Location: nessuna (forma unica, non distingue con/senza barra)",
+    "/saas/ -> 200 | Location: nessuna    ///    /saas -> 404 | Location: nessuna",
+    "/hosted/ -> 200 | Location: nessuna  ///    /hosted -> 404 | Location: nessuna",
+    "/on-premise/ -> 200 | Location: nessuna  /  /on-premise -> 404 | Location: nessuna",
+    "/confronto/ -> 200 | Location: nessuna  /  /confronto -> 404 | Location: nessuna",
+    "/legale/termini-di-servizio/ -> 200  /  /legale/termini-di-servizio -> 404 | Location: nessuna",
+    "/legale/informativa-privacy/ -> 200  /  /legale/informativa-privacy -> 404 | Location: nessuna",
+    "/legale/cookie-policy/ -> 200  /  /legale/cookie-policy -> 404 | Location: nessuna",
+    "tutte e 7 le rotte con percorso: 404 senza barra, nessun header Location in nessuna delle 8 risposte testate — nessun redirect, in nessuna direzione"
+  ],
+  "esito": "misurato — finding F01",
+  "umano_coinvolto": false
+}

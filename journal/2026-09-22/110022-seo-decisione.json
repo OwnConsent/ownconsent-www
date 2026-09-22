@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-22T11:00:22+02:00",
+  "agente": "seo",
+  "issue": "8",
+  "lotto": "L13",
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Metodo fissato su /saas/, poi replicato identico sulle altre 7 rotte: curl per corpo+header, parser Python stdlib (html.parser) per title/description/canonical/lang/headings/link interni",
+  "contesto": "AC2 e AC3 hanno già test verdi (e2e/ac02-title-description-canonical.spec.ts, e2e/ac03-sitemap-robots.spec.ts) che leggono solo il PRIMO title/description/canonical con cheerio. Il valore di questo lotto è quello che quei test non vedono: un secondo elemento in conflitto, un meta robots/X-Robots-Tag, una nona pagina indicizzabile fuori sitemap, l'ordine dei titoli (non coperto da AC2/AC3), il comportamento senza barra finale. Serve un metodo unico, scritto prima, non improvvisato pagina per pagina.",
+  "alternative": [
+    { "opzione": "leggere site/dist/ dal filesystem", "scartata_perche": "CLAUDE.md: il contenuto va misurato sull'HTML servito via HTTP, non sui sorgenti o sulla build letta da disco — il file system non dice cosa risponde davvero il server (header, status, redirect)" },
+    { "opzione": "riusare cheerio (già dipendenza di root, usata da AC2/AC3)", "scartata_perche": "per contare TUTTE le occorrenze di title/meta/canonical (non solo la prima) e l'ordine dei titoli serve comunque scrivere selettori dedicati; ho preferito html.parser (stdlib Python, zero dipendenze nuove) per avere un unico script portabile fuori da e2e/ (che è non_tocca per questo lotto) e riusabile identico sulle 8 pagine" }
+  ],
+  "evidenza": [
+    "$ pnpm --dir site build -> '8 page(s) built in 825ms', file emessi: confronto/, hosted/, legale/{cookie-policy,informativa-privacy,termini-di-servizio}/, on-premise/, saas/, index.html, robots.txt, sitemap.xml (8 html + 2 file)",
+    "$ nohup pnpm --dir site preview --host 127.0.0.1 --port 0 --ignore-lock > .work/8/l13/preview.log 2>&1 & -> log: 'astro v7.3.3 ready in 22 ms / Local http://127.0.0.1:33595/' (porta 4321 di default era occupata da un'altra worktree: 'Port 4321 is already in use', --port 0 fa scegliere la porta libera al sistema operativo, letta dal log come da istruzione, non presunta)",
+    "$ curl -sS -D .work/8/l13/headers/saas.txt -o .work/8/l13/html/saas.html http://127.0.0.1:33595/saas/ -> 200, corpo e header salvati su file",
+    "$ python3 .work/8/l13/estrai.py .work/8/l13/html/saas.html -> 1 title, 1 description, 1 canonical, 1 lang, 6 headings [1,2,2,2,2,2] in ordine, 8 link interni unici tutti con barra finale — stesso comando replicato identico su home/hosted/on-premise/confronto/termini/privacy/cookie (file .work/8/l13/estratto-*.json)"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

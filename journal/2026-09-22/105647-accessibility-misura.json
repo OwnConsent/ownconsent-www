@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-22T10:56:47+02:00",
+  "agente": "accessibility",
+  "issue": "8",
+  "lotto": "L09",
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "32/32 combinazioni misurate con misura.mjs; due finding confermati (link di salto, anello coperto), tre controlli conformi ovunque",
+  "contesto": "Passata unica di .work/8/l09/misura.mjs (chromium via @playwright/test, node --experimental-strip-types) su tutte le 8 pagine x 2 viewport x 2 temi, aggregata in .work/8/l09/risultati-32.json (291KB) e riassunta con .work/8/l09/analisi.mjs (stampa solo le anomalie, non il dump grezzo).",
+  "alternative": [],
+  "evidenza": [
+    "C1 ordine del focus (2.4.3): conformi 32/32 — nessuna divergenza fra sequenza di Tab, ordine DOM e ordine visivo su nessuna combinazione",
+    "C2 focus sempre visibile (2.4.7/2.4.11): 0/32 combinazioni senza anomalie. In ogni combinazione l'unico elemento anomalo e' il link 'Salta al contenuto' (idx=0): dentroViewport=false (l'anello si estende 4px sopra top:0, fuori viewport, senza scroll possibile) e copertoDa=[HEADER, A, HEADER] su tre dei quattro punti campionati sul bordo destro/inferiore dell'anello — vedi finding in .work/8/l09/findings-accessibility.json. Nessun altro elemento (13 per pagina) ha anomalie su nessuna delle 32 combinazioni.",
+    "C3 nessuna trappola da tastiera (2.1.2): conformi 32/32 — due giri avanti identici, il giro indietro e' l'esatto inverso, il focus esce sempre su BODY dopo l'ultimo elemento (nessuna trappola)",
+    "C4 link 'salta al contenuto' (2.4.1): su tutte le 32 combinazioni, dopo Invio sul link, location.hash='#contenuto' ma document.activeElement resta BODY e document.getElementById('contenuto').getAttribute('tabindex') e' null — il focus DOM non si sposta mai su <main>. Il Tab successivo pero' diverge per pagina, non per viewport/tema (coerente sulle 4 combinazioni di ogni pagina): su /, /saas/, /hosted/, /on-premise/, /legale/informativa-privacy/ atterra per coincidenza dentro <main>; su /confronto/, /legale/termini-di-servizio/, /legale/cookie-policy/ atterra sul link 'Termini di servizio' del FOOTER (dentroMain=false), saltando tutto il contenuto della pagina. Verdetto: 'il salto e' solo visuale' non e' un'ipotesi, e' misurato — la differenza fra le due classi di pagine e' il comportamento non-standard di Chromium che sposta il punto di partenza della navigazione sequenziale allo scroll, non il focus stesso; quando quella scorciatoia non copre la distanza (pagine piu' corte), il difetto reale (nessun tabindex=-1 su <main>) diventa visibile.",
+    "C5 contrasto anello footer (1.4.11, D-2): 96 letture (3 link per pagina x 32 combinazioni), 0 non conformi. Rapporto misurato sul documento servito: 8.80:1 in tema chiaro, 6.91:1 in tema scuro, su tutte le 8 pagine — sopra la soglia 3:1, outline-color misurato uguale al token atteso color.semantic.<tema>.focus-ring-on-inverse in ogni lettura (outlineUgualeATokenAtteso=true)"
+  ],
+  "esito": "2 finding scritti in .work/8/l09/findings-accessibility.json (gravita' alta entrambi); C1, C3, C5 senza finding (conformi su tutte le combinazioni misurate)",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-22T11:01:50+02:00",
+ "tipo": "misura",
+ "agente": "design",
+ "lotto": "L10",
+ "issue": "8",
+ "titolo": "Le quattro pagine con contrassegno sono conformi ad AC5, e la tabella di confronto ha davvero le due rese",
+ "ac5": {
+  "cosa_chiede": "docs/design/01-pagine.md, riepilogo: «Contrassegno «pagina dimostrativa» su SaaS, Hosted, On-premise, Confronto, specificato visibile senza scorrere a entrambe le viewport».",
+  "misura": "campo piega di .work/8/l10/evidenza/<slug>-<vp>-light.json. A 360x640 il contrassegno sta a top=159 bottom=223 su tutte e quattro (altezza 64: va a capo su due righe, come il documento prevede — «va a capo su due righe se il testo non entra, ma resta sopra la piega»). A 1280x800 sta a top=87 bottom=127, altezza 40, larghezza 474.75px cioe' la larghezza del testo, non del contenitore: «badge in linea, larghezza minima quanto il testo». interamente_sopra_la_piega=true in tutti e otto i casi.",
+  "guardato_anche_con_gli_occhi": "Read sulle schermate .work/8/l10/schermate/saas-360x640-piega.png e confronto-1280x800-piega.png: il contrassegno e' la prima cosa dentro il contenuto, sopra l'h1, a pillola, su fondo ambra. Conforme.",
+  "contrasto": "badge-demo-text su badge-demo-bg = 10.20:1 calcolato sui colori resi (rgb(74,44,0) su rgb(255,227,173)); badge-draft-text su badge-draft-bg = 9.90:1 (rgb(51,23,85) su rgb(223,201,245)). Sono i due valori dichiarati da 00-sistema-e-componenti.md, al centesimo."
+ },
+ "tabella_di_confronto": {
+  "perche_era_il_caso_dubbio": "Il mandato del lotto segnalava che senza media query il doppio comportamento della tabella — blocchi sotto 400px, colonne vere da breakpoint.lg — non poteva venire da un breakpoint, e che quindi «o viene da un altro meccanismo, o una delle due rese non c'e'».",
+  "risposta": "Viene da un breakpoint, e c'e'. Le due rese esistono entrambe.",
+  "misura_360": "display_table=block, display_thead=block, thead_clip_path=inset(50%), thead_position=absolute, thead_rettangolo 1x1 (nascosto visivamente ma non display:none, come prescritto), display_tr=block, display_td=block, td_before_content=\"SaaS\", celle_con_data_etichetta=12 su 12 celle td, scorre_orizzontalmente=false.",
+  "misura_1280": "display_table=table, display_thead=table-header-group, thead_clip_path=none, thead_position=static, display_tr=table-row, display_td=table-cell, td_before_content=none, colonne_riga1 a left 16/331/674/1000: quattro colonne vere.",
+  "comune": "scope_col=3, scope_row=4, caption=«Confronto fra SaaS, Hosted e On-premise», ultima riga «Come si attiva» con «Scrivici» in tutte e tre le celle (AC4).",
+  "regola_che_lo_fa": "site/dist/confronto/index.html, @media (min-width:1280px) inlinata: display:revert sui sei elementi, clip-path:none sul thead, content:none sul ::before dei td. breakpoint.lg = 1280px."
+ },
+ "conclusione": "Il componente piu' difficile della consegna e' quello riuscito meglio. Il mandato mi chiedeva di verificare un sospetto: il sospetto era infondato, e vale la pena scriverlo con la stessa cura con cui si scrive un difetto."
+}

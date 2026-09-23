@@ -1,0 +1,45 @@
+{
+ "ts": "2026-09-23T17:18:15+02:00",
+ "agente": "architect",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "touch-target: il contratto si allinea a WCAG 2.5.8 riscrivendo solo gli uso (ADR-0005, smaltisce A08)",
+ "contesto": "A08 in DESIGN-AMENDMENTS.md, ratificata da Andrea il 22/09: il contratto promette 24px su ogni elemento interattivo e dichiara non usata l'eccezione di spaziatura; il mailto in linea dell'informativa privacy e' 449x17 a 1280x800 (finding D06 di L10) ed e' conforme per l'eccezione Inline di 2.5.8.",
+ "alternative": [
+  {
+   "opzione": "togliere touch-target.min-undisturbed-space",
+   "scartata_perche": "token-css.mjs lo emette come --touch-target-min-undisturbed-space: rimuoverlo rompe un consumatore senza deprecazione; e Spacing resta un'eccezione reale di 2.5.8"
+  },
+  {
+   "opzione": "aggiungere un token per l'eccezione inline",
+   "scartata_perche": "un'eccezione non ha value da emettere; nessun componente lo consumerebbe"
+  },
+  {
+   "opzione": "dare al link in linea 24px di altezza (CSS)",
+   "scartata_perche": "contraddice A08, che dichiara conforme il prodotto"
+  },
+  {
+   "opzione": "solo riscrivere gli uso di min-size e min-undisturbed-space, value e nomi invariati",
+   "scartata_perche": "scelta"
+  }
+ ],
+ "evidenza": [
+  "python3 -m json.tool contracts/design-tokens.json -> json-ok",
+  "cd site && pnpm build -> build_exit=0, '[build] 8 page(s) built in 1.01s', '[build] Complete!'",
+  "cd site && pnpm astro check -> 'Result (29 files): 0 errors, 0 warnings, 6 hints', check_exit=0",
+  "grep -o 'touch-target[^;]*;' site/dist/_astro/*.css -> touch-target-min-size:24px; touch-target-min-undisturbed-space:24px; touch-target-min-size); (custom property emesse invariate)"
+ ],
+ "conseguenze_da_registrare": {
+  "e2e/ac37-mobile-360.spec.ts": "righe 10-13 e 135-146 verificano '>= 24x24 oppure spaziatura' su getBoundingClientRect, senza eccezione Inline. Oggi passa. E' piu' severo del contratto nuovo (non lo contraddice sul prodotto attuale) ma puo' fallire su un link in linea conforme, e il rettangolo di unione a 360px nasconde il bersaglio per riga. Allineamento: @qa-test, dopo che e' definito come si riconosce un bersaglio in linea (domanda aperta 2 di ADR-0005).",
+  "DESIGN-AMENDMENTS.md A08, Da smaltire (lo aggiorna Andrea)": "contratto e riga 20 di docs/design/00-sistema-e-componenti.md riallineati da ADR-0005 in L14; resta aperto l'allineamento di e2e/ac37-mobile-360.spec.ts (@qa-test) e le domande aperte 1-2 di ADR-0005."
+ },
+ "consumatori_impattati": [
+  "design",
+  "frontend (nessuna modifica di codice richiesta)",
+  "qa-test (ac37-mobile-360.spec.ts)"
+ ],
+ "esito": "applicata, ADR in stato proposta",
+ "umano_coinvolto": true
+}

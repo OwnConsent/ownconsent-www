@@ -1,0 +1,30 @@
+{
+ "ts": "2026-09-23T17:18:24+02:00",
+ "agente": "architect",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "consegna",
+ "titolo": "ADR-0005 e contratto touch-target consegnati (punto 9 del mandato, A08)",
+ "contesto": "Mandato dell'orchestrator: ADR, contracts/design-tokens.json blocco touch-target, riga 20 di docs/design/00-sistema-e-componenti.md; DESIGN-AMENDMENTS.md, test e site/ non toccati.",
+ "evidenza": [
+  "docs/adr/0005-touch-target-eccezioni-wcag-258.md",
+  "pnpm build exit 0; pnpm astro check 0 errors 0 warnings 6 hints"
+ ],
+ "dod_soddisfatta": {
+  "adr_scritto": true,
+  "contratto_aggiornato_e_committato": true,
+  "consumatori_impattati_per_agente": [
+   "design",
+   "frontend",
+   "qa-test"
+  ],
+  "test": "non toccati per mandato; allineamento di e2e/ac37-mobile-360.spec.ts a @qa-test"
+ },
+ "domande_aperte": [
+  "quali eccezioni di 2.5.8 ammette il sistema (tutte e cinque o solo Inline e Spacing)",
+  "definizione operativa di bersaglio in linea per i test"
+ ],
+ "esito": "consegnata",
+ "umano_coinvolto": false
+}

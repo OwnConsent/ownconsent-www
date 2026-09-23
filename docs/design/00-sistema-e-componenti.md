@@ -17,7 +17,7 @@ Nessun file Figma esiste nel repository: il sistema nasce con questo lotto (vedi
 - **360 px è la larghezza minima supportata** (AC37): nessun layout qui sotto richiede
   scorrimento orizzontale del documento a `breakpoint.base` (360px).
 - **Il corpo del testo non scende mai sotto `typography.font-size.100`** (16px, AC37).
-- **Ogni elemento interattivo rispetta `touch-target.min-size`** (24×24 CSS px, WCAG 2.5.8).
+- **Ogni elemento interattivo rispetta `touch-target.min-size`** (24×24 CSS px, WCAG 2.5.8), **salvo le eccezioni di 2.5.8**: un link in linea dentro una frase è esente (eccezione «Inline»), un bersaglio più piccolo fuori dal testo è ammesso solo con `touch-target.min-undisturbed-space` (ADR-0005).
 - **Il focus è sempre visibile** (WCAG 2.4.7/2.4.11): `focus.ring-width` +
   `focus.ring-offset`, colore `color.semantic.<tema>.focus-ring`, calcolato ≥3:1 contro
   `bg-canvas` e `bg-surface` in `docs/design/contrast-check.py`.

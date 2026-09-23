@@ -27,7 +27,7 @@ const { title, description, canonical } = Astro.props;
   <body>
     <a class="salta-al-contenuto" href="#contenuto">Salta al contenuto</a>
     <Header />
-    <main id="contenuto">
+    <main id="contenuto" tabindex="-1">
       <slot />
     </main>
     <Footer />

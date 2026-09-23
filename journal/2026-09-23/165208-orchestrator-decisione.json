@@ -1,0 +1,27 @@
+{
+ "ts": "2026-09-23T16:52:08+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "Istruzione di Andrea corretta da una misura della sessione: il criterio di F2 vale su tutte e 8 le pagine come «primo focalizzabile che segue il salto», non «dentro <main>». Terzo caso secondo Andrea",
+ "contesto": "Il mandato di L14 diceva: dopo il salto il Tab cade sul primo elemento focalizzabile DENTRO <main>, su tutte e 8 le pagine. La misura del 151439-orchestrator-misura.json ha mostrato che su /confronto/ dentro <main> non c'e' nulla da focalizzare. Andrea, in sessione: la formulazione precedente era sovra-specificata, dava per scontato che ogni pagina avesse un focalizzabile nel contenuto; /confronto/ non ce l'ha ed e' corretto cosi'.",
+ "alternative": [
+  {
+   "opzione": "criterio «dentro <main>» come nel mandato",
+   "scartata_perche": "non soddisfacibile su /confronto/, dove la pagina e' corretta: l'invariante vero e' che dopo il salto non si ripercorra nulla di cio' che sta prima di <main>"
+  },
+  {
+   "opzione": "eccezione solo per /confronto/",
+   "scartata_perche": "Andrea: il criterio corretto vale per tutte e 8 le pagine, non come eccezione"
+  }
+ ],
+ "evidenza": [
+  "conteggio su site/dist/confronto/index.html (build dell'agente, 15:10), dentro <main>: 0 link con href, 0 button, 0 input, 0 tabindex, 0 summary",
+  "criterio in vigore, parole di Andrea: activeElement e' <main>, e il Tab successivo va al primo elemento focalizzabile che SEGUE il punto di salto nell'ordine del documento — dentro <main> se ce n'e' uno, altrimenti il primo dopo"
+ ],
+ "caso": "terzo caso di un'istruzione di Andrea corretta da una misura (conteggio di Andrea; gli altri due non sono citati qui)",
+ "esito": "il test di regressione di @qa-test (punto 7) usa questo criterio, non il precedente",
+ "umano_coinvolto": true
+}

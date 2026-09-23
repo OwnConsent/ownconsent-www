@@ -1,0 +1,30 @@
+{
+ "ts": "2026-09-23T16:51:52+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "Decisioni di Andrea sul gate 151439: F1 lo correggono e lo misurano la sessione, non un terzo @frontend; su /confronto/ F2 si chiude sul primo focalizzabile dopo il salto",
+ "contesto": "Risposta di Andrea al gate 151439-orchestrator-gate.json, data in sessione il 23/09.",
+ "alternative": [
+  {
+   "opzione": "terzo @frontend con mandato ridotto a F1 (la mia raccomandazione)",
+   "scartata_perche": "Andrea: la regola fissata il 20/09 in L06 dice che non si delega il lavoro sequenziale dentro un lotto che la sessione ha gia' in contesto; si delega quando il lavoro e' parallelo o quando la separazione dei ruoli e' portante. Due @frontend sullo stesso punto sono spesa in riscoperta. Non e' una deroga alla regola dei due rimandi: cambiano chi esegue e il metodo di misura"
+  },
+  {
+   "opzione": "far partire intanto @architect",
+   "scartata_perche": "non scelta: @qa-test e @architect si delegano dopo, uno alla volta, perche' li' la separazione dei ruoli e' portante"
+  },
+  {
+   "opzione": "su /confronto/, pretendere un elemento focalizzabile dentro <main>",
+   "scartata_perche": "scelto da Andrea il criterio: activeElement e' <main>, e il Tab successivo va al primo elemento focalizzabile che segue il salto nell'ordine del documento, dentro <main> se ce n'e' uno, altrimenti il primo dopo"
+  }
+ ],
+ "evidenza": [
+  "decisione in sessione: 1) F1 lo corregge e lo misura la sessione; criterio invariato (al primo Tab il link e' interamente nella viewport e nessun punto dell'anello e' coperto dall'header, a 360x640 e 1280x800); il metodo lo sceglie la sessione, elementFromPoint ha gia' fallito due volte, e qualunque altro va giustificato con una misura, non con un'intenzione. 2) la sessione misura anche i punti 1, 3 e 4 di cd68e01 e toglie il marchio wip solo a quelli che la misura conferma. 3) commit e push dopo ogni passo. 4) poi @qa-test (5-8, 10) e @architect (9), uno alla volta",
+  "richiesta esplicita: il journal registra che il lavoro su F1 l'ha scritto la sessione e non un agente"
+ ],
+ "esito": "applicata da qui in avanti: le voci e i commit su F1 e sulla misura di 1, 3, 4 sono della sessione (firma orchestrator), non di @frontend",
+ "umano_coinvolto": true
+}

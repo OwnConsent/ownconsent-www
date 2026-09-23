@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-23T13:02:41+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "consegna",
+  "titolo": "Due decisioni di Andrea portate negli artefatti: AC7 interpretato (L13-F03), L10-D06 ratificata. PR aperta, L14 non avviato",
+  "contesto": "PR piccola, prima e separata da L14, richiesta da Andrea dopo il gate di 130050. Ramo decisioni-ac7-d06, spinto prima del primo commit, worktree .claude/worktrees/decisioni.",
+  "dod_soddisfatta": "Aree site/ e api/ non toccate: build, lint, test e budget non si applicano. Nessun cambiamento visibile, quindi nessuna evidenza documento-contro-prodotto. Nessun contratto in contracts/ modificato: l'ADR su D06 resta ad @architect dentro L14. JSON dello spec: la riserializzazione e' identica byte per byte al file prima della modifica, e l'unica riga tolta nel diff e' «allora» con la virgola aggiunta. Journal scritto durante il lavoro: gate, fallimento, consegna.",
+  "non_fatto": [
+    "L14: non avviato. Parte da main dopo il merge di questa PR.",
+    "Le conseguenze di D06 che non sono parole di Andrea (se il link resta alto 17px, come un test dei 24px tratta i link in linea): nella PR come domande, non nella voce."
+  ],
+  "esito": "PR aperta, in attesa di Andrea",
+  "umano_coinvolto": true
+}

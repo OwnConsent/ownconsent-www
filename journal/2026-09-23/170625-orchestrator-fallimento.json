@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-23T17:06:25+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "fallimento",
+ "titolo": "@qa-test fermo al tetto dopo i punti 7 e 5 (10, 6, 8 non iniziati); ha lavorato nella worktree l14, non in una sua",
+ "contesto": "Terzo agente del lotto fermato al tetto. Questa volta il runtime non gli ha dato una worktree propria e, nonostante il mandato dicesse di non lavorare in .claude/worktrees/l14, ha lavorato li'. Non c'e' stato conflitto perche' la sessione non ha toccato quella worktree mentre l'agente era attivo.",
+ "cosa_ho_provato": [
+  "letto cio' che c'era: e9fbda5 (punto 7, commit e push dell'agente, firma qa-test); punto 5 in stage e non committato, con la sua voce di consegna 170529",
+  "rilette la modifica di e2e/ac07-nessuna-registrazione-iab.spec.ts e l'evidenza: completa rispetto al mandato; committata com'era, messaggio che la attribuisce a @qa-test"
+ ],
+ "cosa_si_e_imparato": "Il commit dopo ogni punto ha funzionato a meta': il punto 7 e' arrivato nel ramo, il 5 si e' fermato fra stage e commit. Il tetto arriva a circa 45-58 chiamate di strumento qualunque sia il mandato: un mandato con cinque punti non ci sta. Il prossimo @qa-test riceve i tre punti rimasti (10, 6, 8) e parte dal 10, quello che puo' fermarsi su una contraddizione.",
+ "evidenza": [
+  "notifica del runtime: 58 tool_uses, 396 s, «stopped at its 45-turn limit»",
+  "$ git worktree list -> nessuna worktree del runtime per @qa-test; .claude/worktrees/l14 a e9fbda5",
+  "$ git status -s (l14, dopo la notifica) -> A docs/evidenza/8/l14/qa-test/reversione-1ae5db2-ac07-saas.txt, A verde-head-ac07.txt, M e2e/ac07-nessuna-registrazione-iab.spec.ts, A journal/2026-09-23/170529-qa-test-consegna.json",
+  "$ ss -ltnp | grep node -> solo le due anteprime orfane di L13 e L15 gia' segnalate: nessun server lasciato da @qa-test"
+ ],
+ "esito": "punti 7 e 5 nel ramo; 10, 6, 8 a un @qa-test nuovo",
+ "umano_coinvolto": false
+}

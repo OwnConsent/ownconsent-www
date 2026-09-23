@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-23T13:09:34+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "gate",
+  "titolo": "guard-prod.sh blocca il push con --force-with-lease dopo il rebase di #54: il mandato lo chiedeva, l'hook lo riserva a una persona",
+  "contesto": "Il mandato di Andrea diceva: push dopo il rebase con --force-with-lease, mai --force. L'hook non distingue le due forme e le tratta entrambe da push forzato. Il comando conteneva anche il commit della voce 130915, concatenato con &&: il blocco ha fermato tutto prima che partisse, commit compreso.",
+  "evidenza": [
+    "messaggio dell'hook: «GATE: push forzato — questa azione richiede una persona. Prepara il cambiamento e fermati.»",
+    "$ git rev-parse origin/decisioni-ac7-d06 -> c8ec8351fa842fc337638555eb374fc70138e02e (testa di prima del rebase: remoto intatto)",
+    "$ git status -s -> ?? journal/2026-09-23/130915-orchestrator-decisione.json (il commit concatenato non era partito)"
+  ],
+  "chi_ha_deciso": "l'hook; il push lo fa Andrea",
+  "cosa_serviva": "git push --force-with-lease=decisioni-ac7-d06:c8ec835 origin decisioni-ac7-d06, eseguito da una persona. Il lease sullo SHA esatto fa fallire il push se il ramo remoto e' cambiato dal momento del rebase",
+  "esito": "fermo, ramo ribasato e committato in locale, misure pronte per la PR",
+  "umano_coinvolto": true
+}

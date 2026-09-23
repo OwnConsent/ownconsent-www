@@ -295,3 +295,26 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   genera un piano legge prima la tabella **Scadenze** degli ADR in vigore e porta nei lotti
   i punti che scadono sul loro giro: è la seconda volta in questa issue che un lotto trova
   un gate che il piano non aveva (la prima è A03).
+
+## A07 — D05 (L10): «(bozza)» nell'h1 delle tre bozze legali — chiusa senza modifica
+- Data: 23/09/2026
+- Classe: pre-produzione (era: fuori-lista, finding D05 di L10) — il sito non è in
+  produzione, decide Andrea
+- Documento dice: `docs/design/01-pagine.md` §6, §7, §8 prescrive un `<h1>` senza
+  «(bozza)» («Termini di servizio», «Informativa privacy», «Cookie policy») e un `<title>`
+  **con** «(bozza)» («Termini di servizio (bozza) — OwnConsent», e così le altre due).
+- Prodotto fa: h1 e `<title>` portano entrambi «(bozza)», perché sono lo stesso campo.
+  `site/src/pages/legale/[slug].astro` riga 23 `` const titolo = `${voce.data.titolo} — OwnConsent` ``
+  e riga 49 `<h1>{voce.data.titolo}</h1>`; lo schema di `site/src/content.config.ts` è
+  `.strict()`, quindi dal frontmatter non si può separare l'uno dall'altro.
+- La misura che ha fatto cadere la premessa: il mandato di L15 chiedeva di togliere
+  «(bozza)» dall'h1 perché «sporca titolo e risultati di ricerca», lavorando solo in
+  `site/src/content/legale/`. Da lì l'unico modo è cambiare il frontmatter, che toglie la
+  parola anche dal `<title>` — cioè proprio dal punto in cui il design la vuole.
+- Deciso: «(bozza)» resta nel frontmatter, quindi nell'h1 e nel `<title>`. Su una bozza
+  pubblicata, «(bozza)» nei risultati di ricerca è corretto, non un difetto. Resta la
+  ripetizione fra h1 e contrassegno: è estetica e non vale un cambio di schema. Deciso da
+  Andrea, 23/09/2026. Journal: `journal/2026-09-23/124831-orchestrator-decisione.json`.
+- Da smaltire: alla prossima sessione di design, `01-pagine.md` §6-8 punto 4 si allinea
+  all'h1 reso («… (bozza)»), oppure dichiara che la divergenza è accettata finché le
+  pagine restano bozze.

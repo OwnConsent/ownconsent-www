@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-23T12:48:31+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L15",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "D05 chiusa senza modifica: la premessa del mandato («(bozza) nell'h1 sporca il <title>») cade sulla misura del meccanismo",
+  "contesto": "Il mandato di L15, punto 3, chiedeva di togliere «(bozza)» dall'h1 delle tre bozze legali lavorando SOLO in site/src/content/legale/, con la motivazione che nell'h1 «sporca titolo e risultati di ricerca». Prima di toccare i file ho letto la rotta e lo schema della collezione.",
+  "evidenza": [
+    "$ sed -n 23p site/src/pages/legale/[slug].astro -> «const titolo = `${voce.data.titolo} — OwnConsent`;» (alimenta il <title> via BaseLayout)",
+    "$ sed -n 49p site/src/pages/legale/[slug].astro -> «<h1>{voce.data.titolo}</h1>»",
+    "site/src/content.config.ts: schema z.object({titolo, descrizione, bozza}).strict() -> nessun campo aggiuntivo ammesso dal frontmatter; separare h1 e <title> richiede la rotta o lo schema, entrambi fuori dal perimetro di L15 (sono di L14)",
+    "docs/design/01-pagine.md §6, §7, §8, «Meta»: title «Termini di servizio (bozza) — OwnConsent», «Informativa privacy (bozza) — OwnConsent», «Cookie policy (bozza) — OwnConsent» -> il design vuole «(bozza)» proprio nel <title>"
+  ],
+  "alternative": [
+    {
+      "opzione": "togliere «(bozza)» dal frontmatter titolo",
+      "scartata_perche": "toglie la parola anche dal <title>, contro la Meta del design: si sarebbe corretto l'h1 rompendo il title che il mandato voleva proteggere"
+    },
+    {
+      "opzione": "rinviare a L14 la separazione h1/<title> nella rotta o nello schema",
+      "scartata_perche": "un cambio di schema per una ripetizione estetica fra h1 e contrassegno; Andrea lo esclude esplicitamente"
+    },
+    {
+      "opzione": "fermarsi sul punto 3 e chiedere",
+      "scartata_perche": "non scartata: e' quella scelta. Andrea ha poi chiuso D05 senza modifica"
+    }
+  ],
+  "deciso": "«(bozza)» resta nel frontmatter, quindi nell'h1 e nel <title>. Su una bozza pubblicata, «(bozza)» nei risultati di ricerca e' corretto, non un difetto. Resta la ripetizione fra h1 e contrassegno: estetica, non vale un cambio di schema. Registrata in DESIGN-AMENDMENTS.md come voce di classe pre-produzione.",
+  "istruzione_smentita_dalla_misura": "Andrea la registra come il secondo caso in cui una sua istruzione viene smentita da una misura dell'esecutore. Non ho verificato nel journal quale sia il primo: il candidato piu' vicino e' journal/2026-09-23/091831-orchestrator-misura.json (criterio di accettazione che confondeva vocabolario e uso, corretto da Andrea come riporta la voce 100905), ma e' un'ipotesi, non una misura.",
+  "esito": "applicata (nessuna modifica al codice)",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 23/09/2026"
+}

@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-23T17:03:39+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "Punto 7: e2e/l09-salto-al-contenuto.spec.ts, test comportamentali per L09-F1 e L09-F2, 8 pagine x 360x640 e 1280x800",
+ "contesto": "Scritto dai criteri di Andrea (journal/2026-09-23/165208-orchestrator-decisione.json per F2, 165508/165627-orchestrator-misura.json per il metodo di F1), non dall'implementazione. Tre gruppi di 16 test ciascuno (48 totali): F1 anello di focus non coperto e dentro viewport al primo Tab (metodo a pixel, non elementFromPoint), F1 area visibile 0 px2 quando il link non e' a fuoco, F2 activeElement=<main> dopo Invio e Tab successivo sul primo focalizzabile che segue l'inizio di <main> nell'ordine del documento (dentro <main> se c'e', altrimenti il primo dopo — criterio verificato anche su /confronto/, che non ha nulla di focalizzabile dentro <main>).",
+ "alternative": [
+  {
+   "opzione": "elementFromPoint sui punti dell'anello per verificare la copertura",
+   "scartata_perche": "gia' fallito due volte in questo lotto (journal 165508): un outline non partecipa all'hit-testing, elementFromPoint legge la scatola sotto anche quando l'anello e' dipinto sopra. Riuso invece il metodo a pixel di docs/evidenza/8/l14/sonda-l14.mjs, validato con un controllo che sa dire rosso"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/l09-salto-al-contenuto.spec.ts --reporter=list  (su HEAD 8404d59)  -> 48 passed (6.3s), salvato in docs/evidenza/8/l14/qa-test/verde-head-l09-salto-al-contenuto.txt",
+  "prova-by-reversion 1: $ git show 1ae5db2:site/src/layouts/BaseLayout.astro > site/src/layouts/BaseLayout.astro (senza tabindex=-1 su <main>, anello a inset 0 senza offset) -> pnpm exec playwright test e2e/l09-salto-al-contenuto.spec.ts -> 32 failed, 16 passed (i soli 16 test di 'non a fuoco fuori viewport', indipendenti da questa reversione). Salvato in docs/evidenza/8/l14/qa-test/reversione-1ae5db2-l09-salto-al-contenuto.txt. Ripristinato: git checkout -- site/src/layouts/BaseLayout.astro, poi git status -s site/ vuoto",
+  "prova-by-reversion 2: $ git show 5fd10e8:site/src/layouts/BaseLayout.astro > site/src/layouts/BaseLayout.astro (link spostato anche senza focus) -> 16 failed (tutti e soli i test 'non a fuoco', con 'Received: 640' su ognuno — combacia con la misura della sessione: 640 px2 visibili), 32 passed (F1 a pixel e F2, gia' chiusi a quel commit secondo il journal). Salvato in docs/evidenza/8/l14/qa-test/reversione-5fd10e8-l09-salto-al-contenuto.txt. Ripristinato: git checkout -- site/src/layouts/BaseLayout.astro, poi git status -s site/ vuoto"
+ ],
+ "esito": "chiuso; entrambe le reversioni falliscono come atteso dal mandato, nessuna modifica permanente a site/",
+ "umano_coinvolto": false
+}

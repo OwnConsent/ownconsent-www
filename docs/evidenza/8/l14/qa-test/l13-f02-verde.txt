@@ -1,0 +1,17 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 44337 --host 127.0.0.1 --ignore-lock
+
+Running 10 tests using 8 workers
+
+  ✓   2 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Informativa privacy (bozza) (/legale/informativa-privacy/) — un h1, nessun salto (72ms)
+  ✓   1 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Cookie policy (bozza) (/legale/cookie-policy/) — un h1, nessun salto (77ms)
+  ✓   5 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Termini di servizio (bozza) (/legale/termini-di-servizio/) — un h1, nessun salto (70ms)
+  ✓   4 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Confronto modalità e listino (/confronto/) — un h1, nessun salto (67ms)
+  ✓   3 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Home (/) — un h1, nessun salto (85ms)
+  ✓   6 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: Hosted (/hosted/) — un h1, nessun salto (72ms)
+  ✓   8 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: On-premise (/on-premise/) — un h1, nessun salto (73ms)
+  ✓   7 e2e/l13-f02-struttura-titoli.spec.ts:92:5 › L13-F02: un solo h1 e nessun salto di livello, sulle 8 pagine servite (finding di @seo, non un AC) › L13-F02: SaaS (/saas/) — un h1, nessun salto (81ms)
+  ✓  10 e2e/l13-f02-struttura-titoli.spec.ts:134:3 › L13-F02: il controllo sa fallire — due casi malati costruiti in memoria con page.setContent › caso malato: <h2> seguito da <h4> senza <h3> intermedio — il controllo lo rifiuta, il contrario sano lo accetta (98ms)
+  ✓   9 e2e/l13-f02-struttura-titoli.spec.ts:106:3 › L13-F02: il controllo sa fallire — due casi malati costruiti in memoria con page.setContent › caso malato: due <h1> nella stessa pagina — il controllo lo rifiuta, il contrario sano lo accetta (102ms)
+
+  10 passed (4.1s)

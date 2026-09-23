@@ -1,0 +1,19 @@
+{
+ "ts": "2026-09-23T15:14:39+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "gate",
+ "titolo": "L14 fermo dopo due giri di @frontend fermati al tetto: regola dei due rimandi del piano. @qa-test e @architect non avviati",
+ "contesto": "docs/plan/issue-8.json, lotto L14, note: «Massimo due rimandi allo stesso ruolo (docs/HANDOFF.md), poi ci si ferma e si riporta». Due @frontend, entrambi al tetto (45 turni, tetto_turni del piano), nessuno dei due ha consegnato, committato o scritto journal, nonostante il secondo mandato chiedesse un commit dopo ogni compito. I test di @qa-test (punto 7) dipendono da F1 e F2 chiusi.",
+ "evidenza": [
+  "$ git log --oneline 1ae5db2..origin/lotto/l14-rientro-finding -> 8 commit, due wip di site/ salvati dall'orchestrator (cd68e01, 5fd10e8), nessuno firmato frontend",
+  "notifiche del runtime: 45 tool_uses / 370 s e 55 tool_uses / 504 s, entrambe «stopped at its 45-turn limit»",
+  "un index.lock orfano (0 byte, 15:12:05, nessun processo git attivo) nella worktree del secondo agente: rimosso per poter committare"
+ ],
+ "chi_ha_deciso": "la regola del piano; come ripartire lo decide Andrea",
+ "cosa_serviva": "una decisione su come chiudere F1 e F2 (terzo giro con tetto piu' alto e mandato ridotto a F1, oppure altro), e su cosa vale per /confronto/, dove dentro <main> non c'e' nulla da focalizzare",
+ "esito": "fermo; ramo spinto a questo commit, nessuna PR ancora aperta",
+ "umano_coinvolto": true
+}

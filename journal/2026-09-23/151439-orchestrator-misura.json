@@ -1,0 +1,20 @@
+{
+ "ts": "2026-09-23T15:14:39+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "Lette le misure del secondo @frontend: F2 regge su 7 pagine, /confronto/ non ha nulla da focalizzare dentro <main>; la sonda di F1 dice «coperto» 36/36 dopo la correzione, e il metodo e' sospetto",
+ "contesto": "Il secondo @frontend si e' fermato al tetto (55 chiamate di strumento, 504 s) senza consegna ne' commit, con le misure in .work/l14 (ignorata). Salvate com'erano in docs/evidenza/8/l14/frontend-2/ (5fd10e8). Le ho lette io, senza rieseguirle.",
+ "evidenza": [
+  "risultati-dopo.json, 16 righe (8 pagine x 2 viewport): focus_su_main_dopo_invio 16/16; tab_successivo_dentro_main 14/16. Le due righe no sono /confronto/ a 360x640 e 1280x800: activeElement MAIN#contenuto, poi il Tab va al link «Termini di servizio» del footer",
+  "$ python3 (regex su <main> di site/dist/confronto/index.html della worktree dell'agente, build 15:10) -> a href: 0, button: 0, input: 0, tabindex: [], summary: 0. Dentro <main> di /confronto/ non c'e' nessun elemento focalizzabile: il criterio del mandato («il Tab successivo cade sul primo elemento focalizzabile DENTRO <main>, su tutte e 8») li' non e' soddisfacibile, e andare al footer e' l'ordine giusto",
+  "risultati-prima.json (codice di cd68e01, prima della correzione di F1): anello_dentro_viewport false 16/16, anello a left -4 top -4; punti dell'anello «coperti» 16/36, elemento sopra A.nome-sito dell'header",
+  "risultati-dopo.json (5fd10e8, link spostato di focus-ring-width + focus-ring-offset): anello_dentro_viewport true 16/16; punti «coperti» 36/36, elemento sopra HEADER.intestazione",
+  "la sonda decide «coperto» con elementFromPoint sui punti dell'anello. Un outline non partecipa al hit-testing: elementFromPoint restituisce la scatola sotto quel punto anche se l'anello e' dipinto sopra. Ipotesi, non misura: il 36/36 puo' voler dire che l'anello ora sta sopra l'area dell'header, non che ne e' coperto. Serve un metodo sull'ordine di pittura (stacking, oppure pixel della schermata), non il hit-testing",
+  "ipotesi non misurata: con inset 4px e translateY(-100%) il link non a fuoco finisce con il bordo inferiore a y=4, una striscia di 4px potrebbe restare visibile senza focus"
+ ],
+ "esito": "F2: 7 pagine su 8 conformi al criterio; su /confronto/ il criterio non e' soddisfacibile come scritto, decide Andrea. F1: non chiuso, e la misura che direbbe se e' chiuso va rifatta con un altro metodo",
+ "umano_coinvolto": false
+}

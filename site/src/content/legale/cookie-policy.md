@@ -50,3 +50,8 @@ voci seguenti diventerà vera. Nessuna di esse rientra in questa consegna:
 - l'indicazione di eventuali destinatari e di trasferimenti fuori dall'Unione europea
   introdotti dagli strumenti sopra elencati;
 - l'identità del titolare, oggi indicata nell'informativa privacy con un segnaposto.
+
+## Contatti
+
+Per domande su questa pagina si scrive a {{recapito}}: è l'unico indirizzo del sito, lo
+stesso dell'informativa privacy e dei termini di servizio.

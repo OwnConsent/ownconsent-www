@@ -1,0 +1,16 @@
+{
+ "ts": "2026-09-23T17:15:34+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "L14 (parte @qa-test): suite completa verde dopo i punti 10, 6, 8 — 311 passed",
+ "contesto": "Dopo aver chiuso i tre punti rimasti del mandato (10: N3 misurato dalla spec, nessuna correzione al test; 6: e2e/l13-f02-struttura-titoli.spec.ts nuovo; 8: quarto caso in e2e/modi-di-sbagliare-misura.spec.ts), eseguo `pnpm exec playwright test` completo dalla radice come richiesto dal mandato, avendo ancora turni disponibili.",
+ "evidenza": [
+  "$ pnpm exec playwright test --reporter=list  (webServer su 127.0.0.1:34599, HEAD 6c819bb) -> 311 passed (47.3s), zero falliti. Output completo salvato in docs/evidenza/8/l14/qa-test/suite-completa.txt",
+  "$ ss -ltnp | grep -i -E 'node|astro|preview' -> due processi node in ascolto su 127.0.0.1:33595 e 127.0.0.1:42489, NESSUNO sulla porta 34599 di questa esecuzione (verificato con $ ss -ltnp | grep 34599 -> nessun risultato): il webServer di Playwright di questa sessione si e' chiuso da solo a fine suite. Le due porte in ascolto non sono di questa esecuzione (porta diversa, assegnata dal sistema operativo a ogni run per costruzione di playwright.config.ts) e restano fuori dal perimetro di questa worktree"
+ ],
+ "esito": "suite verde, nessun server di questa sessione lasciato in ascolto",
+ "umano_coinvolto": false
+}

@@ -54,7 +54,7 @@ l'etichetta resta quella che c'è.
 è la prima voce del file a usare la classe 4.
 
 **D06 è già stata decisa:** Andrea l'ha ratificata `pre-produzione` il 22/09/2026; la
-voce è **L10-D06** qui sotto. D05 è stata decisa il 23/09/2026 come **A07**. Restano
+voce è **A08** qui sotto. D05 è stata decisa il 23/09/2026 come **A07**. Restano
 quattro `D`: D01, D03, D04, D07.
 
 Dove stanno i `D` ancora in attesa: **non sono in questo file** — sono
@@ -323,7 +323,7 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   all'h1 reso («… (bozza)»), oppure dichiara che la divergenza è accettata finché le
   pagine restano bozze.
 
-## L10-D06 — Il contratto promette 24px su ogni elemento interattivo; WCAG 2.5.8 esenta i link nel testo
+## A08 — D06 (L10): il contratto promette 24px su ogni elemento interattivo; WCAG 2.5.8 esenta i link nel testo
 - Data: 22/09/2026 (registrata il 23/09/2026)
 - Classe: pre-produzione (era: fuori-lista nel finding di L10)
 - Ratificata da: Andrea, 22/09/2026

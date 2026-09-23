@@ -1,0 +1,242 @@
+{
+ "lotto": "L10",
+ "issue": "8",
+ "prodotto_da": "design (sessione di orchestrazione per il primo caso, agente @design per la replica)",
+ "data": "2026-09-22",
+ "base": "7532799 (origin/main)",
+ "ramo": "lotto/l10-evidenza-documento-prodotto",
+ "anteprima": "http://localhost:4321 — porta letta dal log di astro preview, non assunta",
+ "metodo": "Una sola sonda (.work/8/l10/misura.mjs) per tutte le 8 pagine. Per ogni pagina apre il documento servito via HTTP a 360x640 e 1280x800, nei due schemi di colore, ed estrae: ordine dei figli di <main>, gerarchia dei titoli, stili calcolati di 38 selettori, rettangoli rispetto alla piega, scorrimento orizzontale del documento, ordine di focus, tabindex positivi, bersagli sotto 24x24, testo sotto 16px, struttura della tabella di confronto, link e mailto, contrasti calcolati dai colori resi. Scatta la prima schermata, la pagina intera e l'anello di focus sul primo link del footer. La sonda non giudica: il confronto con docs/design/01-pagine.md e docs/design/00-sistema-e-componenti.md lo fa chi legge l'evidenza.",
+ "classi": "Le tre di CLAUDE.md: 1 unshipped (funzionalita' non ancora costruita), 2 accessibilita' (il documento fallisce un requisito), 3 shipped-vince (documento contro meccanismo gia' in produzione). Una differenza che non sta in nessuna delle tre e' dichiarata «fuori-lista»: non e' una classe, e' una segnalazione che la lista chiusa non la copre e che la decisione e' di Andrea.",
+ "note_gia_decise": [
+  {
+   "id": "N01",
+   "cosa": "Il footer e' a una colonna a ogni viewport: footer.piede nav ul ha flex-direction: column sia a 360x640 sia a 1280x800, e il separatore «·» prescritto da 00-sistema-e-componenti.md («Da breakpoint.md: link in riga, separati da un punto») non esiste nel documento servito.",
+   "stato": "GIA' NOTA E DECISA — DESIGN-AMENDMENTS.md A02(a), ipotesi (b) di ADR-0002 smentita. Non e' un finding nuovo: citata e superata."
+  },
+  {
+   "id": "N02",
+   "cosa": "Termini di servizio e cookie policy non hanno la sezione «Contatti» prescritta da docs/design/01-pagine.md (pagine 6 e 8).",
+   "stato": "GIA' NOTA E DECISA — da Andrea il 21/09/2026, rientra in L15. E' anche il finding F03 di L08. Non si riscopre."
+  }
+ ],
+ "finding": [
+  {
+   "id": "D01",
+   "pagina": "1 — Home (/)",
+   "viewport": "360x640",
+   "gravita": "media",
+   "classe_proposta": "fuori-lista",
+   "rientro": "L14 se Andrea decide che vale il documento; sessione di design se vale il prodotto",
+   "documento_dice": "docs/design/01-pagine.md, «1. Home — Comportamento a 360x640»: «Titolo, lead e prima carta modalita' visibili senza scorrere oltre la prima schermata; le altre due carte sotto, impilate».",
+   "prodotto_fa": "A 360x640 la prima carta modalita' comincia a 662px, cioe' 22px sotto la piega: non e' visibile senza scorrere. Titolo e lead lo sono.",
+   "misura": {
+    "comando": "node .work/8/l10/misura.mjs http://localhost:4321 home /",
+    "file": ".work/8/l10/evidenza/home-360x640-light.json, campo piega",
+    "output": "h1 top=159 bottom=332 interamente_sopra_la_piega=true; lead top=348 bottom=542 interamente_sopra_la_piega=true; prima_carta top=662 bottom=1049 inizia_sopra_la_piega=false (altezza viewport 640)",
+    "schermata": ".work/8/l10/schermate/home-360x640-piega.png"
+   },
+   "scenario": "Chi apre la Home da telefono a 360x640 vede titolo e paragrafo introduttivo ma nessuna delle tre carte modalita': deve scorrere di almeno 22px per vedere il bordo superiore della prima. La promessa del documento — che la prima carta sia sopra la piega — non e' mantenuta.",
+   "perche_fuori_lista": "Non e' classe 1 (la carta e' costruita e resa), non e' classe 2 (nessun requisito di accessibilita' viene violato: niente scorrimento orizzontale, nessun testo sotto 16px, l'ordine di focus e' quello del documento), non e' classe 3 (non c'e' un meccanismo in produzione che vinca: il sito non e' pubblicato). E' una prescrizione del documento che il contenuto reso non soddisfa. Per farla stare servirebbe accorciare h1 o lead, oppure ridurre le distanze verticali: sono decisioni di contenuto e di sistema visivo, cioe' una sessione di design, non una PR di implementazione (CLAUDE.md, «migliorativo non e' una classe»).",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  },
+  {
+   "id": "D02",
+   "pagina": "1 — Home (/), ma la causa e' comune a tutte le 8",
+   "viewport": "1280x800",
+   "gravita": "media",
+   "classe_proposta": "1 — unshipped (funzionalita' non ancora costruita)",
+   "rientro": "L14",
+   "documento_dice": "contracts/design-tokens.json, typography.font-size.700 = 3rem (48px), uso: «h1 dal breakpoint md in su (desktop)»; font-size.600 = 2.25rem (36px), uso: «h1 sotto il breakpoint md (mobile/tablet)». docs/design/00-sistema-e-componenti.md dichiara che i componenti usano i token per nome.",
+   "prodotto_fa": "L'h1 e' reso a 36px a 1280x800 esattamente come a 360x640: la regola che lo porta a font-size.700 sopra breakpoint.md non esiste nel CSS servito. font-size.700 e' emesso come custom property (--font-size-700:3rem) e non e' usato da nessuna regola.",
+   "misura": {
+    "comando": "node .work/8/l10/misura.mjs http://localhost:4321 home / ; grep -o \"@media[^{]*{\" site/dist/_astro/*.css | sort | uniq -c ; grep -o \"h1[^{}]*{[^}]*}\" site/dist/_astro/*.css",
+    "output": "main > h1 font-size = 36px a 360x640 e 36px a 1280x800; «1 @media (prefers-color-scheme:dark){» e' l'unica media query del foglio servito; «h1{font-size:var(--font-size-600)}» e' l'unica regola che fissa la misura dell'h1",
+    "file": ".work/8/l10/evidenza/home-360x640-light.json e home-1280x800-light.json, stili['main > h1'].font-size"
+   },
+   "scenario": "Su un desktop a 1280px il titolo principale resta della misura pensata per il telefono. La gerarchia tipografica del sistema visivo, che distingue h1 mobile da h1 desktop, non esiste nel prodotto: h1 (36px) e h2 (30px) distano 6px invece dei 18px previsti dai token.",
+   "causa_comune": "Nel CSS servito non esiste NESSUNA media query di breakpoint: l'unica e' prefers-color-scheme. Il meccanismo per scriverle c'e' gia' — ADR-0004 (proposta) e il visitor di Lightning CSS sono montati in site/astro.config.mjs e risolvono @media (--bp-<k>) — ma nessun componente lo usa. E' la stessa causa della nota N01 (footer a una colonna, DESIGN-AMENDMENTS A02(a)), che percio' resta aperta: A02 si chiude «quando L06 mette i breakpoint», e L06 non li ha messi.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra.",
+   "correzione": {
+    "ts": "2026-09-22, dopo la misura di @design in journal/2026-09-22/105600-design-fallimento.json",
+    "cosa_era_sbagliato": "Il campo causa_comune qui sopra dice «Nel CSS servito non esiste NESSUNA media query di breakpoint» e «nessun componente lo usa». E' falso, e resta scritto sopra invece di essere cancellato: la misura che lo sosteneva guardava solo i fogli esterni (site/dist/_astro/*.css) e non gli stili con scope di componente, che Astro inlina nell'HTML.",
+    "misura_che_corregge": "$ grep -roh \"@media[^{]*{\" site/dist --include=*.html | sort | uniq -c -> «2 @media (min-width:1280px){» e «8 @media (min-width:768px){». 768px e 1280px sono breakpoint.md e breakpoint.lg: il meccanismo di ADR-0004 e' in uso su cinque componenti (griglia delle carte, riga del listino, blocco di chiusura, tabella di confronto). Le tre pagine legali non ne hanno nessuna, perche' non hanno componenti con breakpoint.",
+    "cosa_resta_vero": "Il fatto del finding non cambia: l'h1 e' 36px a 360x640 e 36px a 1280x800, e font-size.700 non e' usato da nessuna regola ($ grep -roh \"font-size:var(--font-size-700)\" site/dist | wc -l -> 0). Cambia la spiegazione: non e' che i breakpoint manchino nel prodotto, e' che l'h1 (come l'intestazione e il pie' di pagina) non ne ha uno.",
+    "chi_l_ha_trovato": "@design, riverificando il primo caso invece di darlo per buono. La misura sbagliata era del filo principale."
+   }
+  },
+  {
+   "id": "D03",
+   "pagina": "6 — Termini di servizio (/legale/termini-di-servizio/); il secondo fatto riguarda tutte le 8",
+   "viewport": "360x640 e 1280x800 (identico: nessuna regola di breakpoint in gioco)",
+   "gravita": "media",
+   "classe_proposta": "fuori-lista",
+   "rientro": "L15 per il contenuto della bozza (site/src/content/legale/termini-di-servizio.md); L14 se si decide di correggere invece il pie' di pagina (site/src/components/) — ma la scelta fra i due e' di Andrea, non mia",
+   "documento_dice": "docs/design/01-pagine.md, «6. Termini di servizio (bozza)», struttura punto 6: «Le tre modalita' di fornitura» (SaaS, Hosted, On-premise, ciascuna con un rimando alla propria pagina — **soddisfa AC1**)». E «Ordine di focus»: «Generale; dentro il contenuto, i link verso SaaS/Hosted/On-premise citati nella sezione «Le tre modalita' di fornitura», nell'ordine in cui compaiono nel testo». E docs/design/00-sistema-e-componenti.md, componente «pie' di pagina»: «Soddisfa AC8 (link alle tre pagine legali) e contribuisce ad AC1 fornendo i link a SaaS/Hosted/On-premise anche quando il contenuto principale di una pagina legale non li cita nel testo».",
+   "prodotto_fa": "Nella sezione «Le tre modalita'» dei Termini non c'e' nessun link: le tre modalita' sono le righe di una tabella di testo semplice. E il pie' di pagina non contiene i link a SaaS/Hosted/On-premise: porta solo i tre link legali piu' la riga «© OwnConsent — ragione sociale da definire». Sulle tre pagine legali, quindi, i rimandi alle pagine di modalita' esistono solo nella navigazione di testata. Nessuna delle due reti di sicurezza che il documento descrive e' in opera.",
+   "misura": {
+    "comando": "node .work/8/l10/misura.mjs http://localhost:4321 termini /legale/termini-di-servizio/ ; poi python3 su evidenza/termini-1280x800-light.json, campi link e ordine_focus ; e curl del documento servito per il markup del pie' di pagina",
+    "output_link": "link = [('Salta al contenuto','#contenuto'), ('OwnConsent','/'), ('Home','/'), ('SaaS','/saas/'), ('Hosted','/hosted/'), ('On-premise','/on-premise/'), ('Confronto modalita' e listino','/confronto/'), ('Termini di servizio','/legale/termini-di-servizio/'), ('Informativa privacy','/legale/informativa-privacy/'), ('Cookie policy','/legale/cookie-policy/')] — dieci link esatti: sette di testata piu' tre di pie' di pagina, nessuno dentro <main>.",
+    "output_focus": "ordine_focus = [Salta al contenuto, OwnConsent, Home, SaaS, Hosted, On-premise, Confronto modalita' e listino, Termini di servizio, Informativa privacy, Cookie policy] — fra la nav e il pie' di pagina non c'e' nessun passo: il punto 4 dell'ordine generale («Contenuto principale della pagina») e' vuoto su questa pagina.",
+    "output_footer": "<footer class=\"piede\"><nav aria-label=\"Legale\"><ul><li><a href=\"/legale/termini-di-servizio/\">Termini di servizio</a></li><li><a href=\"/legale/informativa-privacy/\">Informativa privacy</a></li><li><a href=\"/legale/cookie-policy/\">Cookie policy</a></li></ul></nav><p>© OwnConsent — ragione sociale da definire</p></footer>",
+    "file": ".work/8/l10/evidenza/termini-1280x800-light.json e termini-360x640-light.json, campi link e ordine_focus",
+    "schermata": ".work/8/l10/schermate/termini-1280x800-intera.png"
+   },
+   "nota_sul_documento": "Le due prescrizioni si contraddicono a vicenda dentro 00-sistema-e-componenti.md: l'«Anatomia» del pie' di pagina elenca solo i tre link legali e la riga di chiusura, mentre la riga «Presente su» dello stesso componente gli attribuisce anche i link a SaaS/Hosted/On-premise. Il prodotto ha implementato l'anatomia. Non e' il prodotto ad aver disobbedito: e' il documento a dire due cose diverse in dodici righe di distanza.",
+   "scenario": "Chi arriva sulla bozza dei Termini da un motore di ricerca e vuole capire che cosa cambia fra SaaS, Hosted e On-premise legge i tre nomi dentro una tabella e non ha nessun modo, dal corpo della pagina, di aprirne una: deve tornare in cima alla pagina e usare la navigazione. Chi naviga da tastiera lo vive in modo piu' netto: dal link «Confronto modalita' e listino» della testata il tasto Tab successivo porta gia' nel pie' di pagina, saltando l'intero contenuto — su una pagina lunga 15 blocchi, nessuno dei quali e' raggiungibile.",
+   "perche_fuori_lista": "Non e' classe 1: la sezione «Le tre modalita'» esiste ed e' resa, non e' una funzionalita' non costruita di cui disegnare lo stato vuoto. Non e' classe 2: nessun criterio WCAG impone che un testo che nomina una pagina la colleghi, e l'ordine di focus reso e' l'ordine del documento, senza tabindex positivi. Non e' classe 3: non c'e' un meccanismo in produzione che vinca sul documento — il sito non e' pubblicato. E' una prescrizione del documento che il prodotto non soddisfa, su un documento che per di piu' si contraddice: la decisione (aggiungere i link nella bozza, aggiungerli al pie' di pagina, o correggere 00-sistema-e-componenti.md) e' di Andrea.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  },
+  {
+   "id": "D04",
+   "pagina": "6 — Termini di servizio (/legale/termini-di-servizio/)",
+   "viewport": "360x640 (il difetto si vede qui); misurata anche a 1280x800",
+   "gravita": "media",
+   "classe_proposta": "fuori-lista",
+   "rientro": "L15 (la tabella nasce dal markdown di site/src/content/legale/termini-di-servizio.md)",
+   "documento_dice": "docs/design/01-pagine.md, «6. Termini di servizio (bozza)», punto 6, prescrive per quella pagina una struttura di paragrafi — «Oggetto del servizio», «Le tre modalita' di fornitura», «Modifiche ai termini», «Legge applicabile e foro competente», «Contatti» — e nessuna tabella. L'unica tabella dell'intera consegna e' il componente «tabella di confronto» di docs/design/00-sistema-e-componenti.md, «Presente su: Confronto modalita' e listino», che prescrive: <caption>, «Ogni cella di intestazione ha scope=\"col\"/scope=\"row\" secondo il ruolo», e sotto 400px «si passa dal layout tabellare a un layout a blocchi con solo CSS... ogni td porta un attributo data-etichetta... ogni riga diventa un blocco con bordo, radius.md, padding spacing.4».",
+   "prodotto_fa": "La sezione «Le tre modalita'» dei Termini rende una seconda tabella di confronto (colonne: Modalita', Che cosa riceve il cliente, Chi registra la piattaforma; righe: SaaS, Hosted, On-premise) che non e' il componente e non ne ha niente: nessun <caption>, 3 <th> e 0 con scope, 0 celle con data-etichetta, e a 360px resta display:table — le tre colonne si comprimono a 69px, 152px e 100px invece di diventare blocchi.",
+   "misura": {
+    "comando": "node .work/8/l10/tabella-termini.mjs (Playwright sul documento servito: main table, computed style e rettangoli alle due viewport)",
+    "output_360": "display=table; rect 328x426; scrollWidth 328 = clientWidth 328 (la tabella non scorre: si comprime); caption=false; th_totali=3, th_con_scope=0; td_con_data_etichetta=0; thead display=table-header-group (non nascosto, non a blocchi). Celle della prima riga: 69x122, 152x122, 100x122 — «configurazione e distribuzione a cura del fornitore, con piani per volume di richieste» occupa 8 righe di testo in 152px di larghezza.",
+    "output_1280": "display=table; rect 883x114 — a 1280 si legge senza problemi: il difetto e' solo sotto 400px.",
+    "documento_non_scorre": "document.documentElement.scrollWidth 360 = clientWidth 360: AC37 (nessuno scorrimento orizzontale a 360px) non e' violato. Il prezzo e' pagato in compressione, non in scorrimento.",
+    "file": ".work/8/l10/evidenza/termini-360x640-light.json (scorrimento_orizzontale, ordine_main)",
+    "schermata": ".work/8/l10/schermate/termini-360x640-tabella.png — la colonna centrale a 152px con «On-premise» spezzato in «On-» / «premise»"
+   },
+   "scenario": "Chi apre la bozza dei Termini da un telefono a 360px, alla sezione «Le tre modalita'», legge una colonna di prosa larga 152px: otto righe da tre o quattro parole, senza bordi che separino una modalita' dall'altra, senza l'etichetta di colonna ripetuta accanto al valore. La stessa informazione, sulla pagina Confronto, la stessa persona la legge come tre blocchi con bordo, ciascuno con «SaaS», «Hosted», «On-premise» stampato sopra il valore. Due rese diverse dello stesso confronto sullo stesso sito, e quella peggiore sta sulla pagina che ha valore legale.",
+   "perche_fuori_lista": "Non e' classe 1: la tabella e' costruita e resa, non e' uno stato vuoto da disegnare. Non e' classe 2: la tabella ha <thead>/<th> e le relazioni implicite di una tabella semplice a una sola riga di intestazione sono comunque esposte agli screen reader, il documento non scorre orizzontalmente e nessun testo scende sotto 16px — nessun criterio WCAG e' fallito. Non e' classe 3: nessun meccanismo in produzione. E' un elemento che il documento di design non prevede su quella pagina e che, essendo nato dal markdown, non passa da nessun componente: ne' da «tabella di confronto», ne' da altro. Se si decide che deve restare, va deciso anche se debba diventare il componente — ed e' una sessione di design, non una PR di implementazione.",
+   "non_e_un_doppione": "Non coincide con nessuno dei 19 finding confermati di L08: F03 riguarda la sezione «Contatti» mancante nella stessa pagina, non questa tabella; nessun altro finding di L08 nomina una tabella nelle bozze legali.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  },
+  {
+   "id": "D05",
+   "pagina": "6, 7 e 8 — le tre bozze legali",
+   "viewport": "360x640 e 1280x800 (identico: e' contenuto, non impaginazione)",
+   "gravita": "bassa",
+   "classe_proposta": "fuori-lista",
+   "rientro": "L15 per i tre .md; L14 solo per la riga di site/src/pages/legale/[slug].astro che alimenta insieme <title> e <h1>",
+   "documento_dice": "docs/design/01-pagine.md prescrive per ciascuna delle tre pagine un <h1> senza la parola «bozza» — «4. <h1>: «Termini di servizio»», «4. <h1>: «Informativa privacy»», «4. <h1>: «Cookie policy»» — e riserva la parola «(bozza)» al <title> e al contrassegno. Prescrive inoltre titoli di sezione precisi, e per la cookie policy un «testo chiave» citato per esteso: «Le pagine pubbliche di OwnConsent non impostano cookie ne' scrivono in localStorage, sessionStorage, IndexedDB o Cache Storage prima di alcuna tua scelta. Non ci sono banner di consenso su queste pagine perche' non c'e' nulla da consentire.»",
+   "prodotto_fa": "Le tre bozze seguono un impianto proprio, non quello del documento. (a) L'h1 e' «Termini di servizio (bozza)», «Informativa privacy (bozza)», «Cookie policy (bozza)»: la parola compare tre volte sulla stessa schermata (contrassegno, h1, paragrafo di avviso). (b) I titoli di sezione sono altri: «Che cosa e' OwnConsent» invece di «Oggetto del servizio», «Le tre modalita'» invece di «Le tre modalita' di fornitura», «Modifiche a questi termini» invece di «Modifiche ai termini»; «Quali dati tratta questo sito» invece di «Quali dati trattiamo», «Diritti di chi ci scrive» invece di «Diritti dell'interessato». (c) La cookie policy non ha «Cosa sono i cookie» ne' «Se in futuro verranno introdotti cookie tecnici», e il testo chiave e' riscritto: dice le stesse cose («localStorage, sessionStorage, IndexedDB e Cache Storage restano intatti dopo la visita», «Perche' non c'e' nulla da consentire») in parole diverse. (d) Al posto delle sezioni prescritte e non scrivibili, tutte e tre portano una sezione «Che cosa manca a questa bozza» con l'elenco puntato di cio' che manca.",
+   "misura": {
+    "comando": "node .work/8/l10/misura.mjs http://localhost:4321 termini|privacy|cookie <percorso> ; poi ricerca letterale delle frasi del documento nel campo testo_completo_main",
+    "output_h1": "titoli[0] = (1, 'Termini di servizio (bozza)'), (1, 'Informativa privacy (bozza)'), (1, 'Cookie policy (bozza)'). Un solo h1 per pagina, nessun salto di livello.",
+    "output_frasi": "'Cosa sono i cookie' -> False ; 'non impostano cookie ne' scrivono in localStorage' -> False ; 'Se in futuro' -> False ; 'Oggetto del servizio' -> False (termini) ; 'Legge applicabile' -> False, ma 'foro compet' -> True (dentro l'elenco di cio' che manca) ; 'Finalita'' -> False (privacy), ma 'base giuridica' -> True (idem).",
+    "meccanismo": "site/src/content/legale/termini-di-servizio.md, frontmatter: «titolo: Termini di servizio (bozza)». site/src/pages/legale/[slug].astro riga 23 «const titolo = `${voce.data.titolo} — OwnConsent`» e riga 49 «<h1>{voce.data.titolo}</h1>»: un solo campo alimenta <title> e <h1>, quindi oggi non possono differire. Non e' una svista di scrittura: e' la forma del modello.",
+    "file": ".work/8/l10/evidenza/{termini,privacy,cookie}-{360x640,1280x800}-light.json, campi titoli e testo_completo_main",
+    "schermata": ".work/8/l10/schermate/termini-360x640-piega.png"
+   },
+   "scenario": "Chi apre la bozza della cookie policy cerca la frase che il documento di design ha scelto come testo chiave — quella che il sito promette e che AC9 verifica — e non la trova: ne trova una equivalente, scritta altrove nella pagina, con parole diverse. Chi fa il controllo a mano prima della pubblicazione, con il documento in una finestra e la pagina nell'altra, non puo' spuntare nessuna delle due liste, perche' i titoli di sezione non combaciano: deve ricostruire a mano quale sezione del prodotto corrisponde a quale voce del documento, tre volte.",
+   "perche_fuori_lista": "Non e' classe 1 in senso stretto — anzi, il punto (d) e' classe 1 fatta bene: le sezioni che nessun agente puo' scrivere («legge applicabile e foro competente», «i tempi di conservazione dei messaggi») non sono state inventate ne' lasciate in silenzio, sono dichiarate in un elenco esplicito. E' lo «stato vuoto disegnato» che CLAUDE.md chiede. Non e' classe 2: nessun requisito di accessibilita' in gioco. Non e' classe 3: niente in produzione. Resta un documento e un prodotto che descrivono due impianti diversi della stessa pagina, e la domanda vera non e' «chi ha sbagliato» ma «quale dei due si aggiorna»: la bozza legale e' piu' precisa del documento di design su almeno due punti (il segnaposto letterale del titolare, l'elenco di cio' che manca), ma il documento e' l'artefatto committato da cui si implementa. La decisione e' di Andrea.",
+   "gia_noto_e_non_riaperto": "La sezione «Contatti» assente da Termini e Cookie policy e' N02 / F03 di L08, gia' decisa da Andrea il 21/09 per L15: non la riapro. Aggiungo solo un fatto che F03 non registra — «Contatti» manca anche all'informativa privacy, dove pero' il recapito e' pubblicato lo stesso, dentro «Titolare del trattamento», come mailto senza oggetto precompilato: «mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid», conforme a DP-27/DP-29. Le sezioni «Finalita' e base giuridica» e «Per quanto tempo conserviamo i dati» assenti dall'informativa sono F11 di L08: nemmeno quelle riapro, ma registro che il loro contenuto e' dichiarato mancante nell'elenco «Che cosa manca a questa bozza», non taciuto — un dettaglio che F11 non riporta e che cambia quanto e' grave.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  },
+  {
+   "id": "D06",
+   "pagina": "7 — Informativa privacy (/legale/informativa-privacy/)",
+   "viewport": "1280x800 (a 360x640 il difetto non si manifesta, e il perche' e' parte del finding)",
+   "gravita": "media",
+   "classe_proposta": "fuori-lista",
+   "rientro": "L14 se si decide di dare al link un'altezza minima (e' CSS di componente, fuori da site/src/content/legale/); nessun rientro se si decide invece di correggere l'affermazione in contracts/design-tokens.json — quella e' una modifica di contratto e passa da @architect con un ADR (CLAUDE.md, regola 2 del cantiere)",
+   "documento_dice": "contracts/design-tokens.json, touch-target.min-undisturbed-space: «in alternativa alla dimensione minima: diametro dello spazio indisturbato richiesto attorno a un bersaglio piu' piccolo di 24x24... eccezione di 2.5.8. **In questo sistema non e' usata: ogni elemento interattivo rispetta gia' min-size**». E docs/design/00-sistema-e-componenti.md, principi generali: «**Ogni elemento interattivo rispetta `touch-target.min-size`** (24x24 CSS px, WCAG 2.5.8)», senza eccezioni dichiarate.",
+   "prodotto_fa": "Su 11 elementi interattivi della pagina, dieci rispettano i 24x24. L'undicesimo — l'unico link del contenuto, il mailto del recapito del titolare — e' alto 17px: display inline dentro un <p>, font-size 16px, line-height 24px, rettangolo 449x17. L'affermazione del contratto e' falsa sul prodotto reso, e lo e' proprio grazie all'eccezione che il contratto dichiara di non usare.",
+   "misura": {
+    "comando": "node .work/8/l10/misura.mjs http://localhost:4321 privacy /legale/informativa-privacy/ ; poi node .work/8/l10/tabella-termini.mjs per il contesto del link",
+    "output_1280": "bersagli_sotto_24 = [{\"testo\": \"segnaposto-nome-casella@segnaposto-domin\", \"top\": 385, \"left\": 414, \"larghezza\": 449, \"altezza\": 17, \"bottom\": 402}] — un elemento, quel link.",
+    "output_360": "bersagli_sotto_24 = [] — a 360px il testo del link va a capo su piu' righe e il rettangolo di unione supera i 24px in altezza. Il bersaglio per riga resta alto 17px: e' la misura a cambiare, non il bersaglio. Chi verificasse solo a 360px non vedrebbe niente.",
+    "contesto": "display=inline, lineHeight=24px, fontSize=16px, padre <p>: «Il recapito del titolare per le richieste sui dati personali e' segnaposto-nome-casella@segnaposto-dominio-casella.invalid: e' l'unico indirizzo del sito...»",
+    "controprova_sulle_altre_sette": "bersagli_sotto_24 = [] su home, saas, hosted, onpremise, confronto, termini e cookie, a entrambe le viewport: l'informativa privacy e' l'unica pagina con un link in linea dentro una frase, ed e' l'unica che inciampa.",
+    "file": ".work/8/l10/evidenza/privacy-1280x800-light.json e privacy-360x640-light.json, campo bersagli_sotto_24",
+    "schermata": ".work/8/l10/schermate/privacy-1280x800-mailto-focus.png (il link a fuoco, anello 2px solid rgb(122,75,0) offset 2px: il focus e' visibile, quello non e' in discussione)"
+   },
+   "scenario": "Chi legge l'informativa su un telefono tenuto in una mano e vuole scrivere al titolare per esercitare un diritto tocca un bersaglio alto 17px in mezzo a una riga di testo: sopra e sotto c'e' altro testo della stessa frase, non spazio. Se manca, non succede niente — non apre il client di posta e non capisce perche'. E' il gesto piu' importante che quella pagina offre, ed e' l'unico bersaglio del sito piu' piccolo del minimo che il sistema dichiara di garantire ovunque.",
+   "perche_fuori_lista": "Non e' classe 2, ed e' importante dirlo con precisione: WCAG 2.2, criterio 2.5.8, esenta esplicitamente il bersaglio «in linea in una frase o la cui dimensione e' vincolata dall'interlinea del testo non-bersaglio» (eccezione «Inline»). Questo link e' esattamente quel caso: il prodotto **non** viola WCAG. Non e' classe 1 (il link e' costruito) ne' classe 3 (niente in produzione). Cio' che non regge e' l'invariante scritto nel contratto: contracts/design-tokens.json afferma che l'eccezione «non e' usata» e che «ogni elemento interattivo rispetta gia' min-size», e sul prodotto reso quell'affermazione e' falsa. La divergenza e' fra il contratto e la resa, non fra la resa e WCAG. Le due uscite — alzare il link a 24px, oppure correggere il contratto perche' dichiari l'eccezione inline che sta effettivamente usando — non sono equivalenti: la seconda tocca un contratto. Decide Andrea.",
+   "perche_conta_comunque": "Un'affermazione assoluta dentro un contratto e' cio' su cui poi si scrive un test. Finche' resta cosi', un test di AC37/AC40 scritto sulla lettera del contratto fallira' su questa pagina, e chi lo leggera' non sapra' se il difetto e' nel test, nella pagina o nel contratto.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  },
+  {
+   "id": "D07",
+   "pagina": "2 SaaS, 3 Hosted, 4 On-premise, 5 Confronto — il componente e' su quattro pagine su otto",
+   "viewport": "1280x800 (a 360x640 il componente e' impilato e si legge bene)",
+   "gravita": "bassa sulla resa, media sul processo",
+   "classe_proposta": "fuori-lista",
+   "rientro": "nessuno, finche' non c'e' una spec: scrivere la spec del componente e' una sessione di design. Se dopo la spec il valore reso divergera', quella correzione rientrera' in L14 (e' CSS di componente sotto site/src/components/).",
+   "documento_dice": "docs/design/01-pagine.md autorizza l'elemento ma non lo specifica: «Tabella o elenco strutturale dei piani (AC6, DP-21): righe con etichetta «Piano» e valore segnaposto «da definire»... Esempio di riga: «Tetto di richieste incluso nel piano: da definire»» (punto 7 di SaaS; analoghi per Hosted e On-premise). docs/design/00-sistema-e-componenti.md specifica sette componenti — intestazione, pie' di pagina, contrassegno «pagina dimostrativa», contrassegno «bozza», valore «da definire», carta modalita', tabella di confronto, link mailto in stile bottone, blocco di chiusura — e **nessuno di questi e' l'elenco strutturale del listino**: grep -n -i 'listino' su quel file restituisce solo occorrenze del nome della pagina «Confronto modalita' e listino» e del componente «valore da definire». Il mandato di @design in CLAUDE.md dice: «Spec di componente — obbligatoria per ogni componente nuovo: anatomia, stati, comportamento responsive (cosa fa sotto i 400px)».",
+   "prodotto_fa": "Il componente esiste, e' reso su quattro pagine, ha una classe propria (dl.listino-struttura, con figli div.riga) e una propria regola di breakpoint a 768px — ma non ha spec. La regola inlinata e' «@media (min-width:768px){.riga{justify-content:space-between;gap:var(--spacing-6);flex-direction:row}}». La conseguenza a 1280: l'etichetta resta ancorata a sinistra e il valore vola all'estremo destro del contenuto, con 1052px, 911px e 1050px di bianco in mezzo.",
+   "misura": {
+    "comando": "node .work/8/l10/listino.mjs (Playwright sul documento servito, dl.listino-struttura della pagina SaaS alle due viewport)",
+    "output_1280": "righe: display=flex, justify-content=space-between, flex-direction=row, ciascuna larga 1248px. dt: «Numero di piani» right=137, «Tetto di richieste incluso nel piano» right=278, «Canone mensile» right=139. dd: tutti e tre left=1189. gap dt->dd = [1052, 911, 1050] px.",
+    "output_360": "righe: flex-direction=column, justify-content=normal; dd left=16, sotto il dt. gap dt->dd = [-328,-328,-328] (cioe' incolonnati). A 360px si legge bene: e' la resa desktop il caso non deciso.",
+    "regola_che_lo_fa": "grep -o \"@media (min-width:[0-9]*px){[^@]*\" site/dist/saas/index.html -> «@media (min-width:768px){.riga[data-astro-cid-2joriptf]{justify-content:space-between;gap:var(--spacing-6);flex-direction:row}}». 768px e' breakpoint.md. Da notare: il gap dichiarato e' spacing.6 (24px), ma con justify-content:space-between il gap non ha alcun effetto — lo spazio reale fra i due elementi e' tutto quello che avanza.",
+    "verifica_dell_assenza_di_spec": "grep -n -i 'listino' docs/design/00-sistema-e-componenti.md -> righe 34, 54, 78, 120, 172, 173, 234: tutte occorrenze del nome della pagina «Confronto modalita' e listino» o del componente «valore segnaposto da definire». Nessuna sezione «## Componente:» lo riguarda.",
+    "file": ".work/8/l10/evidenza/{saas,hosted,onpremise,confronto}-1280x800-light.json, stili['dl.listino-struttura'] e stili['dl.listino-struttura dd']",
+    "schermata": ".work/8/l10/schermate/saas-1280x800-listino.png (visto con Read: etichetta a sinistra, «da definire» in corsivo all'estremo destro, un filetto sottile fra una riga e l'altra) e saas-360x640-listino.png"
+   },
+   "scenario": "Chi guarda la pagina SaaS su un portatile a 1280px e vuole sapere quale sia il canone mensile legge «Canone mensile» a sinistra e deve attraversare un metro di schermo vuoto per trovare «da definire» all'estremo opposto. Con tre righe consecutive e tre valori identici, l'unico appiglio per capire quale valore appartiene a quale etichetta e' il filetto orizzontale fra le righe. Sulla pagina Confronto, dove gli elenchi sono tre di fila sotto tre h3, la stessa persona compie il gesto nove volte. Nessuno ha deciso che dovesse essere cosi': non c'e' un documento in cui quella decisione sia scritta.",
+   "perche_fuori_lista": "Non e' classe 1: il componente e' costruito e reso, non e' una funzionalita' assente di cui disegnare lo stato vuoto. Non e' classe 2: l'associazione fra etichetta e valore e' programmaticamente corretta (e' un <dl> con <dt> e <dd>, letti in coppia da uno screen reader indipendentemente dalla distanza visiva), il testo e' a 16px e il contrasto del valore «da definire» e' 6.88:1 — nessun criterio WCAG e' fallito. Non e' classe 3: niente in produzione. E non e' nemmeno, a rigore, «documento contro prodotto», perche' il documento su questo punto **non dice niente**: e' l'assenza stessa a essere il finding. La lista chiusa delle tre classi presuppone che il documento abbia una posizione; qui non ce l'ha.",
+   "non_e_un_miglioramento_proposto": "Non propongo un valore diverso — non e' compito di un lotto di verifica e «migliorativo non e' una classe». Registro che un componente reso su meta' del sito non ha la spec che il metodo del progetto rende obbligatoria, e che la prima conseguenza visibile e' misurabile in 1052px.",
+   "non_corretto_qui": "L10 e' un lotto di verifica: trova e registra."
+  }
+ ],
+ "conformita_verificate": [
+  {
+   "id": "C01",
+   "pagina": "1 — Home (/)",
+   "cosa": "L'anello di focus del footer usa focus-ring-on-inverse e non focus-ring: e' la divergenza D-2 del piano, ratificata da Andrea il 19/09 come classe 2. Misurata, non dedotta.",
+   "misura": "focus sul primo link del footer -> outline 2px solid rgb(240,170,46) offset 2px; focus sul primo link della nav -> outline 2px solid rgb(122,75,0) offset 2px. #F0AA2E e' focus-ring-on-inverse (chiaro), #7A4B00 e' focus-ring (chiaro). docs/design/contrast-check.py, eseguito sul ramo: «focus ring su inverse (componente UI, footer) #F0AA2E / #17191C 8.80:1 soglia 3.0:1 PASS», exit 0, TUTTE LE COPPIE OBBLIGATORIE PASSANO."
+  },
+  {
+   "id": "C02",
+   "pagina": "1 — Home (/)",
+   "cosa": "Struttura, ordine di focus, assenza di script, gerarchia dei titoli e regole generali di 00-sistema-e-componenti.md: conformi a entrambe le viewport.",
+   "misura": "ordine_main = [h1, p.lead, section, section] come i punti 3-6 del documento; titoli = h1, h2, h3 SaaS, h3 Hosted, h3 On-premise, h2 (nessun salto di livello, un solo h1); ordine_focus = salta-al-contenuto, nome sito, Home, SaaS, Hosted, On-premise, Confronto, Scopri di piu' x3 in ordine SaaS->Hosted->On-premise, link al confronto, poi i tre link legali del footer — esattamente l'ordine dichiarato da 00-sistema-e-componenti.md e dalla sezione «Ordine di focus» della Home; tabindex positivi = 0; script nel documento = 0; scorrimento orizzontale = false a 360 e a 1280; bersagli sotto 24x24 = nessuno; testo sotto 16px = nessuno; tre carte su una riga a 1280 (grid-template-columns 400px 400px 400px) e una per riga a 360; carta con bordo 1px solid rgb(138,146,155) = border-default e radius 8px = radius.md, padding 24px = spacing.6; h2 30px = font-size.500, h3 di carta 24px = font-size.400, lead 18px = font-size.200."
+  },
+  {
+   "id": "C03",
+   "pagina": "5 — Confronto modalita' e listino (/confronto/)",
+   "cosa": "Il componente «tabella di confronto» ha davvero le due rese prescritte da 00-sistema-e-componenti.md, e la sospetta assenza segnalata nel mandato era infondata. E' il componente piu' difficile della consegna ed e' quello riuscito meglio.",
+   "misura": "A 360x640: display_table=block, display_thead=block con clip-path=inset(50%) e position=absolute (rettangolo 1x1: nascosto visivamente, non display:none, quindi ancora letto), display_tr=block, display_td=block, td_before_content=\"SaaS\", celle_con_data_etichetta=12 su 12 td, scorre_orizzontalmente=false, documento scrollWidth 360 = clientWidth 360. A 1280x800: display_table=table, thead=table-header-group, clip_path=none, position=static, tr=table-row, td=table-cell, td_before_content=none, quattro colonne vere a left 16/331/674/1000. Comune a entrambe: scope_col=3, scope_row=4, caption=«Confronto fra SaaS, Hosted e On-premise», ultima riga «Come si attiva» con «Scrivici» nelle tre celle (AC4). La regola che lo fa e' «@media (min-width:1280px)» inlinata in site/dist/confronto/index.html: breakpoint.lg."
+  },
+  {
+   "id": "C04",
+   "pagina": "2 SaaS, 3 Hosted, 4 On-premise, 5 Confronto",
+   "cosa": "AC5 (contrassegno «pagina dimostrativa» visibile senza scorrere), AC6 (nessun valore, nessun nome di piano), AC49 (il testo sul superamento del tetto, su SaaS e su Confronto), AC33 e AC34 (i testi esatti di Hosted e On-premise), e la struttura in ordine dei punti 3-11 di 01-pagine.md. Tutto conforme, alle due viewport e nei due temi.",
+   "misura": "AC5: piega.badge interamente_sopra_la_piega=true in tutti e otto i casi (360: top 159 bottom 223, due righe; 1280: top 87 bottom 127, larghezza 474.75px = larghezza del testo). Guardato anche con Read su saas-360x640-piega.png e confronto-1280x800-piega.png. AC6: ricerca sui testo_completo_main delle quattro pagine -> percentuali [], numeri [], occorrenze di «euro/EUR/€» [], «in arrivo» False, «prossimamente» False; «da definire» compare 3 volte su SaaS, 3 su Hosted, 1 su On-premise, 8 su Confronto, sempre in corsivo con color text-muted (#545B63, 6.88:1 chiaro; #8A929B, 6.09:1 scuro) e font-size 16px, mai piu' piccolo del testo intorno. AC49: la frase «Superare il tetto non interrompe il servizio. Non ci sono addebiti automatici per l'eccedenza. Ti avvisiamo prima che tu raggiunga il tetto; se il superamento si ripete, ti proponiamo un cambio di piano, deciso da una persona.» e' presente identica su /saas/ (sezione «Se superi il tetto») e su /confronto/ (sezione «Come contiamo le richieste»). Ordine di main: badge, h1, lead, le sezioni nell'ordine del documento, blocco di chiusura ultimo prima del footer su SaaS/Hosted/On-premise; su Confronto nessun blocco di chiusura e mailto=[] , come il punto 9 prescrive. Mailto con l'oggetto giusto: ?subject=SaaS, ?subject=Hosted, ?subject=On-premise."
+  },
+  {
+   "id": "C05",
+   "pagina": "tutte e 8",
+   "cosa": "Tema chiaro e tema scuro resi insieme e coerenti con contracts/design-tokens.json, contrasti verificati sui colori resi e non sui token dichiarati. Anche l'anello di focus si scambia correttamente fra i due temi.",
+   "misura": "Tema scuro, valori resi: bg-canvas rgb(14,15,17)=#0E0F11, text-primary rgb(246,247,248)=#F6F7F8, text-secondary rgb(180,186,193)=#B4BAC1, text-muted rgb(138,146,155)=#8A929B, brand-bg rgb(61,138,220)=#3D8ADC, bg-inverse rgb(246,247,248)=#F6F7F8, text-on-inverse rgb(23,25,28)=#17191C, badge demo #FFE3AD su #4A2C00, badge bozza #DFC9F5 su #331755. Ogni valore coincide al byte con color.semantic.dark. Contrasti calcolati sui resi: h1 17.88:1, lead 9.80:1, «da definire» 6.09:1, CTA 5.36:1, badge 10.20:1 e 9.90:1, footer 16.42:1 — tutti sopra 4.5:1. Anello di focus in tema scuro (misurato, la sonda lo scattava solo in chiaro): nav e CTA rgb(240,170,46)=#F0AA2E=focus-ring scuro; primo link del footer rgb(122,75,0)=#7A4B00=focus-ring-on-inverse scuro. E' lo scambio esatto rispetto al tema chiaro (#7A4B00 per nav/CTA, #F0AA2E per il footer), cioe' quello che ADR-0002 D6 prescrive. Comando del progetto: python3 docs/design/contrast-check.py -> 36 coppie, «TUTTE LE COPPIE OBBLIGATORIE PASSANO», exit 0."
+  },
+  {
+   "id": "C06",
+   "pagina": "tutte e 8",
+   "cosa": "Le regole generali di 00-sistema-e-componenti.md, verificate su tutte e otto le pagine alle due viewport, e AC10.",
+   "misura": "Nessun JavaScript per mostrare contenuto: script_nel_documento=0 su tutte e otto (grep -c '<script' sui file di dist: 0). Nessuno scorrimento orizzontale a 360px: scorrimento_orizzontale.eccede=false su tutte e otto. Nessun testo sotto 16px: testo_sotto_16px=[] su tutte e otto, a entrambe le viewport. Nessun tabindex positivo: tabindex_positivi=0 su tutte e otto. Bersagli sotto 24x24: nessuno su sette pagine su otto (l'ottava e' il finding D06). Un solo h1 per pagina e nessun salto di livello di intestazione su tutte e otto. AC10: grep di tutte le URL assolute nei documenti serviti -> 8 occorrenze, tutte «https://segnaposto-dominio-sito.example/...» nel canonical, nessuna origine terza; form=0, script=0, img=0, nessun riferimento a fonts.g* in nessuna pagina. Intestazione: a 1280 il nome del sito resta a sinistra (left 16) e la navigazione va a destra (left 790) sulla stessa riga, come prescrive «Da breakpoint.md» — ottenuto con flex-wrap, senza media query, e il risultato e' quello prescritto. Blocco di chiusura: a 360 flex-direction=column con la CTA larga 280px cioe' tutta la larghezza interna del contenitore; a 1280 flex-direction=row, testo a sinistra e bottone a destra (left 1004) largo 236px, «larghezza automatica, mai a piena larghezza». Entrambe conformi."
+  }
+ ],
+ "copertura_dichiarata": {
+  "fatte": [
+   "1 — Home (/): 360x640 e 1280x800, temi chiaro e scuro, schermate piega/intera/focus-footer",
+   "2 — SaaS (/saas/): 360x640 e 1280x800, due temi",
+   "3 — Hosted (/hosted/): 360x640 e 1280x800, due temi",
+   "4 — On-premise (/on-premise/): 360x640 e 1280x800, due temi",
+   "5 — Confronto (/confronto/): 360x640 e 1280x800, due temi, componente «tabella di confronto» nelle due rese",
+   "6 — Termini di servizio (/legale/termini-di-servizio/): 360x640 e 1280x800, due temi",
+   "7 — Informativa privacy (/legale/informativa-privacy/): 360x640 e 1280x800, due temi",
+   "8 — Cookie policy (/legale/cookie-policy/): 360x640 e 1280x800, due temi",
+   "Tutte e 8 alle due viewport: struttura e ordine dei figli di main, gerarchia dei titoli, ordine di focus, tabindex positivi, bersagli sotto 24x24, testo sotto 16px, scorrimento orizzontale, script nel documento, origini terze, contrassegni sopra la piega, contrasti calcolati sui colori resi in tema chiaro e scuro",
+   "docs/design/contrast-check.py eseguito sul ramo: 36 coppie, TUTTE LE COPPIE OBBLIGATORIE PASSANO, exit 0"
+  ],
+  "non_guardato": [
+   "Stati al passaggio del puntatore e alla pressione (hover, active) dei link di navigazione, dei link del pie' di pagina, della carta modalita' e della CTA: la sonda misura default e focus, non hover ne' active. Le tabelle «Stati» di 00-sistema-e-componenti.md restano quindi verificate a meta'.",
+   "Lo stato «corrente (pagina aperta)» della navigazione: l'attributo aria-current=\"page\" e' presente, ma font-weight.semibold e la sottolineatura permanente che 00-sistema-e-componenti.md gli attribuisce non sono stati misurati.",
+   "Le viewport intermedie fra 360 e 1280 — in particolare la fascia 768-1279, dove il documento prevede due carte modalita' per riga. Il lotto dichiara due viewport e sono state misurate quelle due: la resa a breakpoint.md non e' stata guardata.",
+   "title, meta description, canonical e sitemap confrontati fra loro e con il documento: sono il perimetro di L13 (@seo), che corre in parallelo. Qui i valori sono stati estratti e allegati all'evidenza, non giudicati.",
+   "Il contenuto giuridico delle tre bozze nel merito: non e' una verifica di design ed e' un gate di persona competente (G3).",
+   "La resa su un dispositivo reale e su un browser diverso da Chromium: la sonda usa un solo motore."
+  ]
+ },
+ "esito": "8 pagine su 8 misurate e confrontate alle due viewport. 7 finding, 6 conformita' verificate, 1 finding scartato alla riverifica (journal 112000-design-fallimento.json), 1 misura del primo caso corretta da chi l'ha riverificata (journal 105600-design-fallimento.json)."
+}

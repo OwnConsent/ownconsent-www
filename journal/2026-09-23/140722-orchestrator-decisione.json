@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-23T14:07:22+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "decisione",
+  "titolo": "L10-D06 rinumerata A08, deciso da Andrea: il file si interroga per numero. Aggiornato anche il rimando nella nota, che era testo mio",
+  "contesto": "Mandato: rinumerare la voce, modificarla senza duplicarla, aggiornare i rimandi interni alla mia stessa voce e nessun altro. Fuori dal journal «L10-D06» compariva due volte: il titolo della voce e la riga 57 della nota («la voce e' **L10-D06** qui sotto»), frase introdotta da questa PR.",
+  "alternative": [
+    { "opzione": "cambiare solo il titolo", "scartata_perche": "la riga 57 e' un rimando alla mia voce, scritto da me in questa PR: lasciarla avrebbe prodotto un rimando morto verso una sigla che non esiste piu'. Non tocca nessuna voce ratificata da altri. Segnalato nel riepilogo ad Andrea" },
+    { "opzione": "aggiornare anche le voci di journal che citano L10-D06", "scartata_perche": "il journal registra cio' che era vero quando e' stato scritto; le correzioni si aggiungono, non si sovrascrivono (docs/JOURNAL.md)" }
+  ],
+  "evidenza": [
+    "$ grep -n \"^## A\" DESIGN-AMENDMENTS.md -> A01 riga 69, A02 77, A03 121, A04 147, A05 181, A06 233, A07 303, A08 326: continua, senza buchi",
+    "$ grep -n \"^## \" DESIGN-AMENDMENTS.md | grep -v \"^[0-9]*:## A[0-9][0-9] \" -> solo Formato, Le quattro classi ammesse, Voci",
+    "$ grep -c \"L10-D06\" DESIGN-AMENDMENTS.md -> 0"
+  ],
+  "esito": "applicata in un solo commit; ramo ancora da spingere con --force-with-lease da Andrea (gate 130934)",
+  "umano_coinvolto": true
+}

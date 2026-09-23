@@ -34,17 +34,15 @@ const { title, description, canonical } = Astro.props;
   </body>
 </html>
 <style>
-  /* L09-F1: al primo Tab, il link e' il primo elemento del body e siede a inset 0,0.
-     L'anello di focus (focus-ring-width + focus-ring-offset) si espande OLTRE il
-     rettangolo del link su ogni lato: a inset 0 il bordo esterno dell'anello finiva a
-     coordinate negative (fuori viewport, invisibile per definizione, non per z-order).
-     Spostando il link di quella stessa espansione, il bordo esterno dell'anello atterra
-     esattamente sul confine della viewport invece di superarlo
-     (docs/evidenza/8/l14/misura-l09-f1.json). */
+  /* L09-F1: l'anello di focus sporge dal link di focus-ring-width + focus-ring-offset
+     per lato; a inset 0 la sua parte alta e sinistra cadeva fuori dalla viewport. A
+     fuoco il link si sposta di quella sporgenza. Solo a fuoco: senza focus resta a
+     inset 0 e tutto sopra la viewport («visibile solo al focus», docs/design/00).
+     Misura: docs/evidenza/8/l14/sonda-l14.mjs, a pixel sulla schermata. */
   .salta-al-contenuto {
     position: absolute;
-    inset-block-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
-    inset-inline-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+    inset-block-start: 0;
+    inset-inline-start: 0;
     transform: translateY(-100%);
     background: var(--color-bg-canvas);
     color: var(--color-text-primary);
@@ -52,6 +50,8 @@ const { title, description, canonical } = Astro.props;
   }
 
   .salta-al-contenuto:focus {
-    transform: translateY(0%);
+    inset-block-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+    inset-inline-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+    transform: none;
   }
 </style>

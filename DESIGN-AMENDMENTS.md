@@ -9,11 +9,41 @@ Si smaltisce in sessioni di design, non dentro una PR di implementazione.
 
     ## A01 — titolo breve
     - Data:
-    - Classe: unshipped | accessibilita | shipped-vince
+    - Classe: unshipped | accessibilita | shipped-vince | pre-produzione
     - Documento dice:
     - Prodotto fa:
     - Deciso: cosa vale, e perché
     - Da smaltire: cosa va aggiornato nel design, e quando
+
+## Le quattro classi ammesse
+
+La lista chiusa sta in `CLAUDE.md`, sezione **Metodo**. Qui la ripetizione serve solo a
+compilare il campo `Classe:`:
+
+1. `unshipped` — funzionalità non ancora costruita → si disegna lo stato vuoto;
+2. `accessibilita` — il documento fallisce un requisito di accessibilità → si corregge il valore;
+3. `shipped-vince` — documento contro meccanismo già in produzione → vince il secondo, segnalato;
+4. `pre-produzione` — documento e prodotto divergono **prima che esista qualcosa in
+   produzione**. Nessuno dei due vince per default: decide Andrea, caso per caso, e la
+   decisione si registra qui come ratifica. Questa classe scade il giorno del primo
+   rilascio in produzione: da lì vale la 3.
+
+Aggiunta da Andrea il 22/09/2026. «Migliorativo» resta fuori: non è una classe.
+
+### Nota sulle voci già etichettate «fuori-lista»
+
+La voce **A01** di questo file e i finding **D01, D03, D04, D05, D06, D07** del lotto L10
+(issue #8) portano la classe `fuori-lista` perché la classe 4 **non esisteva** quando sono
+stati scritti — non perché siano stati classificati male. Non si riclassificano adesso:
+si riclassificano quando Andrea decide ciascuna, una per una. Fino a quel momento
+l'etichetta resta quella che c'è.
+
+Dove stanno: A01 è più sotto, in **Voci**. I sei `D` **non sono in questo file** — sono
+in `.work/8/l10/findings-design.json`, che `.gitignore` esclude; ciò che resta committato
+di loro è `journal/2026-09-22/110840-orchestrator-consegna.json` e
+`journal/2026-09-22/112100-design-decisione.json`, che li elencano uno per uno con la
+ragione dell'esclusione dalle tre classi. Quando Andrea ne decide uno, la voce entra in
+**Voci** con la sua sigla.
 
 ## Voci
 

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-23T08:27:59+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "decisione",
+  "titolo": "Quarta classe di divergenza: dove scriverla e cosa NON riclassificare adesso",
+  "contesto": "Andrea ha deciso il 22/09 di aggiungere una quarta classe — «pre-produzione» — alla lista chiusa delle divergenze. Il testo e' dato, non da inventare. Restano due scelte di esecuzione: quale «elenco delle classi ammesse» di DESIGN-AMENDMENTS.md si aggiorna, e se toccare le voci gia' etichettate fuori-lista.",
+  "alternative": [
+    { "opzione": "riclassificare subito A01 e le sei D come classe 4", "scartata_perche": "il mandato lo vieta in modo esplicito: «si riclassificano quando Andrea decide ciascuna, non ora». Una riclassificazione d'ufficio farebbe passare per ratificata una decisione che nessuno ha preso" },
+    { "opzione": "aggiungere la classe solo in CLAUDE.md", "scartata_perche": "DESIGN-AMENDMENTS.md porta il proprio elenco delle classi nella riga «Classe:» del blocco Formato (riga 12): lasciarlo a tre farebbe divergere il registro dalla regola nello stesso commit che la cambia" },
+    { "opzione": "una worktree fuori dall'albero del progetto", "scartata_perche": "l'hook guard-paths.sh ha bloccato la risalita di un livello. La convenzione del cantiere e' .claude/worktrees/, che .gitignore gia' esclude" }
+  ],
+  "evidenza": [
+    "grep -n 'classi' CLAUDE.md DESIGN-AMENDMENTS.md -> CLAUDE.md:120 «Solo tre classi sono ammesse»; DESIGN-AMENDMENTS.md:26 (A01, campo «Da smaltire») «una sessione di design decide se la lista chiusa delle classi si allarga»",
+    "grep -n 'Classe:' DESIGN-AMENDMENTS.md -> 12 (Formato), 22 (A01 fuori-lista), 30, 74, 100 (A04 fuori-lista), 134, 186 (A06 perimetro)"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 22/09/2026 — testo della classe 4 dato verbatim"
+}

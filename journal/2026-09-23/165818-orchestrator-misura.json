@@ -1,0 +1,19 @@
+{
+ "ts": "2026-09-23T16:58:18+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "Evidenza documento-contro-prodotto di L14, e DoD della sessione: build, lint, check puliti, suite 252/252. Due osservazioni visibili per l'occhio di Andrea",
+ "contesto": "Lavoro della sessione. Schermate della Home, 360x640 e 1280x800, temi chiaro e scuro, senza focus e al primo Tab: prima = BaseLayout.astro e base.css di 1ae5db2, dopo = HEAD. Anteprima sulla porta letta dal log (44771), fermata a fine lavoro ($ ss -ltn | grep -c ':44771 ' -> 0). Anche l'anteprima 39583 della sonda e' fermata (pid 28520, cwd site della worktree l14; conteggio in ascolto dopo kill: 0).",
+ "evidenza": [
+  "$ pnpm build (site) -> 8 page(s) built, exit 0; $ pnpm lint -> exit 0; $ pnpm astro check -> 0 errors, 0 warnings, 6 hints, exit 0",
+  "$ pnpm exec playwright test (radice della worktree) -> 252 passed (25.1s), exit 0",
+  "docs/evidenza/8/l14/schermate/{prima,dopo}/home-<viewport>-<tema>-{senza-focus,salto-a-fuoco}.png, 16 file",
+  "osservazione 1 (letta sulle schermate, non misurata): a fuoco il link di salto sta sopra l'header e copre il nome del sito «OwnConsent», prima e dopo la correzione. Non e' nel criterio di F1 (l'anello non e' coperto) e il documento di design non dice nulla sulla posizione; lo segnalo, non lo correggo",
+  "osservazione 2: a 1280x800 l'h1 della Home a 48px (font-size.700) va su due righe; la piega scende di circa 70px (le carte partono a y 351 invece di 279 nelle schermate). E' la conseguenza di D02 applicato come dice il contratto, non una scelta mia"
+ ],
+ "esito": "evidenza committata; le due osservazioni vanno nella PR per Andrea",
+ "umano_coinvolto": false
+}

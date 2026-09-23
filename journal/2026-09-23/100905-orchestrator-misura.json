@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-23T10:09:05+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "misura",
+  "titolo": "A01 riclassificata pre-produzione: i due criteri passano, e una nota scritta nel primo commit era diventata falsa",
+  "contesto": "Andrea ha riclassificato A01 e ha corretto da se' il criterio di accettazione del terzo commit («il mio di prima confondeva vocabolario e uso»). Con il criterio corretto la misura passa. Ma la riclassificazione ha reso falsa una frase che avevo scritto io nel commit 4977a0e.",
+  "evidenza": [
+    "$ grep -oP '^- Classe: \\K[a-z-]+' DESIGN-AMENDMENTS.md | sort | uniq -c -> 2 perimetro / 1 pre-produzione / 1 shipped-vince / 2 unshipped",
+    "$ grep -cP '^- Classe: fuori-lista' DESIGN-AMENDMENTS.md -> 0",
+    "valori in uso (4): perimetro, pre-produzione, shipped-vince, unshipped; fuori dal modello: NESSUNO; ammessi mai usati: accessibilita",
+    "$ grep -n fuori-lista DESIGN-AMENDMENTS.md -> 45 (titolo della nota), 47 (corpo), 64 (traccia dentro A01), 142 (traccia dentro A04). Nessuna occorrenza e' piu' un valore di campo"
+  ],
+  "criterio_1": "nessuna voce porta piu' fuori-lista -> SODDISFATTO (grep -c = 0)",
+  "criterio_2": "ogni valore in uso e' fra i cinque del modello -> SODDISFATTO (insieme vuoto fuori dal modello). accessibilita resta ammesso e mai usato: col criterio corretto non e' un difetto",
+  "difetto_trovato_e_corretto": "La sezione «Nota sulle voci gia' etichettate fuori-lista», che avevo scritto io in 4977a0e, apriva con «La voce A01 di questo file e i finding D01..D07 portano la classe fuori-lista». Dopo la riclassificazione la frase e' falsa su A01, e falsa per colpa di questo stesso commit. Il mandato diceva «il resto non si tocca», riferito alla voce A01: la nota e' un'altra sezione. L'ho aggiornata — verbi al passato e un capoverso che dice che A01 e' gia' stata decisa il 23/09 e restano i sei D. Non e' una decisione di classificazione: e' la trascrizione di quella che Andrea ha appena preso. Lo dichiaro perche' e' fuori dalle due righe chieste, e si revoca con un revert di un solo hunk.",
+  "perche_non_ho_taciuto": "Chiudere la PR lasciando il file che contraddice se stesso sarebbe stato peggio del piccolo sconfinamento. Un registro che dice di una voce una classe che la voce non porta piu' non e' interrogabile — e' esattamente il motivo per cui Andrea aveva chiesto di normalizzare A04 due commit fa.",
+  "cosa_resta_aperto": "Riga 71, campo «Da smaltire» di A01: «una sessione di design decide se la lista chiusa delle classi si allarga». La sessione c'e' stata il 22/09 e la lista si e' allargata. Non l'ho toccata: e' dentro la voce, e il mandato nominava una sola frase, che stava sulla riga 64. Stessa scadenza, formulazione diversa. Sempre in quel campo restano aperti due punti veri: la correzione di ADR-0003 D6, e la spec di issue-25.",
+  "esito": "applicata, criteri soddisfatti, uno sconfinamento dichiarato",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-23T13:09:15+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "decisione",
+  "titolo": "Rebase di #54 su main dopo L15: tenute A07 e L10-D06; corretta la mia frase «restano cinque D», che A07 rendeva falsa",
+  "contesto": "L15 (a85724a) e' entrata in main mentre #54 era aperta e ha aggiunto A07 in coda a DESIGN-AMENDMENTS.md, lo stesso punto dove #54 aggiungeva L10-D06. Mandato di Andrea: rebase, tenere entrambe le voci, non riscrivere ne' rinumerare nulla di esistente, primo numero libero dopo A07 solo in caso di collisione.",
+  "alternative": [
+    { "opzione": "rinominare la mia voce in A08, seguendo il precedente di A07 (D05 registrata con un numero A)", "scartata_perche": "non c'e' collisione: A07 e L10-D06 sono sigle diverse, e il mandato rinomina solo in caso di collisione. La sigla L10-D06 viene dalla brief di Andrea e dalla nota («la voce entra in Voci con la sua sigla»). Le due convenzioni ora convivono: segnalato nella PR, decide Andrea" },
+    { "opzione": "lasciare intatta la mia frase nella nota, «Restano cinque D: D01, D03, D04, D05, D07»", "scartata_perche": "dopo il rebase e' falsa: D05 e' decisa in A07. E' testo introdotto da questa PR, non esistente su main, quindi correggerlo non riscrive nulla di esistente. Ora dice che D05 e' A07 e che ne restano quattro" }
+  ],
+  "evidenza": [
+    "conflitto: un solo blocco, righe 302-352, due voci aggiunte nello stesso punto",
+    "A07 confrontata con origin/main via diff sul blocco estratto con awk -> nessuna differenza",
+    "$ git diff origin/main -- DESIGN-AMENDMENTS.md | grep '^-[^-]' -> due righe, entrambe della nota che #54 modificava gia' («Restano i sei D», «Dove stanno i sei D»)",
+    "$ grep -oP '^- Classe: \\K[a-z-]+' DESIGN-AMENDMENTS.md | sort | uniq -c -> 2 perimetro, 3 pre-produzione, 1 shipped-vince, 2 unshipped",
+    "il messaggio del commit 6eb3c69 dice ancora «ne restano cinque»: vero quando e' stato scritto, lasciato com'e' per non riscrivere la storia oltre il necessario"
+  ],
+  "esito": "applicata; push con --force-with-lease",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-23T16:56:27+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "F1 corretto dalla sessione: spostamento dell'anello solo in :focus; F1 32/32, link non a fuoco 0 px2 visibili. Sulla stessa build confermati F2 (32/32) e D02",
+ "contesto": "Lavoro della sessione, non di un agente. Correzione in site/src/layouts/BaseLayout.astro: senza focus il link resta a inset 0 con translateY(-100%); in :focus inset-block-start e inset-inline-start valgono focus-ring-width + focus-ring-offset e transform none. Sostituisce la regola di 5fd10e8, che spostava il link anche senza focus.",
+ "alternative": [
+  {
+   "opzione": "tenere 5fd10e8",
+   "scartata_perche": "misura 165508: 640 px2 del link visibili senza focus su 32/32, contro «visibile solo al focus» del documento di design"
+  },
+  {
+   "opzione": "transform: translate(ampiezza anello) in :focus invece di inset",
+   "scartata_perche": "translate sull'asse x non segue la direzione del testo; gli inset logici si'. Sul sito in italiano il risultato sarebbe stato lo stesso: scelta di coerenza con le proprieta' logiche gia' in uso, non misurata come migliore"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm --dir site build -> 16:55:26 [build] Complete!",
+  "$ node docs/evidenza/8/l14/sonda-l14.mjs http://127.0.0.1:39583 f1-dopo -> «F1 chiuso 32/32; F2 chiuso 32/32»",
+  "per combinazione: dentro_viewport true, punti non visibili 0/36, area del link non a fuoco 0 px2, un solo h1, 36px a 360x640 (16/16) e 48px a 1280x800 (16/16)",
+  "home 360x640 chiaro: anello esterno left 0 top 0 right 168.09 bottom 48; link non a fuoco top -40 bottom 0",
+  "F2 sul criterio corretto da Andrea: /confronto/ in 4 combinazioni su 4 -> dopo Invio MAIN, Tab al link «Termini di servizio» del footer, uguale al primo focalizzabile che segue <main>; le altre 7 pagine -> primo focalizzabile dentro <main>; tabindex positivi: 0"
+ ],
+ "esito": "F1 chiuso secondo il criterio; F2 (tabindex di cd68e01) e D02 (base.css di cd68e01) confermati dalla misura. La prova-by-reversion resta di @qa-test",
+ "umano_coinvolto": false
+}

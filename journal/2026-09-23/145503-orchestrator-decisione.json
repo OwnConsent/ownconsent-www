@@ -1,0 +1,31 @@
+{
+ "ts": "2026-09-23T14:55:03+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "L14 parte: ramo lotto/l14-rientro-finding spinto prima della worktree; una worktree sola, un agente per volta: @frontend, poi @qa-test, poi @architect",
+ "contesto": "Mandato di Andrea del 23/09 su main 1ae5db2: quattro correzioni su site/ (L09-F2, L09-F1, L10-D02, L13-F03), cinque test a @qa-test (punti 5, 6, 7, 8, 10), un ADR ad @architect su A08 (punto 9). Il nome «L14» era gia' stato usato: il ramo l14/copia-temporanea-porta-stretta-e-identita (PR #42, merged il 21/09) e' un fix del collaudo, non questo lotto. Stesso nome, cose diverse: il ramo nuovo porta il prefisso lotto/ come L07-L15.",
+ "alternative": [
+  {
+   "opzione": "tre worktree in parallelo, una per ruolo",
+   "scartata_perche": "mandato: una worktree e un agente per volta; e i test di regressione dei punti 1 e 2 (punto 7) si scrivono contro la correzione di @frontend, quindi la dipendenza c'e' comunque"
+  },
+  {
+   "opzione": "@architect per primo, perche' indipendente da site/",
+   "scartata_perche": "in serie non cambia il totale; @frontend per primo sblocca @qa-test, che e' il passo piu' lungo"
+  },
+  {
+   "opzione": "isolation worktree del runtime per ogni agente",
+   "scartata_perche": "crea un ramo worktree-agent-* per agente invece di lavorare sul ramo del lotto gia' spinto"
+  }
+ ],
+ "evidenza": [
+  "$ git push -u origin lotto/l14-rientro-finding -> * [new branch]; $ git rev-parse origin/lotto/l14-rientro-finding -> 1ae5db24cb44b9e2bbf53f5db366a9eeb2c4ad47",
+  "$ git worktree add .claude/worktrees/l14 lotto/l14-rientro-finding -> HEAD is now at 1ae5db2",
+  "$ gh pr list --state all -> 42 ... l14/copia-temporanea-porta-stretta-e-identita MERGED"
+ ],
+ "esito": "applicata",
+ "umano_coinvolto": false
+}

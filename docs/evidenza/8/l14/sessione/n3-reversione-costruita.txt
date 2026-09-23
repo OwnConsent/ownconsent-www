@@ -1,0 +1,43 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 33537 --host 127.0.0.1 --ignore-lock
+
+Running 5 tests using 5 workers
+
+  ✓  1 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Cookie policy (bozza) (/legale/cookie-policy/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (53ms)
+  ✓  3 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:44:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ identifica il titolare del trattamento (segnaposto dichiarato, testo non prescritto) (53ms)
+  ✓  4 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Termini di servizio (bozza) (/legale/termini-di-servizio/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (49ms)
+  ✓  5 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Informativa privacy (bozza) (/legale/informativa-privacy/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (52ms)
+  ✘  2 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:54:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ contiene un link mailto: all'indirizzo unico di contatto, senza oggetto precompilato (67ms)
+
+
+  1) e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:54:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ contiene un link mailto: all'indirizzo unico di contatto, senza oggetto precompilato 
+
+    Error: un link mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid senza ?subject= nell'informativa privacy
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      64 |       .some((href) => attesoMailtoSenzaOggetto.test(href));
+      65 |
+    > 66 |     expect(trovato, `un link mailto:${indirizzo} senza ?subject= nell'informativa privacy`).toBe(true);
+         |                                                                                             ^
+      67 |   });
+      68 |
+      69 |   for (const pagina of ROTTE_LEGALI) {
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:66:93
+
+    Error Context: test-results/e2e-n3-pagine-legali-titol-b7c23--senza-oggetto-precompilato/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-n3-pagine-legali-titol-b7c23--senza-oggetto-precompilato/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-n3-pagine-legali-titol-b7c23--senza-oggetto-precompilato/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:54:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ contiene un link mailto: all'indirizzo unico di contatto, senza oggetto precompilato 
+  4 passed (2.5s)

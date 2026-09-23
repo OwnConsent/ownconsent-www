@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-23T13:00:50+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "gate",
+  "titolo": "L14 fermato prima di partire: due decisioni della brief (L13-F03, L10-D06) non erano in nessun artefatto committato",
+  "contesto": "La brief di L14 diceva «DECISO da Andrea il 22/09» su F03 e chiedeva ad @architect un ADR che allinea il contratto a WCAG per D06. Prima di aprire il ramo ho cercato le due decisioni nel repository. Non c'erano. CLAUDE.md: «si implementa solo da artefatti committati». L14 non e' partito: nessun ramo, nessuna worktree, nessun commit. Questa voce e' scritta nel giro successivo, il primo con un ramo dove scriverla: il ts e' quello di scrittura, non quello del gate, che non ho letto dall'orologio quando e' scattato.",
+  "evidenza": [
+    "$ git grep -n -E \"F03|meta description\" -- journal/2026-09-22 journal/2026-09-23 DESIGN-AMENDMENTS.md -> solo journal/2026-09-22/110214-seo-consegna.json e 110044-seo-misura.json, che registrano F03 come finding; nessuna decisione",
+    "DESIGN-AMENDMENTS.md righe 47-55 su 141135d: i sei D di L10, D06 compreso, restano «fuori-lista» finche' Andrea non li decide uno per uno; nessuna voce D06 fra le Voci",
+    "journal/2026-09-22/110840-orchestrator-consegna.json, gate_aperto_per_andrea: «Tutti e sette i finding [...] D06 tocca contracts/design-tokens.json (percorso @architect + ADR)»"
+  ],
+  "chi_ha_deciso": "Andrea: prima si registrano le due decisioni in una PR piccola e separata, poi parte L14",
+  "cosa_serviva": "un campo di interpretazione su AC7 in docs/spec/issue-8.json e una voce D06 di classe pre-produzione in DESIGN-AMENDMENTS.md",
+  "esito": "gate risolto da questa PR; L14 riparte da main dopo il merge",
+  "umano_coinvolto": true
+}

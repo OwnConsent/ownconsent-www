@@ -52,7 +52,15 @@
       "gruppo": "Prezzi, IAB, pagine legali",
       "dato": "ciascuna delle 8 pagine pubbliche",
       "quando": "leggo l'HTML servito",
-      "allora": "non compare un identificativo CMP IAB, né l'affermazione che OwnConsent sia registrata, certificata o approvata da IAB Europe"
+      "allora": "non compare un identificativo CMP IAB, né l'affermazione che OwnConsent sia registrata, certificata o approvata da IAB Europe",
+      "interpretazione": [
+        {
+          "data": "2026-09-22",
+          "deciso_da": "Andrea",
+          "testo": "La meta description di /saas/ che afferma «CMP registrata da OwnConsent presso IAB Europe» viola AC7, perche' afferma uno stato — participio passato — che oggi non e' vero, con la registrazione IAB ancora aperta. NON viola AC7 la tabella di confronto che dichiara CHI registra la CMP in ciascuna modalita': quella descrive una responsabilita'. La riformulazione ammessa e' di questa seconda forma (esempio dato da Andrea nella brief di L14: «la registrazione della CMP presso IAB Europe la gestiamo noi»).",
+          "origine": "finding L13-F03 (journal/2026-09-22/110214-seo-consegna.json); decisione presa in chat il 22/09, registrata qui il 23/09"
+        }
+      ]
     },
     {
       "id": "AC8",
@@ -549,6 +557,12 @@
       "cosa": "N2 ristretta (oggetto del mailto solo sulle pagine di vendita, legali senza oggetto) e nuovo criterio N3 (titolare e recapito nell'informativa)",
       "fonte": "DP-27, DP-29",
       "autore": "feature (sessione principale), registrazione di decisioni di Andrea"
+    },
+    {
+      "data": "2026-09-23",
+      "cosa": "AC7: aggiunto il campo «interpretazione» (L13-F03, stato contro responsabilita'). Formulazione originale di AC7 invariata.",
+      "fonte": "L13-F03, decisione di Andrea del 22/09",
+      "autore": "orchestrator (sessione principale), registrazione di decisioni di Andrea"
     }
   ]
 }

@@ -1,0 +1,1906 @@
+[
+  {
+    "pagina": "home",
+    "percorso": "/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "scopri-di-piu",
+      "testo": "Scopri di più →",
+      "href": "/saas/",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "home",
+    "percorso": "/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "scopri-di-piu",
+      "testo": "Scopri di più →",
+      "href": "/saas/",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "saas",
+    "percorso": "/saas/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Scrivici e ti attiviamo noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=SaaS",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "saas",
+    "percorso": "/saas/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Scrivici e ti attiviamo noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=SaaS",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "hosted",
+    "percorso": "/hosted/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Si attiva parlando con noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=Hosted",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "hosted",
+    "percorso": "/hosted/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Si attiva parlando con noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=Hosted",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "on-premise",
+    "percorso": "/on-premise/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Si attiva parlando con noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=On-premise",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "on-premise",
+    "percorso": "/on-premise/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "cta-mailto",
+      "testo": "Si attiva parlando con noi",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid?subject=On-premise",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "confronto",
+    "percorso": "/confronto/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "Termini di servizio",
+      "href": "/legale/termini-di-servizio/",
+      "dentroMain": false
+    },
+    "tab_successivo_dentro_main": false
+  },
+  {
+    "pagina": "confronto",
+    "percorso": "/confronto/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "Termini di servizio",
+      "href": "/legale/termini-di-servizio/",
+      "dentroMain": false
+    },
+    "tab_successivo_dentro_main": false
+  },
+  {
+    "pagina": "termini-di-servizio",
+    "percorso": "/legale/termini-di-servizio/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "Confronto modalità e listino",
+      "href": "/confronto/",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "termini-di-servizio",
+    "percorso": "/legale/termini-di-servizio/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "Confronto modalità e listino",
+      "href": "/confronto/",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "informativa-privacy",
+    "percorso": "/legale/informativa-privacy/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "informativa-privacy",
+    "percorso": "/legale/informativa-privacy/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "cookie-policy",
+    "percorso": "/legale/cookie-policy/",
+    "viewport": "360x640",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 135,
+        "top": 0,
+        "left": 0,
+        "right": 360,
+        "bottom": 135
+      },
+      "viewport": {
+        "width": 360,
+        "height": 640
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  },
+  {
+    "pagina": "cookie-policy",
+    "percorso": "/legale/cookie-policy/",
+    "viewport": "1280x800",
+    "primo_tab": {
+      "tag": "A",
+      "id": "",
+      "className": "salta-al-contenuto",
+      "testo": "Salta al contenuto",
+      "href": "#contenuto"
+    },
+    "geometria": {
+      "elementoRect": {
+        "x": 0,
+        "y": 0,
+        "width": 160.09375,
+        "height": 40,
+        "top": 0,
+        "left": 0,
+        "right": 160.09375,
+        "bottom": 40
+      },
+      "headerRect": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 63,
+        "top": 0,
+        "left": 0,
+        "right": 1280,
+        "bottom": 63
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      }
+    },
+    "anello_di_focus": {
+      "left": -4,
+      "top": -4,
+      "right": 164.09375,
+      "bottom": 44
+    },
+    "anello_dentro_viewport": false,
+    "punti_anello_campionati": 36,
+    "punti_anello_coperti": 16,
+    "dettaglio_punti_coperti": [
+      {
+        "x": 17.01171875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 38.0234375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 59.03515625,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 80.046875,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      },
+      {
+        "x": 101.05859375,
+        "y": 44,
+        "dentroViewport": true,
+        "coperto": true,
+        "elementoSopra": {
+          "tag": "A",
+          "id": "",
+          "className": "nome-sito"
+        }
+      }
+    ],
+    "dopo_invio_activeElement": {
+      "tag": "MAIN",
+      "id": "contenuto",
+      "className": ""
+    },
+    "focus_su_main_dopo_invio": true,
+    "dopo_tab_successivo": {
+      "tag": "A",
+      "id": "",
+      "className": "",
+      "testo": "segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "href": "mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid",
+      "dentroMain": true
+    },
+    "tab_successivo_dentro_main": true
+  }
+]

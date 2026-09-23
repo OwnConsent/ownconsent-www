@@ -34,10 +34,17 @@ const { title, description, canonical } = Astro.props;
   </body>
 </html>
 <style>
+  /* L09-F1: al primo Tab, il link e' il primo elemento del body e siede a inset 0,0.
+     L'anello di focus (focus-ring-width + focus-ring-offset) si espande OLTRE il
+     rettangolo del link su ogni lato: a inset 0 il bordo esterno dell'anello finiva a
+     coordinate negative (fuori viewport, invisibile per definizione, non per z-order).
+     Spostando il link di quella stessa espansione, il bordo esterno dell'anello atterra
+     esattamente sul confine della viewport invece di superarlo
+     (docs/evidenza/8/l14/misura-l09-f1.json). */
   .salta-al-contenuto {
     position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: 0;
+    inset-block-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
+    inset-inline-start: calc(var(--focus-ring-width) + var(--focus-ring-offset));
     transform: translateY(-100%);
     background: var(--color-bg-canvas);
     color: var(--color-text-primary);

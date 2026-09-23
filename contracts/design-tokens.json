@@ -165,8 +165,8 @@
   },
   "touch-target": {
     "_nota": "WCAG 2.2, criterio 2.5.8 (Target Size Minimum, AA).",
-    "min-size": { "value": "24px", "uso": "dimensione minima di ogni elemento interattivo (link, voce di nav, link mailto in stile bottone)" },
-    "min-undisturbed-space": { "value": "24px", "uso": "in alternativa alla dimensione minima: diametro dello spazio indisturbato richiesto attorno a un bersaglio più piccolo di 24×24, non sovrapposto allo spazio di un altro bersaglio (eccezione di 2.5.8). In questo sistema non è usata: ogni elemento interattivo rispetta già min-size" }
+    "min-size": { "value": "24px", "uso": "dimensione minima del bersaglio di ogni elemento interattivo (link, voce di nav, link mailto in stile bottone), salvo le eccezioni di WCAG 2.5.8: Spacing (vedi min-undisturbed-space), Equivalent, Inline, User agent control, Essential. Nel sistema oggi ricorre Inline: un link dentro una frase o un blocco di testo (es. il mailto del recapito nell'informativa privacy) è esente, la sua dimensione è vincolata dall'interlinea del testo. ADR-0005" },
+    "min-undisturbed-space": { "value": "24px", "uso": "in alternativa alla dimensione minima: diametro dello spazio indisturbato richiesto attorno a un bersaglio più piccolo di 24×24, non sovrapposto allo spazio di un altro bersaglio (eccezione di 2.5.8). Ammessa per i bersagli fuori dal testo che non raggiungono min-size; non si applica ai link in linea, che rientrano nell'eccezione Inline. ADR-0005" }
   },
   "focus": {
     "_nota": "Il focus deve essere visibile su ogni elemento interattivo (WCAG 2.2, 2.4.7 e 2.4.11); colore in color.semantic.<tema>.focus-ring, verificato ≥3:1 contro gli sfondi in cui compare.",

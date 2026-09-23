@@ -1,0 +1,15 @@
+{
+ "ts": "2026-09-23T22:05:26+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "correzione",
+ "titolo": "Errore di metodo sul punto 10: ho trattato i file di prima di L15 come la reversione di N3. Non lo sono: la proprieta' che N3 misura esisteva gia' prima di L15. Seconda volta che questo lotto ci cade",
+ "corregge": "2026-09-23/145701-orchestrator-misura.json (e l'esito di 2026-09-23/170907-qa-test-misura.json, che ne seguiva il mandato)",
+ "cosa_era_sbagliato": "Nel 145701 ho visto che a 141135d l'informativa aveva gia' il recapito e ne ho concluso che la prova-by-reversion «probabilmente» non avrebbe dato rosso, lasciando la decisione ad Andrea. Il punto vero era un altro: una reversione si costruisce togliendo la proprieta' che il test misura, non si pesca da un commit della storia. Se la proprieta' c'era gia' prima della modifica, quel commit non e' una reversione di niente, e un test che ci passa sopra non dice nulla ne' pro ne' contro di se'. Ho passato a @qa-test la stessa impostazione, e @qa-test l'ha eseguita.",
+ "come_lo_so": "Andrea, in sessione il 23/09: la reversione corretta e' una copia temporanea del file legale in cui il recapito NON viene risolto, e il test deve fallire su quella copia. E' lo stesso errore che Andrea aveva fatto su N3 a suo tempo; in questo lotto e' la seconda volta (conteggio di Andrea: la prima e' il suo mandato, la seconda il mio 145701 ripreso da @qa-test).",
+ "cosa_si_e_imparato": "Prima di cercare un commit su cui un test deve fallire, chiedersi: su quel commit la proprieta' misurata e' assente? Se non lo e', la reversione va costruita a mano, togliendo esattamente quella proprieta'.",
+ "esito": "la voce superata resta; la reversione costruita segue nella prossima voce",
+ "umano_coinvolto": true
+}

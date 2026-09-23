@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-23T22:08:26+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "consegna",
+ "titolo": "Residui di L14 chiusi dalla sessione: punto 10 dimostrato con una reversione costruita, D02 con test e reversione, A09 registrata. Suite 327/327",
+ "contesto": "Secondo mandato di Andrea sulla PR #55: due residui prima che sia mergiabile, fatti dalla sessione e non delegati, piu' la voce A09. Schermate e frase di F03 non toccate: le decide Andrea.",
+ "dod_soddisfatta": {
+  "punto_10": "si: il test esistente di N3 fallisce sulla copia con il recapito non risolto (220603); l'affermazione di @qa-test e' dimostrata, nessun test nuovo",
+  "d02": "si: e2e/l10-d02-h1-token.spec.ts 16/16, reversione costruita 8 falliti tutti a 1280 (220708)",
+  "a09": "si, classe pre-produzione (220749)",
+  "suite": "$ pnpm exec playwright test -> 327 passed (22.2s), exit 0, 0 falliti; docs/evidenza/8/l14/sessione/suite-completa.txt",
+  "site_non_modificato_da_questo_giro": "si: le due reversioni sono state ripristinate e verificate con git status -s site/ vuoto",
+  "journal_durante": "si, compreso l'errore di metodo sulla reversione di N3 (220526)"
+ },
+ "evidenza": [
+  "$ ss -ltnp | grep node | wc -l -> 0: le anteprime orfane di L13 e L15 non sono piu' in ascolto; non le ha fermate questa sessione"
+ ],
+ "esito": "PR #55 aggiornata; il merge e' di Andrea",
+ "umano_coinvolto": true
+}

@@ -45,12 +45,15 @@ Deciso da Andrea il 23/09/2026.
 ### Nota sulle voci già etichettate «fuori-lista»
 
 La voce **A01** di questo file e i finding **D01, D03, D04, D05, D06, D07** del lotto L10
-(issue #8) portano la classe `fuori-lista` perché la classe 4 **non esisteva** quando sono
-stati scritti — non perché siano stati classificati male. Non si riclassificano adesso:
-si riclassificano quando Andrea decide ciascuna, una per una. Fino a quel momento
+(issue #8) portavano la classe `fuori-lista` perché la classe 4 **non esisteva** quando
+sono stati scritti — non perché fossero stati classificati male. Non si riclassificano in
+blocco: si riclassificano quando Andrea decide ciascuna, una per una. Fino a quel momento
 l'etichetta resta quella che c'è.
 
-Dove stanno: A01 è più sotto, in **Voci**. I sei `D` **non sono in questo file** — sono
+**A01 è già stata decisa:** Andrea l'ha riclassificata `pre-produzione` il 23/09/2026, ed
+è la prima voce del file a usare la classe 4. Restano i sei `D`.
+
+Dove stanno i sei `D`: **non sono in questo file** — sono
 in `.work/8/l10/findings-design.json`, che `.gitignore` esclude; ciò che resta committato
 di loro è `journal/2026-09-22/110840-orchestrator-consegna.json` e
 `journal/2026-09-22/112100-design-decisione.json`, che li elencano uno per uno con la
@@ -61,7 +64,7 @@ ragione dell'esclusione dalle tre classi. Quando Andrea ne decide uno, la voce e
 
 ## A01 — aree di `ci` rilevate sul merge commit, non sullo SHA di testa
 - Data: 15/09/2026
-- Classe: fuori-lista — specifica errata nel merito, ratificata da Andrea il 15/09, in attesa che una sessione di design decida se aprire una quarta classe
+- Classe: pre-produzione (era: fuori-lista, riclassificata il 23/09 quando la classe 4 è stata aperta) — specifica errata nel merito, ratificata da Andrea il 15/09, la sessione di design del 22/09 ha aperto la classe 4, che è quella di questa voce
 - Documento dice: `docs/spec/issue-25.json`, definizioni «area site/» e «area api/»: lo stato dell'area (presente, assente, incompleta) si legge su «il commit», cioè sul «SHA osservato» della definizione «contesto ci»: per gli eventi di PR, la testa della PR. Le definizioni reggono AC5–AC9, AC13, AC17–AC19.
 - Prodotto fa: su `pull_request` il checkout di default è il merge commit (ADR-0003, F6), quindi `.github/ci/area.sh` rileva le aree sul merge commit fra la testa della PR e `main` (ADR-0003, D6). Misurato sulla PR #26, run `34942254235`: il passo «SHA verificato» stampa `bbda3d2`, che è «Merge b62d60b… into 0e079fc…» con genitori `0e079fc` (`main`) e `b62d60b` (testa della PR).
 - Deciso: vale il merge commit, perché ciò che deve risultare verde è quello che finirà su `main`. Deciso da Andrea, 15/09. Il check run `ci` resta sullo SHA di testa.

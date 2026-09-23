@@ -1,0 +1,27 @@
+{
+ "ts": "2026-09-23T14:55:23+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "Il file dei finding di L10 entra nel ramo in docs/evidenza/8/l10/, byte per byte; quello di L09 non esiste piu' e non lo ricostruisco",
+ "contesto": "Mandato: ogni file di finding o di evidenza che serve a qualcun altro si committa. D02 (L10) e A08 rimandano a .work/8/l10/findings-design.json, «file non committato». Nella checkout principale il file c'e' ancora; findings-accessibility.json di L09 no. I fatti di L09-F1 e F2 che servono a @frontend sono committati in journal/2026-09-22/105733-accessibility-consegna.json.",
+ "alternative": [
+  {
+   "opzione": "lasciarlo in .work/ e citare solo il journal",
+   "scartata_perche": "e' la perdita segnalata da Andrea; il campo correzione di D02 esiste solo li'"
+  },
+  {
+   "opzione": "ricostruire findings-accessibility.json di L09 dal journal",
+   "scartata_perche": "sarebbe un artefatto scritto dopo e firmato come se fosse di L09: un racconto, non una prova"
+  }
+ ],
+ "evidenza": [
+  "$ find .work -name findings-accessibility.json -> nessun risultato",
+  "$ sha256sum dei due file -> c3d59f76...2b28 per entrambi, 44141 byte",
+  "$ grep -oE '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+' sul file -> solo l'indirizzo segnaposto .invalid di contatto.json: nessun dato personale"
+ ],
+ "esito": "applicata in b8f07db; la cartella docs/evidenza/ e' nuova, segnalata nella PR",
+ "umano_coinvolto": false
+}

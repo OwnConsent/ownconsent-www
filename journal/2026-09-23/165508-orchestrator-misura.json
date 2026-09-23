@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-23T16:55:08+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "F1 misurato dalla sessione con un metodo a pixel: prima l'anello era tagliato dalla viewport e NON coperto dall'header; 5fd10e8 chiude il criterio ma lascia 4px del link visibili senza focus",
+ "contesto": "Lavoro della sessione, non di un agente (decisione di Andrea, 165152). Il metodo a elementFromPoint aveva fallito due volte: un outline non partecipa al hit-testing. Sonda nuova, docs/evidenza/8/l14/sonda-l14.mjs: schermata con il link a fuoco, colore letto in 36 punti al centro della fascia dell'anello (9 per lato), confrontato con outline-color calcolato (tolleranza 8 per canale); un punto fuori viewport conta come non visibile. 8 pagine x 360x640, 1280x800 x tema chiaro e scuro = 32 combinazioni. Anteprima sulla porta letta dal log: «Local http://127.0.0.1:39583/».",
+ "alternative": [
+  {
+   "opzione": "elementFromPoint / elementsFromPoint sui punti dell'anello",
+   "scartata_perche": "restituisce la scatola sotto il punto anche quando l'anello e' dipinto sopra: e' la ragione per cui il secondo @frontend leggeva «coperto» 36/36 dopo la sua correzione"
+  },
+  {
+   "opzione": "dedurre l'ordine di pittura da position e z-index",
+   "scartata_perche": "e' una deduzione, non una misura: la sonda legge cio' che e' dipinto"
+  }
+ ],
+ "evidenza": [
+  "controllo (il metodo sa dire rosso): stessa build, iniettato .intestazione{position:relative;z-index:1;background:rgb(255,0,255)} -> $ node sonda-l14.mjs http://127.0.0.1:39583 f1-controllo-coperto controllo -> punti non visibili 36/36 in 32 combinazioni su 32; motivi: 608 fuori viewport, 544 colore letto [255,0,255]",
+  "prima (BaseLayout.astro di cd68e01, link a inset 0) -> F1 chiuso 0/32; punti non visibili 19/36 ovunque, 608 su 608 per «fuori viewport», 0 per colore. Anello esterno left -4 top -4 (outline 2px + offset 2px). L'header NON copre l'anello: la parte «coperto dall'header» di L09-F1 non regge a questa misura; c'era solo il taglio sul bordo",
+  "5fd10e8 (link spostato di focus-ring-width + focus-ring-offset) -> F1 chiuso 32/32, F2 chiuso 32/32; ma link non a fuoco: top -36 bottom 4 left 4, area visibile 640 px2 su 32 combinazioni su 32",
+  "docs/design/00-sistema-e-componenti.md riga 30: link «salta al contenuto» «visibile solo al focus»",
+  "D02, stessa misura: h1 unico su ogni pagina, 36px a 360x640 e 48px a 1280x800 in 32/32"
+ ],
+ "esito": "5fd10e8 non si tiene cosi': la correzione di F1 va spostata sullo stato :focus, e il link non a fuoco deve restare fuori viewport",
+ "umano_coinvolto": false
+}

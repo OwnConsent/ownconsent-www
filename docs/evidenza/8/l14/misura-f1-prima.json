@@ -1,0 +1,6280 @@
+{
+ "baseURL": "http://127.0.0.1:39583",
+ "etichetta": "f1-prima",
+ "controllo": false,
+ "tolleranza": 8,
+ "risultati": [
+  {
+   "pagina": "home",
+   "rotta": "/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 4,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "saas",
+   "rotta": "/saas/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "hosted",
+   "rotta": "/hosted/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "on-premise",
+   "rotta": "/on-premise/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "confronto",
+   "rotta": "/confronto/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 0,
+    "atteso": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "termini-di-servizio",
+   "rotta": "/legale/termini-di-servizio/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 2,
+    "atteso": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "informativa-privacy",
+   "rotta": "/legale/informativa-privacy/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "cookie-policy",
+   "rotta": "/legale/cookie-policy/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "home",
+   "rotta": "/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 4,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "saas",
+   "rotta": "/saas/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "hosted",
+   "rotta": "/hosted/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "on-premise",
+   "rotta": "/on-premise/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "confronto",
+   "rotta": "/confronto/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 0,
+    "atteso": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "termini-di-servizio",
+   "rotta": "/legale/termini-di-servizio/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 2,
+    "atteso": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "informativa-privacy",
+   "rotta": "/legale/informativa-privacy/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "cookie-policy",
+   "rotta": "/legale/cookie-policy/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "light",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(122, 75, 0)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "home",
+   "rotta": "/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 4,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "saas",
+   "rotta": "/saas/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "hosted",
+   "rotta": "/hosted/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "on-premise",
+   "rotta": "/on-premise/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "confronto",
+   "rotta": "/confronto/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 0,
+    "atteso": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "termini-di-servizio",
+   "rotta": "/legale/termini-di-servizio/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 2,
+    "atteso": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "informativa-privacy",
+   "rotta": "/legale/informativa-privacy/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "cookie-policy",
+   "rotta": "/legale/cookie-policy/",
+   "http": 200,
+   "viewport": "360x640",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "36px"
+   }
+  },
+  {
+   "pagina": "home",
+   "rotta": "/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 4,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scopri di più →",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "saas",
+   "rotta": "/saas/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Scrivici e ti attiviamo noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "hosted",
+   "rotta": "/hosted/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "on-premise",
+   "rotta": "/on-premise/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Si attiva parlando con noi",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "confronto",
+   "rotta": "/confronto/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 0,
+    "atteso": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Termini di servizio",
+     "dentro_main": false
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "termini-di-servizio",
+   "rotta": "/legale/termini-di-servizio/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 2,
+    "atteso": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "Confronto modalità e listino",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "informativa-privacy",
+   "rotta": "/legale/informativa-privacy/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  },
+  {
+   "pagina": "cookie-policy",
+   "rotta": "/legale/cookie-policy/",
+   "http": 200,
+   "viewport": "1280x800",
+   "tema": "dark",
+   "f1": {
+    "primo_tab": "salta-al-contenuto",
+    "outline_color": "rgb(240, 170, 46)",
+    "outline_width": 2,
+    "outline_offset": 2,
+    "link": {
+     "left": 0,
+     "top": 0,
+     "right": 160.09375,
+     "bottom": 40
+    },
+    "anello_esterno": {
+     "left": -4,
+     "top": -4,
+     "right": 164.09375,
+     "bottom": 44
+    },
+    "dentro_viewport": false,
+    "link_non_a_fuoco": {
+     "top": -40,
+     "bottom": 0,
+     "left": 0,
+     "right": 160.09375,
+     "area_visibile_px2": 0
+    },
+    "punti_campionati": 36,
+    "punti_non_visibili": 19,
+    "dettaglio_non_visibili": [
+     {
+      "punto": [
+       6.227430555555555,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       163.09375,
+       -0.44444444444444464
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       24.682291666666664,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       4.666666666666666
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       43.13715277777778,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       9.777777777777779
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       61.592013888888886,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       14.88888888888889
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       80.046875,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       20
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       98.50173611111111,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       25.111111111111114
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       116.95659722222221,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       30.22222222222222
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       135.41145833333334,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       35.333333333333336
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       153.86631944444443,
+       -3
+      ],
+      "perche": "fuori viewport"
+     },
+     {
+      "punto": [
+       -3,
+       40.44444444444444
+      ],
+      "perche": "fuori viewport"
+     }
+    ],
+    "chiuso": false
+   },
+   "f2": {
+    "dopo_invio": {
+     "tag": "MAIN",
+     "id": "contenuto"
+    },
+    "tabindex_positivi": 0,
+    "focalizzabili_in_main": 1,
+    "atteso": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "tab_successivo": {
+     "tag": "A",
+     "testo": "segnaposto-nome-casella@segnaposto-domin",
+     "dentro_main": true
+    },
+    "uguale_all_atteso": true,
+    "prima_di_main": false,
+    "chiuso": true
+   },
+   "d02_h1": {
+    "quanti": 1,
+    "font_size": "48px"
+   }
+  }
+ ]
+}

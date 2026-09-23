@@ -1,0 +1,24 @@
+{
+ "ts": "2026-09-23T14:55:03+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "fallimento",
+ "titolo": "Apertura di L14: tre gate di guard-paths.sh e un commit partito senza le voci che il suo messaggio annuncia",
+ "contesto": "Preparazione di L14: copiare nel ramo il file dei finding di L10, che esiste solo in .work/ della checkout principale, e scrivere le prime voci.",
+ "cosa_ho_provato": [
+  "1) ls ~/.claude/plugins -> GATE: porta fuori dal progetto. Giusto: non serviva al lotto, lasciato perdere.",
+  "2) da dentro .claude/worktrees/l14, cp con una risalita di tre livelli verso .work/8/l10/ -> GATE: l'hook ha risolto la risalita contro /home/andreapernici/src/ownconsent/www (radice della sessione) e non contro la cwd del comando, arrivando a /home/andreapernici/.work/. La destinazione vera era dentro www. Rifatto con percorsi assoluti: stessa azione, stesso perimetro (docs/HANDOFF.md: si riformula solo se si sa dire perche' era un falso positivo).",
+  "3) il comando successivo creava lo script che scrive le voci e citava la risalita alla lettera nel testo di una voce: l'hook legge tutto il comando, heredoc compreso, e l'ha bloccato per intero. Lo script non e' mai stato creato.",
+  "4) il comando dopo ancora chiamava lo script, falliva tre volte con «No such file or directory», e la catena proseguiva comunque fino a git add -A, commit e push, perche' le chiamate erano separate da a-capo e non da &&. Risultato: b8f07db «journal: apertura di L14 e finding di L10 portati nel ramo» contiene solo docs/evidenza/8/l10/findings-design.json, nessuna voce. Le voci arrivano nel commit successivo; b8f07db resta com'e', il ramo e' gia' spinto."
+ ],
+ "cosa_si_e_imparato": "Nelle worktree annidate i percorsi si scrivono assoluti: guard-paths.sh non conosce il cd dello stesso comando e legge anche il testo dei dati. Un commit in coda a una catena va legato con && a tutto cio' che deve contenere, altrimenti un passo fallito lascia un commit che dice il falso sul proprio contenuto.",
+ "evidenza": [
+  "messaggio del gate: «porta fuori dal progetto (/home/andreapernici/.work/8/l10/findings-design.json)»",
+  "$ git show --stat b8f07db -> docs/evidenza/8/l10/findings-design.json, un solo file",
+  "$ sha256sum della copia -> c3d59f76bd2b8fe81e73cca791b8e633e9fc1a89b4c53d8ff7e9025493de2b28, identico all'originale"
+ ],
+ "esito": "copia eseguita; voci recuperate nel commit successivo",
+ "umano_coinvolto": false
+}

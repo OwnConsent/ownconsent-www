@@ -1,14 +1,15 @@
 /**
- * Tre modi di sbagliare misura, trovati davvero in L07 — issue #8, richiesta di Andrea.
+ * Quattro modi di sbagliare misura, trovati davvero in L07 e in L10 — issue #8, richiesta
+ * di Andrea (il quarto aggiunto in L14, punto 8 del mandato).
  *
  * ATTENZIONE A CHI LEGGE (in particolare il gate di L12): questi test NON sono criteri
  * di accettazione della issue #8. Non hanno un id `AC*`/`N*` perché non ne verificano
- * uno: verificano il METODO di misura del collaudo stesso — tre famiglie di difetti che
- * fanno sembrare valida una misura che non lo è. Non toccano `site/`, non aprono una
+ * uno: verificano il METODO di misura del collaudo stesso — quattro famiglie di difetti
+ * che fanno sembrare valida una misura che non lo è. Non toccano `site/`, non aprono una
  * pagina del sito: costruiscono da soli, in memoria, il caso sano e il caso malato per
  * ciascun difetto (page.setContent / stringhe cheerio), come richiesto.
  *
- * Struttura a prova-by-reversion per ciascuno dei tre (CLAUDE.md: «un bug è corretto
+ * Struttura a prova-by-reversion per ciascuno dei quattro (CLAUDE.md: «un bug è corretto
  * quando esiste un test che, rimettendo il codice com'era, fallisce»): il modo giusto
  * di misurare passa sul caso sano E rifiuta il caso malato; il modo sbagliato di
  * misurare, sullo stesso caso malato, dà un falso verde — e lo dimostriamo esplicitamente,
@@ -162,6 +163,70 @@ test.describe('Modi di sbagliare misura (strumenti di L07, non prodotto)', () =>
     expect(
       trovatoInQualcheElemento,
       'nessun singolo <p> contiene sia "listino" sia "segreto": il match sul testo continuo era un falso positivo di confine',
+    ).toBe(false);
+  });
+
+  test('4. Un grep sui soli file .css esterni non vede il CSS che Astro inlina nell\'HTML (falso negativo)', async () => {
+    // Il difetto misurato davvero in L10 (journal/2026-09-22/105600-design-fallimento.json,
+    // corretto in 110807-orchestrator-correzione.json): un finding di @design affermava
+    // «nel CSS servito non esiste nessuna media query di breakpoint», a sostegno di
+    // `grep -o "@media[^{]*{" site/dist/_astro/*.css` -> una sola @media
+    // (prefers-color-scheme). La media query di breakpoint c'era davvero, ma Astro inlina
+    // nell'HTML servito il CSS piccolo e con scope di componente (sotto una certa soglia di
+    // byte): stava in `<style>` dentro le pagine, non nei fogli esterni sotto `_astro/`.
+    // Solo guardando anche l'HTML (`grep -roh "@media[^{]*{" site/dist --include=*.html`)
+    // la regola è comparsa: 2 occorrenze a 1280px, 8 a 768px.
+
+    // Rappresenta l'unico foglio di stile ESTERNO del prodotto: nessuna regola di
+    // breakpoint qui, esattamente come site/dist/_astro/*.css in L10.
+    const foglioEsterno = '.pulsante{color:red}@media (prefers-color-scheme:dark){.pulsante{color:orange}}';
+
+    // Rappresenta la pagina HTML SERVITA: include il link al foglio esterno sopra E uno
+    // <style> inlinato da Astro per un componente con scope, dove la regola di breakpoint
+    // vive per davvero.
+    const paginaServita = `<!doctype html><html><head>
+      <link rel="stylesheet" href="/_astro/pagina.css">
+      <style>.carta{display:block}@media (min-width:768px){.carta{display:grid}}</style>
+    </head><body><h1>Prova</h1></body></html>`;
+
+    const regolaBreakpoint = /@media\s*\(min-width:\s*768px\)/;
+
+    // MALATO — il modo sbagliato di misurare: cercare la regola SOLO nel foglio .css
+    // esterno, come il grep di L10 limitato a `site/dist/_astro/*.css`.
+    const trovataSoloNelCssEsterno = regolaBreakpoint.test(foglioEsterno);
+    expect(
+      trovataSoloNelCssEsterno,
+      "il grep sui soli .css esterni non trova la regola: è il falso negativo misurato in L10 — ma la regola c'è davvero (vedi sotto)",
+    ).toBe(false);
+
+    // Prova del falso: la regola esiste per davvero nel prodotto — solo non dove il grep
+    // sbagliato guardava. Se questo fosse false, "trovataSoloNelCssEsterno === false"
+    // sarebbe semplicemente corretto, non un falso negativo.
+    const esisteDavveroNelProdotto = regolaBreakpoint.test(paginaServita);
+    expect(esisteDavveroNelProdotto, "la regola di breakpoint esiste per davvero, inlinata nell'HTML servito").toBe(
+      true,
+    );
+
+    // SANO — il modo giusto di misurare: cercare su TUTTO ciò che il browser riceve
+    // davvero — fogli esterni E l'HTML servito, dove Astro inlina il CSS di componente —
+    // come la misura corretta di L10 (`grep -roh ... site/dist --include=*.html`, oltre
+    // ai .css).
+    function cercaSuTuttoIlProdottoReso(fogli: string[], html: string, regola: RegExp): boolean {
+      return fogli.some((css) => regola.test(css)) || regola.test(html);
+    }
+
+    expect(
+      cercaSuTuttoIlProdottoReso([foglioEsterno], paginaServita, regolaBreakpoint),
+      "il modo giusto trova la regola perché guarda anche l'HTML servito, non solo i .css esterni",
+    ).toBe(true);
+
+    // Contrasto: sullo stesso metodo giusto, un prodotto che DAVVERO non ha quella regola
+    // (né nei .css esterni né inlinata nell'HTML) resta correttamente negativo — non è un
+    // metodo che dice sempre sì una volta guardato anche l'HTML.
+    const paginaSenzaBreakpoint = '<!doctype html><html><body><h1>Prova</h1><style>.carta{display:block}</style></body></html>';
+    expect(
+      cercaSuTuttoIlProdottoReso([foglioEsterno], paginaSenzaBreakpoint, regolaBreakpoint),
+      'sul prodotto che davvero non ha quella regola, il metodo giusto resta negativo: non produce falsi positivi',
     ).toBe(false);
   });
 });

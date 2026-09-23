@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-23T09:11:23+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "decisione",
+  "titolo": "Il perimetro e' un secondo registro, non una quinta classe — e due incoerenze che la decisione lascia aperte",
+  "contesto": "Nella PR #52 avevo aperto una domanda: A04 e A06 portano fuori-lista/perimetro e non erano nell'elenco della nota. Andrea ha risposto il 23/09 con una regola, non con una riclassificazione: DESIGN-AMENDMENTS.md registra due cose diverse — divergenze di merito (le quattro classi) e deroghe al piano (il perimetro). Testo dato verbatim.",
+  "alternative": [
+    { "opzione": "riscrivere il campo Classe di A04 da «fuori-lista — divergenza di perimetro» a «perimetro»", "scartata_perche": "la decisione di Andrea DESCRIVE il campo («il campo Classe le nomina perimetro»), non ordina di riscriverlo, e il mandato chiedeva una sola aggiunta sotto le quattro classi. Riscrivere una voce ratificata e' un atto sulla voce, non sulla regola. Misurato: A06:226 dice gia' «perimetro», A04:140 dice ancora «fuori-lista». La descrizione di Andrea e' vera per una delle due, non per entrambe" },
+    { "opzione": "aggiungere «perimetro» alla riga Classe: del blocco Formato (riga 12)", "scartata_perche": "quella riga enumera le classi, e Andrea ha appena detto che il perimetro NON e' una classe. Metterlo in fila con le altre quattro contraddirebbe la frase nello stesso file. Ma lasciarla com'e' vuol dire che chi compila una voce di perimetro non trova il valore da scrivere in nessun elenco: e' un buco, e lo segnalo invece di chiuderlo a naso" },
+    { "opzione": "nessun titolo di sezione, solo il paragrafo", "scartata_perche": "la sezione accanto («Nota sulle voci gia' etichettate fuori-lista») ha un ### : senza titolo il paragrafo si leggerebbe come coda della lista delle quattro classi, cioe' esattamente l'errore che la frase vuole impedire" }
+  ],
+  "evidenza": [
+    "$ grep -n -E '^- Classe:' DESIGN-AMENDMENTS.md -> 62 (A01 fuori-lista), 70, 114 (unshipped), 140 (A04 «fuori-lista — divergenza di **perimetro**, non di merito»), 174 (shipped-vince), 226 (A06 «perimetro»)",
+    "$ sed -n '12p' DESIGN-AMENDMENTS.md -> «- Classe: unshipped | accessibilita | shipped-vince | pre-produzione» — quattro valori, «perimetro» non c'e'",
+    "$ grep -n -E '^### |^## ' DESIGN-AMENDMENTS.md -> la sezione nuova sta a riga 33, fra le quattro classi (18) e la nota sul fuori-lista (43)"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true,
+  "chi_ha_deciso": "Andrea, 23/09/2026 — testo dato verbatim",
+  "gate_aperto_per_andrea": "Due incoerenze che restano, entrambe misurate e nessuna toccata: (1) A04:140 porta ancora «fuori-lista», mentre la regola nuova dice che il campo nomina «perimetro»; A06:226 e' gia' a posto. (2) La riga 12 del blocco Formato elenca quattro valori e non offre «perimetro» a chi compila una voce di perimetro."
+}

@@ -30,6 +30,16 @@ compilare il campo `Classe:`:
 
 Aggiunta da Andrea il 22/09/2026. «Migliorativo» resta fuori: non è una classe.
 
+### Il perimetro non è una quinta classe
+
+`DESIGN-AMENDMENTS.md` registra due cose diverse. Le quattro classi qui sopra riguardano
+le divergenze di **merito** fra documento e prodotto. Le voci di perimetro — **A04**,
+**A06** — registrano invece una deroga al **piano**: un lotto ha toccato file che il piano
+gli escludeva. Non sono una quinta classe e non vanno ricondotte alle altre quattro: sono
+ratifiche di perimetro, e il campo `Classe` le nomina «perimetro».
+
+Deciso da Andrea il 23/09/2026.
+
 ### Nota sulle voci già etichettate «fuori-lista»
 
 La voce **A01** di questo file e i finding **D01, D03, D04, D05, D06, D07** del lotto L10

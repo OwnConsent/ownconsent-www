@@ -1,0 +1,31 @@
+{
+ "ts": "2026-09-23T17:19:27+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "consegna",
+ "titolo": "L14 consegnato in PR: 4 correzioni su site/, 5 punti di test, ADR-0005; due contraddizioni e tre domande per Andrea",
+ "contesto": "Ramo lotto/l14-rientro-finding da main 1ae5db2. Chi ha fatto cosa: F1 correzione e tutte le misure di 1-4 = la sessione (orchestrator), su decisione di Andrea (165152); il codice di 1, 3, 4 = @frontend (cd68e01, salvato dall'orchestrator); test 5-8 e 10 = @qa-test (due agenti; 5 e la voce della suite salvati dall'orchestrator); ADR-0005 e contratto = @architect. Quattro agenti su cinque si sono fermati al tetto dei turni.",
+ "dod_soddisfatta": {
+  "build_lint_check_site": "si: pnpm build exit 0, pnpm lint exit 0, astro check 0 errori 0 warning (165818; @architect dopo il contratto: 0 errori)",
+  "suite": "si: 311 passed (docs/evidenza/8/l14/qa-test/suite-completa.txt, HEAD 6c819bb); l'ADR non cambia value ne' nomi dei token",
+  "test_per_ogni_correzione": "si per 1, 2, 4 e per la regressione introdotta e corretta nel lotto (link visibile senza focus); D02 (punto 3) non ha un test di regressione: non era nel mandato di @qa-test",
+  "prove_by_reversion": "si per 1 e 2 (1ae5db2: 32 falliti), per il link senza focus (5fd10e8: 16 falliti), per 4 (1ae5db2: solo /saas/); NO per 10: sui file di 141135d il test di N3 passa (170907-qa-test-misura.json)",
+  "budget_perf": "AC39 verde nella suite completa, 8/8",
+  "evidenza_documento_prodotto": "si: docs/evidenza/8/l14/schermate/{prima,dopo}, misure in misura-f1-*.json e misura-f03-*.txt",
+  "journal_durante": "si, con fallimenti: tre gate di guard-paths.sh, due commit partiti senza cio' che annunciavano, una violazione mia della regola della worktree, quattro agenti al tetto",
+  "non_toccato": "site/src/content/legale/: $ git diff --stat 1ae5db2..HEAD -- site/src/content/legale -> vuoto"
+ },
+ "gate_aperto_per_andrea": [
+  "punto 10: la prova-by-reversion attesa non si verifica, e @qa-test sostiene che il test esistente di N3 copre gia' la spec",
+  "osservazioni visibili: il link di salto a fuoco copre il nome del sito; l'h1 a 48px va su due righe a 1280",
+  "ADR-0005 proposto: domande aperte su quali eccezioni di 2.5.8 ammettere e su come un test riconosce un link in linea; A08 in DESIGN-AMENDMENTS.md da aggiornare",
+  "lettura mia su F03: «OwnConsent registra la CMP ... per conto tuo» classificata responsabilita'",
+  "docs/design/00 riga 30-31: il salto «porta al primo titolo», il prodotto porta a <main> dalla #39",
+  "anteprime orfane di L13 (pid 7078) e L15 (pid 3314) ancora in ascolto",
+  "cartella nuova docs/evidenza/"
+ ],
+ "esito": "PR aperta, merge di Andrea",
+ "umano_coinvolto": true
+}

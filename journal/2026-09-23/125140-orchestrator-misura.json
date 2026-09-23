@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-23T12:51:40+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L15",
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Tre bozze misurate prima e dopo; suite verde, ma N2/N3 passano anche senza i mailto: il pavimento non ha un test",
+  "contesto": "Il mandato chiede sulle tre pagine servite: numero di mailto (almeno uno per pagina), numero di subject= (zero), contrassegno bozza presente, h1 senza «(bozza)» — quest'ultimo superato dalla decisione di Andrea su D05 (voce 124831). Anteprima: `pnpm preview --port 42489`, porta scelta libera e letta dal log («Preview server running at http://localhost:42489»). Sonda: .work/l15/misura-legali.py (HTML servito via HTTP, parser senza browser).",
+  "evidenza": [
+    "PRIMA (build di 141135d): termini mailto=0 subject=0 contrassegno=1 table_in_main=1 | privacy mailto=1 subject=0 contrassegno=1 | cookie mailto=0 subject=0 contrassegno=1",
+    "DOPO: termini mailto=1 subject=0 contrassegno=1 table_in_main=0 link_in_main=['/confronto/', 'mailto:segnaposto-nome-casella@segnaposto-dominio-casella.invalid'] | privacy mailto=1 subject=0 contrassegno=1 (invariata) | cookie mailto=1 subject=0 contrassegno=1",
+    "segnaposto {{recapito}} non risolto nell'HTML: 0 su tutte e tre",
+    "h1 dopo: 'Termini di servizio (bozza)', 'Informativa privacy (bozza)', 'Cookie policy (bozza)' — invariati per decisione (A07)",
+    "$ pnpm lint -> 0 problemi ; $ pnpm astro check -> 0 errors, 0 warnings, 6 hints",
+    "$ pnpm exec playwright test -> 252 passed (22.3s)",
+    "Riportando termini-di-servizio.md e cookie-policy.md a HEAD~1 (zero mailto): $ pnpm exec playwright test e2e/n3-... e2e/n2-... -> 18 passed. Poi `git checkout -- site/src/content/legale`, albero pulito."
+  ],
+  "cosa_ha_mostrato": "N3 per pagina scorre i mailto trovati e chiede che nessuno abbia ?subject= e che nessuno punti altrove: con zero mailto l'asserzione e' vera a vuoto. Stessa cosa per N2 sulle pagine legali. La decisione di Andrea del 21/09 — N3 e' un pavimento, non un tetto — oggi non ha un test che la faccia valere: se qualcuno togliesse la sezione Contatti, la suite resterebbe verde. Scriverlo non spetta a chi ha scritto il contenuto (regola 3): e' per @qa-test.",
+  "esito": "criteri del mandato soddisfatti (tranne h1, ritirato); lacuna di copertura segnalata, non corretta",
+  "umano_coinvolto": false,
+  "gate_aperto_per_andrea": "un test di @qa-test che richieda almeno un mailto all'indirizzo unico su ognuna delle tre pagine legali; in piu', se N3 va riscritta per dire «almeno uno», e' un cambio di spec."
+}

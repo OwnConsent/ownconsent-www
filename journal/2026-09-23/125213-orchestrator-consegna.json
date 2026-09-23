@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-23T12:52:13+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L15",
+  "stadio": "05-consegna",
+  "tipo": "consegna",
+  "titolo": "L15: Contatti in termini e cookie policy, tabella dei termini tolta, D05 chiusa senza modifica",
+  "fatto": [
+    "punto 1: sezione «Contatti» in termini-di-servizio.md e cookie-policy.md, con {{recapito}} risolto dalla rotta, nessun ?subject=",
+    "punto 2 (L10-D04): tabella tolta dai termini, al suo posto un rimando a /confronto/",
+    "punto 3 (L10-D05): non toccato per decisione di Andrea; ratificato in DESIGN-AMENDMENTS.md come A07 pre-produzione"
+  ],
+  "perimetro": "file modificati: site/src/content/legale/{termini-di-servizio,cookie-policy}.md, DESIGN-AMENDMENTS.md (chiesto da Andrea), journal/. Nessun altro file di site/ toccato (L14 in parallelo).",
+  "dod_soddisfatta": {
+    "build": "pnpm build -> 8 page(s) built, Complete",
+    "lint_check": "pnpm lint 0 problemi; pnpm astro check 0 errors 0 warnings 6 hints",
+    "e2e": "252 passed",
+    "test_di_accettazione_nuovi": "NO: il pavimento di N3 non ha un test (voce 125140), e' di @qa-test",
+    "evidenza_documento_prodotto": "HTML servito misurato prima e dopo (voce 125140); resa visiva non guardata: gate di Andrea"
+  },
+  "segnalato_non_deciso": [
+    "Il mandato dice che il punto 1 «chiude anche L10-D03: oggi i termini rimandano a l'indirizzo pubblicato dal sito». In .work/8/l10/findings-design.json, D03 parla d'altro: i link a SaaS/Hosted/On-premise che mancano nel corpo dei termini e nel pie' di pagina. L'indirizzo non pubblicato dai termini e' F03/N02 di L08, come dice D05 al campo gia_noto_e_non_riaperto. Il rimando a /confronto/ copre D03 solo in parte (un link al confronto, non alle tre pagine). D03 resta aperta finche' Andrea non decide.",
+    "Il segnaposto del titolare nei Contatti dei termini e' quello dell'informativa, non la formula del design (voce 125021).",
+    "La frase «verso l'indirizzo di contatto pubblicato dal sito» dei termini (sezione Trattamento dei dati personali) non e' stata toccata: adesso e' vera, perche' la pagina l'indirizzo lo pubblica."
+  ],
+  "esito": "PR aperta, merge di Andrea",
+  "umano_coinvolto": true
+}

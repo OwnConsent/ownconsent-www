@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-23T12:51:58+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L15",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "guard-paths.sh ha bloccato tre comandi in questo giro, nessuno dei quali usciva dal progetto",
+  "contesto": "Il fenomeno era gia' registrato stamattina (082944): l'hook legge la riga di comando come testo. Oggi si e' visto in tre forme nuove.",
+  "cosa_ho_provato": [
+    "1) Un heredoc che aggiungeva la voce A07 a DESIGN-AMENDMENTS.md: il testo conteneva il tag di chiusura dell'h1 in HTML, cioe' una barra seguita da «h1». Il gate lo ha risolto come il percorso assoluto «/h1». Rimedio: la stessa aggiunta fatta con il tool Edit, che non passa dall'hook di Bash.",
+    "2) Un grep sul file .gitignore della radice della worktree, scritto con il percorso relativo che risale di un livello dalla cartella site/. La cwd era site/, quindi il file stava dentro la worktree; il gate ha risolto la risalita rispetto alla radice del progetto principale, non rispetto alla cwd, e ha concluso che si usciva dal progetto. Rimedio: percorsi assoluti.",
+    "3) Un comando che componeva il nome della voce di journal come «cartella journal, barra, sostituzione di comando date». Il gate ha letto «barra dollaro» come percorso. Un comando quasi identico, poco prima, era passato: la differenza era una variabile intermedia. Rimedio: ora letta con date -Is in un comando a se', voce scritta con il tool Write."
+  ],
+  "cosa_si_e_imparato": "Il caso 2 e' diverso dagli altri: non e' testo scambiato per un percorso, e' un percorso vero risolto rispetto alla directory sbagliata. Il gate calcola le risalite dalla radice del progetto anche quando la shell e' in una sottocartella, quindi un percorso relativo corretto dalla cwd puo' essere bloccato. In una worktree annidata sotto .claude/worktrees/ questo si somma alla profondita' del percorso: conviene usare sempre percorsi assoluti.",
+  "evidenza": [
+    "messaggi: «GATE: il percorso '/h1' porta fuori dal progetto (/h1)», «GATE: il percorso '../.gitignore' porta fuori dal progetto (/home/andreapernici/src/ownconsent/.gitignore)», «GATE: il percorso '/$' porta fuori dal progetto (/$)»"
+  ],
+  "esito": "aggirato cambiando il modo di scrivere, non il contenuto; nessun file fuori dal progetto e' stato toccato",
+  "umano_coinvolto": false
+}

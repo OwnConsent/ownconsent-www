@@ -1,0 +1,11 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 36627 --host 127.0.0.1 --ignore-lock
+
+Running 4 tests using 4 workers
+
+  ✓  2 e2e/modi-di-sbagliare-misura.spec.ts:169:3 › Modi di sbagliare misura (strumenti di L07, non prodotto) › 4. Un grep sui soli file .css esterni non vede il CSS che Astro inlina nell'HTML (falso negativo) (7ms)
+  ✓  3 e2e/modi-di-sbagliare-misura.spec.ts:23:3 › Modi di sbagliare misura (strumenti di L07, non prodotto) › 1. Un build verde che non esercita il codice sotto esame (12ms)
+  ✓  1 e2e/modi-di-sbagliare-misura.spec.ts:89:3 › Modi di sbagliare misura (strumenti di L07, non prodotto) › 2. Le entità HTML (&#39;) falsificano una ricerca di numeri sul sorgente grezzo (14ms)
+  ✓  4 e2e/modi-di-sbagliare-misura.spec.ts:119:3 › Modi di sbagliare misura (strumenti di L07, non prodotto) › 3. Un regex con DOTALL (flag s) scavalca il confine fra due elementi (14ms)
+
+  4 passed (3.7s)

@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-23T17:13:50+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "Punto 8: quarto caso in e2e/modi-di-sbagliare-misura.spec.ts — grep sui soli .css esterni non vede il CSS inlinato da Astro",
+ "contesto": "Il difetto e' successo per davvero in L10 (journal/2026-09-22/105600-design-fallimento.json, corretto in 110807-orchestrator-correzione.json): un finding di @design diceva 'nel CSS servito non esiste nessuna media query di breakpoint' con a sostegno `grep -o \"@media[^{]*{\" site/dist/_astro/*.css` -> solo prefers-color-scheme. La regola c'era davvero, ma Astro inlina nell'HTML il CSS piccolo con scope di componente sotto una soglia di byte (gia' noto da L08, finding F16 sul budget CSS): stava in <style> dentro le pagine, non in _astro/*.css. La misura corretta (`grep -roh \"@media[^{]*{\" site/dist --include=*.html`) l'ha trovata: 2 occorrenze a 1280px, 8 a 768px. Aggiunto un quarto test nello stesso file esistente (stesso stile dei tre di L07: caso malato e sano costruiti in memoria — nessuna lettura di site/dist), non un file nuovo: e' la stessa famiglia di 'modi di sbagliare misura del collaudo stesso', non un AC. Aggiornato anche il commento di testa del file da 'tre' a 'quattro' famiglie.",
+ "alternative": [
+  {
+   "opzione": "file nuovo affiancato",
+   "scartata_perche": "il mandato chiede esplicitamente 'un caso nuovo... nello stile dei tre esistenti' nello stesso file; e' la stessa categoria di test (metodo di misura del collaudo), non un criterio diverso"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/modi-di-sbagliare-misura.spec.ts --reporter=list  (con il quarto caso aggiunto) -> 4 passed (3.7s), salvato in docs/evidenza/8/l14/qa-test/modi-di-sbagliare-misura-verde.txt",
+  "dimostrazione del falso esplicita nel test: regolaBreakpoint.test(foglioEsterno)===false (il grep sbagliato, limitato al solo .css esterno, non trova nulla) MA regolaBreakpoint.test(paginaServita)===true (la regola esiste per davvero, inlinata nello <style> della pagina) — lo stesso schema del falso negativo misurato in L10, riprodotto in memoria senza toccare site/",
+  "controllo di contrasto nello stesso test: sullo stesso metodo giusto (cerca su fogli esterni + HTML), un prodotto che davvero non ha la regola resta negativo — non e' un metodo che dice sempre si' una volta guardato anche l'HTML"
+ ],
+ "esito": "chiuso; quarto caso verde, dimostra esplicitamente sia il falso negativo del metodo sbagliato sia la correttezza (positivo e negativo) del metodo giusto",
+ "umano_coinvolto": false
+}

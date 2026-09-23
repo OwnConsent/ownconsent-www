@@ -1,0 +1,12 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 42621 --host 127.0.0.1 --ignore-lock
+
+Running 5 tests using 5 workers
+
+  ✓  2 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Termini di servizio (bozza) (/legale/termini-di-servizio/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (76ms)
+  ✓  3 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:54:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ contiene un link mailto: all'indirizzo unico di contatto, senza oggetto precompilato (72ms)
+  ✓  5 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:44:3 › N3: pagine legali — titolare e recapito unico › N3: /legale/informativa-privacy/ identifica il titolare del trattamento (segnaposto dichiarato, testo non prescritto) (65ms)
+  ✓  4 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Cookie policy (bozza) (/legale/cookie-policy/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (77ms)
+  ✓  1 e2e/n3-pagine-legali-titolare-e-recapito.spec.ts:70:5 › N3: pagine legali — titolare e recapito unico › N3: Informativa privacy (bozza) (/legale/informativa-privacy/) — nessun mailto: con oggetto precompilato e nessun recapito diverso dall'indirizzo unico (90ms)
+
+  5 passed (3.8s)

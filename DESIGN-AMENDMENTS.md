@@ -349,3 +349,24 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   dentro L14 (regola 2 del cantiere). Nello stesso giro va riallineata la riga 20 di
   `docs/design/00-sistema-e-componenti.md`, che porta la stessa promessa: il contratto
   corretto e il documento di design non devono contraddirsi.
+
+## A09 — Il link «salta al contenuto» porta a `<main>`, il documento dice «al primo titolo»
+- Data: 23/09/2026
+- Classe: pre-produzione (nessun rilascio in produzione: `git tag -l` e
+  `gh release list` vuoti il 23/09/2026, quindi la classe 3 non si applica)
+- Ratificata da: Andrea, 23/09/2026
+
+- Documento dice: `docs/design/00-sistema-e-componenti.md` righe 30-31, ordine di
+  navigazione da tastiera: il link «salta al contenuto» «porta al primo titolo del
+  contenuto principale (`id="contenuto"`)».
+- Prodotto fa: `id="contenuto"` e `tabindex="-1"` stanno su `<main>` in
+  `site/src/layouts/BaseLayout.astro` (l'id dalla #39, f7ffc19; il tabindex da L14,
+  cd68e01). Dopo Invio sul link, `document.activeElement` è `<main>`: misura L14 su
+  8 pagine × 2 viewport × 2 temi, 32/32
+  (`journal/2026-09-23/165627-orchestrator-misura.json`); test di regressione in
+  `e2e/l09-salto-al-contenuto.spec.ts`.
+- Deciso: **vale il prodotto.** Ragioni di Andrea: `<main>` è il landmark giusto;
+  portare il fuoco su un titolo richiederebbe comunque un `tabindex="-1"` sul titolo; il
+  criterio di L09-F2 misurato 32 su 32 è scritto su `<main>`.
+- Da smaltire: in una sessione di design si aggiornano le righe 30-31 di
+  `docs/design/00-sistema-e-componenti.md`. Il prodotto non cambia.

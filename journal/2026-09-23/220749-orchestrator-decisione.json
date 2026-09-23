@@ -1,0 +1,27 @@
+{
+ "ts": "2026-09-23T22:07:49+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "A09 registrata in DESIGN-AMENDMENTS.md con classe pre-produzione, scelta leggendo l'elenco di CLAUDE.md: la 3 chiede un meccanismo gia' in produzione, e non c'e'",
+ "contesto": "Mandato di Andrea: una voce per la divergenza «docs/design/00 dice che il salto porta al primo titolo, il prodotto porta a <main>», classe scelta leggendo l'elenco in CLAUDE.md e non a memoria. Nel merito Andrea ha deciso: vale il prodotto, e il documento si aggiorna in sessione di design.",
+ "alternative": [
+  {
+   "opzione": "shipped-vince (classe 3), che suona come il merito della decisione («vince lo shipped»)",
+   "scartata_perche": "CLAUDE.md, Metodo, classe 3: «documento contro meccanismo gia' in produzione». Nulla e' in produzione ($ git tag -l -> vuoto; $ gh release list -> vuoto); la classe 4 dice che fino al primo rilascio vale lei. Suonano uguali, ma il merito (vale il prodotto) e la classe (chi decide e perche') sono due cose"
+  },
+  {
+   "opzione": "accessibilita (classe 2)",
+   "scartata_perche": "il documento non fallisce un requisito di accessibilita': portare il fuoco sul primo titolo sarebbe conforme anche lui"
+  }
+ ],
+ "evidenza": [
+  "CLAUDE.md righe 123-127: classi 3 e 4 lette dal file il 23/09",
+  "DESIGN-AMENDMENTS.md: ultima voce A08 (riga 326), la nuova e' A09, in coda; $ git diff --stat -> 21 righe aggiunte, nessuna tolta",
+  "nella voce, oltre alle ragioni di Andrea, solo fatti misurati o riferimenti: righe del documento, commit dell'id e del tabindex, misura 32/32 (165627), file del test"
+ ],
+ "esito": "applicata; docs/design/00 non toccato, si aggiorna in sessione di design",
+ "umano_coinvolto": true
+}

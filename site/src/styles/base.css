@@ -27,6 +27,15 @@ h1 {
   font-size: var(--font-size-600);
 }
 
+/* L10-D02: font-size.700 e' definito per h1 dal breakpoint md in su e non era applicato
+   da nessuna regola (docs/evidenza/8/l10/findings-design.json, D02). Meccanismo dei
+   breakpoint: ADR-0004 — @media (--bp-md) risolto dal visitor di Lightning CSS. */
+@media (--bp-md) {
+  h1 {
+    font-size: var(--font-size-700);
+  }
+}
+
 h2 {
   font-size: var(--font-size-500);
 }

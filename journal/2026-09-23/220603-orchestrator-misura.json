@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-23T22:06:03+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "Punto 10 chiuso senza test nuovi: sulla copia costruita in cui il recapito non viene risolto, il test esistente di N3 fallisce. L'affermazione di @qa-test «il test esistente copre gia' la spec» e' dimostrata",
+ "contesto": "Lavoro della sessione, su mandato di Andrea. Reversione costruita, non pescata dalla storia (voce 220526): site/src/pages/legale/[slug].astro sostituisce la stringa letterale {{recapito}} con il mailto; nella copia temporanea di informativa-privacy.md il segnaposto e' scritto {{ recapito }}, che la rotta non riconosce, quindi la pagina esce senza mailto. Il file e' stato ripristinato subito dopo.",
+ "alternative": [
+  {
+   "opzione": "cancellare la riga del recapito dalla copia",
+   "scartata_perche": "toglie anche il testo attorno: la reversione deve togliere solo la proprieta' misurata, cioe' la risoluzione del recapito"
+  },
+  {
+   "opzione": "copia temporanea di site/ con la fixture di e2e/fixtures/copia-temporanea.ts",
+   "scartata_perche": "serve a sostituire file di dati (ADR-0002 D4), non contenuti; per una prova manuale basta la modifica temporanea verificata, come nelle altre reversioni del lotto"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/n3-pagine-legali-titolare-e-recapito.spec.ts (HEAD 45a3c7e) -> 5 passed, exit 0; docs/evidenza/8/l14/sessione/n3-verde-head.txt",
+  "$ sed -i 's/{{recapito}}/{{ recapito }}/' site/src/content/legale/informativa-privacy.md; git diff -> una riga, solo il segnaposto",
+  "$ pnpm exec playwright test (stesso spec, sulla copia) -> 1 failed, 4 passed, exit 1: fallisce «/legale/informativa-privacy/ contiene un link mailto: all'indirizzo unico di contatto, senza oggetto precompilato», Expected true, Received false; docs/evidenza/8/l14/sessione/n3-reversione-costruita.txt",
+  "i 3 test per pagina restano verdi sulla copia: il controllo «ogni mailto presente» e' vero a vuoto dove non c'e' mailto, e per questo l'asserzione non vacua e' quella che conta",
+  "$ git checkout -- site/src/content/legale/informativa-privacy.md; git status -s site/ -> vuoto"
+ ],
+ "esito": "punto 10 chiuso; nessun test nuovo, e2e/n3-pagine-legali-titolare-e-recapito.spec.ts invariato",
+ "umano_coinvolto": false
+}

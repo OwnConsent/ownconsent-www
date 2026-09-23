@@ -1,0 +1,418 @@
+[
+  {
+    "pagina": "home",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/home-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "home",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/home-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "saas",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/saas-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "saas",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/saas-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "hosted",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/hosted-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "hosted",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/hosted-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "on-premise",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/on-premise-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "on-premise",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/on-premise-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "confronto",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/confronto-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "confronto",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/confronto-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "termini-di-servizio",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/termini-di-servizio-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "termini-di-servizio",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/termini-di-servizio-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "informativa-privacy",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/informativa-privacy-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "informativa-privacy",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/informativa-privacy-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  },
+  {
+    "pagina": "cookie-policy",
+    "viewport": {
+      "width": 360,
+      "height": 640
+    },
+    "png": ".work/l14/shots-dopo/cookie-policy-360x640.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 360,
+      "bottom": 135
+    }
+  },
+  {
+    "pagina": "cookie-policy",
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "png": ".work/l14/shots-dopo/cookie-policy-1280x800.png",
+    "elemento": {
+      "tag": "A",
+      "className": "salta-al-contenuto"
+    },
+    "rect": {
+      "top": 4,
+      "left": 4,
+      "right": 164.09375,
+      "bottom": 44,
+      "width": 160.09375,
+      "height": 40
+    },
+    "headerRect": {
+      "top": 0,
+      "left": 0,
+      "right": 1280,
+      "bottom": 63
+    }
+  }
+]

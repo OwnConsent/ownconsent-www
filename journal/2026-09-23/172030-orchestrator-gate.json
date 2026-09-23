@@ -1,0 +1,18 @@
+{
+ "ts": "2026-09-23T17:20:30+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "gate",
+ "titolo": "guard-paths.sh blocca l'apertura della PR: una rotta del sito nel testo del corpo letta come percorso assoluto; PR #55 aperta scrivendo il corpo fuori da bash",
+ "contesto": "Il corpo della PR, passato con un heredoc nello stesso comando di gh pr create, citava la rotta della pagina SaaS con le due barre. L'hook l'ha risolta come percorso della radice del filesystem e ha bloccato il comando intero. E' il quarto blocco dello stesso tipo in questo lotto: l'hook legge il testo dei dati come se fosse un percorso.",
+ "evidenza": [
+  "messaggio del gate: «il percorso '/saas/' porta fuori dal progetto (/saas)»",
+  "corpo scritto con lo strumento di scrittura in un file della cartella temporanea di sessione, poi $ gh pr create --body-file -> https://github.com/OwnConsent/ownconsent-www/pull/55"
+ ],
+ "chi_ha_deciso": "l'hook; falso positivo, stessa azione con un altro strumento dentro lo stesso perimetro (docs/HANDOFF.md)",
+ "cosa_serviva": "che il testo non passasse dalla riga di comando",
+ "esito": "PR aperta; il merge e' di Andrea",
+ "umano_coinvolto": false
+}

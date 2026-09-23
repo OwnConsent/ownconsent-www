@@ -1,0 +1,25 @@
+{
+ "ts": "2026-09-23T17:09:07+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "misura",
+ "titolo": "Punto 10: N3 scritto dalla spec conferma l'ipotesi del 145701 — la prova-by-reversion su 141135d passa, non fallisce; nessuna correzione al test esistente",
+ "contesto": "Ho derivato le due asserzioni richieste dal mandato direttamente da docs/spec/issue-8.json (criterio N3, campo 'allora'): (1) l'informativa privacy contiene almeno un link mailto: (asserzione non vacua, non solo 'nessun mailto sbagliato'); (2) su tutte e tre le pagine legali ogni mailto: presente punta all'unico indirizzo di site/src/dati/contatto.json e non ha ?subject=. Confrontando con e2e/n3-pagine-legali-titolare-e-recapito.spec.ts (creato in L07, 0a7a469, 'un test per ciascuno dei 22 criteri, in rosso come atteso'): il file gia' implementa esattamente queste due asserzioni — il test 'contiene un link mailto: ... senza oggetto precompilato' con 'trovato'/toBe(true) e' non vacuo; il test per-pagina calcola 'indirizziDiversi' su TUTTI gli href mailto: di ciascuna pagina e verifica /\\?subject=/ su ciascuno. Decisione: NESSUNA correzione al file esistente e nessun file affiancato — sarebbe una duplicazione della stessa logica scritta dalla stessa spec, col rischio di divergenza che L14-punto-5 ha gia' segnalato come pattern da evitare (journal 170529). Uso il file esistente, gia' verificato spec-fedele, per la prova-by-reversion richiesta da Andrea.",
+ "alternative": [
+  {
+   "opzione": "scrivere un file nuovo, affiancato, con solo le due asserzioni del mandato",
+   "scartata_perche": "duplicherebbe esattamente la logica gia' in e2e/n3-pagine-legali-titolare-e-recapito.spec.ts (stesso criterio N3, stesse due asserzioni derivate dallo stesso testo di spec): due file che verificano la stessa cosa possono divergere silenziosamente a un cambio futuro. Il file esistente e' gia' scritto dalla spec (L07), non dall'implementazione: non c'e' un difetto da correggere"
+  }
+ ],
+ "evidenza": [
+  "baseline: $ pnpm exec playwright test e2e/n3-pagine-legali-titolare-e-recapito.spec.ts --reporter=list  (HEAD d5bd199) -> 5 passed (3.8s), salvato in docs/evidenza/8/l14/qa-test/n3-baseline-attuale.txt",
+  "reversione: $ for f in cookie-policy informativa-privacy termini-di-servizio; do git show 141135d:site/src/content/legale/$f.md > site/src/content/legale/$f.md; done  -> git status -s site/ mostra SOLO cookie-policy.md e termini-di-servizio.md modificati (informativa-privacy.md e' identico a 141135d, coerente con 145701)",
+  "$ pnpm exec playwright test e2e/n3-pagine-legali-titolare-e-recapito.spec.ts --reporter=list  (con i tre file a 141135d) -> 5 passed (3.8s), NON fallisce. Salvato in docs/evidenza/8/l14/qa-test/n3-reversione-141135d.txt",
+  "conferma testuale della causa: $ for r in 141135d 39daaee; do for f in termini informativa cookie; do git show $r:site/src/content/legale/$f.md | grep -c '{{recapito}}'; done; done  -> a 141135d: termini=0, informativa=1, cookie=0. L'informativa aveva gia' il recapito prima di L15 (nessun mailto mancante da rilevare come non-vacuo li'); termini e cookie non avevano NESSUN mailto, quindi il controllo per-pagina ('ogni mailto presente...') e' vero a vuoto su entrambi, esattamente come previsto dalla spec N3 (che non impone un mailto su termini e cookie, solo sull'informativa)",
+  "ripristino: $ git checkout -- site/src/content/legale/cookie-policy.md site/src/content/legale/termini-di-servizio.md site/src/content/legale/informativa-privacy.md ; $ git status -s site/ -> vuoto"
+ ],
+ "esito": "l'ipotesi del 145701-orchestrator-misura.json e' confermata sulla build servita, non solo su git show: il test scritto dalla spec PASSA sui file di 141135d, non fallisce. Non l'ho piegato per farlo fallire (CLAUDE.md, prove-by-reversion). Nessuna modifica a e2e/n3-pagine-legali-titolare-e-recapito.spec.ts ne' a site/: il file e' gia' fedele alla spec e la prova-by-reversion attesa da Andrea nel mandato non si verifica per un motivo di dato (l'informativa aveva gia' il recapito prima di L15), non per un difetto del test. Decide Andrea se questo e' accettabile o se N3 va riletta insieme a L15. Passo al punto 6",
+ "umano_coinvolto": false
+}

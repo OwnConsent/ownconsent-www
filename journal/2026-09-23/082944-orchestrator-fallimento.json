@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-23T08:29:44+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "fallimento",
+  "titolo": "guard-paths.sh blocca la risalita anche quando non e' un percorso, ma testo dentro un heredoc",
+  "contesto": "Tre blocchi dello stesso hook nello stesso giro. Il primo era corretto e utile; il secondo e il terzo no.",
+  "cosa_ho_provato": [
+    "1) git worktree add -b classe-4-divergenze <un livello sopra il progetto> main -> GATE, giustamente: la worktree sarebbe finita fuori dal perimetro della sessione. Corretto in .claude/worktrees/classe-4-divergenze, che .gitignore gia' esclude come «alberi di lavoro degli agenti».",
+    "2) cat > <voce di journal> <<EOF ... EOF, dove il CONTENUTO della voce citava alla lettera il percorso rifiutato al punto 1 -> stesso GATE, stesso messaggio. Nessun comando stava per toccare quel percorso: la stringa era dentro il testo del journal.",
+    "3) scrivendo QUESTA voce, che descriveva il punto 2, ho abbreviato un percorso interno con tre puntini -> GATE di nuovo, perche' due di quei tre puntini sono una risalita. Il gate ha bloccato la registrazione del gate."
+  ],
+  "cosa_si_e_imparato": "L'hook ispeziona la riga di comando come testo, non gli argomenti che il comando usera' davvero. Con un heredoc il corpo del documento fa parte della riga di comando, quindi registrare nel journal un percorso vietato basta a far scattare il gate — e anche una semplice ellissi dentro un percorso. Conseguenza pratica per chi scrive il journal dal terminale: un tentativo bloccato si descrive a parole, non si cita alla lettera, e non si abbrevia con i puntini. Non e' un difetto da correggere di corsa: un gate che sbaglia per eccesso sbaglia nel verso giusto. Ma va saputo, perche' la reazione istintiva e' credere che il comando sia sbagliato e riscriverlo, invece di guardare il testo che il comando porta dentro. Il caso 3 e' la misura piu' pulita che si possa chiedere: il comando scriveva dentro la worktree, e il solo motivo del blocco era il contenuto.",
+  "evidenza": [
+    "messaggio identico nei tre casi: «GATE: la risalita X porta fuori dal progetto Y — fuori dal perimetro di questa sessione»",
+    "nel caso 3 il percorso ricostruito dall'hook era /home/andreapernici/src/ownconsent/decisione.json, cioe' un file che nessuno ha mai nominato: l'hook ha risolto l'ellissi come se fosse un percorso"
+  ],
+  "esito": "aggirato riscrivendo il testo della voce, non il comando",
+  "umano_coinvolto": false
+}

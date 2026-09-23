@@ -117,10 +117,14 @@ poterti accorgere di aver guardato nel posto sbagliato.
 meccanismo, vale ciò che è in produzione. La divergenza si segnala, non si assorbe in
 silenzio.
 
-**Le divergenze sono una lista chiusa.** Solo tre classi sono ammesse:
+**Le divergenze sono una lista chiusa.** Solo quattro classi sono ammesse:
 1. funzionalità non ancora costruita → si disegna lo stato vuoto;
 2. il documento fallisce un requisito di accessibilità → si corregge il valore;
 3. documento contro meccanismo già in produzione → vince il secondo, segnalato.
+4. **pre-produzione** → documento e prodotto divergono prima che esista qualcosa in
+   produzione. Nessuno dei due vince per default: decide Andrea, caso per caso, e la
+   decisione si registra in `DESIGN-AMENDMENTS.md` come ratifica. Questa classe scade
+   il giorno del primo rilascio in produzione: da lì vale la 3.
 
 **«Migliorativo» non è una classe.** Un'idea migliore non entra da una PR di
 implementazione: passa da una sessione di design. Le divergenze ratificate si annotano in

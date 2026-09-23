@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-23T08:29:07+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "misura",
+  "titolo": "Classe 4 presente in entrambi i file; due cose che la misura ha fatto vedere e che il mandato non prevedeva",
+  "contesto": "Il mandato chiede il grep delle classi nei due file prima del commit. Il grep ha risposto, e ha anche mostrato due cose che nessuno aveva chiesto di guardare.",
+  "evidenza": [
+    "$ grep -n 'classi|pre-produzione|Classe:' CLAUDE.md -> 120 «Solo quattro classi sono ammesse»; 124 «4. **pre-produzione** ...». Due righe, zero prima della modifica.",
+    "$ grep -n 'classi|pre-produzione|Classe:' DESIGN-AMENDMENTS.md -> 12 (Formato, 4 valori), 18 (sezione nuova), 21, 26 (classe 4), 37-38 (nota), piu' le 6 righe «Classe:» delle voci A01..A06, invariate.",
+    "$ git grep -n -E '\\bD0[1-7]\\b' -- ':!journal' -> UNA sola riga, ed e' quella che ho appena scritto io (DESIGN-AMENDMENTS.md:35). Prima della modifica: zero.",
+    "$ grep -n -E '^- Classe: (fuori-lista|perimetro)' DESIGN-AMENDMENTS.md -> 45 (A01), 123 (A04), 209 (A06). Tre, non una."
+  ],
+  "cosa_ha_mostrato": [
+    "D01..D07 non sono in nessun file tracciato: vivono in .work/8/l10/findings-design.json, che .gitignore esclude. La nota richiesta da Andrea nominava sei sigle che nel repository non esistevano. Ho aggiunto un paragrafo «Dove stanno» che rimanda alle due voci di journal del 22/09 che le elencano. E' l'unica aggiunta di testo oltre a quello dettato: senza, la nota sarebbe un riferimento morto.",
+    "Le voci etichettate fuori-lista o perimetro in DESIGN-AMENDMENTS.md sono TRE (A01, A04, A06), non una. L'elenco di Andrea nomina A01 e le sei D, non A04 ne' A06. Non ho toccato nulla: A04 e A06 si dichiarano divergenze di PERIMETRO («il documento non dice una cosa diversa nel merito, dice che quel file non si tocca in questo lotto»), che e' un'altra cosa dalla classe 4 — la classe 4 parla di merito, non di proprieta' dei file. Puo' essere che sia questa la ragione dell'esclusione, e puo' essere una dimenticanza. E' una domanda per Andrea, non una decisione mia."
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true,
+  "gate_aperto_per_andrea": "A04 e A06 portano ancora fuori-lista/perimetro e non sono nell'elenco della nota: restano da chiarire, in questa PR o dopo."
+}

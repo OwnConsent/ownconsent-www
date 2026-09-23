@@ -1,0 +1,23 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 45887 --host 127.0.0.1 --ignore-lock
+
+Running 16 tests using 8 workers
+
+  ✓   5 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 1280x800 (316ms)
+  ✓   8 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 360x640 (320ms)
+  ✓   2 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 1280x800 (327ms)
+  ✓   6 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 360x640 (338ms)
+  ✓   1 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 360x640 (341ms)
+  ✓   4 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 1280x800 (344ms)
+  ✓   3 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 360x640 (348ms)
+  ✓   7 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 1280x800 (357ms)
+  ✓  13 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 (131ms)
+  ✓  10 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 1280x800 (158ms)
+  ✓  11 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 (150ms)
+  ✓  14 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 (144ms)
+  ✓  12 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 (148ms)
+  ✓  16 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 (140ms)
+  ✓  15 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 (168ms)
+  ✓   9 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 360x640 (209ms)
+
+  16 passed (3.4s)

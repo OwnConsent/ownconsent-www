@@ -1,0 +1,24 @@
+{
+ "ts": "2026-09-23T17:05:29+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "Punto 5: AC7 esteso a <title> e a ogni content di <meta> in head, non solo al body",
+ "contesto": "e2e/ac07-nessuna-registrazione-iab.spec.ts leggeva solo $('body').text(): un punto cieco reale, non ipotetico — L13-F03 (journal/2026-09-22/110214-seo-consegna.json) ha trovato la violazione proprio nella meta description di /saas/, mai raggiunta dal body. Esteso lo stesso test (non affiancato: e' lo stesso criterio AC7, non un criterio nuovo) a title + ogni meta[content] di head + body, tre punti verificati per pagina con il nome del punto nel messaggio di fallimento. Interpretazione da docs/spec/issue-8.json AC7 'interpretazione' (Andrea, 2026-09-22): vietato lo stato (participio), ammessa la responsabilita' — le due regex non sono cambiate.",
+ "alternative": [
+  {
+   "opzione": "file nuovo affiancato al test esistente",
+   "scartata_perche": "stesso AC, stesso criterio; un secondo file avrebbe duplicato la logica e il rischio di divergenza. Il mandato dice 'estendilo'"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/ac07-nessuna-registrazione-iab.spec.ts --reporter=list  (HEAD 8404d59) -> 8 passed (4.7s), docs/evidenza/8/l14/qa-test/verde-head-ac07.txt",
+  "prova-by-reversion: $ git show 1ae5db2:site/src/pages/saas.astro > site/src/pages/saas.astro -> pnpm exec playwright test e2e/ac07-nessuna-registrazione-iab.spec.ts -> 7 passed, 1 failed: SOLO /saas/, messaggio 'nessuna affermazione ... in meta[description] di /saas/', Expected false Received true. Le altre 7 pagine restano verdi, come atteso ('deve fallire su /saas/, e solo li''). Salvato in docs/evidenza/8/l14/qa-test/reversione-1ae5db2-ac07-saas.txt",
+  "ripristino: $ git checkout -- site/src/pages/saas.astro; $ git status -s site/ -> vuoto",
+  "riscontro con docs/evidenza/8/l14/misura-f03-prima.txt: stessa unica occorrenza, stessa pagina, stesso punto (meta description)"
+ ],
+ "esito": "chiuso; il test aggiornato copre il punto cieco misurato in L13, verde su HEAD, rosso mirato sulla reversione",
+ "umano_coinvolto": false
+}

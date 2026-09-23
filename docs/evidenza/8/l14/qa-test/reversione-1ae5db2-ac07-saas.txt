@@ -1,0 +1,46 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 37875 --host 127.0.0.1 --ignore-lock
+
+Running 8 tests using 8 workers
+
+  ✓  2 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Home (/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (212ms)
+  ✓  1 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Termini di servizio (bozza) (/legale/termini-di-servizio/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (223ms)
+  ✓  3 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Cookie policy (bozza) (/legale/cookie-policy/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (230ms)
+  ✓  4 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Confronto modalità e listino (/confronto/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (213ms)
+  ✓  6 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Hosted (/hosted/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (158ms)
+  ✓  5 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: On-premise (/on-premise/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (191ms)
+  ✓  8 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Informativa privacy (bozza) (/legale/informativa-privacy/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (172ms)
+  ✘  7 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: SaaS (/saas/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (200ms)
+
+
+  1) e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: SaaS (/saas/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe 
+
+    Error: nessuna affermazione che OwnConsent sia registrata, certificata o approvata da IAB Europe in meta[description] di /saas/
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      79 |           affermaRegistrazione,
+      80 |           `nessuna affermazione che OwnConsent sia registrata, certificata o approvata da IAB Europe in ${luogo} di ${pagina.rotta}`,
+    > 81 |         ).toBe(false);
+         |           ^
+      82 |       }
+      83 |     });
+      84 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/ac07-nessuna-registrazione-iab.spec.ts:81:11
+
+    Error Context: test-results/e2e-ac07-nessuna-registraz-4c3d8-rovazione-presso-IAB-Europe/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-ac07-nessuna-registraz-4c3d8-rovazione-presso-IAB-Europe/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-ac07-nessuna-registraz-4c3d8-rovazione-presso-IAB-Europe/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: SaaS (/saas/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe 
+  7 passed (4.3s)

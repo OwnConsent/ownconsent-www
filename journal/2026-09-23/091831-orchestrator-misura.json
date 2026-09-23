@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-23T09:18:31+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "misura",
+  "titolo": "Le due correzioni chieste sono applicate; il criterio di accettazione che le accompagna NON e' soddisfatto, e non lo puo' essere",
+  "contesto": "Il mandato del terzo commit chiude con un criterio: «Entrambi devono dare cinque valori, quattro classi piu' perimetro, senza fuori-lista». Ho applicato le due correzioni e poi misurato. Il modello (riga 12) soddisfa il criterio. L'elenco dei valori usati nelle voci no, e non per una svista di questo commit.",
+  "evidenza": [
+    "$ grep -n -E '^- Classe:|Classe:' DESIGN-AMENDMENTS.md -> 12 (modello, 4 classi), 14-15 (perimetro nominato FUORI dall'enumerazione), 23, 64 (A01 fuori-lista), 72, 116 (unshipped), 142 (A04 perimetro, con la traccia), 176 (shipped-vince), 228 (A06 perimetro)",
+    "$ grep -oP '^- Classe: \\K[a-z-]+' DESIGN-AMENDMENTS.md | sort | uniq -c -> 1 fuori-lista / 2 perimetro / 1 shipped-vince / 2 unshipped",
+    "$ grep -n fuori-lista DESIGN-AMENDMENTS.md -> 45 (titolo della nota), 48 (corpo della nota), 64 (A01), 142 (la traccia dentro A04)"
+  ],
+  "il_criterio_dice": "cinque valori — unshipped, accessibilita, shipped-vince, pre-produzione, perimetro — e nessun fuori-lista",
+  "la_misura_dice": "QUATTRO valori distinti usati dalle voci, e fuori-lista c'e' ancora",
+  "perche_diverge": [
+    "fuori-lista sopravvive in A01:64. Non e' un residuo di questo commit: e' il 22/09 che Andrea ha deciso «si riclassificano quando Andrea decide ciascuna, non ora», e A01 e' in quell'elenco. Il mandato di oggi normalizza A04, non A01. Normalizzare anche A01 per far tornare il conto sarebbe adattare la misura alla descrizione: il caso esatto che CLAUDE.md vieta.",
+    "accessibilita e pre-produzione non compaiono in nessuna voce perche' nessuna voce li ha mai usati. Sono valori ammessi, non valori presenti: A01..A06 sono sei voci scritte fra il 15/09 e il 21/09, e pre-produzione esiste da ieri. Un elenco dei valori USATI non puo' contenere un valore che nessuno ha ancora usato — il criterio confonde il vocabolario con l'inventario."
+  ],
+  "cosa_non_ho_fatto": "Non ho toccato A01. Non ho inventato una voce per far comparire pre-produzione. Non ho riformulato il grep per farlo tornare.",
+  "gate_aperto_per_andrea": "Il conto torna a cinque solo quando A01 viene riclassificata, e quella decisione e' sua, una voce per volta. In piu' A01:64 porta ancora «in attesa che una sessione di design decida se aprire una quarta classe»: quella sessione c'e' stata il 22/09, quindi la riga e' doppiamente scaduta.",
+  "esito": "correzioni applicate, criterio di accettazione non soddisfatto e segnalato",
+  "umano_coinvolto": true
+}

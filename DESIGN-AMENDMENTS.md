@@ -10,6 +10,8 @@ Si smaltisce in sessioni di design, non dentro una PR di implementazione.
     ## A01 — titolo breve
     - Data:
     - Classe: unshipped | accessibilita | shipped-vince | pre-produzione
+      (oppure `perimetro`, che non è una classe di divergenza: vedi
+      «Il perimetro non è una quinta classe»)
     - Documento dice:
     - Prodotto fa:
     - Deciso: cosa vale, e perché
@@ -137,7 +139,7 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
 
 ## A04 — `vite.preview.strictPort` in `site/astro.config.mjs`, fuori dal perimetro del collaudo
 - Data: 21/09/2026
-- Classe: fuori-lista — divergenza di **perimetro**, non di merito: il documento non dice
+- Classe: perimetro (era: fuori-lista, normalizzata il 23/09 dopo la decisione sul perimetro) — divergenza di **perimetro**, non di merito: il documento non dice
   una cosa diversa, dice che quel file non si tocca in questo lotto
 - Ratificata da: Andrea, 21/09/2026
 

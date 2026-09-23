@@ -1,0 +1,22 @@
+{
+ "ts": "2026-09-23T17:11:15+02:00",
+ "agente": "qa-test",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "04-collaudo",
+ "tipo": "consegna",
+ "titolo": "Punto 6: e2e/l13-f02-struttura-titoli.spec.ts — un h1 e nessun salto di livello sulle 8 pagine, non un AC",
+ "contesto": "L13-F02 (journal/2026-09-22/110044-seo-misura.json) misura che axe-core 4.13.0 pubblica heading-order e page-has-heading-one con tag ['cat.semantics','best-practice'], non wcag*: e2e/ac40-wcag-a-aa.spec.ts seleziona solo per TAG_WCAG_A_AA (riga 29), quindi non le esegue mai. Non e' un id AC/N della spec (docs/spec/issue-8.json), quindi il commento di testa del file lo dice esplicitamente, come chiesto, cosi' il gate di L12 non lo confonda con un criterio di accettazione mancante. Due proprieta' su ciascuna delle 8 pagine di e2e/pagine.ts: esattamente un <h1>; nessun salto di livello in ordine di documento (h(n) seguito da h(n+2) o oltre senza h(n+1) intermedio; una discesa di livello non conta come salto). Il controllo e' una funzione pura (violazioniStrutturaTitoli) applicata alla sequenza di livelli, estratta via cheerio per le 8 pagine reali (guardiaEsistenzaRequest, http puro) e via page.evaluate su page.setContent per i due casi costruiti in memoria richiesti dal mandato.",
+ "alternative": [
+  {
+   "opzione": "aggiungere heading-order/page-has-heading-one ai tag di axe in ac40-wcag-a-aa.spec.ts",
+   "scartata_perche": "quelle due regole sono best-practice, non wcag*: cambiare il filtro di AC40 estenderebbe silenziosamente un criterio di accettazione gia' definito (AC40 parla di 'regole WCAG 2.2 di livello A e AA') con un requisito diverso. E' materia per @architect/@seo su un ADR, non per un file di test nuovo di @qa-test"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/l13-f02-struttura-titoli.spec.ts --reporter=list  (HEAD 89994b1 + questo file) -> 10 passed (4.1s): 8 test sulle pagine reali (tutte verdi, coerente con l'ordine dei livelli gia' misurato da @seo in 110044) + 2 test che costruiscono in memoria un caso malato (due <h1>; h2->h4) e il suo contrario sano, dimostrando che violazioniStrutturaTitoli distingue i due casi invece di passare sempre. Salvato in docs/evidenza/8/l14/qa-test/l13-f02-verde.txt",
+  "riscontro coi livelli gia' misurati da @seo (110044, ordine titoli): / -> [1,2,3,3,3,2], nessuna eccezione su nessuna delle 8 pagine — combacia con il verde ottenuto qui, misura indipendente (cheerio, non l'estrattore python di @seo) che conferma lo stesso esito"
+ ],
+ "esito": "chiuso; nessun AC toccato (finding, non criterio), test verde sulle 8 pagine e dimostrato capace di fallire sui due casi malati costruiti in memoria",
+ "umano_coinvolto": false
+}

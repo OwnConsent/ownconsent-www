@@ -1,0 +1,17 @@
+{
+ "ts": "2026-09-23T14:57:01+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "Punto 10 del mandato: la prova-by-reversion attesa (il test di N3 fallisce sui file prima di L15) e' probabilmente contraddetta dal sorgente — l'informativa aveva gia' il recapito",
+ "contesto": "Il mandato chiede un test di N3 scritto dalla spec, con due asserzioni (l'informativa contiene almeno un mailto; su tutte e tre le pagine ogni mailto presente punta all'indirizzo unico e non ha oggetto) e dice che sui file di main precedenti a L15 deve fallire. L15 ha aggiunto il recapito a termini e cookie policy, non all'informativa. La spec N3 non chiede un mailto su termini e cookie: li' il controllo e' vero a vuoto anche per la spec.",
+ "evidenza": [
+  "$ for r in 141135d 39daaee; for f in termini informativa cookie; git show $r:site/src/content/legale/$f.md | grep -c '{{recapito}}' -> 141135d (prima di L15): 0 / 1 / 0; 39daaee (L15): 1 / 1 / 1",
+  "$ git diff --stat 141135d 39daaee -- site/ -> solo cookie-policy.md (+5) e termini-di-servizio.md (+12 -5): l'informativa non cambia",
+  "A08 in DESIGN-AMENDMENTS.md: il 22/09, prima di L15, l'informativa servita aveva un mailto (rettangolo 449x17)"
+ ],
+ "esito": "ipotesi, non ancora misura sull'HTML servito: la verifica sulla build la fa @qa-test. Se il test scritto dalla spec passa sui file di 141135d, @qa-test si ferma su quel punto e lo riporta; il test non si piega per farlo fallire. Da decidere per Andrea nella PR",
+ "umano_coinvolto": false
+}

@@ -1,0 +1,19 @@
+{
+ "ts": "2026-09-23T16:56:44+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "L13-F03 confermato: la forma di stato su IAB Europe era una sola, nella meta description di /saas/; le altre sei frasi su IAB Europe sono responsabilita' o «in definizione» e restano",
+ "contesto": "Lavoro della sessione. Sonda docs/evidenza/8/l14/sonda-f03.mjs: per ognuna delle 8 pagine servite legge title, il content di ogni meta in head e il testo del body; applica le due regex di AC7 e in piu' elenca OGNI frase che nomina IAB Europe, perche' le regex non vedono «registra» e «registri». La classificazione segue docs/spec/issue-8.json, AC7, «interpretazione»: vietato lo stato (participio: registrata, certificata, approvata), ammessa la responsabilita' (chi registra).",
+ "evidenza": [
+  "prima (saas.astro di 1ae5db2): $ node sonda-f03.mjs http://127.0.0.1:39583 -> «AC7 REGEX | 200 /saas/ | meta description | ... CMP registrata da OwnConsent presso IAB Europe», occorrenze: 1",
+  "dopo (cd68e01): occorrenze: 0; 2 meta con content per pagina (viewport, description), nessun'altra",
+  "frasi su IAB Europe dopo, classificate: /saas/ meta description «la registrazione della CMP presso IAB Europe la gestiamo noi» -> responsabilita' (esempio di Andrea); /saas/ body «OwnConsent registra la CMP presso IAB Europe per conto tuo» -> responsabilita' (voce «Chi registra la CMP» della carta); /hosted/ body «... per le istanze Hosted e' in definizione» -> nessuna affermazione; /on-premise/ meta description «registri tu la CMP presso IAB Europe a tuo nome» e body «la fa il cliente, a proprio nome» -> responsabilita' del cliente; /confronto/ meta description «chi registra la CMP presso IAB Europe» -> responsabilita'",
+  "pagine legali servite: nessuna frase su IAB Europe; $ grep -rn -i iab site/src/content/legale/ -> nessun risultato",
+  "$ git diff 1ae5db2 -- site/src/pages/saas.astro -> una riga, solo la meta description"
+ ],
+ "esito": "confermato; il merito (SaaS: registra OwnConsent) non cambia. Da segnalare ad Andrea: «OwnConsent registra la CMP ... per conto tuo» e' al presente indicativo; l'ho letta come responsabilita' perche' sta sotto «Chi registra la CMP», ma la lettura e' mia",
+ "umano_coinvolto": false
+}

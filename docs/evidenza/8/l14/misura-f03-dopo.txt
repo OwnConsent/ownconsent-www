@@ -1,0 +1,15 @@
+200 / | meta in head: 2
+   frase IAB | /saas/ | meta description | OwnConsent SaaS: configurazione e delivery a cura nostra, canone mensile a piani per volume di richieste, la registrazione della CMP presso IAB Europe la gestiamo noi
+   frase IAB | /saas/ | body | Chi registra la CMPOwnConsent registra la CMP presso IAB Europe per conto tuo: nessun passaggio amministrativo a tuo carico
+200 /saas/ | meta in head: 2
+   frase IAB | /hosted/ | body | Discoda definireMemoriada definireCPUda definireChi registra la CMPLa registrazione della CMP presso IAB Europe per le istanze Hosted è in definizione
+200 /hosted/ | meta in head: 2
+   frase IAB | /on-premise/ | meta description | OwnConsent On-premise: installi sul tuo hardware, licenza annuale, registri tu la CMP presso IAB Europe a tuo nome
+   frase IAB | /on-premise/ | body | Licenza annualeda definireChi registra la CMPLa registrazione della CMP presso IAB Europe la fa il cliente, a proprio nome
+200 /on-premise/ | meta in head: 2
+   frase IAB | /confronto/ | meta description | Confronta SaaS, Hosted e On-premise: cosa ricevi, come paghi, chi registra la CMP presso IAB Europe e come si attiva ciascuna modalità
+200 /confronto/ | meta in head: 2
+200 /legale/termini-di-servizio/ | meta in head: 2
+200 /legale/informativa-privacy/ | meta in head: 2
+200 /legale/cookie-policy/ | meta in head: 2
+occorrenze: 0

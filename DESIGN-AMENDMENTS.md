@@ -51,9 +51,13 @@ blocco: si riclassificano quando Andrea decide ciascuna, una per una. Fino a que
 l'etichetta resta quella che c'è.
 
 **A01 è già stata decisa:** Andrea l'ha riclassificata `pre-produzione` il 23/09/2026, ed
-è la prima voce del file a usare la classe 4. Restano i sei `D`.
+è la prima voce del file a usare la classe 4.
 
-Dove stanno i sei `D`: **non sono in questo file** — sono
+**D06 è già stata decisa:** Andrea l'ha ratificata `pre-produzione` il 22/09/2026; la
+voce è **L10-D06** qui sotto. D05 è stata decisa il 23/09/2026 come **A07**. Restano
+quattro `D`: D01, D03, D04, D07.
+
+Dove stanno i `D` ancora in attesa: **non sono in questo file** — sono
 in `.work/8/l10/findings-design.json`, che `.gitignore` esclude; ciò che resta committato
 di loro è `journal/2026-09-22/110840-orchestrator-consegna.json` e
 `journal/2026-09-22/112100-design-decisione.json`, che li elencano uno per uno con la
@@ -318,3 +322,30 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
 - Da smaltire: alla prossima sessione di design, `01-pagine.md` §6-8 punto 4 si allinea
   all'h1 reso («… (bozza)»), oppure dichiara che la divergenza è accettata finché le
   pagine restano bozze.
+
+## L10-D06 — Il contratto promette 24px su ogni elemento interattivo; WCAG 2.5.8 esenta i link nel testo
+- Data: 22/09/2026 (registrata il 23/09/2026)
+- Classe: pre-produzione (era: fuori-lista nel finding di L10)
+- Ratificata da: Andrea, 22/09/2026
+
+- Documento dice: `contracts/design-tokens.json`, `touch-target.min-size`: 24px come
+  «dimensione minima di ogni elemento interattivo»; `touch-target.min-undisturbed-space`:
+  l'eccezione di 2.5.8 «in questo sistema non è usata: ogni elemento interattivo rispetta
+  già min-size». La stessa regola, senza eccezioni, è in
+  `docs/design/00-sistema-e-componenti.md` riga 20: «Ogni elemento interattivo rispetta
+  `touch-target.min-size` (24×24 CSS px, WCAG 2.5.8)».
+- Prodotto fa: il mailto del recapito del titolare nell'informativa privacy è un link in
+  linea dentro un `<p>`, alto 17px a 1280×800 (rettangolo 449×17, `display: inline`,
+  `font-size` 16px, `line-height` 24px). È l'unico bersaglio sotto i 24px sulle otto
+  pagine, a entrambe le viewport. Misura di L10, in `.work/8/l10/findings-design.json`
+  (voce D06; file non committato): `node .work/8/l10/misura.mjs http://localhost:4321
+  privacy /legale/informativa-privacy/` → `bersagli_sotto_24` con un solo elemento, quel
+  link; a 360×640 la lista è vuota perché il link va a capo e il rettangolo di unione
+  supera i 24px, mentre il bersaglio per riga resta alto 17px.
+- Deciso: **il contratto si allinea a WCAG 2.5.8.** Il prodotto è conforme: 2.5.8 esenta
+  il bersaglio in linea in una frase (eccezione «Inline»). È il contratto a promettere una
+  regola più severa di WCAG e a non rispettarla.
+- Da smaltire: l'ADR e la modifica di `contracts/design-tokens.json` li scrive @architect
+  dentro L14 (regola 2 del cantiere). Nello stesso giro va riallineata la riga 20 di
+  `docs/design/00-sistema-e-componenti.md`, che porta la stessa promessa: il contratto
+  corretto e il documento di design non devono contraddirsi.

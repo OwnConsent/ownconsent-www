@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-23T13:02:13+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "00-metodo",
+  "tipo": "fallimento",
+  "titolo": "Due scivolate nel registrare decisioni altrui: una copia di backup fuori dal progetto, e frasi mie dentro la decisione di Andrea",
+  "contesto": "PR piccola che porta negli artefatti due decisioni di Andrea (AC7 su L13-F03, L10-D06). Il rischio specifico di questo lavoro e' scrivere, sotto la firma di Andrea, piu' di quanto Andrea abbia deciso.",
+  "cosa_ho_provato": [
+    "1) prima di modificare docs/spec/issue-8.json ho tentato una copia di sicurezza in una cartella a un livello sopra la directory temporanea di sessione -> GATE di guard-paths.sh: la destinazione risolveva fuori dal progetto. La copia non serviva: il diff di git e' gia' il confronto col prima.",
+    "2) nel testo dell'interpretazione di AC7 avevo aggiunto una frase mia, che l'interpretazione vale anche per title e ogni meta in head. Non e' mai arrivata nel file: stava nello stesso comando della copia al punto 1, e il gate ha bloccato il comando intero prima che partisse. L'ho tolta dal secondo tentativo: non era nella decisione registrata. E' vero che AC7 dice «HTML servito», ma estenderlo per iscritto e' materia del punto 5 di L14 (@qa-test), non di una registrazione.",
+    "3) nella voce L10-D06 avevo scritto «il link non si alza a 24px» e una regola per i test futuri (esentare i link in linea, non l'informativa per nome). Tolte entrambe: sono deduzioni plausibili, ma non parole della decisione. Stanno nella descrizione della PR come punti aperti per Andrea."
+  ],
+  "cosa_si_e_imparato": "Quando si registra la decisione di un altro, ogni frase che non ha detto diventa, una volta committata, una sua decisione. Il controllo utile e' rileggere il testo contro la brief riga per riga e spostare nel campo «da smaltire» o nella PR tutto quello che e' conseguenza e non decisione.",
+  "evidenza": [
+    "messaggio del gate: la destinazione della copia risolveva in /home/andreapernici/src/ownconsent, fuori da www",
+    "$ git diff docs/spec/issue-8.json | grep -c '^-[^-]' -> 1 (solo «allora», che ricompare identica con la virgola)",
+    "$ grep -oP '^- Classe: \\K[a-z-]+' DESIGN-AMENDMENTS.md | sort | uniq -c -> 2 perimetro, 2 pre-produzione, 1 shipped-vince, 2 unshipped; $ grep -cP '^- Classe: fuori-lista' DESIGN-AMENDMENTS.md -> 0"
+  ],
+  "esito": "corretto prima del commit; nessuna frase aggiunta e' arrivata nel ramo",
+  "umano_coinvolto": false
+}

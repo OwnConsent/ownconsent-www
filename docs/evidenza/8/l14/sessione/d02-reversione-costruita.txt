@@ -1,0 +1,257 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 46455 --host 127.0.0.1 --ignore-lock
+
+Running 16 tests using 8 workers
+
+  ✓   1 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 360x640 (291ms)
+  ✓   6 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 360x640 (249ms)
+  ✓   5 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 360x640 (275ms)
+  ✓   8 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 360x640 (245ms)
+  ✘   4 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 1280x800 (297ms)
+  ✘   2 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 1280x800 (344ms)
+  ✓  10 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 (124ms)
+  ✘   7 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 1280x800 (305ms)
+  ✘   3 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 1280x800 (343ms)
+  ✓  11 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 360x640 (145ms)
+  ✓  13 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 (105ms)
+  ✘   9 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 1280x800 (204ms)
+  ✘  12 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 (194ms)
+  ✓  15 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 (127ms)
+  ✘  14 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 (171ms)
+  ✘  16 e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 (187ms)
+
+
+  1) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-3c9ee-d-in-su-D02-Home-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-3c9ee-d-in-su-D02-Home-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-3c9ee-d-in-su-D02-Home-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-9f214-su-D02-SaaS-saas-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-9f214-su-D02-SaaS-saas-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-9f214-su-D02-SaaS-saas-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-71d59-02-Hosted-hosted-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-71d59-02-Hosted-hosted-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-71d59-02-Hosted-hosted-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-65cb6-emise-on-premise-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-65cb6-emise-on-premise-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-65cb6-emise-on-premise-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-764a4-istino-confronto-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-764a4-istino-confronto-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-764a4-istino-confronto-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-58e3c-mini-di-servizio-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-58e3c-mini-di-servizio-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-58e3c-mini-di-servizio-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-1d99c-ormativa-privacy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-1d99c-ormativa-privacy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-1d99c-ormativa-privacy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+
+    Error: font-size calcolato dell'h1 a 1280x800: atteso font-size.700 = 48px
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 48
+    Received: 36
+
+      70 |
+      71 |         expect(misura.h1, `la pagina ${pagina.rotta} ha un h1`).not.toBeNull();
+    > 72 |         expect(misura.h1, `font-size calcolato dell'h1 a ${vw}x${vh}: atteso ${token} = ${attesoPx}px`).toBe(attesoPx);
+         |                                                                                                         ^
+      73 |       });
+      74 |     }
+      75 |   }
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l10-d02-h1-token.spec.ts:72:105
+
+    Error Context: test-results/e2e-l10-d02-h1-token-L10-D-08122-le-cookie-policy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l10-d02-h1-token-L10-D-08122-le-cookie-policy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l10-d02-h1-token-L10-D-08122-le-cookie-policy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8 failed
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Home (/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: SaaS (/saas/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Hosted (/hosted/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: On-premise (/on-premise/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Confronto modalità e listino (/confronto/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+    e2e/l10-d02-h1-token.spec.ts:56:7 › L10-D02: l'h1 usa font-size.600 sotto breakpoint.md e font-size.700 da breakpoint.md in su › D02: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+  8 passed (3.7s)

@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-23T22:07:08+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "D02 ha un test di regressione: e2e/l10-d02-h1-token.spec.ts, verde 16/16; con l'h1 rimesso alla dimensione precedente falliscono tutti e soli gli 8 test a 1280",
+ "contesto": "Lavoro della sessione su richiesta di Andrea («li fai tu, non delegarli»). Stessa forma del test di F1: 8 pagine x 360x640 e 1280x800, misura sull'HTML servito. Valori attesi letti a runtime da contracts/design-tokens.json (font-size.600, font-size.700 in rem, breakpoint.md in px), rem convertiti con il font-size calcolato di <html>. La correzione e' di @frontend (cd68e01): chi scrive il test non e' chi ha scritto la correzione, ma e' chi l'ha misurata (165627).",
+ "alternative": [
+  {
+   "opzione": "scrivere 36 e 48 px nel test",
+   "scartata_perche": "copierebbe i valori: il test deve seguire il contratto, come e2e/pagine.ts fa per gli altri dati"
+  },
+  {
+   "opzione": "reversione a base.css di 1ae5db2",
+   "scartata_perche": "funzionerebbe, ma la lezione del punto 10 (220526) e' costruire la reversione togliendo esattamente la proprieta' misurata: qui la sola regola @media (--bp-md) dell'h1"
+  }
+ ],
+ "evidenza": [
+  "$ pnpm exec playwright test e2e/l10-d02-h1-token.spec.ts (HEAD 1cbbb78) -> 16 passed, exit 0; docs/evidenza/8/l14/sessione/d02-verde-head.txt",
+  "reversione costruita: tolto da site/src/styles/base.css il blocco commento L10-D02 + @media (--bp-md) { h1 { font-size: var(--font-size-700) } } -> git diff --stat: 8 righe tolte, nessuna aggiunta",
+  "$ pnpm exec playwright test (stesso spec, sulla reversione) -> 8 failed, 8 passed, exit 1; falliti: 8 su 8 a 1280x800, passati: 8 su 8 a 360x640; Expected 48, Received 36; docs/evidenza/8/l14/sessione/d02-reversione-costruita.txt",
+  "$ git checkout -- site/src/styles/base.css; git status -s site/ -> vuoto",
+  "$ npx eslint e2e/l10-d02-h1-token.spec.ts -> exit 0"
+ ],
+ "esito": "D02 chiuso con prova-by-reversion",
+ "umano_coinvolto": false
+}

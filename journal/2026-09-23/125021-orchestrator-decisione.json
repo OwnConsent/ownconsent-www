@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-23T12:50:21+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": "L15",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Contatti dei termini: segnaposto del titolare identico a quello dell'informativa, non la formula del design",
+  "contesto": "01-pagine.md §6 vuole che «Contatti» dei termini identifichi il titolare con il segnaposto «ragione sociale e sede da definire». L'informativa privacy, i cui testi sono in attesa di approvazione dalla #35 e non si toccano, usa invece il segnaposto letterale `segnaposto-identita-titolare`.",
+  "alternative": [
+    { "opzione": "la formula del design, «ragione sociale e sede da definire»", "scartata_perche": "due segnaposti diversi per la stessa identita' su due pagine legali: chi sostituisce prima della pubblicazione cerca il prefisso «segnaposto-» e mancherebbe quello dei termini. Due fonti per lo stesso dato divergono, che e' lo stesso argomento con cui Andrea toglie la tabella (D04)" },
+    { "opzione": "nessuna identificazione, solo il recapito", "scartata_perche": "il design §6 chiede che «Contatti» identifichi il titolare" }
+  ],
+  "scelta": "`segnaposto-identita-titolare`, dichiarato come lo stesso dell'informativa. Cookie policy: solo il recapito, come prescrive §8 («lo stesso recapito delle altre due pagine legali»). E' una divergenza dal testo letterale del design: la PR la mostra ad Andrea, non la considero decisa.",
+  "esito": "applicata, da confermare in PR",
+  "umano_coinvolto": false
+}

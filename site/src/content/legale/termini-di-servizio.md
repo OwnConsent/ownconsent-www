@@ -16,11 +16,9 @@ modalità con cui viene reso disponibile; non è il prodotto.
 
 ## Le tre modalità
 
-| Modalità | Che cosa riceve il cliente | Chi registra la piattaforma |
-|---|---|---|
-| SaaS | configurazione e distribuzione a cura del fornitore, con piani per volume di richieste | il fornitore |
-| Hosted | un'istanza con risorse dedicate, dimensionata per disco, memoria e CPU | da definire |
-| On-premise | il software, che il cliente installa e gestisce sulla propria infrastruttura | il cliente, a proprio nome |
+Che cosa riceve il cliente in ciascuna modalità — SaaS, Hosted e On-premise — e chi
+registra la piattaforma sono descritti in una sola pagina,
+[Confronto modalità e listino](/confronto/): questa bozza non ne ripete il contenuto.
 
 I corrispettivi delle tre modalità **non sono definiti**: questa bozza non indica alcun
 importo, alcun tetto di volume e alcuna dimensione di risorse. I valori li stabilisce il
@@ -53,3 +51,12 @@ canale è la posta elettronica, verso l'indirizzo di contatto pubblicato dal sit
 Finché la bozza resta tale, il testo può cambiare in qualsiasi momento senza preavviso,
 perché non vincola nessuno. Le regole di modifica del testo definitivo sono fra le voci
 da definire elencate sopra.
+
+## Contatti
+
+Il fornitore è indicato in questa bozza con lo stesso segnaposto letterale
+dell'informativa privacy, `segnaposto-identita-titolare`: il valore reale — denominazione,
+sede e dati societari — lo comunica una persona prima della pubblicazione.
+
+Per ogni comunicazione su questi termini si scrive a {{recapito}}: è l'unico indirizzo del
+sito, lo stesso dell'informativa privacy e della cookie policy.

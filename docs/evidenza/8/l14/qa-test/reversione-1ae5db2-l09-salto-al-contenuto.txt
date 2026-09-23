@@ -1,0 +1,985 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 36215 --host 127.0.0.1 --ignore-lock
+
+Running 48 tests using 8 workers
+
+  ✘   6 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 360x640 (812ms)
+  ✘   4 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 360x640 (930ms)
+  ✘   2 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 360x640 (913ms)
+  ✘   1 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 360x640 (951ms)
+  ✘   5 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 1280x800 (944ms)
+  ✘   8 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 1280x800 (917ms)
+  ✘   3 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 1280x800 (982ms)
+  ✘   7 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 1280x800 (936ms)
+  ✘  12 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 (556ms)
+  ✘   9 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 360x640 (673ms)
+  ✘  10 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 (678ms)
+  ✘  14 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 (578ms)
+  ✘  11 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 1280x800 (714ms)
+  ✘  15 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 (653ms)
+  ✘  13 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 (701ms)
+  ✘  16 e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 (660ms)
+  ✓  17 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Home (/) a 360x640 — area visibile 0 px² (327ms)
+  ✓  18 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Home (/) a 1280x800 — area visibile 0 px² (414ms)
+  ✓  19 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: SaaS (/saas/) a 1280x800 — area visibile 0 px² (398ms)
+  ✓  21 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Hosted (/hosted/) a 360x640 — area visibile 0 px² (361ms)
+  ✓  20 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: SaaS (/saas/) a 360x640 — area visibile 0 px² (438ms)
+  ✓  22 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Hosted (/hosted/) a 1280x800 — area visibile 0 px² (378ms)
+  ✓  23 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: On-premise (/on-premise/) a 1280x800 — area visibile 0 px² (364ms)
+  ✓  24 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: On-premise (/on-premise/) a 360x640 — area visibile 0 px² (340ms)
+  ✓  25 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Confronto modalità e listino (/confronto/) a 360x640 — area visibile 0 px² (290ms)
+  ✓  26 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Confronto modalità e listino (/confronto/) a 1280x800 — area visibile 0 px² (284ms)
+  ✓  27 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 — area visibile 0 px² (305ms)
+  ✓  29 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 — area visibile 0 px² (251ms)
+  ✓  28 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 — area visibile 0 px² (250ms)
+  ✓  30 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 — area visibile 0 px² (254ms)
+  ✓  31 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 — area visibile 0 px² (261ms)
+  ✓  32 e2e/l09-salto-al-contenuto.spec.ts:255:7 › L09-F1: il link di salto NON a fuoco resta fuori dalla viewport (visibile solo al focus) › F1 non a fuoco: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 — area visibile 0 px² (311ms)
+  ✘  33 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 360x640 (422ms)
+  ✘  37 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 360x640 (435ms)
+  ✘  36 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 1280x800 (468ms)
+  ✘  34 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 1280x800 (464ms)
+  ✘  35 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 360x640 (492ms)
+  ✘  38 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 1280x800 (419ms)
+  ✘  39 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 360x640 (443ms)
+  ✘  40 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 1280x800 (407ms)
+  ✘  41 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 360x640 (634ms)
+  ✘  44 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 (621ms)
+  ✘  43 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 (683ms)
+  ✘  42 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 1280x800 (723ms)
+  ✘  46 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 (579ms)
+  ✘  45 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 (667ms)
+  ✘  47 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 (643ms)
+  ✘  48 e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 (523ms)
+
+
+  1) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-7d18c-è-coperto-F1-Home-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-7d18c-è-coperto-F1-Home-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-7d18c-è-coperto-F1-Home-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-88438--coperto-F1-Home-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-88438--coperto-F1-Home-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-88438--coperto-F1-Home-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-57ab8-erto-F1-SaaS-saas-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-57ab8-erto-F1-SaaS-saas-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-57ab8-erto-F1-SaaS-saas-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-c7935-rto-F1-SaaS-saas-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-c7935-rto-F1-SaaS-saas-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-c7935-rto-F1-SaaS-saas-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-cec42--F1-Hosted-hosted-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-cec42--F1-Hosted-hosted-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-cec42--F1-Hosted-hosted-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-cbc33-F1-Hosted-hosted-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-cbc33-F1-Hosted-hosted-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-cbc33-F1-Hosted-hosted-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-1e12e-remise-on-premise-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-1e12e-remise-on-premise-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-1e12e-remise-on-premise-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-96111-emise-on-premise-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-96111-emise-on-premise-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-96111-emise-on-premise-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  9) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-635be-listino-confronto-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-635be-listino-confronto-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-635be-listino-confronto-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  10) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-34e6b-istino-confronto-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-34e6b-istino-confronto-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-34e6b-istino-confronto-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-1e43f-rmini-di-servizio-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-1e43f-rmini-di-servizio-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-1e43f-rmini-di-servizio-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  12) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-ef554-mini-di-servizio-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-ef554-mini-di-servizio-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-ef554-mini-di-servizio-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  13) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-076f0-formativa-privacy-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-076f0-formativa-privacy-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-076f0-formativa-privacy-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  14) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-da127-ormativa-privacy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-da127-ormativa-privacy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-da127-ormativa-privacy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  15) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 360x640
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-8d1cb-ale-cookie-policy-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-8d1cb-ale-cookie-policy-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-8d1cb-ale-cookie-policy-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  16) e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+
+    Error: l'anello di focus del link di salto è interamente dentro la viewport 1280x800
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      238 |           'salta-al-contenuto',
+      239 |         );
+    > 240 |         expect(misura.dentroViewport, `l'anello di focus del link di salto è interamente dentro la viewport ${vw}x${vh}`).toBe(
+          |                                                                                                                           ^
+      241 |           true,
+      242 |         );
+      243 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:240:123
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-7c56b-le-cookie-policy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-7c56b-le-cookie-policy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-7c56b-le-cookie-policy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-5ab37-o-di-main-F2-Home-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-5ab37-o-di-main-F2-Home-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-5ab37-o-di-main-F2-Home-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-d43e1--di-main-F2-Home-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-d43e1--di-main-F2-Home-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-d43e1--di-main-F2-Home-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  19) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-27c64-main-F2-SaaS-saas-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-27c64-main-F2-SaaS-saas-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-27c64-main-F2-SaaS-saas-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  20) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-b3ca6-ain-F2-SaaS-saas-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-b3ca6-ain-F2-SaaS-saas-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-b3ca6-ain-F2-SaaS-saas-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  21) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-54642--F2-Hosted-hosted-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-54642--F2-Hosted-hosted-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-54642--F2-Hosted-hosted-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  22) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-4ae1c-F2-Hosted-hosted-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-4ae1c-F2-Hosted-hosted-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-4ae1c-F2-Hosted-hosted-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  23) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-21558-remise-on-premise-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-21558-remise-on-premise-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-21558-remise-on-premise-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  24) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-60c28-emise-on-premise-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-60c28-emise-on-premise-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-60c28-emise-on-premise-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  25) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-53e36-listino-confronto-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-53e36-listino-confronto-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-53e36-listino-confronto-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  26) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-a1932-istino-confronto-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-a1932-istino-confronto-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-a1932-istino-confronto-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  27) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-c3288-rmini-di-servizio-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-c3288-rmini-di-servizio-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-c3288-rmini-di-servizio-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  28) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-20b62-mini-di-servizio-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-20b62-mini-di-servizio-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-20b62-mini-di-servizio-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  29) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-14156-formativa-privacy-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-14156-formativa-privacy-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-14156-formativa-privacy-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  30) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-f0d08-ormativa-privacy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-f0d08-ormativa-privacy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-f0d08-ormativa-privacy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  31) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-a7ead-ale-cookie-policy-a-360x640/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-a7ead-ale-cookie-policy-a-360x640/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-a7ead-ale-cookie-policy-a-360x640/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  32) e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+
+    Error: dopo Invio sul link di salto, document.activeElement è <main>
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: "MAIN"
+    Received: "BODY"
+
+      267 |         const misura = await misuraF2(page, pagina.rotta, vw, vh);
+      268 |
+    > 269 |         expect(misura.tagDopoInvio, 'dopo Invio sul link di salto, document.activeElement è <main>').toBe('MAIN');
+          |                                                                                                      ^
+      270 |         expect(misura.idDopoInvio, "l'elemento a fuoco dopo Invio è #contenuto").toBe('contenuto');
+      271 |
+      272 |         expect(
+        at /home/andreapernici/src/ownconsent/www/.claude/worktrees/l14/e2e/l09-salto-al-contenuto.spec.ts:269:102
+
+    Error Context: test-results/e2e-l09-salto-al-contenuto-fb402-le-cookie-policy-a-1280x800/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/e2e-l09-salto-al-contenuto-fb402-le-cookie-policy-a-1280x800/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results/e2e-l09-salto-al-contenuto-fb402-le-cookie-policy-a-1280x800/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  32 failed
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Home (/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: SaaS (/saas/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Hosted (/hosted/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: On-premise (/on-premise/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Confronto modalità e listino (/confronto/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:234:7 › L09-F1: al primo Tab il link di salto è interamente in viewport e il suo anello di focus non è coperto › F1: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Home (/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: SaaS (/saas/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Hosted (/hosted/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: On-premise (/on-premise/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Confronto modalità e listino (/confronto/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Termini di servizio (bozza) (/legale/termini-di-servizio/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Informativa privacy (bozza) (/legale/informativa-privacy/) a 1280x800 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 360x640 
+    e2e/l09-salto-al-contenuto.spec.ts:266:7 › L09-F2: dopo Invio sul link di salto il fuoco è su <main>, il Tab successivo va al primo focalizzabile che segue l'inizio di <main> › F2: Cookie policy (bozza) (/legale/cookie-policy/) a 1280x800 
+  16 passed (10.3s)

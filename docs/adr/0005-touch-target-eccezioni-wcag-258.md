@@ -99,6 +99,4 @@ si auto-certifica non e' un'eccezione: e' un permesso.
 
 ## Voci aperte
 
-- `e2e/ac37-mobile-360.spec.ts` non è allineato al contratto nuovo e non si corregge in L14.
-  Proprietario: @qa-test. Motivo: il test e' piu' severo del contratto e misura il
-  rettangolo di unione — oggi non produce falsi verdi, domani produce falsi rossi.
+- `e2e/ac37-mobile-360.spec.ts` non allineato al contratto, proprietario @qa-test: https://github.com/OwnConsent/ownconsent-www/issues/58

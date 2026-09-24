@@ -1,0 +1,20 @@
+{
+ "ts": "2026-09-24T12:51:46+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "misura",
+ "titolo": "Trailer contro journal su L14: su main i ruoli nei trailer sono TRE (orchestrator 28, qa-test 4, architect 1), non due; @frontend e' assente da entrambi i registri. Consegne nel journal: qa-test 5, orchestrator 2, architect 1, frontend 0",
+ "contesto": "Misura chiesta da Andrea dopo il merge di L14 su main (47c78e6). La premessa del mandato era: due ruoli nei trailer, orchestrator e architect, per un lotto che ne ha impiegati cinque. La misura la smentisce in parte: qa-test compare in 4 trailer. Resta vero il punto di fondo: i trailer sottostimano gli altri ruoli, e per @frontend lo sottostima anche il journal. «Cinque» sono gli agenti (due @frontend, due @qa-test, un @architect), su tre ruoli di subagente piu' la sessione: quattro ruoli.",
+ "evidenza": [
+  "$ git merge-base --is-ancestor 1ae5db2 origin/main -> 0; $ git log --oneline 1ae5db2..origin/main | wc -l -> 33; $ git rev-list --count 1ae5db2..origin/lotto/l14-rientro-finding -> 33; stessi soggetti (diff delle liste ordinate vuoto): i 33 commit sono L14 e solo L14",
+  "$ git log --format='%(trailers:key=Cantiere-Agent,valueonly)' 1ae5db2..origin/main | sort | uniq -c -> 28 orchestrator, 4 qa-test, 1 architect, 0 frontend",
+  "journal su origin/main, voci con lotto L14, contate dal campo agente: orchestrator 25, qa-test 11, architect 2, frontend 0. Consegne (tipo consegna): qa-test 5, orchestrator 2, architect 1, frontend 0",
+  "commit con trailer orchestrator e contenuto di un altro ruolo, 4: e9475a6 e 6211d5f (codice e misure dei due @frontend, 4+27 file, nessuna voce di journal); dd02ecb e 1ec17e3 (lavoro e voci di journal di @qa-test: 170529-qa-test-consegna, 171534-qa-test-consegna). Misurato confrontando, per ogni commit, il trailer con l'agente nel nome dei file di journal che il commit aggiunge",
+  "per ruolo, trailer contro consegne: qa-test 4 commit contro 5 consegne (piu' 2 commit suoi sotto trailer orchestrator); architect 1 contro 1; orchestrator 28 contro 2; frontend 0 contro 0, ma codice suo in 2 commit"
+ ],
+ "cosa_dice": "Il journal registra @qa-test piu' fedelmente dei trailer (5 consegne contro 4 commit firmati). Su @frontend nessuno dei due dice la verita': i due agenti si sono fermati al tetto senza scrivere voci, e la loro presenza sta solo nei messaggi dei commit wip e nelle voci dell'orchestrator che li raccontano (150337, 151439). Il 28 dell'orchestrator mescola il lavoro della sessione (F1, le misure, D02, i residui), il salvataggio del lavoro altrui e il registro.",
+ "esito": "misura registrata; la premessa «due ruoli» e' smentita (tre), il punto «i trailer non dicono chi ha fatto cosa» e' confermato",
+ "umano_coinvolto": false
+}

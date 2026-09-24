@@ -221,7 +221,15 @@
     "La cookie policy in bozza descrive un sito senza cookie né storage prima del consenso: la frase è vera solo finché AC9 passa.",
     "AC4, AC33, AC34, AC41, AC49 e AC53 chiedono che la pagina dica o spieghi qualcosa: un controllo sulle stringhe li copre solo in parte, e la verifica completa richiede la lettura del testo."
   ],
-  "domande_aperte": [],
+  "domande_aperte": [
+    {
+      "data": "2026-09-24",
+      "proprietario": "Andrea",
+      "testo": "Nessun criterio richiede che le affermazioni sull'offerta siano VERE. AC7 vieta solo le affermazioni di stato sulla registrazione IAB: la frase «OwnConsent registra la CMP presso IAB Europe per conto tuo» (pagina SaaS, corretta in A10) le passava tutte restando falsa. Nessun test colmera' il buco.",
+      "proposta": "Un gate umano scritto nella spec: ogni frase che nomina IAB, i prezzi o obblighi di legge richiede la ratifica di Andrea registrata nella spec.",
+      "origine": "voce c) del commento sulla PR #55 (https://github.com/OwnConsent/ownconsent-www/pull/55#issuecomment-5811575695); A10 in DESIGN-AMENDMENTS.md"
+    }
+  ],
   "issue": "https://github.com/OwnConsent/ownconsent-www/issues/8",
   "fonti": [
     {

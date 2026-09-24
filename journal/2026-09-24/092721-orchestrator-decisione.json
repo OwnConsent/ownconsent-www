@@ -1,0 +1,27 @@
+{
+ "ts": "2026-09-24T09:27:21+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "ADR-0005 ratificata da Andrea il 24/09 (aa901ac) e allineata nella tabella delle alternative; la voce di journal di aa901ac mancava per una lettura mia di «non toccare altro»",
+ "contesto": "Due modifiche all'ADR-0005 chieste da Andrea, scritte dalla sessione. aa901ac: stato «ratificata (Andrea, 24/09/2026)»; domanda aperta 1 chiusa (nessun restringimento dell'elenco delle eccezioni, se mai servira' passa da una sessione di design); domanda aperta 2 chiusa con rimando alla nuova sezione «Definizione operativa dell'eccezione Inline (ratificata 24/09/2026)», testo di Andrea parola per parola; nuova sezione «Voci aperte» con e2e/ac37-mobile-360.spec.ts, proprietario @qa-test. Questo commit: nella tabella delle alternative, ultima riga, la coda «resta domanda aperta» diventa «chiusa il 24/09/2026, nessun restringimento (vedi Domande aperte 1)»; l'argomento della riga resta identico.",
+ "alternative": [
+  {
+   "opzione": "committare aa901ac senza voce di journal (cio' che ho fatto)",
+   "scartata_perche": "Andrea: aveva scritto «non toccare altro» intendendo il contenuto della modifica; il journal non e' mai «altro», e' il registro del lavoro, e va scritto anche quando la modifica e' una riga. L'ambiguita' era sua, dice Andrea; la lettura sbagliata e' stata mia, e in aa901ac l'ho segnalata invece di scegliere il journal"
+  },
+  {
+   "opzione": "riscrivere la riga della tabella perche' dica solo la decisione finale",
+   "scartata_perche": "un ADR e' un registro storico: l'argomento non si riscrive, ma non puo' affermare come aperto cio' che e' chiuso tre sezioni piu' sotto. Cambia solo la coda"
+  }
+ ],
+ "evidenza": [
+  "$ git show --stat aa901ac -> un solo file, docs/adr/0005-touch-target-eccezioni-wcag-258.md, 32 righe aggiunte e 7 tolte; contratto, test e A08 non toccati",
+  "$ git diff (questo commit, ADR) -> una riga tolta e una aggiunta, la riga «Elencare nel contratto solo Inline e Spacing come ammesse», differenti solo nella coda",
+  "nel testo dell'ADR la coda usa «è» accentato come il resto del file, non «e'» come nel messaggio di Andrea"
+ ],
+ "esito": "applicata; PR #55 attende il merge di Andrea",
+ "umano_coinvolto": true
+}

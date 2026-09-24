@@ -49,7 +49,7 @@ Cambiano solo i campi `uso` dei due token e la riga 20 del documento di design. 
 | Dare al link in linea un'altezza minima di 24px (rientro CSS in L14, prima opzione del finding D06) | Contraddice A08: Andrea ha deciso che il prodotto è conforme e che si corregge il contratto. Un `padding` verticale su un link inline altera l'interlinea del paragrafo o si sovrappone alle righe adiacenti. |
 | Togliere `min-undisturbed-space` dal contratto | Rompe un consumatore senza deprecazione: `token-css.mjs` emette `--touch-target-min-undisturbed-space` nel foglio globale. Inoltre l'eccezione Spacing resta una regola reale di 2.5.8 che un componente futuro può usare. |
 | Aggiungere un token per l'eccezione Inline (es. `touch-target.inline-exempt`) | Un'eccezione non ha un valore da emettere come custom property: sarebbe un token senza `value`, cioè documentazione travestita da token. Nessun componente lo consumerebbe (nessuna astrazione senza due casi d'uso nel repo). |
-| Elencare nel contratto solo Inline e Spacing come ammesse | A08 dice «si allinea a WCAG 2.5.8», non «ad alcune eccezioni». Restringere è una scelta di design che A08 non fa: resta domanda aperta. |
+| Elencare nel contratto solo Inline e Spacing come ammesse | A08 dice «si allinea a WCAG 2.5.8», non «ad alcune eccezioni». Restringere è una scelta di design che A08 non fa: chiusa il 24/09/2026, nessun restringimento (vedi Domande aperte 1). |
 
 ## Conseguenze
 

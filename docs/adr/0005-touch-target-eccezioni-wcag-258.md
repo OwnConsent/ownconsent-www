@@ -1,6 +1,6 @@
 # ADR-0005 — `touch-target`: il contratto si allinea a WCAG 2.5.8, eccezioni comprese
 
-- Stato: proposta (ratifica di Andrea)
+- Stato: ratificata (Andrea, 24/09/2026)
 - Data: 2026-09-23
 - Deciso da: @architect
 - Vincola: @design, @frontend, @qa-test
@@ -67,13 +67,38 @@ Cambiano solo i campi `uso` dei due token e la riga 20 del documento di design. 
   e si sceglie fra dare 24px ai link in linea o accettare di nuovo la contraddizione.
   Nessun `value`, nessun nome, nessun componente cambia in nessuna delle due direzioni.
 
+## Definizione operativa dell'eccezione Inline (ratificata 24/09/2026)
+
+Un bersaglio e' in linea se e solo se, misurato sull'HTML servito:
+
+  a. `getComputedStyle(el).display` inizia con "inline";
+  b. il genitore ha testo proprio: il suo `textContent`, tolti i `textContent` degli
+     elementi interattivi figli, non e' vuoto dopo il trim;
+  c. l'altezza di OGNI rettangolo restituito da `el.getClientRects()` non supera di piu'
+     di 1px la `line-height` calcolata del genitore.
+
+La misura si fa per rettangolo di `getClientRects()`, MAI sul rettangolo di unione di
+`getBoundingClientRect()`: un link che va a capo ha piu' righe, e l'unione nasconde il
+bersaglio per riga. E' il difetto che questo stesso ADR ha misurato in `ac37-mobile-360` a
+360px, e vale per qualunque test futuro.
+
+Un test puo' concedere da solo soltanto le eccezioni misurabili, Inline e Spacing.
+Equivalent, Essential e User agent control restano eccezioni valide del contratto, ma
+nessun test le concede: un bersaglio che le invoca fallisce il controllo automatico e
+richiede un'eccezione scritta a mano in `DESIGN-AMENDMENTS.md`, con data. Un'eccezione che
+si auto-certifica non e' un'eccezione: e' un permesso.
+
 ## Domande aperte
 
-1. A08 non dice se il sistema ammette tutte e cinque le eccezioni di 2.5.8 o solo Inline e
-   Spacing. Il contratto oggi le nomina tutte, perché A08 dice «si allinea a WCAG 2.5.8».
-   Se Andrea vuole restringere, è una modifica del solo `uso`.
-2. A08 non dice come si misura l'eccezione Inline nei test (quale elemento conta come «in
-   linea»: `display: inline` dentro un blocco di testo? discendente di `<p>`/`<li>`?). La
-   definizione operativa serve a @qa-test prima di allineare `ac37-mobile-360.spec.ts`.
+1. Chiusa (Andrea, 24/09/2026): nessun restringimento dell'elenco delle eccezioni; se mai
+   servira', passa da una sessione di design.
+2. Chiusa (Andrea, 24/09/2026): la definizione operativa è nella sezione «Definizione
+   operativa dell'eccezione Inline (ratificata 24/09/2026)» qui sopra.
 3. Aggiornamento di `DESIGN-AMENDMENTS.md` A08 («Da smaltire»): è registro di Andrea, non
    lo tocca questo ADR.
+
+## Voci aperte
+
+- `e2e/ac37-mobile-360.spec.ts` non è allineato al contratto nuovo e non si corregge in L14.
+  Proprietario: @qa-test. Motivo: il test e' piu' severo del contratto e misura il
+  rettangolo di unione — oggi non produce falsi verdi, domani produce falsi rossi.

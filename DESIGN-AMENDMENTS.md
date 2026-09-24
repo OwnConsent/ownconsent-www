@@ -370,3 +370,22 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   criterio di L09-F2 misurato 32 su 32 è scritto su `<main>`.
 - Da smaltire: in una sessione di design si aggiornano le righe 30-31 di
   `docs/design/00-sistema-e-componenti.md`. Il prodotto non cambia.
+
+## A10 — «Chi registra la CMP» nella pagina SaaS: il documento prescriveva una frase falsa
+- Data: 24/09/2026
+- Classe: nessuna delle quattro. Documento e prodotto concordavano, ed erano falsi
+  entrambi: non è una divergenza, e la lista chiusa di `CLAUDE.md` non la copre (1 e 3
+  presuppongono una funzionalità non costruita o un meccanismo in produzione, 2 un
+  requisito di accessibilità, 4 una divergenza). La tassonomia non si allarga per questo.
+- Ratificata da: Andrea, 24/09/2026
+
+- Documento dice: `docs/design/01-pagine.md`, «## 2. SaaS», punto 9 della struttura:
+  «OwnConsent registra la CMP presso IAB Europe per conto tuo: nessun passaggio
+  amministrativo a tuo carico.»
+- Prodotto fa: `site/src/pages/saas.astro` riga 57, la stessa frase parola per parola.
+- Deciso: il documento di design prescriveva un'affermazione falsa sul meccanismo di
+  registrazione IAB; la correzione allinea doc e pagina alla formulazione già ratificata
+  il 22/09 («La registrazione della CMP presso IAB Europe la gestiamo noi: nessun
+  passaggio amministrativo a tuo carico.»).
+- Da smaltire: nulla; doc e pagina corretti nello stesso commit. Il falso l'ha trovato
+  Andrea leggendo la frase: nessun confronto documento-contro-prodotto poteva trovarlo.

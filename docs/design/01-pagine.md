@@ -95,8 +95,8 @@ Soddisfa AC4 (colonna SaaS), AC49, N1.
    raggiunga il tetto; se il superamento si ripete, ti proponiamo un cambio di piano,
    deciso da una persona.» **Nessuna percentuale, nessuna soglia numerica, nessun 120%**
    in questa sezione né altrove nella pagina.
-9. Sezione «Chi registra la CMP» (`h2`): «OwnConsent registra la CMP presso IAB Europe
-   per conto tuo: nessun passaggio amministrativo a tuo carico.»
+9. Sezione «Chi registra la CMP» (`h2`): «La registrazione della CMP presso IAB Europe
+   la gestiamo noi: nessun passaggio amministrativo a tuo carico.»
 10. Blocco di chiusura (componente condiviso): titolo «Pronto ad attivare SaaS?»,
     paragrafo con il testo esatto richiesto da N1: «Scrivici e ti attiviamo noi.», link
     mailto in stile bottone

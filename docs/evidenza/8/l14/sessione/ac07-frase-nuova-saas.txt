@@ -1,0 +1,15 @@
+[WebServer] $ astro build
+[WebServer] $ astro preview --port 41837 --host 127.0.0.1 --ignore-lock
+
+Running 8 tests using 8 workers
+
+  ✓  3 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Home (/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (61ms)
+  ✓  2 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Cookie policy (bozza) (/legale/cookie-policy/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (65ms)
+  ✓  1 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: SaaS (/saas/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (69ms)
+  ✓  5 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Informativa privacy (bozza) (/legale/informativa-privacy/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (55ms)
+  ✓  4 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Termini di servizio (bozza) (/legale/termini-di-servizio/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (58ms)
+  ✓  6 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: On-premise (/on-premise/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (54ms)
+  ✓  7 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Hosted (/hosted/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (58ms)
+  ✓  8 e2e/ac07-nessuna-registrazione-iab.spec.ts:51:5 › AC7: nessuna registrazione IAB › AC7: Confronto modalità e listino (/confronto/) — title, ogni meta di head e il body non mostrano un identificativo CMP IAB né un'affermazione di registrazione/certificazione/approvazione presso IAB Europe (51ms)
+
+  8 passed (3.7s)

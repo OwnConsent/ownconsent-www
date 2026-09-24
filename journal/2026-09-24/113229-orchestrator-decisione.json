@@ -1,0 +1,33 @@
+{
+ "ts": "2026-09-24T11:32:29+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "F03, frase falsa su /saas/: «OwnConsent registra la CMP presso IAB Europe per conto tuo» sostituita nella pagina e nel documento di design con la forma ratificata il 22/09. A10 registrata senza classe. Il falso l'ha trovato Andrea, non un test e non la sessione",
+ "contesto": "Mandato di Andrea del 24/09. La frase era falsa: la registrazione presso IAB Europe e' una domanda di membership annuale presentata dalla CMP stessa, con CMP ID assegnato a quell'entita' (chi firma, chi paga e chi detiene l'ID sono la stessa entita'); in SaaS la CMP e' di OwnConsent e il cliente non registra nulla, in on-premise registra il cliente a proprio nome. «Per conto tuo» non descrive nessuna delle due. La pagina si contraddiceva: la meta description corretta da F03 diceva la forma di responsabilita', il corpo la frase falsa. Chi l'ha trovato: Andrea, leggendo la frase. Non un test (AC7 la passava: nessuna radice registrat/certificat/approvat) e non la sessione: nel 165644 avevo verificato che la frase rispettasse AC7, l'avevo classificata responsabilita' e mi ero fermato li'; la mia «lettura mia» segnalata nella PR riguardava la forma della frase, non se fosse vera.",
+ "alternative": [
+  {
+   "opzione": "classe pre-produzione (4) per A10",
+   "scartata_perche": "CLAUDE.md, Metodo: la 4 e' per documento e prodotto che DIVERGONO prima della produzione. Qui concordavano parola per parola, ed erano falsi entrambi. Nemmeno 1 (funzionalita' non costruita), 2 (requisito di accessibilita'), 3 (meccanismo in produzione), ne' perimetro. Scritto «nessuna delle quattro» invece di forzarne una: la tassonomia non si allarga per far tornare i conti (Andrea)"
+  },
+  {
+   "opzione": "correggere anche la meta description prescritta da docs/design/01-pagine.md righe 73-75, che dice ancora «CMP registrata da OwnConsent presso IAB Europe»",
+   "scartata_perche": "mandato: non aggiungere altro. E' la forma di stato che F03 ha gia' corretto nel prodotto il 23/09 e che il documento prescrive ancora: segnalata ad Andrea, non corretta"
+  },
+  {
+   "opzione": "un file nuovo per le tre voci aperte sui test e sulla spec",
+   "scartata_perche": "nessun posto esistente: git grep di «voci aperte|voce aperta|debito|backlog» fuori da journal, corso ed evidenza -> solo la sezione Voci aperte di ADR-0005 (specifica ai touch target), una frase della spec e una di collections.md; domande_aperte nella spec esiste ma e' vuota e di Andrea. Mandato: niente file inventati, commento sulla PR #55 con una proposta"
+  }
+ ],
+ "evidenza": [
+  "$ git diff -> saas.astro: 2 righe (solo la proposizione falsa, «nessun passaggio amministrativo a tuo carico» invariato); docs/design/01-pagine.md: 2 righe, punto 9 di «## 2. SaaS» (il «§9» del mandato e' questo punto, verificato sul file); DESIGN-AMENDMENTS.md: A10 in coda, 19 righe aggiunte",
+  "$ grep sull'HTML servito site/dist/saas/index.html -> «Chi registra la CMP</h2><p>La registrazione della CMP presso IAB Europe la gestiamo noi: nessun passaggio amministrativo a tuo carico.»; «per conto tuo»: 0 occorrenze",
+  "$ pnpm exec playwright test e2e/ac07-nessuna-registrazione-iab.spec.ts -> 8 passed, /saas/ verde; docs/evidenza/8/l14/sessione/ac07-frase-nuova-saas.txt",
+  "$ pnpm exec playwright test -> 327 passed (25.9s), 0 falliti, exit 0; docs/evidenza/8/l14/sessione/suite-completa-f03.txt",
+  "$ pnpm lint -> exit 0; $ pnpm astro check -> 0 errors, exit 0"
+ ],
+ "esito": "applicata; tre voci aperte (due @qa-test su AC7, una di Andrea sulla spec) in un commento sulla PR #55",
+ "umano_coinvolto": true
+}

@@ -1,0 +1,27 @@
+{
+ "ts": "2026-09-24T12:08:08+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "docs/design/01-pagine.md: la meta description di SaaS prescriveva ancora la forma di stato che F03 ha tolto dal prodotto; allineata al testo servito. A11 registrata come coda di A10, classe pre-produzione",
+ "contesto": "Mandato di Andrea del 24/09. Dopo F03 il documento prescriveva una violazione di AC7 mentre il prodotto era conforme: una divergenza vera, con il documento dalla parte del torto; chi implementasse da quel punto reintrodurrebbe la violazione. Testo nuovo nel documento: nessuno, e' quello che site/src/pages/saas.astro riga 14 serve gia'. Riga voluta da Andrea: la divergenza l'aveva segnalata la sessione (voce 113229 e commento sulla PR #55) perche' Andrea aveva detto di non aggiungere altro, e Andrea dice che la sessione aveva ragione a segnalarla invece di correggerla.",
+ "alternative": [
+  {
+   "opzione": "classe shipped-vince (3), come dice il merito («vince lo shipped»)",
+   "scartata_perche": "CLAUDE.md, Metodo, classe 3: documento contro meccanismo GIA' IN PRODUZIONE. $ git tag -l | wc -l -> 0; $ gh release list | wc -l -> 0: niente in produzione, quindi vale la 4 fino al primo rilascio. Il merito e' lo stesso (vale il prodotto, deciso da Andrea); la classe dice chi decide e perche'. Stesso ragionamento di A09"
+  },
+  {
+   "opzione": "aggiungere la coda dentro la voce A10",
+   "scartata_perche": "A10 ha classe «nessuna delle quattro» e questa e' una divergenza di classe 4: due classi in una voce renderebbero il campo Classe falso per una delle due. A11 subito dopo A10, con il rimando"
+  }
+ ],
+ "evidenza": [
+  "$ git diff docs/design/01-pagine.md -> 2 righe, solo la meta description di «## 2. SaaS»",
+  "$ grep meta description in site/dist/saas/index.html -> «OwnConsent SaaS: configurazione e delivery a cura nostra, canone mensile a piani per volume di richieste, la registrazione della CMP presso IAB Europe la gestiamo noi.», identico al testo ora nel documento",
+  "DESIGN-AMENDMENTS.md: A11 in coda dopo A10, 15 righe aggiunte, nessuna tolta"
+ ],
+ "esito": "applicata; site/ e test non toccati, quindi nessuna nuova esecuzione della suite (ultima: 327/327 su 3fa198a)",
+ "umano_coinvolto": true
+}

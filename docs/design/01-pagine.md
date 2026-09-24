@@ -71,8 +71,8 @@ Soddisfa AC4 (colonna SaaS), AC49, N1.
 ### Meta
 - `title`: «SaaS — OwnConsent in abbonamento, configurato per te»
 - `meta description`: «OwnConsent SaaS: configurazione e delivery a cura nostra, canone
-  mensile a piani per volume di richieste, CMP registrata da OwnConsent presso IAB
-  Europe.»
+  mensile a piani per volume di richieste, la registrazione della CMP presso IAB Europe la
+  gestiamo noi.»
 
 ### Struttura, in ordine
 1. Header/nav.

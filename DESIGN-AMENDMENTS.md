@@ -389,3 +389,18 @@ Il lotto L05 non li elencava fra i propri `file`; servono tutti e tre.
   passaggio amministrativo a tuo carico.»).
 - Da smaltire: nulla; doc e pagina corretti nello stesso commit. Il falso l'ha trovato
   Andrea leggendo la frase: nessun confronto documento-contro-prodotto poteva trovarlo.
+
+## A11 — Coda di A10: la meta description di SaaS nel documento di design era ancora nella forma di stato
+- Data: 24/09/2026
+- Classe: pre-produzione (nessun rilascio in produzione: `git tag -l` e
+  `gh release list` vuoti il 24/09/2026, quindi la classe 3 non si applica)
+- Ratificata da: Andrea, 24/09/2026, come coda della stessa ratifica di A10
+
+- Documento dice: `docs/design/01-pagine.md`, «## 2. SaaS», `meta description`:
+  «... CMP registrata da OwnConsent presso IAB Europe.» — la forma di stato che viola AC7.
+- Prodotto fa: `site/src/pages/saas.astro` riga 14, corretto da F03 in L14: «... la
+  registrazione della CMP presso IAB Europe la gestiamo noi.»
+- Deciso: **vale il prodotto.** Il documento prescriveva una violazione di AC7 mentre il
+  prodotto è conforme; chi implementasse da quel punto la reintrodurrebbe. Il documento
+  si allinea al testo che il sito serve già, senza testo nuovo.
+- Da smaltire: nulla; documento corretto nello stesso commit.

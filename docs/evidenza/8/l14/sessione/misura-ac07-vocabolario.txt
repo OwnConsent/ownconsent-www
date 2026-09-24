@@ -1,0 +1,12 @@
+regex: 2 affermazione + 1 identificativo
+verde | OwnConsent è iscritta al registro CMP di IAB Europe.
+verde | CMP autorizzata da IAB Europe.
+verde | OwnConsent è accreditata presso IAB Europe.
+verde | OwnConsent è riconosciuta da IAB Europe.
+verde | OwnConsent figura nell'elenco CMP di IAB Europe.
+verde | OwnConsent è registrata xxxxxxxxxxxxxxxx [144 caratteri] xxxxxxxxxxx presso IAB Europe.
+verde | OwnConsent è registrata. Lo ha confermato IAB Europe.
+verde | cmpId=1234
+ROSSO | CMP ID: 1234
+ROSSO | la CMP viene registrata da noi presso IAB Europe
+verde | la registrazione della CMP presso IAB Europe la gestiamo noi

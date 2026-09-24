@@ -1,0 +1,2 @@
+360x640 {"display":"inline","line_height_genitore":"24px","unione":{"w":315,"h":41},"righe":[{"w":133,"h":17},{"w":315,"h":17}]}
+1280x800 {"display":"inline","line_height_genitore":"24px","unione":{"w":449,"h":17},"righe":[{"w":449,"h":17}]}

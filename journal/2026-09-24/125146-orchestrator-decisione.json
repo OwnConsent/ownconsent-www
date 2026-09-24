@@ -1,0 +1,29 @@
+{
+ "ts": "2026-09-24T12:51:46+02:00",
+ "agente": "orchestrator",
+ "issue": "8",
+ "lotto": "L14",
+ "stadio": "03-costruzione",
+ "tipo": "decisione",
+ "titolo": "Le tre voci aperte di L14 spostate nelle loro sedi: issue #56 #57 #58 per i test, domanda aperta nella spec per il gate umano; ADR-0005 rimanda a #58 con una riga",
+ "contesto": "Mandato di Andrea dopo il merge di L14. Ramo l14/registro-voci-aperte da origin/main 47c78e6, spinto prima del primo commit (il prefisso l14/ e' lo stesso del ramo della PR #42, che non e' questo lotto: suonano uguali, sono cose diverse). Le misure citate nelle issue le ha rifatte la sessione, perche' quelle di Andrea stavano solo in chat: le regex estratte dal file del test su origin/main applicate alle frasi di prova (docs/evidenza/8/l14/sessione/misura-ac07-vocabolario.*) e i rettangoli del mailto dell'informativa sull'HTML servito (misura-ac37-rettangoli.*, anteprima sulla porta letta dal log, 46029, fermata).",
+ "alternative": [
+  {
+   "opzione": "assegnare le issue a @qa-test come assegnatario GitHub",
+   "scartata_perche": "@qa-test e' un ruolo del cantiere, non un utente: $ gh label list -> solo le etichette predefinite; le issue esistenti (#4, #8, #25) non hanno ne' etichette ne' assegnatari. Scritto «Proprietario: `@qa-test`» nella prima riga, fra backtick perche' GitHub non notifichi un eventuale utente reale con quel nome. Nessuna etichetta creata: sarebbe una convenzione nuova"
+  },
+  {
+   "opzione": "lasciare in ADR-0005 anche il testo della voce ac37",
+   "scartata_perche": "Andrea: la stessa voce in due posti significa che una delle due invecchia. Resta una riga con il link a #58"
+  }
+ ],
+ "evidenza": [
+  "$ node docs/evidenza/8/l14/sessione/misura-ac07-vocabolario.mjs e2e/ac07-nessuna-registrazione-iab.spec.ts -> verdi: le cinque forme di stato, «registrata» a 144 caratteri, «registrata.» separata da un punto, cmpId=1234; rossi: «CMP ID: 1234» (controllo) e «la CMP viene registrata da noi presso IAB Europe» (falso rosso). Le affermazioni di Andrea confermate tutte",
+  "$ node docs/evidenza/8/l14/sessione/misura-ac37-rettangoli.mjs http://127.0.0.1:46029 -> 360x640: display inline, line-height del genitore 24px, unione 315x41, righe 133x17 e 315x17; 1280x800: unione e riga 449x17. A 360 ac37 promuove il link sull'unione, che nessuna riga raggiunge: dettaglio nuovo, scritto in #58",
+  "issue: https://github.com/OwnConsent/ownconsent-www/issues/56 (vocabolario), 57 (falso rosso passivo), 58 (ac37); ciascuna cita comando, file di output a SHA fisso 3fa9db5 e tabella dei risultati",
+  "$ git diff docs/spec/issue-8.json -> una sola riga tolta («domande_aperte»: []), una voce aggiunta; riserializzazione identica byte per byte verificata prima della modifica (indent 2, UTF-8, a-capo finale)",
+  "fallimento: 3fa9db5 (evidenze per le issue) e' partito senza voce di journal, contro la regola salvata il giorno prima («il journal non e' mai altro», stesso commit). Ramo gia' spinto: non riscritto, la voce e' questa, nel commit successivo"
+ ],
+ "esito": "applicata; PR del ramo aperta per il merge di Andrea",
+ "umano_coinvolto": true
+}

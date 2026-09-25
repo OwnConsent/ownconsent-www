@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-25T15:41:30+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Firme ricostruite congelate in corso/firme-ricostruite.md: 33 commit senza trailer leggibile, 31 con le due fonti concordi, 2 discordanze spiegate, 5 senza ruolo attribuibile",
+  "contesto": "Correzione 3 di Andrea: la ricostruzione delle firme non puo' vivere solo nelle API di GitHub. Fonte primaria scelta: il corpo dello squash su main, che contiene le righe Cantiere-Agent dei singoli commit. Verifica: i refs/pull/N/head.",
+  "alternative": [
+    { "opzione": "usare solo i refs/pull come fonte", "scartata_perche": "vivono su GitHub: e' esattamente la dipendenza da togliere" },
+    { "opzione": "usare solo il corpo dello squash", "scartata_perche": "senza una seconda fonte non si vede quando il corpo conta righe che non erano trailer; il confronto ha trovato due di questi casi" }
+  ],
+  "evidenza": [
+    "git log --format='%(trailers:key=Cantiere-Agent,valueonly)' 4cb1674~1..cb2e804 -> 33 commit vuoti: tutti fino a bd43d28 (21/09 13:51), piu' 7532799",
+    "confronto corpo contro refs/pull: 26 concordi con ruolo, 5 concordi senza ruolo (4cb1674, 2207a8c, 76ee693, 4dcebd0, 7532799), 2 discordi",
+    "a24f2db: performance 7 contro 6, per d5e8331, che ha il trailer nel penultimo paragrafo (il commit citato nel commento di prepare-commit-msg)",
+    "b677bdd: design 5 contro 4, per 04d7718, che ha la firma scritta a mano (2026-09-14/102821-design-fallimento)",
+    "7532799 non ha (#N) nel soggetto: PR #48 trovata dal ramo chore/ignora-pycache, fusa per rebase"
+  ],
+  "limite_della_misura": "La tabella ricostruisce la firma, non l'autore: prima di 4dcebd0 la firma veniva da un marcatore condiviso che, secondo il commento dell'hook, dava orchestrator a quasi tutto. Il file lo dichiara e rimanda alla ricognizione §1.2.",
+  "esito": "file scritto; appendice con i trailer commit per commit copiati dai refs/pull",
+  "umano_coinvolto": false
+}

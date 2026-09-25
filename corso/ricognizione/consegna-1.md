@@ -44,6 +44,8 @@ Scelte di perimetro (voce `122626-orchestrator-decisione`):
 **(a) @frontend ha zero voci in L14, e il suo codice sta in due commit dell'orchestrator. CONFERMATO.**
 
     voci issue=8, lotto=L14, per agente     -> orchestrator 27, qa-test 11, architect 2, frontend 0
+      di cui L14 del piano (23/09 14:55 → 24/09 12:51) -> orchestrator 27, qa-test 6, architect 2, frontend 0
+      di cui «L14 (21/09)», un altro lavoro (§1.4)     -> qa-test 5
     git log ... %(trailers:key=Cantiere-Agent) e9475a6 -> orchestrator
                                                6211d5f -> orchestrator
     soggetti: «wip(site): lavoro di @frontend fermato al tetto dei turni, non misurato, salvato dall'orchestrator»
@@ -53,8 +55,10 @@ In tutta la consegna le voci con `frontend` nel campo `agente` stanno **solo in 
 Sono 4 `frontend`, 3 `frontend (sessione principale)` e 1
 `frontend (sessione principale, dopo due agenti delegati fermati al tetto turni)`.
 Nota: `2026-09-24/125146-orchestrator-misura` conta 25 voci orchestrator in L14, io ne
-conto 27. La differenza viene dal momento della misura e dal riuso dell'etichetta (§1.4):
-la sostanza non cambia.
+conto 27. Tutte e 27 sono del L14 del piano. La differenza viene dal momento della misura:
+125146 non poteva contare sé stessa né la voce che la accompagna in `cb2e804`. Tutte e due
+le misure contano anche le 5 voci di @qa-test di «L14 (21/09)» (§1.4). La sostanza non
+cambia: @frontend resta a zero.
 
 **(b) `tetto_turni` in `docs/plan/issue-8.json` non è mai stato applicato. CONFERMATO, con una sfumatura.**
 
@@ -127,12 +131,24 @@ cosa» per il corso deve separarli a mano.
 
 ### 1.4 Buchi della forma «suonano uguali»: la stessa etichetta di lotto per due lavori
 
-| etichetta | primo uso | secondo uso |
-|---|---|---|
-| `L14` | 21/09 09:43–10:40, @qa-test, PR #42 (ramo `l14/copia-temporanea…`): rientro di F13 e F14 di L08 in `e2e/` | 23/09–24/09, L14 del piano: rientro dei finding su `site/`, ruolo @frontend |
-| `L09` | 21/09 13:57–14:03, orchestrator, PR #44: fix della raccolta dei test | 22/09, L09 del piano: WCAG da tastiera, @accessibility |
+In questo file, da qui in poi, **`L09` e `L14` senza altro indicano sempre il lotto del
+piano**. L'altro lavoro si scrive con la data accanto: **«L09 (21/09)»** e **«L14 (21/09)»**.
 
-Chi filtra il journal per lotto mescola i due lavori. Il conteggio del §1.1 lo mostra.
+| nome in questo file | etichetta nel journal | lavoro | chi | voci | PR |
+|---|---|---|---|---|---|
+| **L14 (21/09)** | `L14` | rientro di F13 e F14 di L08 in `e2e/` (copia temporanea: porta stretta, identità del server), 21/09 09:43–10:40 | @qa-test | 5 (2 decisione, 2 misura, 1 fallimento) | #42, ramo `l14/copia-temporanea-porta-stretta-e-identita` |
+| **L14** (piano) | `L14` | rientro dei finding su `site/`, test di regressione, ADR-0005, 23/09 14:55 → 24/09 12:51 | @frontend (piano); di fatto la sessione, @qa-test, @architect | 35 | #55, #59 |
+| **L09 (21/09)** | `L09` | fix della raccolta dei test (worktree annidate) e porta stretta dell'anteprima, 21/09 13:57–14:03 | orchestrator | 5 (3 misura, 1 fallimento, 1 consegna) | #44 |
+| **L09** (piano) | `L09` | verifica WCAG 2.2 AA da tastiera sulle 8 pagine, 22/09 10:45–10:59 | @accessibility (5 voci), sessione (3) | 8 | #49 |
+
+Chi filtra il journal per `lotto` mescola i due lavori, e tutti i conteggi per lotto che
+seguono vanno letti con questa tabella accanto.
+
+**Un'etichetta deve indicare un solo lavoro.** «L14» come ramo del 21/09 e «L14» del piano
+suonano uguali e non sono la stessa cosa: hanno ruolo, perimetro e PR diversi. Un
+lavoro che non è un lotto del piano prende un nome che nel piano non esiste. Qui lo annoto
+e basta: le voci del 21/09 non si rietichettano, perché il journal si corregge solo per
+aggiunta.
 
 ### 1.5 Commit significativi senza voce di journal
 
@@ -171,12 +187,12 @@ Per lotto (issue 8), in ordine: decisione, misura, fallimento, gate, correzione,
 
     L00  9  [4, 1, 2, 0, 1, 1]      L07 40  [15,15, 7, 1, 0, 2]
     L01 14  [5, 3, 2, 1, 2, 1]      L08 17  [5, 5, 4, 2, 0, 1]
-    L02 12  [3, 6, 1, 0, 0, 2]      L09 13  [2, 5, 3, 0, 1, 2]
+    L02 12  [3, 6, 1, 0, 0, 2]      L09  8  [2, 2, 2, 0, 1, 1]   + L09 (21/09) 5 [0,3,1,0,0,1]
     L03 22  [5, 6, 4, 4, 0, 3]      L10  9  [2, 3, 2, 0, 1, 1]
     L04  9  [4, 2, 1, 1, 0, 1]      L11  5  [2, 1, 0, 0, 1, 1]
     L05  8  [1, 3, 3, 1, 0, 0]      L12 21  [4,10, 1, 2, 2, 2]
     L06 10  [1, 5, 1, 2, 0, 1]      L13  7  [2, 2, 2, 0, 0, 1]
-    L06-prerequisito 6 [1,3,1,1,0,0] L14 40 [12,12, 5, 2, 1, 8]
+    L06-prerequisito 6 [1,3,1,1,0,0] L14 35 [10,10, 4, 2, 1, 8]   + L14 (21/09) 5 [2,2,1,0,0,0]
     piano (stadio 02) 3 [1,1,0,0,0,1] L15 5  [2, 1, 1, 0, 0, 1]
     senza lotto 34 [12,11,6,3,0,2]  (più 5 voci a cavallo: «L00, L03», «L01, L02», …)
 
@@ -208,11 +224,12 @@ più grande per una lezione fatta di numeri.
 
 **Durata** (prima → ultima voce del lotto, dal journal):
 
-    L00 13/09 18:58→19:32   L05 19/09 20:21→20/09 18:27   L09 21/09 13:57→22/09 10:59 (§1.4)
+    L00 13/09 18:58→19:32   L05 19/09 20:21→20/09 18:27   L09 22/09 10:45→10:59
     L01 13/09 19:46→14/09 10:56   L06 20/09 17:45→18:16   L10 22/09 10:51→11:08
     L03 13/09 19:56→20:39   L07 19/09 18:12→20/09 19:30   L12 21/09 15:11→16:21
     L04 20/09 16:04→17:29   L08 21/09 08:48→09:25   L13 22/09 10:44→11:02
-    L14 21/09 09:43→24/09 12:51 (§1.4; il L14 del piano parte il 23/09 14:55)   L15 23/09 12:48→12:52
+    L14 23/09 14:55→24/09 12:51   L15 23/09 12:48→12:52
+    fuori piano (§1.4): L14 (21/09) 09:43→10:40   L09 (21/09) 13:57→14:03
     consegna intera: 13/09 18:01 → 24/09 12:51
 
 **Arresti al tetto dei turni.** 16 voci ne parlano. Agenti fermi senza consegna, per

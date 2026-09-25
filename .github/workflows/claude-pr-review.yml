@@ -34,6 +34,13 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Senza questo input l'azione si autentica come app GitHub di Claude, che
+          # su questo repo non e' installata: il 25/09 il collaudo e' fallito cosi',
+          # 401 su tre tentativi. Passando il token del workflow i permessi restano
+          # quelli dichiarati sopra — contents: read, pull-requests: write — invece
+          # dell'insieme completo che l'app pretende (Actions, Workflows e hook in
+          # scrittura compresi).
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             Esegui la procedura di ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md sulla PR
             #${{ github.event.pull_request.number }}.

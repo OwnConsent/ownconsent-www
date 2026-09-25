@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-25T16:05:23+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Il punto non misurato di 153839 ora e' misurato, da Andrea sul plugin: nessun hook, scheda o skill legge tetto_turni; maxTurns ha una fonte sola",
+  "contesto": "La correzione 153839 diceva che gli hook del plugin non li avevo potuti leggere. Andrea ha misurato nel repository cantiere, fuori dal perimetro di questa sessione. La voce 153839 resta com'e': questa la completa.",
+  "evidenza": [
+    "misura di Andrea, 25/09, repository cantiere: grep -rn 'tetto_turni' plugins/cantiere/ -> zero occorrenze in agents/, hooks/ e skills/; nessun hook legge plan.json o docs/plan",
+    "misura di Andrea: maxTurns dichiarato solo nelle 24 schede degli agenti, fonte unica",
+    "misura mia, questo repository: git grep -n tetto_turni -- ':!journal' ':!docs/plan/issue-8.json' ':!corso' -> nessuna riga, exit=1"
+  ],
+  "limite_della_misura": "le prime due righe non le posso rifare: guard-paths blocca il plugin (122651). Sono riportate come misura di un altro, con il comando.",
+  "esito": "corso/ricognizione/consegna-1.md §1.1 b aggiornata: tetto_turni e' campo morto",
+  "umano_coinvolto": true
+}

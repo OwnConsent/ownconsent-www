@@ -93,6 +93,18 @@ repository cantiere. **La coincidenza con il 45 del piano non esiste più:** il
 `tetto_turni` 45 di L10 e L14 non corrisponde più a nessun tetto dell'ambiente. Per i
 lotti chiusi prima del 24/09 la tabella qui sopra resta vera così com'è.
 
+**Il plugin non legge `tetto_turni`: misura di Andrea, fuori dal perimetro di questa
+sessione.** Nel repository la misura è mia: `git grep -n tetto_turni -- ':!journal'
+':!docs/plan/issue-8.json' ':!corso'` → nessuna riga. Sul plugin l'ha fatta Andrea il
+25/09, nel repository cantiere; da qui non la posso rifare:
+
+    grep -rn 'tetto_turni' plugins/cantiere/   ->  zero occorrenze in agents/, hooks/ e skills/
+                                                   nessun hook legge plan.json o docs/plan
+    maxTurns                                   ->  dichiarato solo nelle 24 schede degli agenti: fonte unica
+
+Con questa misura `tetto_turni` è un **campo morto**: nessun codice lo legge e nessuna
+istruzione lo applica. È diverso da `budget_turni` (§1.3), che un'istruzione la ha.
+
 ### 1.2 Altri buchi della forma (a): un ruolo ha lavorato, ma il suo registro non lo dice
 
 Metodo: per ogni lotto ho confrontato l'`agente` del piano con il campo `agente` delle voci

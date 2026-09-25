@@ -74,8 +74,17 @@ il numero del piano **coincide** con quello dell'ambiente (45, in L10 e L14), du
 attribuiscono l'arresto al campo del piano («45, tetto_turni del piano»). È una coincidenza
 scambiata per un meccanismo.
 
-**Non misurato:** da dove vengono il 20 e il 45 dell'ambiente. `guard-paths` blocca la
-lettura del plugin e non l'ho aggirato (voce `122651-orchestrator-gate`).
+**Da dove vengono il 20 e il 45 — dato fornito, non misurato.** Sono i `maxTurns` nelle
+schede degli agenti, in `cantiere/plugins/cantiere/agents/*.md`, non il piano. **Fonte:
+Andrea, il 25/09.** Il plugin è fuori dal perimetro di questa sessione: `guard-paths` ne
+blocca la lettura e non l'ho aggirato (voce `122651-orchestrator-gate`). Il dato arriva
+quindi da fuori la misura, e chi legge non lo può rifare da questo repository.
+
+**Dal 24/09 quei valori sono cambiati** (stessa fonte): cinque revisori passano da 20 a 30
+`maxTurns`, @qa-test e @frontend da 45 a 60. Sono il commit `58019f2` e i seguenti, nel
+repository cantiere. **La coincidenza con il 45 del piano non esiste più:** il
+`tetto_turni` 45 di L10 e L14 non corrisponde più a nessun tetto dell'ambiente. Per i
+lotti chiusi prima del 24/09 la tabella qui sopra resta vera così com'è.
 
 ### 1.2 Altri buchi della forma (a): un ruolo ha lavorato, ma il suo registro non lo dice
 
@@ -281,7 +290,8 @@ lo segnalo e basta.
 ## 5. Cosa questa ricognizione non ha misurato
 
 - La fonte dei tetti di turni dell'ambiente (20 e 45): bloccata da `guard-paths`,
-  voce `122651`.
+  voce `122651`. Andrea l'ha poi fornita: sono i `maxTurns` delle schede degli agenti,
+  cambiati dal 24/09 (§1.1 b). È un dato riportato, non misurato da qui.
 - I log dei run CI passo per passo, oltre alla durata già registrata in L12.
 - Il contenuto dei commenti di Andrea sulle PR (#13, #15, #16, #17, #21, #26, #36, #46,
   #52, #55): li ho contati, non letti. Sono gli unici commenti di revisione esistenti.

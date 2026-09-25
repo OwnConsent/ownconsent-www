@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-25T15:38:13+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "decisione",
+  "titolo": "La fonte dei tetti 20 e 45 entra nella ricognizione come dato fornito da Andrea, non come misura; dal 24/09 i valori sono 30 e 60",
+  "contesto": "Correzione 1 di Andrea: il 20 e il 45 sono i maxTurns delle schede degli agenti del plugin, fuori dal perimetro della sessione; dal 24/09 cinque revisori passano da 20 a 30, qa-test e frontend da 45 a 60 (commit 58019f2 e seguenti nel repository cantiere).",
+  "alternative": [
+    { "opzione": "scriverlo come fatto accertato, senza fonte", "scartata_perche": "non l'ho misurato e non posso: guard-paths blocca la lettura (122651). Senza fonte, chi legge lo crederebbe verificato da qui" },
+    { "opzione": "lasciare il paragrafo «non misurato» com'era", "scartata_perche": "il dato esiste e cambia la conclusione: la coincidenza con il 45 del piano non vale piu' dal 24/09" }
+  ],
+  "scelta": "corso/ricognizione/consegna-1.md §1.1 b e §5: fonte Andrea 25/09, dato fuori dalla misura, valori cambiati dal 24/09, coincidenza con il 45 del piano non piu' esistente",
+  "esito": "applicata",
+  "umano_coinvolto": true
+}

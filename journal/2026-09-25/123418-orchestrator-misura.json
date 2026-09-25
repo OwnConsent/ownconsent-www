@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-25T12:34:17+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Altri buchi della stessa forma: L05 e L15 senza nessuna voce del ruolo del piano, firme di altri ruoli in L04 e L08, sei cose dichiarate e mai applicate, due etichette di lotto riusate",
+  "contesto": "Andrea chiede di cercare altri buchi della forma di @frontend in L14 e di tetto_turni. Per ogni lotto ho confrontato il ruolo del piano, il campo agente delle voci e i trailer dei commit delle PR (git fetch origin '+refs/pull/*/head:refs/remotes/pr/*', poi git log baseRefOid..pr/N).",
+  "evidenza": [
+    "L05 (frontend): voci del ruolo 0 su 8; trailer PR #34: 3 orchestrator, 1 senza firma, 0 frontend",
+    "L15 (privacy): voci del ruolo 0 su 5; trailer PR #53: 3 orchestrator",
+    "L04 (privacy): 3 voci privacy; trailer PR #35: 3 orchestrator, 2 senza firma, 1 cantiere:qa-test",
+    "L08 (code-reviewer): 11 voci; trailer PR #41: 8 orchestrator",
+    "costo_token presente in 1 voce su 360 dell'intervallo, durata_s in 1; unica misura di costo 2026-09-20/211044 (206,05 USD fino a L07)",
+    "gh api .../actions/workflows -> «Verifica agentica su PR disabled_manually»; commenti su 26 PR: solo andreapernici; grep collaudo|pr-fanout nel journal -> 2 voci del 13/09",
+    "budget_turni 615 e stima di 3,2-6,7 M token (182105): nessun consuntivo nel journal",
+    "15 voci senza il campo obbligatorio del proprio tipo (docs/JOURNAL.md)",
+    "etichetta L14 usata il 21/09 da @qa-test per la PR #42 e il 23/09 per il L14 del piano; L09 usata il 21/09 dall'orchestrator per la PR #44 e il 22/09 da @accessibility",
+    "commit senza voce: 4dcebd0 (firma via CANTIERE_AGENT), 4cb1674 (regola comando+output), 4209875 (parziale), 01f4f4e"
+  ],
+  "esito": "registrata; dettaglio e comandi in corso/ricognizione/consegna-1.md §1",
+  "umano_coinvolto": false
+}

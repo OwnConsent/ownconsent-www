@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-25T12:34:17+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "fallimento",
+  "titolo": "Due letture sbagliate dei trailer su main, prese prima di scriverle: firme «assenti» che erano solo illeggibili, e un conteggio di Co-Authored-By troncato",
+  "contesto": "Confronto commit contro journal per il punto 2. (1) git log main --format='%(trailers:key=Cantiere-Agent)' restituiva vuoto su tutti i commit fino a 8135bff (21/09): stava per diventare «nessun commit firmato fino al 21/09». (2) Il primo conteggio dei Co-Authored-By di modello usava awk sui primi due campi, e ne usciva «6 Claude Opus, 1 Claude Sonnet, 4 in coppia»: nella prima stesura del rapporto era diventato «11 commit, in aggiunta alla firma dell'hook».",
+  "evidenza": [
+    "git show -s --format=%B 718d54a | tail -> «Cantiere-Agent: orchestrator ... ---------  Co-authored-by: ...»: la firma c'e', ma sta nel corpo dello squash di GitHub e non nell'ultimo paragrafo, quindi %(trailers) non la vede",
+    "gh api repos/.../ownconsent-www -> allow_squash_merge true; git log --merges main | wc -l -> 0",
+    "conteggio rifatto commit per commit: 13 con un co-autore Claude, 4 dei quali con Claude come unico co-autore; tutti squash anteriori al 21/09"
+  ],
+  "cosa_si_e_imparato": "Su un repository che fonde con squash, un trailer vuoto su main non vuol dire firma assente: vuol dire firma nel posto sbagliato per il parser. Chi fa i conti sulle firme li fa sui refs/pull/*/head, e lo dice. Il secondo errore e' della stessa famiglia del «suonano uguali»: una colonna tagliata da awk sembrava un conteggio.",
+  "esito": "entrambe corrette nel rapporto prima del commit (§1.2 metodo, §4.1, §4.2)",
+  "umano_coinvolto": false
+}

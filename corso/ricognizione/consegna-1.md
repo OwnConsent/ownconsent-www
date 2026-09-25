@@ -103,7 +103,7 @@ sessione.** Nel repository la misura è mia: `git grep -n tetto_turni -- ':!jour
     maxTurns                                   ->  dichiarato solo nelle 24 schede degli agenti: fonte unica
 
 Con questa misura `tetto_turni` è un **campo morto**: nessun codice lo legge e nessuna
-istruzione lo applica. È diverso da `budget_turni` (§1.3), che un'istruzione la ha.
+istruzione lo applica. È diverso da `budget_turni` (§1.3 bis), che un'istruzione la ha.
 
 ### 1.2 Altri buchi della forma (a): un ruolo ha lavorato, ma il suo registro non lo dice
 
@@ -133,13 +133,48 @@ cosa» per il corso deve separarli a mano.
 
 | cosa | dove è dichiarato | misura |
 |---|---|---|
-| `budget_turni: 615` | `docs/plan/issue-8.json` | Nessuna voce lo confronta con un consuntivo: le occorrenze di `615` nel journal sono tutte un altro numero, per esempio un id di worktree. |
 | Stima dei token della consegna: 21 invocazioni, circa 3,2 M; caso peggiore 44, circa 6,7 M | `2026-09-13/182105-feature-misura` | Mai confrontata con un consuntivo in token. |
 | `costo_token`, `durata_s` | formato di `docs/JOURNAL.md` | **1 voce su 360** porta `costo_token` (86 839, spec della #25). **1 su 360** porta `durata_s`. Il costo in dollari esiste una volta sola, il 20/09 dopo L07 (§3). |
 | Skill `/collaudo` («usala su ogni PR prima del merge») | descrizione della skill nel plugin cantiere, fuori dal repository. `grep -n -i collaudo CLAUDE.md docs/DEFINITION-OF-DONE.md` → nessuna riga | Nessuna voce la registra come lanciata nell'intervallo. Comando: `grep -l -i -E 'pr-fanout\|/collaudo\|skill collaudo\|cantiere:collaudo' journal/*/*.json` → `180122-orchestrator-gate` e `181016-orchestrator-misura`, del 13/09. Il comando cerca la skill, non il workflow: per il workflow vedi la riga sotto. |
 | Workflow `Verifica agentica su PR` | `.github/workflows/claude-pr-review.yml` | **Spento per decisione, con una scadenza mancata.** `gh api …/actions/workflows` → `disabled_manually`, ultima modifica il 13/09 alle 15:51:23. `git log --follow` sul file → solo `2c0b095`: lo spegnimento non è un commit. `grep -l -i -E 'claude-pr-review\|Verifica agentica' journal/*/*.json` → 4 voci, fra cui **`2026-09-13/184350-feature-decisione`**: spento deliberatamente da Andrea, con la scadenza «si riaccende all'apertura della PR-4 della consegna 1 (primo codice in site/)». Il primo codice in `site/` è la PR #34, del 20/09; il workflow è ancora spento. 2 run in tutta la storia, entrambi falliti il 13/09 (PR #1 e #2). Commenti di collaudo sulle 26 PR controllate: **0**. Dettaglio in `2026-09-25/153654-orchestrator-misura`. |
 | `revisioni.nessuno_rivede_il_proprio_lavoro` | piano | Rispettato in L08, L09, L10 e L13. Per L14 e L15, che toccano `site/`, le voci non contengono nessun ruolo di revisione (L14: orchestrator, qa-test, architect; L15: solo orchestrator). La regola resta vera solo perché non ha rivisto nessuno. |
 | Campo obbligatorio per tipo (`docs/JOURNAL.md`) | tabella «Tipi di voce» | **15 voci** senza il campo obbligatorio: 7 `consegna` senza `dod_soddisfatta` (devops 091954, privacy 161048, qa-test 170339, 170529, 171115, 171350, 171534), 3 `decisione` senza `alternative`, 3 `misura` senza `evidenza`, 2 `fallimento` di @design senza `cosa_si_e_imparato`. Quelle di @design hanno campi propri (`cosa_dicevo`, `perche_era_sbagliata`), fuori schema. |
+
+### 1.3 bis `budget_turni`: un'istruzione senza meccanismo, non un campo morto
+
+Nella prima stesura questo campo stava nella tabella qui sopra, fra le cose «dichiarate e
+mai applicate». **Era sbagliato:** Andrea ha misurato che un'istruzione lo applica.
+
+**Misura di Andrea, 25/09, nel repository cantiere, fuori dal perimetro di questa
+sessione:** `budget_turni` compare una volta, in `plugins/cantiere/agents/orchestrator.md`
+alla riga 24: «Non superare budget_turni di plan.json. Al superamento fermati e riporta
+cosa manca».
+
+**Misura mia, in questo repository:** `docs/plan/issue-8.json` → `"budget_turni": 615`.
+Nessuna voce lo confronta con un consuntivo: le occorrenze di `615` nel journal sono tutte
+un altro numero, per esempio l'id di una worktree. Nessuna voce dice «budget superato» né
+«budget rispettato».
+
+    grep -l -i -E 'budget (superato|rispettato)|superato il budget|budget_turni' journal/*/*.json
+      -> 1717 (issue 4), 181805 e 185045 (issue 8): tutte del 13/09, stadio di piano; nessun consuntivo
+
+**Due cose diverse:**
+
+| | `tetto_turni` | `budget_turni` |
+|---|---|---|
+| chi lo legge | nessuno: né codice, né hook, né scheda, né skill (§1.1 b) | un'istruzione nella scheda dell'orchestrator |
+| meccanismo che lo fa rispettare | nessuno | nessuno |
+| consuntivo | nessuno | nessuno |
+| classe | **campo morto** | **istruzione senza meccanismo** |
+
+Un campo morto non chiede niente a nessuno. Un'istruzione senza meccanismo chiede
+qualcosa, ma chi la deve rispettare non ha il numero per farlo: per `budget_turni`
+servirebbe il conteggio dei turni già spesi, e `docs/JOURNAL.md` vieta di dichiararlo
+perché gli agenti lo sbagliano (15 contro 81, 24 contro 35). È la stessa famiglia di
+«committa a incrementi» prima che esistesse il gate a tempo sui commit. Nel journal quella
+istruzione fallisce due volte di fila: `2026-09-20/161654-feature-fallimento`, «l'ordine di
+spingere dopo il primo commit non serve se il primo commit non arriva mai». Un'istruzione
+che non tiene.
 
 ### 1.4 Buchi della forma «suonano uguali»: la stessa etichetta di lotto per due lavori
 

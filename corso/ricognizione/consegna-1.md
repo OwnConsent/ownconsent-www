@@ -72,7 +72,10 @@ La sfumatura: il campo è stato *letto*. I brief lo riportavano (105042: «il br
 riportava»), quindi «mai usato» è vero come *mai applicato*, non come *mai letto*. E dove
 il numero del piano **coincide** con quello dell'ambiente (45, in L10 e L14), due voci
 attribuiscono l'arresto al campo del piano («45, tetto_turni del piano»). È una coincidenza
-scambiata per un meccanismo.
+scambiata per un meccanismo. Le due voci, `110840-orchestrator-consegna` e
+`151439-orchestrator-gate`, sono corrette **per aggiunta** dalla voce
+`2026-09-25/153839-orchestrator-correzione`. Restano come erano, con un campo
+`corretta_da` che rimanda lì.
 
 **Da dove vengono il 20 e il 45 — dato fornito, non misurato.** Sono i `maxTurns` nelle
 schede degli agenti, in `cantiere/plugins/cantiere/agents/*.md`, non il piano. **Fonte:

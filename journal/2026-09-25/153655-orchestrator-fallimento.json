@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-25T15:36:54+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "fallimento",
+  "titolo": "La ricognizione del mattino non aveva visto 184350, la voce che spiega lo spegnimento del collaudo: il mio grep cercava la skill, non il workflow",
+  "contesto": "In corso/ricognizione/consegna-1.md §1.3 ho scritto che grep «collaudo|pr-fanout» trovava solo due voci del 13/09, e in §5 che dal repository non si distingue «mai lanciato». Il comando vero era grep -i -E 'pr-fanout|/collaudo|skill collaudo|cantiere:collaudo': cercava la skill, e «Collaudo in CI (claude-pr-review.yml)» non corrisponde a nessuno dei quattro pattern. Nel rapporto l'ho riassunto con un pattern piu' largo di quello lanciato.",
+  "evidenza": [
+    "grep -l -i -E 'claude-pr-review|Verifica agentica|workflow' journal/2026-09-13/*.json -> comprende 184350-feature-decisione.json",
+    "grep -l -i -E 'pr-fanout|/collaudo|skill collaudo|cantiere:collaudo' journal/*/*.json -> 180122, 181016: le due del rapporto"
+  ],
+  "cosa_si_e_imparato": "Nel rapporto si scrive il comando lanciato, non un suo riassunto: un riassunto piu' largo del comando promette una copertura che non c'e' stata. E' la regola di CLAUDE.md sul riportare il comando e il suo output, e l'ho violata io.",
+  "esito": "non corretto nel rapporto, perche' Andrea ha chiesto questa misura «senza correggere niente»; segnalato nella risposta di fine giro, con la proposta di correggere §1.3",
+  "umano_coinvolto": false
+}

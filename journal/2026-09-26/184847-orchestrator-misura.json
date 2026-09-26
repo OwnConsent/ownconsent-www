@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-26T18:48:47+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Il collaudo commenta quando la PR non ha un commento del bot e tace quando ce n'e' gia' uno: 6 esecuzioni su 6",
+  "contesto": "Misura di Andrea: su sei esecuzioni il collaudo ha commentato le tre volte senza un commento di Claude gia' presente e ha taciuto le tre volte con. Dal passo «Verdetto pubblicato» (9241195) ogni PR ricollaudata diventa rossa. Rifatta qui prima di toccare il prompt.",
+  "evidenza": [
+    "per ogni esecuzione: run_started_at del tentativo (/actions/runs/{id}/attempts/{n}); commenti di github-actions[bot] sulla PR prima dell'inizio e fra inizio e fine",
+    "36151435641/a1 PR#61: bot prima 0, durante 1; 168269 ms, 13 turni, 1.02 USD",
+    "36244241315/a1 PR#60: bot prima 0, durante 1; 600046 ms, 13 turni, 4.14 USD",
+    "36245446819/a1 PR#60: bot prima 1, durante 0; 97217 ms, 13 turni, 0.90 USD",
+    "36245446819/a2 PR#60: bot prima 1, durante 0; 103873 ms, 15 turni, 1.04 USD",
+    "36248365541/a1 PR#62: bot prima 0, durante 1; 332879 ms, 11 turni, 1.64 USD",
+    "36255932164/a1 PR#60 (df78532): bot prima 1, durante 0; 243374 ms, 15 turni, 1.25 USD; 'Verdetto pubblicato' failure: 'il collaudo non ha lasciato un verdetto ... dopo 2026-09-26T16:34:28Z'"
+  ],
+  "cosa_dice_la_misura": "La correlazione e' 6 su 6. 'Durata e costo molto minori' vale sulla #60 ma non in generale: 36255932164, muto, costa e dura piu' di 36151435641, che ha commentato. Che l'agente faccia la revisione e scelga di non duplicare e' un'ipotesi: il testo finale non e' nel log. Il falso rosso temuto e' gia' accaduto una volta: 36255932164.",
+  "esito": "misura confermata sul punto che serve; due dettagli della descrizione non confermati",
+  "umano_coinvolto": true
+}

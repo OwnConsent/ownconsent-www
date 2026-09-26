@@ -65,6 +65,14 @@ jobs:
             gravità, con file e riga. I bloccanti in cima. Se non ci sono finding, scrivi
             una riga che lo dice.
 
+            Il commento è SEMPRE nuovo, uno per ogni esecuzione. Pubblicalo anche se
+            sulla PR c'è già un commento di un collaudo precedente, e anche se le
+            conclusioni non cambiano: in quel caso scrivi che confermano il collaudo
+            precedente. Non modificare e non sostituire commenti esistenti. La prima
+            riga del commento è esattamente:
+
+            ## Collaudo — run ${{ github.run_id }}, tentativo ${{ github.run_attempt }}
+
             Non modificare file. Non approvare. Non mergiare.
           claude_args: |
             --max-turns 40

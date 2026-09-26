@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-26T22:11:57+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Verdetto da file, run nuova su una PR che ha gia' un verdetto (36268387115, 82f0942): l'agente non scrive il file; il job lo dice, ma il silenzio resta",
+  "contesto": "Dopo il primo giro verde su ef9fa19, la #64 e' stata chiusa e riaperta alle 22:06:55 locali per collaudare il codice completo (82f0942, troncamento compreso). Sulla PR c'era gia' il commento 5849454060 del giro precedente. Il rerun previsto come secondo tempo non e' stato lanciato: questa run, che doveva pubblicare, non ha pubblicato.",
+  "evidenza": [
+    "passi: Ventaglio success, Diagnostica success, Misura success ('verdetto: 0 byte'), Conserva skipped, Pubblica failure",
+    "ls -la .collaudo: solo . e ..; find verdetto*.md in workspace, /tmp e HOME: nessun file",
+    "execution_file: num_turns 10, permission_denials_count 0",
+    "risultato: duration_ms 185580, total_cost_usd 1.01",
+    "##[error]il collaudo non ha lasciato un verdetto: .../.collaudo/verdetto.md manca o e' vuoto (ventaglio: success)",
+    "commenti sulla #64: 1, quello del giro precedente"
+  ],
+  "cosa_dice_la_misura": "Il meccanismo fa la sua parte: pubblicare e' del job, e un verdetto assente produce un rosso con il messaggio giusto invece di un verde muto. Ma la decisione di produrre il verdetto e' ancora dell'agente, e l'agente tace come prima. Con un verdetto del bot gia' presente sulla PR, oggi il collaudo ha taciuto 5 volte su 6: 36245446819/1 e /2, 36255932164, 36257241401/2, 36268387115. Ha parlato solo 36257241401/1. Il silenzio si e' spostato da 'non commenta' a 'non scrive il file'. Non dipende dal canale di pubblicazione: segue la presenza di un verdetto precedente. Che l'agente lo legga con gh pr view (ancora permesso) e concluda di aver gia' risposto e' un'ipotesi: il suo testo non e' nel log.",
+  "esito": "prova fermata al primo tempo sul codice finale; la #64 non si mergia; rerun non lanciato, riportato ad Andrea",
+  "umano_coinvolto": true
+}

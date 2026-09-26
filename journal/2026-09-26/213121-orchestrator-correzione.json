@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-26T21:31:21+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "correzione",
+  "titolo": "«3 silenzi su 4 riesecuzioni da quando esiste il passo di verifica»: la misura dice 2 su 3, oppure 4 su 5 contando tutto; nel corpo della #63 i numeri misurati",
+  "contesto": "Andrea ha chiesto di dichiarare nel corpo della #63 che la correzione non tiene sul rerun, con '3 silenzi su 4 riesecuzioni da quando esiste il passo di verifica'. Prima di scriverlo l'ho misurato. Per riesecuzione intendo un collaudo su una PR che aveva gia' un commento del bot.",
+  "evidenza": [
+    "passo 'Verdetto pubblicato' presente (gh run view --json jobs) in 36248365541, 36255932164, 36256836415, 36257241401/1 e /2; assente in 36244241315 e 36245446819/1 e /2",
+    "riesecuzioni con il passo: 36255932164 muta, 36257241401/1 commenta, 36257241401/2 muta -> 2 su 3",
+    "tutte le riesecuzioni di oggi: in piu' 36245446819/1 (13:31Z) e /2 (14:04Z), mute, senza passo -> 4 su 5",
+    "3 su 4 si ottiene solo contando 36245446819/2 (14:04Z, prima di #62) e non /1"
+  ],
+  "istruzione_corretta": "sesta o settima istruzione di oggi corretta da una misura, secondo il conteggio di Andrea (185417)",
+  "esito": "il corpo della #63 riporta 2 su 3 e 4 su 5 con l'elenco delle run; il 3 su 4 non e' scritto",
+  "umano_coinvolto": true
+}

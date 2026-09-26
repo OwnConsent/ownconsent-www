@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-26T21:31:19+02:00",
+  "agente": "andrea (trascritta dalla sessione principale, parole sue)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Il verdetto del collaudo lo pubblica il job, non l'agente: l'agente scrive un file nel workspace, un passo del workflow lo legge e commenta",
+  "contesto": "Dopo il rerun muto della #63 (211944), la sessione ha proposto un meccanismo al posto dell'istruzione: l'agente scrive il verdetto in un file e il commento lo pubblica un passo del workflow. Andrea adotta la proposta. La decisione e' sua, la proposta e' della sessione.",
+  "chi_ha_deciso": "Andrea, 26/09 sera",
+  "chi_ha_proposto": "sessione principale (orchestrator), resoconto del rerun muto",
+  "decisione": "Pubblicare smette di essere una scelta dell'agente e diventa una proprieta' del job. E' la stessa mossa di guard-commit e guard-tempo, che hanno sostituito «committa a incrementi» con un meccanismo.",
+  "perche": "Parole di Andrea: tre tentativi a istruzione non hanno tenuto, ed e' il terzo caso oggi in cui un'istruzione ha ceduto dove un meccanismo regge. Nel prompt la sessione trova due versioni dell'istruzione di pubblicare: 'Se non ci sono finding, scrivi una riga che lo dice' (2c0b095), muta sulla #60, e 'Il commento e' SEMPRE nuovo' (03f9705), muta sul rerun della #63. Il 'tre' e' il conteggio di Andrea, non una misura della sessione.",
+  "non_ora": "Non si implementa in questa sessione. Sara' la prossima PR, e tocchera' insieme prompt, passo «Verdetto pubblicato» e permessi dei tool.",
+  "da_misurare_non_assumere": [
+    "che Write basti: oggi --allowedTools e' \"Read,Grep,Glob,Bash(git *),Bash(gh pr *),Task\" e Write non c'e'. Ma --permission-mode e' auto, quindi va misurato anche se oggi Write sia davvero bloccato",
+    "se togliere Bash(gh pr *), o almeno gh pr comment, per evitare il doppio commento: agente piu' passo",
+    "dove mettere il file perche' sopravviva fra lo step dell'azione e quello successivo"
+  ],
+  "si_chiude_quando": "In .github/workflows/claude-pr-review.yml esiste un passo che pubblica il commento leggendo un file scritto dall'agente, e un rerun con un commento della stessa run gia' presente produce un commento nuovo. Finche' il file pubblica tramite l'agente (Bash(gh pr *) nel prompt), la decisione e' aperta.",
+  "esito": "decisa, non implementata",
+  "umano_coinvolto": true
+}

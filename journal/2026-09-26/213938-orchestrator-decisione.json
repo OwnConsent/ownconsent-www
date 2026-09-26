@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-26T21:39:38+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Verdetto da file: forma di Andrea, piu' tre scelte della sessione dichiarate (divieto esplicito dei gh in scrittura, cartella svuotata prima dell'azione, diagnostica separata)",
+  "contesto": "Implementazione della decisione 213119 su richiesta di Andrea: l'agente scrive ${{ github.workspace }}/.collaudo/verdetto.md, il passo «Pubblica il verdetto» lo pubblica con gh pr comment --body-file, «Verdetto pubblicato» sparisce, Write entra in --allowedTools, Bash(gh pr *) si restringe alle letture.",
+  "alternative": [
+    {
+      "opzione": "solo restringere --allowedTools a gh pr view e gh pr diff",
+      "scartata_perche": "--permission-mode e' auto, e in quella modalita' un comando non elencato puo' essere approvato lo stesso. Scelta: lista ristretta PIU' --disallowedTools per gh pr comment, gh pr review e gh api. Un divieto esplicito vale anche in auto. Se non basta, lo dice il numero di commenti del bot sulla PR, che deve essere uno per run"
+    },
+    {
+      "opzione": "tenere «Inizio del collaudo»",
+      "scartata_perche": "COLLAUDO_INIZIO serviva solo al passo che sparisce. Al suo posto «Prepara la cartella del verdetto»: rm -rf e mkdir -p di .collaudo. Se un .collaudo/verdetto.md venisse committato nel repository, il checkout lo porterebbe nel workspace e il job lo pubblicherebbe come verdetto di un agente muto"
+    },
+    {
+      "opzione": "verificare che la prima riga del file sia l'intestazione della run e del tentativo",
+      "scartata_perche": "rende il job rosso per un'intestazione scritta male, cioe' riporta una dipendenza dall'istruzione. La cartella svuotata basta a garantire che il file sia di questa esecuzione"
+    },
+    {
+      "opzione": "misure dentro il passo di pubblicazione",
+      "scartata_perche": "scelto un passo «Diagnostica del ventaglio» a parte, if: !cancelled(): ls -la della cartella, find di verdetto*.md nel workspace, in /tmp e in HOME (per un eventuale percorso relativo), permission_denials dall'execution_file dell'azione. Le misure chieste da Andrea finiscono nel log senza mescolarsi alla logica del verdetto"
+    },
+    {
+      "opzione": "pubblicare solo se l'azione e' verde",
+      "scartata_perche": "scelto if: !cancelled(). Se l'azione e' fallita e il file c'e', lo si pubblica con una riga in testa scritta dal job, che dichiara l'esito dell'azione e il rischio di un verdetto incompleto: un lavoro fatto non si butta, e chi legge sa quanto fidarsi. Se l'azione e' fallita e il file manca, il passo da' 'nessun verdetto', un secondo rosso distinto dal primo"
+    }
+  ],
+  "nota": "Andrea scrive che sul rerun il prompt da solo ha ceduto '3 volte su 4'. La misura registrata in 213121 dice 2 su 3 con il passo di verifica, 4 su 5 in tutto. Non cambia la prova da fare.",
+  "esito": "deciso; si implementa sul ramo ci/collaudo-verdetto-da-file",
+  "umano_coinvolto": true
+}

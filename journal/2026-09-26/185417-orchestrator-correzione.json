@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-26T18:54:17+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "correzione",
+  "titolo": "Due istruzioni di Andrea sulla misura delle sei esecuzioni, corrette dalla misura della sessione",
+  "contesto": "Andrea le conta come quinta e sesta di oggi. Nel journal del 26/09 ne trovo una sola registrata prima di queste: in 162043, 'stesso numero di turni' valeva per il tentativo 1 di 36245446819 (13) e non per il 2 (15). Le altre due del conteggio di Andrea non sono registrate: questo lo segnalo, non lo assorbo.",
+  "istruzioni_corrette": [
+    {
+      "istruzione": "i silenzi hanno «durata e costo molto minori»",
+      "misura": "vale sulla #60 (97 s e 0,90 USD, 104 s e 1,04 USD, 243 s e 1,25 USD, contro 600 s e 4,14 USD) ma non in generale: 36255932164, muto, 243374 ms e 1,25 USD; 36151435641 (#61), che ha commentato, 168269 ms e 1,02 USD",
+      "fonte": "184847-orchestrator-misura"
+    },
+    {
+      "istruzione": "«non salta la revisione: la fa e decide di non duplicare il commento»",
+      "misura": "non misurabile da qui: il testo finale dell'agente non compare nel log delle run. La correlazione misurata e' fra commento gia' presente e silenzio, 6 su 6; la causa resta un'ipotesi",
+      "fonte": "184847-orchestrator-misura"
+    }
+  ],
+  "conteggio": "quinta e sesta di oggi secondo Andrea; nel journal del 26/09 sono la seconda e la terza",
+  "esito": "registrate come istruzioni corrette da una misura",
+  "umano_coinvolto": true
+}

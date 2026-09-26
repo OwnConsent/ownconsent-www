@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-26T18:54:16+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "correzione",
+  "titolo": "Il rosso di 36255932164 non e' un falso rosso del passo: il difetto sta nella coppia prompt-passo",
+  "contesto": "Nella voce 184847 ho scritto «Il falso rosso temuto e' gia' accaduto una volta: 36255932164». Andrea corregge la lettura. Il passo «Verdetto pubblicato» ha detto il vero su cio' che osserva e dichiara: nessun commento creato dopo l'inizio della run. Il suo messaggio lo dice gia' («non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato»). Anche l'agente si e' comportato in modo legittimo: non ha duplicato un commento gia' presente. Sbagliato e' l'accoppiamento: un comportamento legittimo dell'agente produce uno stato di allarme.",
+  "corregge": "2026-09-26/184847-orchestrator-misura.json",
+  "cosa_era_sbagliato": "Chiamare 'falso' un rosso vero rispetto a cio' che il passo misura. Il passo non ha sbagliato, e correggerlo non avrebbe chiuso il difetto: va corretta la coppia. La #63 lo fa dal lato del prompt.",
+  "dove_resta_scritto": [
+    "journal 184847: resta com'e', con corretta_da che rimanda qui",
+    "messaggio del commit 03f9705 della #63 ('e' il primo falso rosso') e corpo della PR #63 ('L'ultima riga e' il primo caso' sotto 'ogni PR ricollaudata diventerebbe rossa'): non riscritti in questo commit; il commit e' gia' pushato",
+    "resoconto della sessione ad Andrea: 'Il falso rosso e' gia' successo una volta'"
+  ],
+  "esito": "voce 184847 corretta per aggiunta",
+  "umano_coinvolto": true
+}

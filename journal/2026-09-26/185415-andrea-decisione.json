@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-26T18:54:15+02:00",
+  "agente": "andrea (azione fuori dalla sessione, trascritta dalla sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Andrea pusha df78532 sul ramo della #60 dal terminale, fuori dalla sessione",
+  "contesto": "Alle 15:35 locali la sessione aveva committato df78532 (voce 153522, ricollaudo verde senza commento) senza pusharlo, e aveva chiesto se pushare o rilanciare la run. Il push l'ha fatto Andrea dal terminale, su istruzione di chi coordina la sessione. Fonte dell'attore: messaggio del 26/09. Su GitHub l'attore risulta andreapernici sia per la sessione sia per Andrea: le API non distinguono chi dei due ha agito.",
+  "ts_evento": "2026-09-26T14:02:45Z",
+  "evidenza": [
+    "gh api 'repos/.../activity?ref=refs/heads/corso/ricognizione-consegna-1' -> 2026-09-26T14:02:45Z push andreapernici c033486->df78532",
+    "subito dopo: 36245446819 tentativo 2, triggering_actor andreapernici, run_started_at 14:04:01Z, head c033486 (un rerun gira sul commit originale, non su df78532)",
+    "la run su df78532, 36255932164, non viene dal push (il workflow non ha 'synchronize'): viene da close 16:34:09Z e reopen 16:34:18Z della #60"
+  ],
+  "motivo": "Registrare in remoto la voce di journal 153522 del ricollaudo muto. Ricavato dalla sequenza: la sessione aveva chiesto se pushare o rilanciare, e sono seguiti push e rerun a 76 secondi l'uno dall'altro. Non e' scritto nel messaggio di Andrea: da confermare.",
+  "esito": "azione umana registrata; l'attore non resta senza nome",
+  "umano_coinvolto": true
+}

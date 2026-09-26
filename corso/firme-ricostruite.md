@@ -104,6 +104,17 @@ salvo `7532799`. Non sono in tabella.
 
 Copia congelata della fonte di verifica, perché resti anche senza GitHub. `∅` indica un commit senza trailer leggibile.
 
+Tabella e appendice devono avere le stesse coppie commit–PR. Il controllo, da rifare a ogni
+modifica di questo file:
+
+    diff <(sed -nE 's/^\| `([0-9a-f]+)` \|[^|]*\| (#[0-9]+) ·.*/\1 \2/p' corso/firme-ricostruite.md | sort) \
+         <(sed -nE 's/^- \*\*(#[0-9]+)\*\* \(`([0-9a-f]+)`\).*/\2 \1/p' corso/firme-ricostruite.md | sort)
+
+Non stampa nulla quando le coppie coincidono (33 su 33 il 26/09). Prima di quella data la riga
+della #48 mancava, e il comando stampava `< 7532799 #48`. Il controllo sui ruoli, cioè che i
+conteggi della tabella coincidano con quelli dell'appendice PR per PR, è stato fatto il
+26/09 con uno script fuori dal repository. Esito: nessuna differenza.
+
 - **#10** (`4cb1674`): `8e14912`:∅
 - **#9** (`3fe1874`): `846db4b`:feature
 - **#7** (`fe50e11`): `629f893`:feature
@@ -136,3 +147,4 @@ Copia congelata della fonte di verifica, perché resti anche senza GitHub. `∅`
 - **#41** (`d797f0c`): `023229a`:orchestrator `72c2e85`:orchestrator `92ad8b2`:orchestrator `3b0509c`:orchestrator `23ead00`:orchestrator `1cd329c`:orchestrator `5dfa1d2`:orchestrator `f6ce4bb`:orchestrator
 - **#43** (`4dcebd0`): `94926d8`:∅
 - **#42** (`bd43d28`): `3f6aa9e`:orchestrator
+- **#48** (`7532799`): `763ed39`:∅

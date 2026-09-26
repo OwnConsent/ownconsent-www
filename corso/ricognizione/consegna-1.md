@@ -25,6 +25,20 @@ Prima e ultima voce per issue, dalla stessa lettura:
     issue 25 -> 72 voci  2026-09-15T08:24 .. 2026-09-19T11:23
     issue 8  -> 288 voci 2026-09-13T18:01 .. 2026-09-24T12:51
 
+**Ordine: per `ts`, non per nome di file.** Il nome del file e il campo `ts` di una voce
+sono generati separatamente e possono divergere. Misura del 26/09 su tutte le 431 voci:
+in 40 i due non coincidono. Ci sono 31 nomi a quattro cifre, senza secondi: 30 del 13/09 e
+1 del 20/09. Poi 6 voci con un orario diverso nel nome, 1 del 15/09 e 5 del 22/09. Infine 3
+voci del 25/09 (`123418`, `153655`, `173942`), che hanno un
+nome un secondo più avanti del `ts` e lo stesso `ts` della voce precedente. Il 22/09 lo
+scarto arriva a 14 minuti (`112000-design-fallimento` ha `ts` 11:05:56). Ordinate per nome,
+7 coppie di voci adiacenti risultano in ordine inverso rispetto al `ts`.
+
+In questa ricognizione **niente è ordinato per nome di file**. Filtro dell'intervallo,
+prima e ultima voce, durate del §3: tutto si calcola sul `ts`. L'unico numero che cambierebbe
+è la fine di L10: 11:08 per `ts` (`110840-orchestrator-consegna`), 11:05 se si prende
+l'ultimo file per nome (`112100-design-decisione`). Il §3 riporta 11:08.
+
 Scelte di perimetro (voce `122626-orchestrator-decisione`):
 
 - **Dentro:** la #8, e la #25 (L-CI) contata **a parte** come prerequisito. Il piano la
@@ -241,7 +255,35 @@ Per lotto (issue 8), in ordine: decisione, misura, fallimento, gate, correzione,
     L06 10  [1, 5, 1, 2, 0, 1]      L13  7  [2, 2, 2, 0, 0, 1]
     L06-prerequisito 6 [1,3,1,1,0,0] L14 35 [10,10, 4, 2, 1, 8]   + L14 (21/09) 5 [2,2,1,0,0,0]
     piano (stadio 02) 3 [1,1,0,0,0,1] L15 5  [2, 1, 1, 0, 0, 1]
-    senza lotto 34 [12,11,6,3,0,2]  (più 5 voci a cavallo: «L00, L03», «L01, L02», …)
+    senza lotto 34 [12,11,6,3,0,2]  (più 4 voci a cavallo: «L00, L03», «L01, L02», «L01, L03», «L02, L03»)
+
+La somma dei blocchi fa 284; più le 4 voci a cavallo fa 288, il totale della prima tabella.
+La prima stesura diceva «5 voci a cavallo» e la somma dava 289. Il conteggio rifatto il 26/09
+ha trovato giusto il 288 e sbagliato il 5: le voci con due lotti nel campo sono quattro.
+I vettori per tipo sono stati riverificati tutti e coincidono.
+
+**Come si rifà.** Si leggono tutti i `journal/*/*.json` e si tengono le voci con `issue`
+uguale a `"8"` e `ts` compreso, estremi inclusi, fra `2026-09-13T18:01:22+02:00` e
+`2026-09-24T12:51:46+02:00` (§0). Il confronto si fa sul `ts` come istante, non sul nome
+del file (§0). Il campo che conta è `lotto`, preso **com'è scritto**: `"L01, L02"` è un
+blocco a sé e non si divide fra L01 e L02, e `null` va in «senza lotto». Soltanto `L09` e
+`L14` si separano per data: le voci con `ts` del 21/09 formano «L09 (21/09)» e «L14 (21/09)»
+(§1.4). Il `tipo` si conta così com'è; nessuna voce ha un tipo fuori dai sei.
+
+    python3 - <<'EOF'
+    import json, glob, collections
+    from datetime import datetime as dt
+    a, b = dt.fromisoformat('2026-09-13T18:01:22+02:00'), dt.fromisoformat('2026-09-24T12:51:46+02:00')
+    T = ['decisione', 'misura', 'fallimento', 'gate', 'correzione', 'consegna']
+    g = collections.defaultdict(collections.Counter)
+    for f in glob.glob('journal/*/*.json'):
+        d = json.load(open(f))
+        if str(d['issue']) != '8' or not a <= dt.fromisoformat(d['ts']) <= b: continue
+        k = str(d['lotto']) + (' (21/09)' if d['lotto'] in ('L09', 'L14') and d['ts'][:10] == '2026-09-21' else '')
+        g[k][d['tipo']] += 1
+    for k in sorted(g): print(f'{k:20s} {sum(g[k].values()):3d}', [g[k][t] for t in T])
+    print('totale', sum(sum(c.values()) for c in g.values()))
+    EOF
 
 **Esito:** il journal non è reticente in aggregato. Nessun lotto è fatto di soli successi:
 l'unico senza `fallimento` né `gate`, L11, ha una `correzione`. Il blocco «piano (stadio 02)»

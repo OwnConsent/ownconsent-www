@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-26T21:41:10+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Passi del verdetto da file provati in locale con uno stub di gh: sei casi su sei come atteso",
+  "contesto": "Script dei passi estratti dal YAML con pyyaml ed eseguiti con bash --noprofile --norc -eo pipefail. Al posto di gh uno stub che stampa gli argomenti e il corpo, per non pubblicare niente su PR vere. Non prova l'azione, i permessi dei tool, ne' il passaggio del file fra step: quelli li prova la PR.",
+  "evidenza": [
+    "prepara, con un verdetto.md lasciato dal checkout -> cartella vuota, exit 0",
+    "pubblica, file assente -> ::error title=Nessun verdetto:: ... manca o e' vuoto (ventaglio: success), exit 1",
+    "pubblica, file vuoto -> Nessun verdetto, exit 1",
+    "pubblica, file presente e ventaglio success -> gh pr comment 99 --repo OwnConsent/ownconsent-www --body-file ...; corpo identico al file; notice, exit 0",
+    "pubblica, file presente e ventaglio failure -> corpo con la riga '> **Nota del workflow:** ... esito `failure`' in testa, poi il file; exit 0",
+    "pubblica, file assente e ventaglio failure -> Nessun verdetto (ventaglio: failure), exit 1",
+    "diagnostica, su un execution_file di esempio -> {\"num_turns\":9,\"permission_denials_count\":1,...}; senza execution_file -> 'execution_file non disponibile', exit 0"
+  ],
+  "cosa_dice_la_misura": "La logica dei passi fa quello che dichiara. Restano da misurare su GitHub: che il file scritto dall'azione sia visibile al passo dopo (ls -la nel log), che Write basti (permission_denials nel JSON), dove finisce il file se il percorso non e' quello dato (find), e che l'azione esponga davvero l'output execution_file.",
+  "esito": "sei casi su sei; il resto e' affidato alle due run della PR",
+  "umano_coinvolto": false
+}

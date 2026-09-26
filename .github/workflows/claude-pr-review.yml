@@ -30,14 +30,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Serve al passo «Verdetto pubblicato». Non si usa il created_at della run:
-      # a un rerun resta quello del primo tentativo, e il commento lasciato da un
-      # tentativo precedente passerebbe per il verdetto di questo. Il run_started_at
-      # del tentativo chiederebbe actions: read in piu'; l'orologio del runner no.
-      - name: Inizio del collaudo
-        run: echo "COLLAUDO_INIZIO=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+      # Il verdetto lo pubblica il job, non l'agente: l'agente scrive un file e il
+      # passo «Pubblica il verdetto» lo commenta. Qui la cartella si svuota, perche'
+      # un .collaudo/verdetto.md arrivato col checkout passerebbe per il verdetto
+      # di un agente rimasto muto.
+      - name: Prepara la cartella del verdetto
+        run: rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
 
       - name: Ventaglio di revisione
+        id: ventaglio
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -61,47 +62,73 @@ jobs:
             Conferma ogni finding di gravità alta o critica con un subagent distinto che
             provi a confutarlo. Scarta quelli che non reggono.
 
-            Pubblica UN SOLO commento di riepilogo con `gh pr comment`, ordinato per
-            gravità, con file e riga. I bloccanti in cima. Se non ci sono finding, scrivi
-            una riga che lo dice.
+            Non pubblicare niente sulla PR: il verdetto lo pubblica il workflow dopo di
+            te. Scrivi il riepilogo con lo strumento Write, in un solo file, a questo
+            percorso assoluto:
 
-            Il commento è SEMPRE nuovo, uno per ogni esecuzione. Pubblicalo anche se
-            sulla PR c'è già un commento di un collaudo precedente, e anche se le
-            conclusioni non cambiano: in quel caso scrivi che confermano il collaudo
-            precedente. Non modificare e non sostituire commenti esistenti. La prima
-            riga del commento è esattamente:
+            ${{ github.workspace }}/.collaudo/verdetto.md
+
+            Il riepilogo è ordinato per gravità, con file e riga, e i bloccanti in cima.
+            Se non ci sono finding, scrivi comunque il file, con una riga che lo dice. Il
+            file si scrive a ogni esecuzione, anche se sulla PR c'è già il verdetto di un
+            collaudo precedente e anche se le conclusioni non cambiano: in quel caso scrivi
+            che confermano il collaudo precedente. La prima riga del file è esattamente:
 
             ## Collaudo — run ${{ github.run_id }}, tentativo ${{ github.run_attempt }}
 
-            Non modificare file. Non approvare. Non mergiare.
+            A parte quel file, non modificare file. Non approvare. Non mergiare.
+          # Write serve al file del verdetto. Di gh pr restano solo le letture; i gh
+          # che scrivono sono anche vietati per nome, perche' in --permission-mode auto
+          # un comando non elencato puo' essere approvato lo stesso, e un commento
+          # dell'agente si aggiungerebbe a quello del job.
           claude_args: |
             --max-turns 40
             --permission-mode auto
-            --allowedTools "Read,Grep,Glob,Bash(git *),Bash(gh pr *),Task"
+            --allowedTools "Read,Grep,Glob,Write,Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Task"
+            --disallowedTools "Bash(gh pr comment *),Bash(gh pr review *),Bash(gh api *)"
             --model claude-opus-4-6
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Il ventaglio puo' uscire verde senza aver pubblicato niente: il 26/09 sulla
-      # PR #60, run 36245446819, due tentativi. Il prompt chiede una riga anche
-      # senza finding e non ha tenuto: qui lo si misura. Il passo guarda solo se un
-      # verdetto esiste, non che cosa dice. Gira anche se il ventaglio e' fallito,
-      # perche' anche un ventaglio rosso puo' aver commentato prima di fallire; non
+      # Misure, non logica: dove sta il file, se ce n'e' uno altrove (percorso
+      # relativo), e se l'agente ha sbattuto contro un permesso.
+      - name: Diagnostica del ventaglio
+        if: ${{ !cancelled() }}
+        env:
+          ESECUZIONE: ${{ steps.ventaglio.outputs.execution_file }}
+        run: |
+          ls -la "$GITHUB_WORKSPACE/.collaudo/" || true
+          echo "file verdetto*.md trovati:"
+          find "$GITHUB_WORKSPACE" /tmp "$HOME" -name 'verdetto*.md' -printf '%p %s byte %TT\n' 2>/dev/null | sort -u || true
+          if [ -n "$ESECUZIONE" ] && [ -f "$ESECUZIONE" ]; then
+            jq -c '[.[] | select(.type == "result")] | last | {num_turns, permission_denials_count: (.permission_denials | length), permission_denials}' "$ESECUZIONE" || true
+          else
+            echo "execution_file non disponibile: '${ESECUZIONE}'"
+          fi
+
+      # Pubblicare non e' piu' una scelta dell'agente: il 26/09 l'agente ha taciuto
+      # su 4 riesecuzioni su 5, e sul rerun anche con l'istruzione di commentare
+      # sempre (36257241401, tentativo 2). Gira anche
+      # se il ventaglio e' fallito (il perche' e' nel commit che lo introduce); non
       # gira su una run cancellata dalla concurrency.
-      - name: Verdetto pubblicato
+      - name: Pubblica il verdetto
         if: ${{ !cancelled() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
+          ESITO_VENTAGLIO: ${{ steps.ventaglio.outcome }}
         run: |
-          : "${COLLAUDO_INIZIO:?manca COLLAUDO_INIZIO: il passo «Inizio del collaudo» non ha girato}"
-          if ! nuovi=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" \
-                --jq ".[] | select(.created_at > \"${COLLAUDO_INIZIO}\") | .html_url"); then
-            echo "::error title=Commenti non letti::non riesco a leggere i commenti della PR #${PR}: non so se il collaudo abbia lasciato un verdetto."
+          verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
+          if [ ! -s "$verdetto" ]; then
+            echo "::error title=Nessun verdetto::il collaudo non ha lasciato un verdetto: ${verdetto} manca o e' vuoto (ventaglio: ${ESITO_VENTAGLIO}). Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
             exit 1
           fi
-          if [ -z "$nuovi" ]; then
-            echo "::error title=Nessun verdetto::il collaudo non ha lasciato un verdetto: nessun commento sulla PR #${PR} creato dopo ${COLLAUDO_INIZIO}. Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
-            exit 1
+          corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
+          if [ "$ESITO_VENTAGLIO" != "success" ]; then
+            printf '> **Nota del workflow:** il ventaglio di revisione è terminato con esito `%s`. Il verdetto qui sotto potrebbe essere incompleto.\n\n' "$ESITO_VENTAGLIO" > "$corpo"
+          else
+            : > "$corpo"
           fi
-          echo "::notice title=Verdetto presente::commenti creati dopo ${COLLAUDO_INIZIO}: ${nuovi//$'\n'/ }. Questo passo non ne legge il contenuto: se il collaudo ha trovato problemi lo dice il commento, non l'esito del job."
+          cat "$verdetto" >> "$corpo"
+          url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+          echo "::notice title=Verdetto pubblicato::${url}. Il job ha pubblicato il verdetto, non l'ha letto: se il collaudo ha trovato problemi lo dice il commento, non l'esito del job."

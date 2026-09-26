@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T15:35:22+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "fallimento",
+  "titolo": "Ricollaudo della #60 su c033486: run verde, nessun commento pubblicato",
+  "contesto": "Dopo le correzioni del collaudo precedente, Andrea ha chiesto di chiudere e riaprire la #60 per farla ricollaudare e di riportargli il commento nuovo. Il workflow e' partito sul commit giusto e ha chiuso con success, ma sulla PR non c'e' nessun commento dopo quello delle 13:20.",
+  "evidenza": [
+    "gh pr close 60 && gh pr reopen 60 alle 15:31; run 36245446819, event pull_request, headSha c033486, conclusion success",
+    "gh api .../issues/60/comments -> un solo commento, 5846599946 del 13:20:08Z (run precedente); reviews 0; commenti inline 0",
+    "run precedente 36244241315 (b89b14a, commento pubblicato): num_turns 13, duration_ms 600046, total_cost_usd 4.14",
+    "run nuovo 36245446819: num_turns 13, duration_ms 97217, total_cost_usd 0.90, permission_denials_count 0, 'No buffered inline comments'",
+    "il testo finale dell'agente non compare nel log del run: il perche' non si ricava da qui"
+  ],
+  "cosa_dice_la_misura": "Un run verde del collaudo non vuol dire che il collaudo abbia pubblicato un verdetto: la conclusione del job non distingue fra 'commento pubblicato' e 'nessun commento'. Stesso numero di turni, un sesto della durata e un quinto del costo, nessun permesso negato. Non so se l'agente abbia deciso di non commentare o se non abbia fatto la revisione.",
+  "esito": "riportato ad Andrea; nessun rilancio fatto senza chiederglielo",
+  "umano_coinvolto": true
+}

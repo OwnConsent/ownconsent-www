@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-26T16:23:35+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Il passo «Verdetto pubblicato», eseguito in locale sulla #60: rosso sui due tentativi muti, verde su quello che aveva commentato",
+  "contesto": "Lo script del passo e' stato estratto dal YAML con pyyaml ed eseguito con bash --noprofile --norc -eo pipefail, la shell di Actions, con GH_TOKEN dell'utente locale. Non e' l'esecuzione su GitHub: quella la fa il collaudo della PR stessa.",
+  "evidenza": [
+    "passi nel YAML: checkout, 'Inizio del collaudo', 'Ventaglio di revisione', 'Verdetto pubblicato' (if: ${{ !cancelled() }})",
+    "PR 60, inizio 2026-09-26T13:31:15Z (tentativo 1 di 36245446819) -> ::error title=Nessun verdetto:: ..., exit 1",
+    "PR 60, inizio 2026-09-26T14:04:01Z (tentativo 2) -> Nessun verdetto, exit 1",
+    "PR 60, inizio 2026-09-26T13:09:50Z (run 36244241315, che aveva commentato) -> ::notice title=Verdetto presente:: ...#issuecomment-5846599946, exit 0",
+    "PR 60, COLLAUDO_INIZIO vuota -> 'manca COLLAUDO_INIZIO: il passo «Inizio del collaudo» non ha girato', exit 1 (senza il controllo, '> \"\"' avrebbe preso per verdetto qualunque commento)",
+    "PR 999999 -> ::error title=Commenti non letti::, exit 1",
+    "formato: date -u +%Y-%m-%dT%H:%M:%SZ -> 2026-09-26T14:22:47Z; created_at dell'API -> 2026-09-26T13:20:08Z: stesso formato, il confronto fra stringhe vale"
+  ],
+  "cosa_dice_la_misura": "Prova per reversione sul caso che l'ha motivato: i due tentativi che Actions ha dato verdi, con il passo, escono rossi con il messaggio di verdetto mancante. Il permesso non e' provato: in locale il token e' quello dell'utente. Che il GITHUB_TOKEN con pull-requests: write legga i commenti della PR lo dira' la run sulla PR.",
+  "esito": "cinque casi su cinque come atteso; resta da vedere l'esecuzione su GitHub",
+  "umano_coinvolto": false
+}

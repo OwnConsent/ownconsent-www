@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T12:31:13+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Le due premesse di Andrea misurate: @frontend a zero voci in L14 con codice in due commit orchestrator (confermata); tetto_turni mai applicato (confermata, con una sfumatura)",
+  "contesto": "Andrea chiede di verificare, non di ripetere. Le misure sono rifatte sul repository, non lette dalla voce 2026-09-24/125146-orchestrator-misura, che dice gia' la prima cosa.",
+  "evidenza": [
+    "voci issue=8, lotto=L14, per agente (script python su journal/*/*.json): orchestrator 27, qa-test 11, architect 2, frontend 0",
+    "voci con 'frontend' nel campo agente, intera consegna: solo lotto L06 (4 'frontend', 3 'frontend (sessione principale)', 1 'frontend (sessione principale, dopo due agenti delegati fermati al tetto turni)')",
+    "git log --format='%h %(trailers:key=Cantiere-Agent,valueonly)' su main: e9475a6 -> orchestrator, 6211d5f -> orchestrator; soggetti «wip(site): lavoro di @frontend fermato al tetto ... salvato dall'orchestrator» e «secondo @frontend fermato al tetto ...»",
+    "grep -rn tetto_turni fuori da docs/plan/issue-8.json: solo voci di journal; nessuno script, nessun hook, nessun workflow lo legge",
+    "tetto del piano contro tetto citato dal journal all'arresto: L07 110 contro 45 (2026-09-20/171823), L08 40 contro 20 (2026-09-21/092500), L09 50 contro 20 (2026-09-22/105042), L10 45 e L14 45 contro 45",
+    "2026-09-22/110840-orchestrator-consegna scrive «tetto dei turni (45, tetto_turni del piano)» e 2026-09-23/151439-orchestrator-gate «45 turni, tetto_tur...»: dove i due numeri coincidono il journal attribuisce l'arresto al campo del piano"
+  ],
+  "cosa_dice_la_misura": "Prima premessa confermata. Seconda confermata come «mai applicato»: il campo era letto e copiato nei brief (105042: «il brief lo riportava»), quindi non «mai usato» in senso stretto. Dove il valore del piano coincideva con quello dell'ambiente (45), due voci attribuiscono l'arresto al piano: una coincidenza scambiata per un meccanismo. La fonte del 20 e del 45 non l'ho misurata, perche' guard-paths blocca la lettura del plugin (voce 122651).",
+  "esito": "registrata; entra nel rapporto corso/ricognizione/consegna-1.md",
+  "umano_coinvolto": false
+}

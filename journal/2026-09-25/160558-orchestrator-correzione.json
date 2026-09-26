@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-25T16:05:58+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "correzione",
+  "corregge": "corso/ricognizione/consegna-1.md §1.3, riga «budget_turni: 615» fra le cose dichiarate e mai applicate (commit 4a07eda); e 2026-09-25/123418-orchestrator-misura, che lo elenca fra le «sei cose dichiarate e mai applicate»",
+  "cosa_era_sbagliato": "budget_turni non e' un campo morto: un'istruzione lo applica, in plugins/cantiere/agents/orchestrator.md riga 24, «Non superare budget_turni di plan.json. Al superamento fermati e riporta cosa manca». E' un'istruzione senza meccanismo e senza consuntivo, una classe diversa da tetto_turni, che nessuno legge.",
+  "come_lo_so": [
+    "misura di Andrea sul plugin, 25/09, fuori dal perimetro di questa sessione: una sola occorrenza di budget_turni, alla riga citata",
+    "misura mia: grep -l -i -E 'budget (superato|rispettato)|superato il budget|budget_turni' journal/*/*.json -> 1717 (issue 4), 181805, 185045, tutte di piano del 13/09: nessun consuntivo",
+    "il mio errore: avevo cercato solo nel repository e ho scritto «mai applicato» per un campo che si applica fuori dal repository. Il perimetro della ricerca non era dichiarato nella riga"
+  ],
+  "cosa_si_e_imparato": "«Nessuno lo legge» si puo' dire solo del perimetro che si e' guardato, e il perimetro va scritto accanto alla conclusione. Qui il perimetro era questo repository, e la scheda che lo legge sta nel plugin.",
+  "esito": "budget_turni spostato in §1.3 bis, con la distinzione istruzione senza meccanismo / campo morto; tetto_turni resta campo morto (§1.1 b). Le voci superate restano.",
+  "umano_coinvolto": true
+}

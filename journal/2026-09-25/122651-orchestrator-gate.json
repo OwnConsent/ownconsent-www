@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T12:26:51+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "gate",
+  "titolo": "Tre gate in un minuto: guard-paths due volte, guard-tempo una; la fonte dei limiti di turni dell'ambiente resta non misurata",
+  "contesto": "Per verificare che tetto_turni del piano non sia mai stato applicato volevo leggere da dove vengono i limiti di turni dell'ambiente (20 e 45, citati nel journal). (1) guard-paths blocca il grep sulle definizioni degli agenti del plugin. (2) guard-paths blocca anche l'heredoc che scriveva la voce di questo gate, perche' il testo della voce nominava quel percorso: l'hook legge il testo del comando, non l'intenzione. (3) guard-tempo blocca la scrittura successiva: 1314 minuti dall'ultimo commit del ramo, che e' cb2e804 di ieri, perche' il ramo e' nato da main senza commit propri.",
+  "evidenza": [
+    "guard-paths.sh (1): «il percorso ... porta fuori dal progetto ... chiedilo a una persona invece di aggirarlo»",
+    "guard-paths.sh (2): «la risalita '../cantiere/plugins/cantiere' porta fuori dal progetto»",
+    "guard-tempo.py (3): «sono passati 1314 minuti dall'ultimo commit (soglia 20) e ci sono 1 file non committati»",
+    "risposta a (3): commit 93f61ea con la sola voce 122626, spinto su origin/corso/ricognizione-consegna-1"
+  ],
+  "chi_ha_deciso": "hook guard-paths.sh e guard-tempo.py",
+  "cosa_serviva": "per (1) e (2): la fonte dei limiti di turni per agente, che nel rapporto e' dichiarata non misurata, con le sole citazioni del journal; per (3): un commit, fatto",
+  "cosa_si_e_imparato": "guard-tempo conta dall'ultimo commit del ramo anche quando e' ereditato da main: una sessione su un ramo appena creato puo' essere fermata alla prima scrittura. Non e' un difetto da correggere qui; lo segnalo.",
+  "esito": "nessuno aggirato",
+  "umano_coinvolto": false
+}

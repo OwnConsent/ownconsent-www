@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-25T12:26:26+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "decisione",
+  "titolo": "Intervallo della ricognizione della consegna 1 fissato da journal e commit, non assunto",
+  "contesto": "Andrea chiede i punti 1, 2, 3, 5, 6 di /lezione su tutto cio' che e' su main per la issue #8, senza il punto 4 e senza @case-study. L'intervallo lo devo determinare io.",
+  "alternative": [
+    { "opzione": "tutta la storia di main (2c0b095 -> cb2e804)", "scartata_perche": "comprende la issue #4 (49 voci) e l'impianto del cantiere, che non sono la consegna 1" },
+    { "opzione": "solo i commit con (#8) nel soggetto", "scartata_perche": "fino al 14/09 il (#N) nel soggetto e' il numero di PR, non di issue: 32272db porta (#13) ed e' la spec della #8" },
+    { "opzione": "solo le voci con issue=8", "scartata_perche": "esclude L-CI (#25), prerequisito della consegna; va tenuto e contato a parte" }
+  ],
+  "scelta": "Da 2026-09-13T18:01:22+02:00 (prima voce issue=8, journal/2026-09-13/180122-orchestrator-gate.json) a cb2e804 (2026-09-24T12:51:46+02:00, HEAD di origin/main). Voci issue=25 contate a parte come prerequisito; issue=4 fuori.",
+  "evidenza": [
+    "git rev-parse origin/main -> cb2e8046bf6de7b0b770d0007dde6a3d151378a5",
+    "prima/ultima voce per issue: 4 -> 49 voci 13/09 16:00..18:50; 25 -> 72 voci 15/09 08:24..19/09 11:23; 8 -> 288 voci 13/09 18:01..24/09 12:51"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": false
+}

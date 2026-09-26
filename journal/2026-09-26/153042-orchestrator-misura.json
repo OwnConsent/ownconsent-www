@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-26T15:30:42+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Nome del file e ts di una voce di journal possono divergere: 40 voci su 431, fino a 14 minuti; ordinare per nome non e' ordinare per ts",
+  "contesto": "Il collaudo della #60 ha segnalato (INFO) tre coppie di voci del 25/09 con ts identico e nome di file distante un secondo. Andrea chiede di registrarlo come misura, non di correggere. Ho misurato su tutto il journal, non solo sul 25/09.",
+  "evidenza": [
+    "confronto fra HHMMSS del nome e ts, su 431 voci -> 40 divergono",
+    "31 nomi a quattro cifre senza secondi (30 del 13/09, 1900-qa-test-decisione del 20/09); 091533-devops-misura ha ts 09:15:29; 5 voci design del 22/09, fino a 112000-design-fallimento con ts 11:05:56",
+    "25/09: 123417/123418, 153654/153655, 173941/173942 -> ts identico nella coppia, nome +1 s",
+    "ordinando per nome, 7 coppie adiacenti hanno ts decrescente (5 del 13/09, 2 del 22/09)",
+    "durate per lotto issue 8, primo/ultimo per ts contro primo/ultimo per nome -> unica differenza L10: 11:08 contro 11:05"
+  ],
+  "cosa_dice_la_misura": "Il nome del file non e' un orario affidabile: chi ordina o filtra per nome ottiene un ordine diverso da quello del ts. Nella ricognizione niente e' ordinato per nome; il §3 riporta 11:08 per L10, cioe' il valore per ts. Dichiarato nel §0.",
+  "esito": "registrata come misura; nessuna voce corretta",
+  "nota_trascrizione": "Voce scritta dopo le misure che riporta, nella stessa sessione del 26/09, prima del commit che le contiene.",
+  "umano_coinvolto": true
+}

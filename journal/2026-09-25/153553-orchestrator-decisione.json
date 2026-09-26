@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-25T15:35:53+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "decisione",
+  "titolo": "Worktree propria con ramo locale di nome diverso che spinge su origin/corso/ricognizione-consegna-1: la checkout principale non si tocca",
+  "contesto": "Andrea chiede di lavorare in una worktree mia e sullo stesso ramo. Il ramo locale corso/ricognizione-consegna-1 e' attivo nella checkout principale, e git non lo apre in due worktree senza forzare.",
+  "alternative": [
+    { "opzione": "git switch nella checkout principale per liberare il ramo", "scartata_perche": "cambia lo stato della checkout di Andrea" },
+    { "opzione": "git worktree add --force sullo stesso ramo locale", "scartata_perche": "due checkout dello stesso ramo: al primo commit la checkout principale si ritrova con l'indice sfasato rispetto a HEAD" }
+  ],
+  "scelta": "git worktree add -b corso/ricognizione-consegna-1-wt .claude/worktrees/ricognizione-c1 origin/corso/ricognizione-consegna-1; upstream impostato su origin/corso/ricognizione-consegna-1; push con HEAD:corso/ricognizione-consegna-1. Il ramo remoto, cioe' quello della PR, resta uno solo.",
+  "evidenza": ["git rev-parse HEAD origin/corso/ricognizione-consegna-1 -> 4a07eda per entrambi prima di cominciare", "git config --get core.hooksPath -> githooks"],
+  "esito": "applicata; il ramo locale della checkout principale restera' indietro rispetto al remoto: basta un git pull quando Andrea lo riprende",
+  "umano_coinvolto": false
+}

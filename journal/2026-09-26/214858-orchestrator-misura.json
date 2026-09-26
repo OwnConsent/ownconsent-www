@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T21:48:58+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Troncamento del verdetto provato in locale: la prima versione pubblicava 12 byte su 175001 quando una riga lunga scavalcava il tetto",
+  "contesto": "Passi 'Misura il verdetto' e 'Pubblica il verdetto' estratti dal YAML ed eseguiti con uno stub di gh che salva il corpo. Tetto 60000 byte.",
+  "evidenza": [
+    "prima versione: head -c 60000 | iconv -c | sed '$d', con ripiego solo se vuoto",
+    "caso 'riga multibyte che scavalca i 60000' (175001 byte) -> pubblicati 12 byte: sed '$d' aveva tolto l'intera seconda riga, e il ripiego non scattava perche' il risultato non era vuoto",
+    "seconda versione, python3: taglio a 60000 byte, carattere spezzato scartato, ritorno all'ultimo a capo solo se e' negli ultimi 4096 byte",
+    "sette casi: corto -> intero, verde; righe di tabella 215705 byte -> 59975 pubblicati, taglio all'a capo; riga che scavalca -> 60000; riga unica da 90000 -> 60000; lungo con ventaglio fallito -> due note in testa, 60330 byte; esattamente 60000 -> intero, non troncato; vuoto -> Nessun verdetto, exit 1",
+    "in tutti i casi pubblicati: corpo <= 65536 byte e UTF-8 valido"
+  ],
+  "cosa_dice_la_misura": "La prova ha trovato un difetto nella prima regola, che avrei pushato: 'togli l'ultima riga incompleta' e' sicura solo se le righe sono corte. Corretta prima del commit.",
+  "esito": "sette casi su sette dopo la correzione",
+  "umano_coinvolto": false
+}

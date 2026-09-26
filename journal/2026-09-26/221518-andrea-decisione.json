@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-26T22:15:18+02:00",
+  "agente": "andrea (trascritta dalla sessione principale, parole sue)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "La #64 si dichiara per quello che e' (sposta il silenzio, lo rende visibile, non lo elimina); la correzione e' un rimando al verdetto dello stesso SHA; togliere la vista dei commenti resta una misura",
+  "contesto": "Dopo il rosso di 36268387115 (221157), la sessione ha proposto di togliere all'agente gh pr view, per verificare l'ipotesi che taccia perche' vede un verdetto precedente.",
+  "chi_ha_deciso": "Andrea, 26/09 sera",
+  "decisione": [
+    "corpo della #64 corretto: il meccanismo sposta il silenzio da «non commenta» a «non scrive il file», lo rende visibile e non lo elimina; tabella 0 su 5 contro 5 su 6",
+    "correzione in una PR sua. L'intestazione del verdetto la scrive il job, con lo SHA dell'head. Verdetto vuoto e commento del bot gia' presente per lo stesso SHA: il job pubblica un rimando a quel verdetto e resta verde. Nessun commento per quello SHA: rosso",
+    "la proposta della sessione di togliere all'agente la vista dei commenti resta in piedi come misura, non come correzione, e il gate non dipende da lei"
+  ],
+  "perche": "Parole di Andrea: l'azione costruisce da se' il contesto della PR e potrebbe passargli i commenti comunque. Se togliessimo gh pr view e il silenzio restasse, non sapremmo se l'ipotesi e' falsa o se abbiamo chiuso la porta sbagliata. Misura della sessione a sostegno: nel log di 36268387115 compaiono gli input include_comments_by_actor ed exclude_comments_by_actor, vuoti. Un meccanismo di raccolta dei commenti nell'azione quindi esiste; che in questa modalita' li abbia passati all'agente il log non lo dice.",
+  "nota": "Con questa forma il rosso cambia significato. Non vuol piu' dire 'l'agente ha taciuto', ma 'questo commit non ha nessun verdetto'. Il silenzio dell'agente su un commit gia' collaudato smette di essere un allarme. Cosi' un comportamento plausibile dell'agente non va piu' combattuto: si incorpora nel meccanismo.",
+  "si_chiude_quando": "In .github/workflows/claude-pr-review.yml l'intestazione del verdetto contiene lo SHA ed e' scritta dal job, e un rerun su un commit gia' collaudato produce un rimando verde invece di un rosso.",
+  "esito": "corpo della #64 aggiornato; PR successiva da fare",
+  "umano_coinvolto": true
+}

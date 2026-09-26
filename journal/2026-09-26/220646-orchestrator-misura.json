@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-26T22:06:46+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Primo giro del verdetto da file (36266924329, ef9fa19): file scritto, visibile al passo dopo e pubblicato dal job; un permesso negato, su gh pr comment; 24 minuti su 30 di timeout",
+  "contesto": "Run del collaudo della #64 aperta su ef9fa19, cioe' prima del controllo sulla lunghezza (175459d). Misure chieste da Andrea: file visibile al passo successivo, Write sufficiente, percorso del file.",
+  "evidenza": [
+    "passi: tutti success; Ventaglio 19:41:35Z -> 20:05:46Z",
+    "ls -la: '-rw-r--r-- 1 runner runner 7501 Sep 26 20:05 verdetto.md' in .collaudo",
+    "find: un solo file, /home/runner/work/ownconsent-www/ownconsent-www/.collaudo/verdetto.md, 7501 byte. Nessun verdetto*.md altrove in workspace, /tmp o HOME",
+    "execution_file: num_turns 12, permission_denials_count 1; il comando negato e' Bash 'gh pr comment --help 2>&1 | head -40'",
+    "risultato: duration_ms 1435386, total_cost_usd 3.83",
+    "commento 5849454060 di github-actions[bot] alle 20:05:46Z, 7431 caratteri, prima riga '## Collaudo — run 36266924329, tentativo 1'; nessun altro commento del bot sulla #64"
+  ],
+  "cosa_dice_la_misura": "Il file attraversa gli step: stesso runner, stesso job, e ls -l lo mostra. Write basta: nessun diniego su Write. L'agente ha usato il percorso assoluto dato nel prompt, senza copie altrove. L'unico diniego e' su gh pr comment: l'agente ha cercato l'aiuto del comando che il prompt non gli chiede piu' di usare, e il divieto per nome l'ha fermato. Non c'e' stato un doppio commento. Il costo e' di 23,9 minuti contro un timeout di 30: le run di oggi erano fra 1,5 e 10 minuti. Sulla causa non ho misure: il testo dell'agente non e' nel log. Se una run va oltre i 30 minuti, il job viene ucciso, e il passo di pubblicazione non si sa se giri (cancellazione o fallimento?). E' da misurare, non da assumere.",
+  "esito": "primo tempo superato sul codice ef9fa19; il troncamento (175459d) non era ancora dentro",
+  "umano_coinvolto": false
+}

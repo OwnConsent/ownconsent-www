@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T21:19:44+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Rerun della #63 (36257241401, tentativo 2): il collaudo tace nonostante il prompt corretto; la correzione e' incompleta e la #63 non si mergia",
+  "contesto": "Richiesta di Andrea: provare il caso che mancava, il rerun, cioe' stesso run_id e tentativo 2. E' la configurazione in cui la #60 aveva taciuto due volte, e il motivo per cui il tentativo e' nell'intestazione. Esito concordato: se tace, non si mergia.",
+  "evidenza": [
+    "gh run rerun 36257241401 alle 21:16:14 locali; tentativo 2, head abb25bb, run_started_at 19:16:16Z, triggering_actor andreapernici",
+    "prompt reso nel log del tentativo 2: '## Collaudo — run 36257241401, tentativo 2' (4 occorrenze); nel tentativo 1: 'tentativo 1'. run_attempt e' stato aggiornato",
+    "tentativo 2: 98337 ms, 9 turni, 0,66 USD, permission_denials_count 0. Tentativo 1: 261146 ms, 11 turni, 1,16 USD",
+    "##[error]il collaudo non ha lasciato un verdetto: nessun commento sulla PR #63 creato dopo 2026-09-26T19:16:25Z",
+    "commenti della #63: 5848089157 (run 36256836415, tentativo 1) e 5848126775 (run 36257241401, tentativo 1); nessuno dopo"
+  ],
+  "cosa_dice_la_misura": "L'istruzione 'commento SEMPRE nuovo' ha tenuto su una chiusura e riapertura (run nuova, 1 su 1) e non su un rerun (0 su 1). Il campione dopo la correzione e' 1 su 2. Il rerun e' l'unico caso in cui sulla PR c'e' gia' un commento con lo stesso numero di run nell'intestazione, ma che sia questa la causa e' un'ipotesi: il testo finale dell'agente non e' nel log. E' la stessa forma di 'committa a incrementi': un'istruzione che tiene in un caso e non in un altro.",
+  "esito": "correzione incompleta; #63 da non mergiare; riportato ad Andrea",
+  "umano_coinvolto": true
+}

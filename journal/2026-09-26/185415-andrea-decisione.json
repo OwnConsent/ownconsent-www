@@ -15,5 +15,11 @@
   ],
   "motivo": "Registrare in remoto la voce di journal 153522 del ricollaudo muto. Ricavato dalla sequenza: la sessione aveva chiesto se pushare o rilanciare, e sono seguiti push e rerun a 76 secondi l'uno dall'altro. Non e' scritto nel messaggio di Andrea: da confermare.",
   "esito": "azione umana registrata; l'attore non resta senza nome",
-  "umano_coinvolto": true
+  "umano_coinvolto": true,
+  "motivo_confermato": {
+    "ts": "2026-09-26T21:18:36+02:00",
+    "fonte": "Andrea, messaggio del 26/09 sera",
+    "testo": "La domanda era «push o rerun» e la risposta e' stata tutti e due, in quell'ordine. Il push serviva a mettere sul ramo la voce di fallimento 153522, ed era gratis perche' il workflow non scatta su synchronize. Il rerun era una misura, per stabilire se il silenzio fosse deterministico. I 76 secondi sono la distanza fra due comandi dello stesso messaggio, non due decisioni.",
+    "rispetto_alla_deduzione": "La deduzione della sessione (campo motivo) coglieva il push, non il rerun: il rerun non era la seconda opzione scelta per scrupolo, ma una misura di determinismo. Il campo motivo resta com'era; vale questo."
+  }
 }

@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-26T21:18:36+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Su GitHub e in git la sessione e Andrea sono lo stesso attore: la distinzione sopravvive solo nel trailer Cantiere-Agent e nel journal",
+  "contesto": "Misura fatta per la voce 185415 senza darle peso ('le API non distinguono chi dei due ha agito'). Andrea la indica come la piu' grossa della giornata. Rifatta qui mettendo a confronto, livello per livello, un'azione della sessione e una di Andrea.",
+  "evidenza": [
+    "push: 14:02:45Z df78532 (Andrea) e 16:49:22Z, 16:54:29Z, 17:01:53Z sul ramo della #63 (sessione) -> actor andreapernici in tutti i casi",
+    "rerun: 36245446819/2 (Andrea, 14:04:01Z) e 36257241401/2 (sessione, 19:16:16Z) -> triggering_actor andreapernici tutti e due",
+    "chiusura e riapertura: #60 16:34 (Andrea), #63 16:56:17Z e 16:56:21Z (sessione) -> actor andreapernici",
+    "autore delle PR: #61, #62 e #63 -> andreapernici",
+    "git: 03f9705 (sessione) author e committer 'Andrea Pernici <andreapernici@gmail.com>'. Commit locali di Andrea sulla stessa macchina: stessa configurazione di git",
+    "unica differenza trovata: 9241195 e 33aa463 hanno committer 'Andrea <andrea.pernici@searchon.it>'. Segue il canale (fusione su GitHub contro commit locale), non l'attore: 9241195 e' un commit della sessione fuso su GitHub"
+  ],
+  "cosa_dice_la_misura": "A livello di GitHub e di git l'agente e la persona sono indistinguibili: una sola identita', andreapernici. La distinzione resta in due posti. Il trailer Cantiere-Agent (con il Co-Authored-By cantiere-<ruolo> che lo stesso hook aggiunge) lo scrive l'hook da una variabile d'ambiente. Il campo agente del journal lo scrive chi scrive la voce. Tutti e due sono auto-dichiarati, e nessun sistema li verifica. Un terzo segnale dello stesso tipo e' la riga 'Generated with Claude Code' nei corpi delle PR della sessione: la scrive la sessione e si toglie a mano. Un trailer assente e' ambiguo: dopo 4dcebd0 l'hook lo legge come 'commit di una persona' (33aa463 non ne ha).",
+  "conseguenza": "Tutto il lavoro sull'attribuzione, cioe' corso/firme-ricostruite.md e chi-ha-fatto-cosa.sh, poggia su quei due segnali auto-dichiarati e su nient'altro. Se l'hook non gira, o una voce non viene scritta, l'attore si perde senza che GitHub possa restituirlo. E' successo con df78532: per saperlo c'e' voluto il messaggio di Andrea.",
+  "esito": "registrata come misura",
+  "umano_coinvolto": true
+}

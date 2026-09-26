@@ -30,6 +30,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Serve al passo «Verdetto pubblicato». Non si usa il created_at della run:
+      # a un rerun resta quello del primo tentativo, e il commento lasciato da un
+      # tentativo precedente passerebbe per il verdetto di questo. Il run_started_at
+      # del tentativo chiederebbe actions: read in piu'; l'orologio del runner no.
+      - name: Inizio del collaudo
+        run: echo "COLLAUDO_INIZIO=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
       - name: Ventaglio di revisione
         uses: anthropics/claude-code-action@v1
         with:
@@ -66,3 +73,27 @@ jobs:
             --model claude-opus-4-6
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Il ventaglio puo' uscire verde senza aver pubblicato niente: il 26/09 sulla
+      # PR #60, run 36245446819, due tentativi. Il prompt chiede una riga anche
+      # senza finding e non ha tenuto: qui lo si misura. Il passo guarda solo se un
+      # verdetto esiste, non che cosa dice. Gira anche se il ventaglio e' fallito,
+      # perche' anche un ventaglio rosso puo' aver commentato prima di fallire; non
+      # gira su una run cancellata dalla concurrency.
+      - name: Verdetto pubblicato
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          : "${COLLAUDO_INIZIO:?manca COLLAUDO_INIZIO: il passo «Inizio del collaudo» non ha girato}"
+          if ! nuovi=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/issues/${PR}/comments" \
+                --jq ".[] | select(.created_at > \"${COLLAUDO_INIZIO}\") | .html_url"); then
+            echo "::error title=Commenti non letti::non riesco a leggere i commenti della PR #${PR}: non so se il collaudo abbia lasciato un verdetto."
+            exit 1
+          fi
+          if [ -z "$nuovi" ]; then
+            echo "::error title=Nessun verdetto::il collaudo non ha lasciato un verdetto: nessun commento sulla PR #${PR} creato dopo ${COLLAUDO_INIZIO}. Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
+            exit 1
+          fi
+          echo "::notice title=Verdetto presente::commenti creati dopo ${COLLAUDO_INIZIO}: ${nuovi//$'\n'/ }. Questo passo non ne legge il contenuto: se il collaudo ha trovato problemi lo dice il commento, non l'esito del job."

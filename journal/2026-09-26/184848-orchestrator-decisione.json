@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-26T18:48:48+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "decisione",
+  "titolo": "Prompt del collaudo: un commento nuovo a ogni esecuzione, intestato con run e tentativo; non l'aggiornamento del commento esistente",
+  "contesto": "Andrea chiede di aggiungere al prompt l'istruzione di pubblicare sempre un commento nuovo, intestato con il numero della run, e di avvisarlo prima se ritengo piu' corretto aggiornare quello esistente. Il passo «Verdetto pubblicato» non si tocca in questa PR.",
+  "alternative": [
+    {
+      "opzione": "aggiornare il commento esistente",
+      "scartata_perche": "una modifica non cambia created_at: il passo, che cerca commenti creati dopo l'inizio, darebbe comunque 'nessun verdetto'. Andrebbe cambiato anche il passo, che qui e' fuori perimetro"
+    },
+    {
+      "opzione": "intestazione con il solo run_id",
+      "scartata_perche": "un rerun tiene lo stesso run_id (36245446819 ha due tentativi): i due collaudi non si distinguerebbero. Scelta: run_id e run_attempt, con il link alla run"
+    }
+  ],
+  "nota": "La prima run della PR nuova non prova la correzione: la PR non ha ancora commenti del bot, e in quel caso il collaudo ha sempre commentato. La prova e' il secondo giro, dopo chiusura e riapertura.",
+  "esito": "decisa: commento nuovo per esecuzione, coerente con il passo di verifica cosi' com'e'",
+  "umano_coinvolto": true
+}

@@ -15,5 +15,10 @@
     "resoconto della sessione ad Andrea: 'Il falso rosso e' gia' successo una volta'"
   ],
   "esito": "voce 184847 corretta per aggiunta",
-  "umano_coinvolto": true
+  "umano_coinvolto": true,
+  "aggiornamento": {
+    "ts": "2026-09-26T21:18:36+02:00",
+    "corpo_della_PR_63": "corretto con gh pr edit. Il rosso di 36255932164 e' descritto come difetto della coppia prompt-passo; 'il falso rosso e' chiuso' e' diventato 'il difetto della coppia prompt-passo e' chiuso'. In fondo c'e' una nota che dichiara la modifica e rimanda a questa voce. Nella prima riscrittura avevo messo come fatto la causa non misurata ('l'agente, che non duplica'): corretta subito in 'e' un'ipotesi: il log non lo mostra'",
+    "messaggio_del_commit_03f9705": "lasciato com'e', con '36255932164 sulla #60 e' il primo falso rosso': la storia non si riscrive. Chi legge git log trova la dicitura originale, e questa voce la corregge"
+  }
 }

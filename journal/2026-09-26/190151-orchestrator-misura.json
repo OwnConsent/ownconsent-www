@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T19:01:51+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Secondo giro della #63, con un commento del collaudo gia' presente: il collaudo ha commentato di nuovo e il passo del verdetto e' verde",
+  "contesto": "Prova della correzione al prompt (03f9705): chiusura e riapertura della #63 dopo un primo collaudo che aveva gia' commentato. Nelle sei esecuzioni precedenti, con un commento del bot gia' presente, il collaudo aveva taciuto 3 volte su 3.",
+  "evidenza": [
+    "giro 1: run 36256836415 su 03f9705, success; commento 5848089157 16:55:37Z, prima riga '## Collaudo — run 36256836415, tentativo 1'",
+    "gh pr close 63 && gh pr reopen 63 alle 18:56:15 locali",
+    "giro 2: run 36257241401 su abb25bb, success; COLLAUDO_INIZIO 2026-09-26T16:56:30Z; 261146 ms, 11 turni, 1,16 USD",
+    "##[notice]commenti creati dopo 2026-09-26T16:56:30Z: .../pull/63#issuecomment-5848126775",
+    "commento 5848126775 17:01:00Z, prima riga '## Collaudo — run 36257241401, tentativo 1'"
+  ],
+  "cosa_dice_la_misura": "Con il prompt corretto, un collaudo con un commento precedente gia' presente ha commentato: 1 su 1, contro 0 su 3 prima. L'intestazione distingue i due collaudi. E' un solo campione: basta a dire che la correzione ha funzionato una volta, non che tenga sempre. Un rerun (tentativo 2) non e' stato provato: la stessa run_id con tentativo diverso resta da vedere.",
+  "esito": "coppia prompt-passo coerente sul caso che produceva il rosso; un campione",
+  "umano_coinvolto": false
+}

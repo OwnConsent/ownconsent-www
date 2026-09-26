@@ -106,17 +106,43 @@ jobs:
             echo "execution_file non disponibile: '${ESECUZIONE}'"
           fi
 
+      # Un commento di GitHub non supera i 65536 caratteri. Qui si misura il file in
+      # byte: in UTF-8 i byte sono almeno quanti i caratteri, quindi un tetto in byte
+      # vale qualunque sia l'unita' che GitHub conta. Il perche' dei 60000 e' nel
+      # commit che li introduce.
+      - name: Misura il verdetto
+        id: misura
+        if: ${{ !cancelled() }}
+        run: |
+          verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
+          byte=$(stat -c %s "$verdetto" 2>/dev/null || echo 0)
+          echo "byte=$byte" >> "$GITHUB_OUTPUT"
+          if [ "$byte" -gt 60000 ]; then echo "lungo=true" >> "$GITHUB_OUTPUT"; else echo "lungo=false" >> "$GITHUB_OUTPUT"; fi
+          echo "verdetto: $byte byte (tetto 60000)"
+
+      - name: Conserva il verdetto intero
+        id: artefatto
+        if: ${{ !cancelled() && steps.misura.outputs.lungo == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: verdetto-completo-tentativo-${{ github.run_attempt }}
+          path: ${{ github.workspace }}/.collaudo/verdetto.md
+          if-no-files-found: error
+
       # Pubblicare non e' piu' una scelta dell'agente: il 26/09 l'agente ha taciuto
       # su 4 riesecuzioni su 5, e sul rerun anche con l'istruzione di commentare
-      # sempre (36257241401, tentativo 2). Gira anche
-      # se il ventaglio e' fallito (il perche' e' nel commit che lo introduce); non
-      # gira su una run cancellata dalla concurrency.
+      # sempre (36257241401, tentativo 2). Gira anche se il ventaglio e' fallito
+      # (il perche' e' nel commit che lo introduce); non gira su una run cancellata
+      # dalla concurrency. Il rosso e' riservato al verdetto assente: un verdetto
+      # troppo lungo si pubblica troncato e resta verde.
       - name: Pubblica il verdetto
         if: ${{ !cancelled() }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR: ${{ github.event.pull_request.number }}
           ESITO_VENTAGLIO: ${{ steps.ventaglio.outcome }}
+          LUNGO: ${{ steps.misura.outputs.lungo }}
+          ARTEFATTO_URL: ${{ steps.artefatto.outputs.artifact-url }}
         run: |
           verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
           if [ ! -s "$verdetto" ]; then
@@ -124,11 +150,32 @@ jobs:
             exit 1
           fi
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
+          : > "$corpo"
           if [ "$ESITO_VENTAGLIO" != "success" ]; then
-            printf '> **Nota del workflow:** il ventaglio di revisione è terminato con esito `%s`. Il verdetto qui sotto potrebbe essere incompleto.\n\n' "$ESITO_VENTAGLIO" > "$corpo"
-          else
-            : > "$corpo"
+            printf '> **Nota del workflow:** il ventaglio di revisione è terminato con esito `%s`. Il verdetto qui sotto potrebbe essere incompleto.\n\n' "$ESITO_VENTAGLIO" >> "$corpo"
           fi
-          cat "$verdetto" >> "$corpo"
+          if [ "$LUNGO" = "true" ]; then
+            parte="$RUNNER_TEMP/verdetto-troncato.md"
+            # 60000 byte, senza il carattere UTF-8 eventualmente spezzato. Se l'ultimo
+            # a capo e' negli ultimi 4096 byte si taglia li', perche' una riga di tabella
+            # spezzata non si legge; se e' piu' indietro si tiene il taglio grezzo, perche'
+            # tornare all'a capo butterebbe una riga lunga intera.
+            python3 - "$verdetto" "$parte" <<'PY'
+          import sys
+          s = open(sys.argv[1], 'rb').read()[:60000].decode('utf-8', 'ignore')
+          a_capo = s.rfind('\n')
+          if a_capo != -1 and len(s[a_capo + 1:].encode()) <= 4096:
+              s = s[:a_capo + 1]
+          open(sys.argv[2], 'w', encoding='utf-8').write(s)
+          PY
+            tot_b=$(stat -c %s "$verdetto"); pub_b=$(stat -c %s "$parte")
+            tot_r=$(wc -l < "$verdetto"); pub_r=$(wc -l < "$parte")
+            printf '> **Nota del workflow:** verdetto troncato. Pubblicati %s byte su %s, %s righe su %s: mancano %s byte e %s righe. Il file intero è fra gli artefatti della run: %s\n\n' \
+              "$pub_b" "$tot_b" "$pub_r" "$tot_r" "$((tot_b - pub_b))" "$((tot_r - pub_r))" "${ARTEFATTO_URL:-artefatto non caricato}" >> "$corpo"
+            cat "$parte" >> "$corpo"
+            echo "::warning title=Verdetto troncato::pubblicati ${pub_b} byte su ${tot_b}; il file intero e' nell'artefatto verdetto-completo-tentativo-${GITHUB_RUN_ATTEMPT}"
+          else
+            cat "$verdetto" >> "$corpo"
+          fi
           url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
           echo "::notice title=Verdetto pubblicato::${url}. Il job ha pubblicato il verdetto, non l'ha letto: se il collaudo ha trovato problemi lo dice il commento, non l'esito del job."

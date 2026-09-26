@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-26T21:48:57+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Lunghezza dei verdetti finora: il massimo e' 2374 caratteri, il 3,6% del limite di 65536; il commento della #60 non era lungo",
+  "contesto": "Andrea chiede un controllo sulla dimensione del verdetto, perche' oltre i 65536 caratteri gh pr comment fallisce e il job darebbe 'nessun verdetto' per la ragione sbagliata. Come prova che il rischio non e' teorico cita un commento lungo del collaudo della #60, su un diff da 27 file.",
+  "evidenza": [
+    "gh api .../issues/N/comments, commenti di github-actions[bot]: #60 5846599946 2200 caratteri (2242 byte); #61 2374 (2403); #62 2292 (2317); #63 1289 (1308) e 2045 (2077)",
+    "gh pr view 60 --json files -> 31 file, non 27"
+  ],
+  "cosa_dice_la_misura": "Oggi il rischio e' teorico: il verdetto piu' lungo e' 27 volte sotto il limite. Il controllo resta giusto, perche' i diff crescono e il costo di un verdetto troppo lungo e' un rosso sbagliato. La motivazione pero' non regge sul caso citato. E' l'ottava istruzione di oggi corretta da una misura, secondo il conteggio di Andrea; la quinta nel journal. L'unita' del limite, caratteri o byte, non l'ho misurata: per farlo andrebbe pubblicato un commento di prova, e il troncamento in byte la rende irrilevante.",
+  "esito": "controllo implementato comunque; motivazione corretta",
+  "umano_coinvolto": true
+}

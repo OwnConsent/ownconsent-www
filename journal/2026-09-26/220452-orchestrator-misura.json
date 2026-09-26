@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T22:04:52+02:00",
+  "agente": "orchestrator (sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Il check della lista delle PR mostra CI sull'ultimo commit, non il collaudo: dopo un push la #64 aveva un check verde e nessun collaudo su quel commit",
+  "contesto": "Andrea ha visto nella lista delle PR la #64 con check verde 1/1 e ha scritto che la run era finita. Nello stesso momento il collaudo 36266924329 era in corso da quasi 20 minuti. Il collaudo non scatta su synchronize, per scelta (commento in testa al workflow); CI invece si'. Il push di 175459d ha spostato la vista della PR sul commit nuovo.",
+  "evidenza": [
+    "gh pr view 64 --json headRefOid,statusCheckRollup -> head 175459d; un solo check: 'CI / ci COMPLETED SUCCESS', run 36267354735",
+    "gh run list --branch ci/collaudo-verdetto-da-file -> 36267354735 CI 175459d success; 36266924329 'Verifica agentica su PR' ef9fa19 in_progress; 36266924339 CI ef9fa19 success",
+    "gh api .../actions/runs/36266924329/jobs alle 19:59:38Z -> 'Ventaglio di revisione' in_progress dalle 19:41:35Z; diagnostica e pubblicazione pending",
+    "screenshot di Andrea della lista delle PR: #64 con check verde 1/1"
+  ],
+  "cosa_dice_la_misura": "Il check verde nella lista dice che CI e' passata sull'ultimo commit, e basta. Non dice se il collaudo ha girato su quel commit, ne' se ne sta girando uno su un commit precedente. Un collaudo in corso sparisce dalla vista della PR appena arriva un push. Chi legge la lista puo' credere che la PR sia stata collaudata sul commit attuale. E' successo ad Andrea, che ha il gate finale: la #64 aveva un check verde e zero collaudi su 175459d.",
+  "conseguenza": "Il check verde della lista non e' un'evidenza di collaudo. Il collaudo si verifica con gh run list --workflow claude-pr-review.yml filtrato sull'head della PR, oppure leggendo il commento con run e tentativo nell'intestazione. Non l'ho corretto in questa PR: e' una questione di come si presenta il collaudo, non del meccanismo del verdetto.",
+  "esito": "registrata come misura",
+  "umano_coinvolto": true
+}

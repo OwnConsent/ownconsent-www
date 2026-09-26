@@ -18,5 +18,6 @@
   ],
   "cosa_dice_la_misura": "La correlazione e' 6 su 6. 'Durata e costo molto minori' vale sulla #60 ma non in generale: 36255932164, muto, costa e dura piu' di 36151435641, che ha commentato. Che l'agente faccia la revisione e scelga di non duplicare e' un'ipotesi: il testo finale non e' nel log. Il falso rosso temuto e' gia' accaduto una volta: 36255932164.",
   "esito": "misura confermata sul punto che serve; due dettagli della descrizione non confermati",
-  "umano_coinvolto": true
+  "umano_coinvolto": true,
+  "corretta_da": "2026-09-26/185416-orchestrator-correzione.json"
 }

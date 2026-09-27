@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-27T17:44:54+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Esperimento a due bracci sul silenzio senza verdetto precedente: controllo e pre-ventaglio scrivono tutti e due il verdetto. Per la regola di lettura del brief: H3, il contenuto del diff della #65. Un solo giro per braccio",
+  "contesto": "Brief di Andrea, 27/09 sera. Silenzio senza verdetto precedente: 0 su 5 prima della #65, 4 su 4 sulla #65. Ipotesi: H1 tempo o modello; H2 hunk pre-ventaglio della #65; H3 contenuto del diff della #65, che include la logica del rimando. Regola di lettura fissata prima: A muto -> H1; A verdetto e C muto -> H2; A e C con verdetto -> H3.",
+  "passo_0": "git push di dd9c8cb su collaudo-rimando-sha; gh run list --branch collaudo-rimando-sha -> sul commit dd9c8cb e' partita solo la run 36330257136 'CI', nessuna 'Verifica agentica su PR'",
+  "bracci": [
+    "A: PR #66 'Esperimento controllo — non mergiare', ramo esperimento-controllo-main, commit aa8b2de (genitore 7c4001f = origin/main). Un solo file nuovo, journal/esperimento-silenzio-2026-09-27.md (sha256 aec8f408…, identico nei due rami)",
+    "C: PR #67 'Esperimento pre-ventaglio — non mergiare', ramo esperimento-pre-ventaglio, commit 5c57cc2 (genitore 7c4001f). Lo stesso file piu' soli hunk della #65: timeout-minutes del job 35, env BUDGET_VENTAGLIO_MIN 30, step 'Commit sotto collaudo' e 'Inizio del ventaglio', timeout-minutes dello step ventaglio da env. git diff --cached origin/main | grep -i -E 'rimando|collaudo-esito|scripts/|RUNNER_TEMP' -> nessuna occorrenza",
+    "le PR sono state aperte una dopo l'altra: run A 36330323825 creata 15:38:49Z, run C 36330329032 creata 15:38:54Z. Un solo giro per PR, nessun rerun"
+  ],
+  "valori_letti": [
+    "metodo: log per job con gh api --allow-escape-sequences repos/…/actions/jobs/<job>/logs; sha256 del workflow al merge commit letto dal checkout ('HEAD is now at … Merge <head> into <base>') e recuperato con git fetch origin <sha>",
+    "A, run 36330323825, job 108650886249: merge cd94f03 (aa8b2de in 7c4001f), workflow sha256 5cb7e1708dac3ab1…, uguale a origin/main. duration_ms 185602, num_turns 15, 0 dinieghi, 'verdetto: 2797 byte'. Verdetto scritto: SI'. Pubblicato: https://github.com/OwnConsent/ownconsent-www/pull/66#issuecomment-5857330435. conclusion success",
+    "C, run 36330329032, job 108650900485: merge b00275a (5c57cc2 in 7c4001f), workflow sha256 822a0f33f8d265f3…. duration_ms 233627, num_turns 12, 0 dinieghi, 'verdetto: 4159 byte'. Verdetto scritto: SI'. Pubblicato: https://github.com/OwnConsent/ownconsent-www/pull/67#issuecomment-5857336650. conclusion success. Il job di pubblicazione di main non e' andato rosso: il file c'era",
+    "incidente di lettura: alla prima lettura di A la chiamata all'API per il job e' fallita ('error connecting to api.github.com', poi 404 con job id vuoto); lo sha256 stampato in quel momento non veniva dal merge commit ed e' stato scartato. Seconda lettura riuscita, valori sopra"
+  ],
+  "lettura": "A verdetto, C verdetto -> H3 (contenuto del diff della #65), secondo la regola fissata prima dell'esperimento.",
+  "caveat": "Un solo giro per braccio. Prima della #65 il silenzio senza verdetto precedente era 0 su 5, quindi un verdetto su A o su C e' l'esito atteso anche per puro caso. L'esperimento esclude H1 e H2 solo nella misura in cui un giro li puo' escludere. H3 non e' misurata direttamente: resta per esclusione, e nessun braccio conteneva il diff della #65.",
+  "esito": "rapporto ad Andrea; PR #66 e #67 aperte, da chiudere a cura di Andrea; nessuna correzione proposta",
+  "umano_coinvolto": true
+}

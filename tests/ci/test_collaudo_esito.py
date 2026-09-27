@@ -281,7 +281,6 @@ class TestInputSbagliati(unittest.TestCase):
             "trascorsi negativo": dict(trascorsi="-5"),
             "budget zero": dict(budget=0),
             "budget vuoto": dict(budget=""),
-            "commenti mancante": dict(commenti="/nonesiste/commenti.json"),
             "commenti non json": dict(commenti="non-json.json"),
         }
         for nome, kw in casi.items():
@@ -290,6 +289,9 @@ class TestInputSbagliati(unittest.TestCase):
                 rc, parola, _, _ = esegui(commenti, **kw)
                 self.assertEqual(rc, 2, f"{nome}: stdout={parola!r}")
                 self.assertNotIn(parola, ("verdetto", "timeout", "rimando", "nessun-verdetto"))
+
+    # COMMENTI mancante non e' piu' un input sbagliato (uscita 2): da 2eaf9b9 e'
+    # la richiesta dei commenti (uscita 3). Si collauda in test_collaudo_commenti.py.
 
     def test_numero_di_argomenti_sbagliato(self):
         rc, _, _, _ = esegui("vuoto.json", argomenti=["a", "b", "c"])

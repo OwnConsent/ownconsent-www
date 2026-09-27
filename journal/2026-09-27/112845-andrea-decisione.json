@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-27T11:28:45+02:00",
+  "agente": "andrea (trascritta dalla sessione principale)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Il timeout dello step agente si inferisce dal tempo trascorso, senza esperimento; budget con una fonte sola; la pubblicazione resta !cancelled()",
+  "contesto": "Misura 112829: il contesto degli step non distingue uno step scaduto da uno fallito. Sul tavolo c'erano due strade: inferire il timeout dal tempo, oppure misurarlo con un workflow usa-e-getta pushato sul repo pubblico.",
+  "chi_ha_deciso": "Andrea, 27/09 mattina",
+  "alternative": [
+    { "opzione": "workflow usa-e-getta con uno step timeout-minutes: 1 e un job che scade, per leggere outcome e vedere se always() gira", "scartata_perche": "non serve alla decisione: un errore di classificazione puo' solo scambiare due messaggi rossi, mai trasformare un rosso in verde, perche' il timeout prevale sul rimando" },
+    { "opzione": "pubblicazione con if: always(), come nel primo brief", "scartata_perche": "lo step che scade non cancella il workflow; il timeout del job a 35 minuti e' solo una rete di sicurezza. Il comportamento di always() sulla scadenza del job NON e' stato misurato e il progetto non ne dipende" }
+  ],
+  "decisione": [
+    "e' un'INFERENZA, non un segnale di GitHub: «timeout» = steps.ventaglio.outcome != 'success' E tempo trascorso >= budget dello step agente. Uno step prima del ventaglio registra l'istante; lo script riceve trascorso e budget come input espliciti; il messaggio di timeout riporta i minuti misurati",
+    "step ventaglio timeout-minutes 30, job 35. Il budget ha una fonte sola, usata dal timeout-minutes dello step e dallo script (contexts.md:113: steps.timeout-minutes accetta env; il job no, :117)",
+    "pubblicazione con if: ${{ !cancelled() }}",
+    "marcatore scritto dal job prima delle note esistenti; il prompt dell'agente non si tocca; il commento esistente su #64 non ha marcatore e non conta"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true
+}

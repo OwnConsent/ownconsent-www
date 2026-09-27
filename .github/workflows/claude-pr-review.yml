@@ -24,7 +24,9 @@ jobs:
   verifica:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
+    env:
+      BUDGET_VENTAGLIO_MIN: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,8 +39,27 @@ jobs:
       - name: Prepara la cartella del verdetto
         run: rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
 
+      # Lo SHA del commit sotto collaudo e' la chiave del verdetto. github.sha qui
+      # e' il merge commit, non l'head della PR. Si stampa a ogni tentativo per
+      # misurare che un rerun riusi lo stesso payload.
+      - name: Commit sotto collaudo
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          MERGE_SHA: ${{ github.sha }}
+        run: |
+          echo "tentativo ${GITHUB_RUN_ATTEMPT}"
+          echo "github.event.pull_request.head.sha=${HEAD_SHA}"
+          echo "github.sha=${MERGE_SHA}"
+
+      # Il contesto degli step non distingue uno step scaduto da uno fallito: il
+      # timeout si inferisce dal tempo misurato fra questi due passi.
+      - name: Inizio del ventaglio
+        id: inizio
+        run: echo "t=$(date +%s)" >> "$GITHUB_OUTPUT"
+
       - name: Ventaglio di revisione
         id: ventaglio
+        timeout-minutes: ${{ fromJSON(env.BUDGET_VENTAGLIO_MIN) }}
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

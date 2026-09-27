@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-27T18:39:34+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Cosa puo' scrivere l'agente del collaudo: secondo la documentazione di Claude Code 2.1.283 e il sorgente dell'action 756cc22, conosce il percorso di $GITHUB_ENV e puo' scriverci. Non misurato dal vivo. Lavoro fermato prima dell'impronta",
+  "contesto": "Brief di Andrea, 27/09 sera, punto 1: misurare prima del codice cosa puo' scrivere l'agente, e fermarsi se puo' scrivere in $GITHUB_ENV o $GITHUB_PATH, perche' e' un problema piu' largo della #65. Va verificata anche la frase della voce 182303: «$RUNNER_TEMP e' scrivibile dall'agente quanto il workspace».",
+  "evidenza": [
+    "workflow .github/workflows/claude-pr-review.yml (817ca82): :117 '--permission-mode auto'; :118 '--allowedTools \"Read,Grep,Glob,Write,Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Task\"'; :119 '--disallowedTools \"Bash(gh pr comment *),Bash(gh pr review *),Bash(gh api *)\"'. Nessun Edit, nessuna regola di percorso",
+    "versione: log della run 36333316998 riga 490 'Version: 2.1.283' (Claude Code installato dall'action). Impostazioni scritte dall'action, righe 504-508: solo 'enableAllProjectMcpServers: true'. Il repository non ha .claude/ (ls -la .claude -> No such file or directory): nessuna regola di progetto, nessun hook, nessun sandbox",
+    "ambiente dell'agente: action 756cc22, base-action/src/parse-sdk-options.ts:279-294. L'env passato a Claude e' '{ ...process.env }' meno ACTIONS_ID_TOKEN_REQUEST_URL, ACTIONS_ID_TOKEN_REQUEST_TOKEN e ALL_INPUTS: GITHUB_ENV, GITHUB_PATH, GITHUB_OUTPUT e RUNNER_TEMP arrivano all'agente. La pulizia dell'env dei sottoprocessi c'e' solo con allowed_non_write_users (docs/security.md:16), che questo workflow non imposta",
+    "lettura dell'env: doc permissions, 'Claude Code recognizes a built-in set of Bash commands as read-only and runs them without a permission prompt in every mode … The set includes ls, cat, echo, pwd …'. Quindi 'echo $GITHUB_ENV' gira senza approvazione, e il percorso e' conoscibile",
+    "scrittura col tool Write: doc permissions, 'Claude Code doesn't warn about a tool-name rule with no path, such as a deny rule for Write; it matches that rule at the tool level everywhere.' L'allow nudo 'Write' della riga 118 vale ovunque. Doc permission-modes, ordine di decisione: '1. Actions matching your allow, ask, or deny rules resolve immediately, with these exceptions: Writes to protected paths route to the classifier …'. $RUNNER_TEMP/_runner_file_commands non e' fra i protected paths (.git, .claude, …). Una Write su $GITHUB_ENV, $GITHUB_PATH o in $RUNNER_TEMP e' approvata dalla regola senza passare dal classificatore",
+    "scrittura via Bash: doc permissions, Redirections, 'for > file, >> file … the check covers your Edit allow and deny rules, protected paths, and the working directories. A rule such as Bash(git commit *) allows the command, not the target.' Un 'echo … >> $GITHUB_ENV' esce dalla working directory e va al classificatore (permission-modes, passo 3): puo' passare o no, non e' determinabile a priori",
+    "la frase della voce 182303, «$RUNNER_TEMP e' scrivibile dall'agente quanto il workspace»: quando l'ho scritta era un'ipotesi. Ora ha una fonte, la documentazione citata sopra: col tool Write, si'. Non e' misurata dal vivo"
+  ],
+  "cosa_non_e_misurato": "Nessun giro ha mostrato l'agente scrivere fuori dal workspace: l'output dell'action e' nascosto ('full output hidden for security') e questa sessione non ha fatto esperimenti. La conclusione viene da documentazione e sorgente, non da un'osservazione.",
+  "perche_e_piu_largo": "Uno step che scrive in $GITHUB_ENV o $GITHUB_PATH cambia l'ambiente di tutti gli step successivi dello stesso job, e il runner applica i file command alla fine dello step. Per esempio un PATH che antepone una directory con un 'gh', 'bash' o 'sha256sum' finto. Da li' ogni controllo di uno step successivo, compresa un'impronta confrontata con l'output di uno step precedente, gira con strumenti scelti dall'agente. Vale anche per il workflow di main, non solo per la #65. L'impronta del punto 2 non chiude questo caso.",
+  "esito": "fermo prima del punto 2, come da brief; nessuna modifica a workflow o script; rapporto ad Andrea",
+  "umano_coinvolto": true
+}

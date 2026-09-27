@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-27T11:28:29+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Prima del rimando per SHA: quattro misure sul workflow, sull'autore dei verdetti, sullo SHA di un rerun e sul timeout",
+  "contesto": "Correzione decisa il 26/09 (2026-09-26/221518-andrea-decisione.json): e' il JOB, non l'agente, a gestire il silenzio. Misura che la motiva: l'agente non scrive il file del verdetto 0 volte su 5 senza verdetto precedente sulla PR, 5 volte su 6 con un verdetto precedente (tabella nel corpo della #64). Prima del codice il brief chiede quattro misure, con l'ordine di fermarsi se una contraddice il brief.",
+  "evidenza": [
+    "1. .github/workflows/claude-pr-review.yml:11-12 trigger pull_request types [opened, ready_for_review, reopened]; :27 timeout-minutes 30 sul job, nessun timeout sullo step ventaglio. Il job NON scrive oggi un'intestazione: la riga '## Collaudo — run …, tentativo …' la scrive l'agente perche' lo chiede il prompt (:77). Il job antepone solo le note ventaglio-non-success (:154-156) e verdetto troncato (:173). La pubblicazione e' if: !cancelled() (:139).",
+    "2. gh api repos/OwnConsent/ownconsent-www/issues/64/comments --paginate --jq '.[] | {login: .user.login, type: .user.type, id, created_at}' -> un solo commento: {login: github-actions[bot], type: Bot, id: 5849454060, created_at: 2026-09-26T20:05:46Z}, senza marcatore.",
+    "3. github/docs events-that-trigger-workflows.md, sezione pull_request: 'GITHUB_SHA for this event is the last merge commit … use github.event.pull_request.head.sha instead.' Pagina re-run: 'the same GITHUB_SHA (commit SHA) and GITHUB_REF (git ref) of the original event' — non dice che il payload si riusa. Misura indiretta: run 36257241401 (PR #63) attempts/1 head_sha abb25bbda4ab… 16:56:23Z, attempts/2 head_sha abb25bbda4ab… 19:16:16Z, mentre la testa del ramo era gia' 205299d (committer 17:01:51Z). E' il campo head_sha della run nell'API, non github.event.pull_request.head.sha letto nel job: il job lo stampera' nei due tentativi della chiusura dal vivo.",
+    "4. github/docs contexts.md: steps.<id>.outcome e conclusion valgono solo success, failure, cancelled, skipped. Nessun valore 'timeout'. workflow-syntax.md:1068 (step) 'killing the process', senza dire l'outcome risultante; :1226 (job) 'automatically cancels it'. expressions: always() 'returns true, even when canceled'. Non misurato. Contraddizione col brief: la tabella presuppone uno step agente 'timeout' leggibile dal contesto, e non lo e'."
+  ],
+  "esito": "lavoro fermato e riportato ad Andrea prima del codice; decisioni nella voce successiva",
+  "umano_coinvolto": true
+}

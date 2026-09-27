@@ -1,0 +1,35 @@
+{
+  "ts": "2026-09-27T18:33:24+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Criterio sostitutivo di chiusura della #65: logica coperta dai test, pubblicazione del verdetto riprovata dal vivo sulla #68, decisione provata a secco sui dati reali. Tutto come atteso",
+  "contesto": "Il rimando dal vivo non si e' mai potuto osservare: sulla #65 l'agente ha taciuto 4 volte senza verdetto, sulla #68 ha scritto il verdetto anche nei 3 rerun. Andrea, 27/09 sera, sostituisce il criterio di chiusura con tre prove: la logica e' coperta dai test, la pubblicazione e' verificata dal vivo, la decisione e' verificata a secco sui dati reali. Prima: correzione del verdetto perso (voce 182303, commit 2eaf9b9) e test di @qa-test (ec4ee70, suite 101 OK, 5 mutazioni + 80a591f in rosso).",
+  "push": "git push di ec4ee70 su collaudo-rimando-sha; gh run list: sul ramo solo la run 36333282049 'CI' su ec4ee70, nessun collaudo nuovo ne' sulla #65 ne' sulla #68",
+  "riprova_68": [
+    "gh pr close 68 && gh pr reopen 68 -> run 36333316998, job 108659311544, un solo giro, nessun rerun",
+    "log per job via API: head.sha 9b850222d7e606ddcc5f8ef77003d6e526d7e4ef, github.sha bba3c173cfe892252df4e4e97b8944e80221374d ('Merge 9b85022… into ec4ee70…')",
+    "workflow eseguito: sha256 al merge bba3c17 = 5f08bf6e3e2537bdd46673a1090b5772d670c5ff85aee866db0165a8d1fe1485, uguale a ec4ee70 e diverso da 80a591f (9902a1e5…): e' la versione corretta",
+    "ventaglio success, duration_ms 238836, 10 turni, 0 dinieghi, 'verdetto: 1236 byte', 'decisione: verdetto', job success",
+    "commento https://github.com/OwnConsent/ownconsent-www/pull/68#issuecomment-5857695061, primo rigo '<!-- cantiere-collaudo tipo=verdetto sha=9b850222d7e606ddcc5f8ef77003d6e526d7e4ef -->'",
+    "nessuna chiamata ai commenti: manca la riga 'lettura dei commenti della PR 68', che lo step stampa prima di ogni gh api. L'unica occorrenza di 'gh api …comments' nel log (riga 653) e' il sorgente dello step che GitHub stampa in testa (prefisso [36;1m), non un'esecuzione"
+  ],
+  "prova_a_secco": [
+    "metodo: frammento 'run:' di «Pubblica il verdetto» estratto con PyYAML da 2eaf9b9 (identico in ec4ee70), eseguito con bash -e. Script da 2eaf9b9 in un RUNNER_TEMP finto, .collaudo/verdetto.md vuoto. Un gh finto in PATH registra ogni chiamata, intercetta 'gh pr comment' copiando il corpo senza pubblicare e passa il resto al gh vero (letture reali dell'API). Comuni: INIZIO 1000, FINE 1000+trascorsi, budget 30",
+    "PR 68, SHA 9b85022…, success, 120 s -> decisione rimando, rc 0; 1 gh api + 1 pr comment (intercettato). Punta a https://github.com/OwnConsent/ownconsent-www/pull/68#issuecomment-5857532906 (16:09:36Z), il piu' recente dei verdetti presenti in quel momento: quello voluto. Testo: '<!-- cantiere-collaudo tipo=rimando sha=9b850222d7e606ddcc5f8ef77003d6e526d7e4ef -->' / 'Commit `9b85022`' / 'Questo giro non ha scritto un verdetto. Lo stesso commit ne ha già uno: …#issuecomment-5857532906'",
+    "PR 68, SHA e61949e…, success, 120 s -> nessun-verdetto, rc 1, 1 gh api",
+    "PR 65, SHA 5a9afa7…, success, 120 s -> nessun-verdetto, rc 1, 1 gh api (i 4 commenti della #65 non hanno marcatore)",
+    "PR 68, SHA 9b85022…, failure, 1800 s -> timeout ('timeout dopo 30 minuti e 0 secondi'), rc 1, ZERO gh api",
+    "PR 999999 -> 'gh: Not Found (HTTP 404)', «Collaudo: commenti non leggibili» (`gh api`, uscita 1), rc 1",
+    "la prova a secco e' stata fatta prima della riprova sulla #68: il verdetto 5857695061 (16:31:55Z) allora non esisteva. Oggi il piu' recente e' quello"
+  ],
+  "rimando_dal_vivo": "rimando mai osservato dal vivo: da registrare alla prima occorrenza in produzione",
+  "fuori_specifica": [
+    "@qa-test (voce 182603): se gh api esce 0 ma il corpo non e' JSON, lo script esce 2 e lo step va rosso con 'Decisione non presa' senza nessun commento sulla PR. Da decidere",
+    "voce 182303: la copia dello script in $RUNNER_TEMP non protegge dall'agente, perche' $RUNNER_TEMP e' scrivibile. Da decidere"
+  ],
+  "esito": "criterio sostitutivo soddisfatto; #65 e #68 aperte, non mergiate",
+  "umano_coinvolto": true
+}

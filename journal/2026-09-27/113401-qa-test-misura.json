@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-27T11:34:01+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Collaudo di collaudo-esito.sh e della statica di claude-pr-review.yml: 33 test nuovi, 7 reversioni sullo script e 6 sul workflow, tutte rosse",
+  "contesto": "Test di accettazione (regola 3) sul commit b57f0ce del ramo collaudo-rimando-sha, dalla tabella e dalle regole di Andrea del brief. Test in tests/ci/test_collaudo_esito.py, fixture in tests/ci/fixtures/collaudo-esito/ (il commento del bot senza marcatore modella quello reale su #64, id 5849454060, come misurato in 2026-09-27/112829; la prima pagina di due-pagine.json ha 30 commenti non pertinenti).",
+  "evidenza": [
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 88 tests in 0.617s' / 'OK' (55 preesistenti + 33 nuovi; python3 -m unittest -v test_collaudo_esito -> 'Ran 33 tests in 0.280s' / 'OK').",
+    "(a) tolta la riga '   | select(.user.login == $autore)' -> FAILED (failures=2): test_verdetto_stesso_sha_di_un_altro_autore [assente, vuoto].",
+    "(b) '== $m)' -> '| startswith(\"<!-- cantiere-collaudo tipo=verdetto sha=\"))' -> FAILED (failures=2): test_verdetto_con_sha_diverso [assente, vuoto].",
+    "(c) '== $m)' -> '| (. == $m or . == ($m | sub(\"tipo=verdetto\"; \"tipo=rimando\"))))' -> FAILED (failures=3): test_ciclo_completo_col_corpo_scritto_dallo_script, test_rimando_precedente_stesso_sha_non_e_un_verdetto [assente, vuoto].",
+    "(d) blocco '# 2. Il timeout' spostato dopo il blocco '# 3. Rimando' -> FAILED (failures=2): test_timeout_prevale_sul_rimando [assente, vuoto].",
+    "(e) '-ge $((budget * 60))' -> '-gt $((budget * 60))' -> FAILED (failures=9): test_trascorsi_uguale_al_budget_e_timeout, test_il_confine_segue_il_budget_passato, test_corpo_del_timeout_riporta_i_minuti_misurati [1800], test_timeout_prevale_sul_rimando x2, test_riga2_timeout x4.",
+    "(f) '[inputs | .[]' -> '[input | .[]' (solo la prima pagina) -> FAILED (failures=1): test_lettura_paginata_verdetto_solo_nella_seconda_pagina.",
+    "(g) tolto '[ \"$esito\" != \"success\" ] && ' -> FAILED (failures=6): test_esito_success_oltre_il_budget_non_e_timeout x4, test_riga3_rimando [success, 1860 s] x2.",
+    "Workflow: SHA -> github.sha (sed cambia anche HEAD_SHA della diagnostica) -> FAIL test_sha_e_l_head_della_pr; tolto --paginate -> FAIL test_commenti_letti_con_paginate; timeout-minutes: 30 letterale sullo step -> FAIL test_timeout_dello_step_ventaglio_legge_il_budget; \"30\" al posto di \"$BUDGET_VENTAGLIO_MIN\" allo script -> FAIL test_fonte_unica_del_budget; synchronize nei types -> FAIL test_trigger_invariato; if: always() su Pubblica -> FAIL test_pubblica_gira_se_non_cancellato. Ognuna 'FAILED (failures=1)'.",
+    "Ogni reversione in una copia scratchpad/rev-<n> con CI_ROOT=<copia>. Dopo: git diff --quiet HEAD -- .github -> 'nessuna modifica in .github'; git status --porcelain -> solo tests/ci/fixtures/ e tests/ci/test_collaudo_esito.py non tracciati."
+  ],
+  "osservazioni": [
+    "Test oltre la tabella, dichiarati come tali: due verdetti dello stesso SHA -> si rimanda al piu' recente (regola scritta nel commento dello script, non nella spec); marcatore con CRLF conta; marcatore non nel primo rigo non conta; input sbagliati -> exit 2; ciclo verdetto -> rimando -> nessun-verdetto usando il CORPO scritto dallo script.",
+    "Nessun difetto trovato. Da sapere: '[ -s ]' tratta come verdetto anche un file di soli spazi o a capo; il corpo del timeout dice 'timeout dopo N minuti e S secondi', che contiene la frase della spec."
+  ],
+  "esito": "tutti i criteri della tabella hanno un test verde sull'implementazione e rosso sulla sua reversione",
+  "umano_coinvolto": false
+}

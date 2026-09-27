@@ -1,0 +1,29 @@
+{
+  "ts": "2026-09-27T18:10:05+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "PR impilata sulla #65 (#68): workflow della #65, diff senza la #65. Verdetto al primo giro, quindi H3 regge; verdetto anche nei 3 rerun, quindi niente rimando e chiusura non raggiunta",
+  "contesto": "Brief di Andrea, 27/09 sera. La #68 ha base collaudo-rimando-sha (bcf4a40): esegue il workflow della #65 e ha nell'albero tutti i file della #65, ma mostra all'agente un diff fatto del solo file di controllo delle PR #66 e #67. Scopo: provare H3 e chiudere dal vivo il rimando.",
+  "verifiche_prima": [
+    "trigger: claude-pr-review.yml:11-12 su collaudo-rimando-sha e' 'pull_request: types: [opened, ready_for_review, reopened]', nessun filtro branches. grep -n -E 'branches|main' sul file -> nessuna riga",
+    "diff dell'agente: prompt alla riga 87 'git diff origin/${{ github.base_ref }}...HEAD'; checkout con fetch-depth: 0 (:39); allowedTools con 'Bash(gh pr diff *)' (:118); nessun diff preparato dal job. Dal vivo: l'action scrive 'Restoring … from origin/collaudo-rimando-sha (PR head is untrusted)', quindi usa la base della PR",
+    "PR #68: ramo esperimento-impilato, commit 9b85022 (genitore bcf4a40), file journal/esperimento-silenzio-2026-09-27.md con sha256 aec8f408…, lo stesso di #66 e #67. gh pr diff 68 -> solo quel file, +2 -0"
+  ],
+  "tentativi": [
+    "run 36331061596. Log letti con gh api --allow-escape-sequences repos/…/actions/jobs/<job>/logs, md5 diversi per tentativo",
+    "1 (apertura), job 108652939246: head.sha 9b850222d7e606ddcc5f8ef77003d6e526d7e4ef, github.sha e61949e981ca9089775aad409e45b621608e3de6, decisione verdetto, duration_ms 287236, 12 turni, 1670 byte, https://github.com/OwnConsent/ownconsent-www/pull/68#issuecomment-5857430779",
+    "2, job 108654023404: head.sha 9b85022…, github.sha e61949e…, verdetto, 184427 ms, 13 turni, 1323 byte, …#issuecomment-5857465041",
+    "3, job 108654876687: head.sha 9b85022…, github.sha e61949e…, verdetto, 171047 ms, 9 turni, 1273 byte, …#issuecomment-5857505136",
+    "4, job 108655569137: head.sha 9b85022…, github.sha e61949e…, verdetto, 169934 ms, 13 turni, 1633 byte, …#issuecomment-5857532906",
+    "tutti: ventaglio success, 0 dinieghi, job verde. head.sha identico nei 4 tentativi"
+  ],
+  "marcatore": "Primo rigo di tutti e 4 i commenti: '<!-- cantiere-collaudo tipo=verdetto sha=9b850222d7e606ddcc5f8ef77003d6e526d7e4ef -->', lo SHA completo della testa della #68, seguito da 'Commit `9b85022`'. Il percorso «verdetto con marcatore» della #65 ha girato dal vivo. Note ventaglio/troncato: nessuna nei 4 commenti, perche' il ventaglio e' finito success e i verdetti sono sotto i 60000 byte. La loro posizione dopo il marcatore NON e' osservata dal vivo; la coprono solo i test",
+  "esito_H3": "Con il workflow della #65 e tutti i suoi file nell'albero, ma senza la #65 nel diff, l'agente scrive il verdetto al primo giro. Quindi non basta la presenza dei file ne' il workflow della #65: e' coerente con H3 (contenuto del diff). Un giro solo.",
+  "esito_chiusura": "Non raggiunta. Fase B esaurita: 3 rerun con un verdetto per lo stesso SHA gia' presente, 3 verdetti, nessun silenzio, quindi il ramo del rimando non e' stato esercitato dal vivo. Il silenzio con verdetto precedente, 5 su 6 fino alla #64, qui e' 0 su 3: il quadro che motivava il rimando cambia, come previsto dal brief per questo caso.",
+  "caveat": "Un solo giro per la fase A e tre per la fase B, su una sola PR. H3 regge per esclusione su 1 giro della #68 e 1 per braccio sulle #66/#67. Nessun giro ha mostrato all'agente un diff con la #65 senza il suo workflow, quindi H3 non e' misurata in positivo.",
+  "esito": "fermo e riportato; PR #68 aperta, la chiude Andrea",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-27T18:26:03+02:00",
+  "agente": "qa-test",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Commenti letti solo per il rimando: 13 test nuovi, rossi su 80a591f e su 5 mutazioni di 2eaf9b9",
+  "contesto": "Test di accettazione per la correzione 2eaf9b9 (finding di /code-review 65, journal 2026-09-27/182303). Test in tests/ci/test_collaudo_commenti.py su tre livelli: lo script (uscita 3), la statica dello step e, oltre la richiesta di test statici e dichiarato come tale, l'esecuzione del run: dello step estratto dal YAML, con bash -e e un gh finto in PATH che registra le chiamate e fa fallire 'gh api' con uscita 7. Aggiornato test_collaudo_esito.py: tolto il caso 'commenti mancante -> uscita 2', perche' da 2eaf9b9 il file mancante vale come richiesta dei commenti (uscita 3).",
+  "evidenza": [
+    "Prima del lavoro, su 2eaf9b9: python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 88 tests' 'FAILED (failures=1)': test_esce_2 (caso='commenti mancante') 'AssertionError: 3 != 2 : commenti mancante: stdout='servono-commenti''.",
+    "Dopo: cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 101 tests in 0.771s' 'OK'.",
+    "80a591f (git archive 80a591f | tar -x, CI_ROOT=<copia>), python3 -m unittest test_collaudo_commenti -> 'Ran 13 tests' 'FAILED (failures=23)'. Falliscono: i test statici (a) nessuna lettura prima della decisione, lettura dipende dall'uscita 3, rm -f prima della decisione, e (b) il ramo 'commenti non leggibili'; eseguendo lo step: verdetto scritto senza API x2, timeout senza API x2, (b) lettura fallita x2 e con commenti.json lasciato dall'agente; script: uscita 3 x8, verdetto e timeout con COMMENTI assente x4. Passano solo lettura riuscita -> rimando e -> nessun verdetto, il cui comportamento non e' cambiato.",
+    "m1 gh api --paginate riaggiunto subito dopo rm -f \"$commenti\" -> FAILED (failures=9): esecuzione verdetto senza API x2, timeout senza API x2, (b) lettura fallita x2 e commenti.json lasciato; statica (a) x2.",
+    "m2 'if [ \"$rc_gh\" -ne 0 ]; then' -> 'if [ \"$rc_gh\" -ne 0 ]; then echo \"[]\" > \"$commenti\"; fi / if false; then' (lettura fallita ricade in nessun verdetto) -> FAILED (failures=3): solo i test eseguiti (b) x2 e commenti.json lasciato. La statica (b) resta verde: il testo del ramo c'e' ancora ma non si raggiunge.",
+    "m3 rimosso 'rm -f \"$commenti\"' -> FAILED (failures=2): esecuzione con commenti.json lasciato dall'agente (pubblicava il rimando), statica rm -f.",
+    "m4 nello script la richiesta dei commenti spostata subito dopo corto= (prima di verdetto e timeout) -> FAILED (failures=8): esecuzione verdetto senza API x2, timeout senza API x2; script verdetto e timeout con COMMENTI assente x4.",
+    "m5 nello script rimosso il blocco 'if [ ! -e \"$commenti\" ]; then echo servono-commenti; exit 3; fi' -> FAILED (failures=13): uscita 3 x8, (b) eseguito x3, lettura riuscita rimando e nessun verdetto (lo step esce 'Decisione non presa' senza leggere).",
+    "Worktree vera dopo le reversioni: git diff --quiet HEAD -- .github -> 'nessuna modifica in .github'; git status --porcelain -> ' M tests/ci/test_collaudo_esito.py', '?? tests/ci/test_collaudo_commenti.py'."
+  ],
+  "osservazioni": [
+    "Fuori specifica, misurato eseguendo lo step: se gh api esce 0 ma il corpo non e' JSON (fixture non-json.json), lo script esce 2 e lo step va rosso con '::error title=Decisione non presa::collaudo-esito.sh e' uscito con 2 ()' senza pubblicare nessun commento sulla PR (rc 1, 1 chiamata api, 0 commenti). Non viola i criteri di Andrea; lo segnalo, non lo decido.",
+    "Limite dei test statici: una mutazione che rende irraggiungibile il ramo del messaggio (m2) passa la statica. Solo l'esecuzione dello step la vede."
+  ],
+  "esito": "i criteri (a) e (b) e i quattro casi aggiunti hanno test verdi su 2eaf9b9 e rossi su 80a591f e sulle mutazioni mirate",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,24 @@
+{
+  "ts": "2026-09-27T19:02:59+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "commit b57f0ce (commento dello step «Prepara la cartella del verdetto» e descrizione della PR #65) e la nota della voce 2026-09-27/182303",
+  "cosa_era_sbagliato": "b57f0ce presentava la copia di collaudo-esito.sh in $RUNNER_TEMP come difesa: «l'agente ha Write, e quello che decide se il suo silenzio e' verde non deve essere un file che puo' riscrivere». Era sbagliato. $RUNNER_TEMP non e' fuori dalla portata dell'agente, e soprattutto l'agente puo' scrivere $GITHUB_ENV e $GITHUB_PATH, che cambiano l'ambiente di tutti gli step successivi. La copia non difende niente. Anche la voce 182303, che lo segnalava, aveva scritto «$RUNNER_TEMP e' scrivibile» come un fatto quando era un'ipotesi.",
+  "come_lo_so": "Voce 2026-09-27/183934: documentazione di Claude Code 2.1.283 (permissions, permission-modes) e sorgente dell'action 756cc22 (parse-sdk-options.ts:279-294, docs/security.md:16). Non misurato dal vivo.",
+  "alternative": [
+    { "opzione": "impronta dello script: sha256 calcolato prima del ventaglio ed esposto come output di step, confrontato nello step di pubblicazione", "scartata_perche": "con PATH e env controllabili dall'agente, lo step che confronta l'impronta gira con strumenti che l'agente puo' aver sostituito (sha256sum, bash, gh). L'impronta sposta il punto d'attacco senza chiudere il caso" },
+    { "opzione": "fermare la #65 finche' l'isolamento non e' risolto", "scartata_perche": "decisione di Andrea: il limite non e' introdotto dalla #65, vale anche per il workflow di main" },
+    { "opzione": "mergiare la #65 con il limite dichiarato nella descrizione e l'isolamento tracciato in una issue a parte", "scelta": true }
+  ],
+  "decisione": [
+    "la #65 si mergia con il limite dichiarato: descrizione aggiornata con 'Limiti noti' (gh pr edit 65 --body-file); nessuna modifica a workflow o script in questo giro",
+    "isolamento dell'agente e uscite impreviste dello script senza commento (JSON non valido -> uscita 2 -> rosso senza spiegazione) rinviati alla issue #69 «Collaudo: isolare l'agente dagli step che lo giudicano»: fatti con fonti, marcati come non misurati dal vivo, una direzione da valutare (due job, verdetto come artifact) e quattro domande aperte",
+    "il commento dello step «Prepara la cartella del verdetto» nel workflow dice ancora la frase sbagliata. Resta com'e' perche' questo giro non tocca il workflow; la correzione e' questa voce, piu' la descrizione della PR"
+  ],
+  "chi_ha_deciso": "Andrea, 27/09 sera",
+  "esito": "applicata: body della #65 aggiornato, issue #69 aperta",
+  "umano_coinvolto": true
+}

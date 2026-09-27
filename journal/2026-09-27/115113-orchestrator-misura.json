@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-27T11:51:13+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Finding, non diagnosticato in questa PR: l'agente tace anche senza verdetto precedente. Silenzio 1 su 6 senza precedente, 5 su 6 con",
+  "contesto": "Separato dalla #65 per decisione di Andrea (27/09): solo un finding. Il criterio di chiusura torna quello originale (un rerun su un commit gia' collaudato rimanda al verdetto e resta verde); il vincolo «verdetto al tentativo 1» cade. Prima dei rerun due verifiche.",
+  "evidenza": [
+    "silenzio senza verdetto precedente: 1 su 6 (0 su 5 della #64 piu' run 36309849626 tentativo 1 sulla #65); con verdetto precedente: 5 su 6, invariato",
+    "run silenziosa 36309849626/1: 128777 ms (150 s fra i due step di tempo), 17 turni, 0 dinieghi, esito success. Run della #64 che ha scritto il verdetto, 36266924329: 1435386 ms, 12 turni, 1 diniego. Stessa action (SHA 756cc22e19660d20e8cc9496b4f242475a7f7790)",
+    "verifica 1: gh api repos/OwnConsent/ownconsent-www/issues/comments/5854712646 --jq .body | grep -c cantiere-collaudo -> 0. Il commento «nessun verdetto» non porta marcatore, quindi nessun tipo: solo verdetto e rimando lo portano, come da brief. Non e' tipo=verdetto: nessun bug",
+    "verifica 2: git log --format='%h %(trailers:key=Cantiere-Agent,valueonly,separator=)' origin/main..origin/collaudo-rimando-sha -> bfb6a1f orchestrator / 5a9afa7 qa-test / b57f0ce orchestrator"
+  ],
+  "esito": "finding registrato; si procede coi rerun in due fasi (A: un verdetto, max 3; B: un rimando verde, max 3)",
+  "umano_coinvolto": true
+}

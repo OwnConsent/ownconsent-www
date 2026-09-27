@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-27T18:23:03+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "commit b57f0ce, .github/workflows/claude-pr-review.yml:192 (step «Pubblica il verdetto»)",
+  "cosa_era_sbagliato": "Lo step leggeva i commenti della PR (gh api …/comments --paginate) PRIMA di guardare se l'agente aveva scritto il verdetto, sotto bash -e. Se l'API falliva (5xx, rate limit secondario), lo step usciva subito: un verdetto scritto non veniva pubblicato e il job andava rosso senza spiegazione. Prima della #65 un verdetto su file si pubblicava senza chiamare l'API: era una regressione. I test non la vedevano, perche' esercitavano lo script e non la shell del workflow.",
+  "come_lo_so": "Finding di /code-review 65 lanciato da Andrea il 27/09, verificato sul ramo: la riga del gh api precedeva la chiamata allo script e non aveva gestione dell'errore.",
+  "alternative": [
+    { "opzione": "leggere i commenti solo quando servono, cioe' per il rimando, dopo verdetto e timeout; se la lettura fallisce, «Collaudo: commenti non leggibili» con il codice d'uscita di gh, rosso", "scelta": true },
+    { "opzione": "rendere tollerante la lettura e, se fallisce, ricadere in «nessun verdetto»", "scartata_perche": "«nessun verdetto» afferma che il commit non ha un verdetto, e con i commenti illeggibili non lo si sa. Un verdetto precedente esistente sarebbe stato annunciato come assente: un rosso con la spiegazione sbagliata, che manda chi legge a cercare il guasto nell'agente invece che nell'API. Il rosso resta, ma deve dire il vero." }
+  ],
+  "decisione": [
+    "lo script esce 3 e stampa 'servono-commenti' quando arriva al passo del rimando e il file dei commenti non esiste. Verdetto (passo 1) e timeout (passo 2) si decidono prima, quindi non leggono mai i commenti",
+    "il workflow cancella $RUNNER_TEMP/commenti.json prima di chiamare lo script, e fa gh api solo sull'uscita 3. Con gh fallito pubblica «Collaudo: commenti non leggibili», senza marcatore (quindi mai tipo=verdetto), e va rosso. Qualunque altra uscita non zero dello script: rosso 'Decisione non presa'",
+    "cambia il contratto dello script: COMMENTI mancante non e' piu' un input sbagliato (uscita 2) ma la richiesta dei commenti (uscita 3). Il test che lo trattava da uscita 2 va aggiornato da @qa-test"
+  ],
+  "nota": "Rivedendo lo step e' emerso un limite di una difesa introdotta in b57f0ce. La copia dello script in $RUNNER_TEMP era motivata con 'l'agente ha Write e non deve poter riscrivere lo script', ma $RUNNER_TEMP e' scrivibile dall'agente quanto il workspace: la difesa non regge come descritta. Per commenti.json la cancellazione prima dell'uso chiude il caso; per lo script no. Registrato qui, non corretto in questo commit: fuori dal brief, decide Andrea.",
+  "esito": "applicata; test di @qa-test e prove-by-reversion nel commit successivo",
+  "umano_coinvolto": true
+}

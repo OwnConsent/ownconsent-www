@@ -1,0 +1,60 @@
+{
+  "ts": "2026-09-27T17:32:59+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Il silenzio dipende dalla versione del workflow della #65? I dati non lo separano: la versione di main non ha mai girato senza un verdetto precedente",
+  "contesto": "Brief di Andrea, 27/09 pomeriggio, sola lettura. Confondimento da escludere: su pull_request il workflow viene dal merge commit, quindi la #65 gira con la versione modificata da b57f0ce.",
+  "metodo": [
+    "runs: gh api repos/OwnConsent/ownconsent-www/actions/workflows/claude-pr-review.yml/runs --paginate -> 13 run, 18 tentativi; attempts/N per head_sha e orari",
+    "log per tentativo: gh api --allow-escape-sequences repos/…/actions/jobs/<job>/logs. PRIMO TENTATIVO FALLITO: gh run view --job <id> --log restituisce il log dell'ULTIMO tentativo qualunque job id si passi (md5 identici per i 4 tentativi della 36309849626, per i 2 della 36257241401 e della 36245446819). Le letture dei tentativi 2-4 della #65 fatte in giornata restano valide perche' ognuna e' stata fatta quando quel tentativo era l'ultimo",
+    "versione eseguita: sha256 del workflow al MERGE commit letto nel log del checkout ('HEAD is now at <sha> Merge <head> into <base>'), commit recuperati con git fetch origin <sha>. Il brief chiedeva lo sha256 all'head_sha: e' riportato anche quello, ma non e' la versione eseguita. Prova: la run 36255932164 (#60, head df78532, sha256 all'head e9ec1e7) esegue lo step che controlla i commenti ('nessun commento sulla PR #60 creato dopo …'), che in e9ec1e7 non esiste; al merge commit 1f02bef la versione e' bd6908f, che lo contiene",
+    "verdetto scritto: dalla versione dac621b in poi, riga 'verdetto: N byte' del log; prima, commento del bot creato fra inizio e fine del tentativo (gh api …/issues/<pr>/comments). Verdetto precedente: commento del bot con intestazione di collaudo creato prima dell'inizio del tentativo"
+  ],
+  "tabella": [
+    "run/tent | PR | head_sha | wf@head | wf@merge (eseguito) | verdetto prec. | bot non-verdetto prec. | ventaglio ms | turni | verdetto",
+    "34759498670/1 | #1 | 1c8c23a | e9ec1e7 | e9ec1e7 | no | no | — | — | agente non partito (Claude Code is not installed)",
+    "34759596021/1 | #2 | 470d79b | e9ec1e7 | e9ec1e7 | no | no | — | — | agente non partito",
+    "36147873278/1 | #60 | c991c0e | e9ec1e7 | e9ec1e7 | no | no | — | — | agente non partito",
+    "36151435641/1 | #61 | 562128a | 816f08e | 816f08e | no | no | 168269 | 13 | si'",
+    "36244241315/1 | #60 | b89b14a | e9ec1e7 | 816f08e | no | no | 600046 | 13 | si'",
+    "36245446819/1 | #60 | c033486 | e9ec1e7 | 816f08e | si' | no | 97217 | 13 | NO",
+    "36245446819/2 | #60 | c033486 | e9ec1e7 | 816f08e | si' | no | 103873 | 15 | NO",
+    "36248365541/1 | #62 | 3347096 | bd6908f | bd6908f | no | no | 332879 | 11 | si'",
+    "36255932164/1 | #60 | df78532 | e9ec1e7 | bd6908f | si' | no | 243374 | 15 | NO",
+    "36256836415/1 | #63 | 03f9705 | b4edc18 | b4edc18 | no | no | 353150 | 10 | si'",
+    "36257241401/1 | #63 | abb25bb | b4edc18 | b4edc18 | si' | no | 261146 | 11 | si'",
+    "36257241401/2 | #63 | abb25bb | b4edc18 | b4edc18 | si' | no | 98337 | 9 | NO",
+    "36266924329/1 | #64 | ef9fa19 | dac621b | dac621b | no | no | 1435386 | 12 | si'",
+    "36268387115/1 | #64 | 82f0942 | 5cb7e17 | 5cb7e17 | si' | no | 185580 | 10 | NO",
+    "36309849626/1 | #65 | 5a9afa7 | 9902a1e | 9902a1e | no | no | 128777 | 17 | NO",
+    "36309849626/2 | #65 | 5a9afa7 | 9902a1e | 9902a1e | no | si' (1) | 87730 | 10 | NO",
+    "36309849626/3 | #65 | 5a9afa7 | 9902a1e | 9902a1e | no | si' (2) | 61496 | 9 | NO",
+    "36309849626/4 | #65 | 5a9afa7 | 9902a1e | 9902a1e | no | si' (3) | 85223 | 11 | NO"
+  ],
+  "conteggi_per_versione_eseguita": [
+    "e9ec1e7: 3 tentativi, agente mai partito, esclusi",
+    "816f08e: silenzio 2 su 4 — senza precedente 0/2, con precedente 2/2",
+    "bd6908f: silenzio 1 su 2 — senza 0/1, con 1/1",
+    "b4edc18: silenzio 1 su 3 — senza 0/1, con 1/2",
+    "dac621b: silenzio 0 su 1 — senza 0/1",
+    "5cb7e17 (= main 7c4001f, sha256 5cb7e1708dac): silenzio 1 su 1 — con precedente 1/1, senza precedente MAI eseguita",
+    "9902a1e (#65): silenzio 4 su 4 — senza precedente 4/4",
+    "totale fuori #65: senza precedente 0/5, con precedente 5/6. Riproduce la misura della #64 (0 su 5, 5 su 6), che copre #60-#64 e non la sola #64 come diceva il brief"
+  ],
+  "differenza_statica_65_contro_main": [
+    "FATTO: input dell'action (with: prompt, claude_args con --max-turns 40, allowedTools, disallowedTools, model, token) identici, sorgente e log: diff dei blocchi 'Run anthropics/claude-code-action@v1' delle run 36268387115 e 36309849626, normalizzati run id e numero PR -> nessuna differenza",
+    "FATTO: env dello step ventaglio: main 'GH_TOKEN'; #65 'BUDGET_VENTAGLIO_MIN: 30' + 'GH_TOKEN' (env di job ereditata). Che arrivi al processo dell'agente e che ne cambi il comportamento: ipotesi, non misurata",
+    "FATTO: permessi del job, directory di lavoro, creazione e pulizia di .collaudo/, percorso del verdetto: invariati (nessun hunk)",
+    "FATTO: prima del ventaglio la #65 aggiunge un cp dello script in $RUNNER_TEMP, lo step 'Commit sotto collaudo' (solo echo) e lo step 'Inizio del ventaglio' (scrive in GITHUB_OUTPUT). Allo step ventaglio si aggiunge timeout-minutes: 30. Gli altri hunk (Fine del ventaglio, Pubblica) stanno dopo il ventaglio",
+    "FATTO: le versioni dac621b (verdetto) e 5cb7e17 (silenzio), tutte e due sulla #64, differiscono solo in step successivi al ventaglio (Misura, Conserva, Pubblica)",
+    "IPOTESI non verificate: che l'agente legga $RUNNER_TEMP o la env del job; che sia il contenuto del diff della #65 (script, test, journal sul silenzio) e non il workflow a cambiarne il comportamento"
+  ],
+  "conclusione": "Il silenzio NON si concentra solo sulla versione della #65: compare con 5 versioni su 6 di quelle in cui l'agente e' partito, compresa quella di main (1 su 1). Ma con tutte le versioni precedenti la #65 compare solo dopo un verdetto precedente, e la versione di main non e' mai stata eseguita senza un verdetto precedente. I dati non separano quindi 'versione della #65' da 'PR senza verdetto precedente che tace': la #65 e' l'unica cella di silenzio senza precedente, e in quella cella ogni altra versione ha 0 tentativi.",
+  "durate_silenzi": "#64 silenziosa (5cb7e17): 185580 ms, 10 turni. #65: 128777/17, 87730/10, 61496/9, 85223/11 ms/turni. Altri silenzi: 97217/13, 103873/15, 243374/15, 98337/9. Giri con verdetto: 168269/13, 600046/13, 332879/11, 353150/10, 261146/11, 1435386/12. Il confronto del brief con 1435 s usa l'estremo: gli altri verdetti stanno fra 168 e 600 s. I 78-150 s del brief sono il tempo fra gli step di tempo, non duration_ms",
+  "evidenza": ["tabella sopra", "dati grezzi fuori dal repository, nello scratchpad della sessione: runs.tsv, attempts.tsv, jobs.txt, merge.tsv, comments.tsv, jlog-*.txt"],
+  "esito": "rapporto ad Andrea; nessuna correzione proposta",
+  "umano_coinvolto": true
+}

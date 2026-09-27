@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-27T12:00:32+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "gate",
+  "titolo": "Chiusura dal vivo della #65 non raggiunta: fase A esaurita, 3 rerun e 3 silenzi. Il silenzio senza verdetto precedente sale a 4 su 9; fase B non avviata",
+  "contesto": "Brief di Andrea del 27/09: fase A, rilanciare il run 36309849626 fino a un verdetto con marcatore, al massimo 3 rerun; se nessuno scrive il verdetto, fermarsi e riportare, perche' il quadro cambia. Fase B (rimando verde) solo dopo un verdetto.",
+  "evidenza": [
+    "tentativo 1 (apertura), job https://github.com/OwnConsent/ownconsent-www/actions/runs/36309849626 : head.sha 5a9afa7bea6676581dcdf0c9771c691d673debce, github.sha 40eaaaf557578b8ad293f1edbd06bf90bb34bfeb, nessun-verdetto, 150 s fra gli step di tempo, ventaglio 128777 ms, 17 turni, commento issuecomment-5854712646",
+    "tentativo 2, job 108595904686: head.sha 5a9afa7…, github.sha 40eaaaf…, nessun-verdetto, 109 s, 87730 ms, 10 turni, commento issuecomment-5854823192",
+    "tentativo 3, job 108596372423: head.sha 5a9afa7…, github.sha 40eaaaf…, nessun-verdetto, 78 s, 61496 ms, 9 turni, commento issuecomment-5854840675",
+    "tentativo 4, job 108596794440: head.sha 5a9afa7…, github.sha 40eaaaf…, nessun-verdetto, 101 s, 85223 ms, 11 turni, commento issuecomment-5854861278",
+    "tutti: ventaglio success, 0 dinieghi, conclusion failure, nessun marcatore nei 4 commenti. Gli head.sha sono identici nei 4 tentativi, e dal tentativo 2 la testa del ramo era gia' bfb6a1f: nel job un rerun riusa il payload (punto 3, misurato dentro il job)",
+    "silenzio senza verdetto precedente: 4 su 9 (0 su 5 della #64 + 4 su 4 della #65); con verdetto precedente: 5 su 6. Nota: dal tentativo 2 la PR aveva gia' commenti «nessun verdetto» del bot, senza marcatore; non sono verdetti"
+  ],
+  "chi_ha_deciso": "la regola di arresto del brief di Andrea; la decisione su come procedere e' sua",
+  "cosa_serviva": "un tentativo con verdetto scritto, da usare come riferimento per la fase B",
+  "esito": "fermo; nessun rerun di fase B; PR #65 aperta, non mergiata",
+  "umano_coinvolto": true
+}

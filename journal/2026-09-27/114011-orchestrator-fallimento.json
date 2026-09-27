@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-27T11:40:11+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "fallimento",
+  "titolo": "Chiusura dal vivo, passo 1: sulla PR #65, senza verdetto precedente, l'agente tace. Il job decide «nessun verdetto», rosso. La misura 0 su 5 diventa 1 su 6; lavoro fermato prima dei rerun",
+  "contesto": "Il brief chiede che l'apertura della PR pubblichi un verdetto con marcatore e che un rerun pubblichi il rimando a quel verdetto. Premessa del brief: senza verdetto precedente l'agente tace 0 volte su 5.",
+  "evidenza": [
+    "PR https://github.com/OwnConsent/ownconsent-www/pull/65, run https://github.com/OwnConsent/ownconsent-www/actions/runs/36309849626 tentativo 1, conclusion failure",
+    "prima dell'apertura la PR non aveva commenti; dopo ne ha uno solo: gh api repos/OwnConsent/ownconsent-www/issues/65/comments --paginate -> github-actions[bot], id 5854712646, 2026-09-27T09:37:55Z, 'Commit `5a9afa7` … **Collaudo: nessun verdetto** (ventaglio: `success`)'",
+    "log, Pubblica il verdetto: 'ventaglio: success, 150 s su un budget di 30 min' / 'decisione: nessun-verdetto'",
+    "log, Diagnostica: .collaudo/ vuota; nessun verdetto*.md in workspace, /tmp, $HOME; {num_turns:17, permission_denials_count:0}",
+    "log, Ventaglio: result success, duration_ms 128777, num_turns 17, total_cost_usd 1.43; 'full output hidden for security', quindi il log non dice che cosa ha fatto l'agente",
+    "stessa action della #64 che ha scritto il verdetto (run 36266924329): SHA 756cc22e19660d20e8cc9496b4f242475a7f7790 in tutti e due i log, stesse righe 'Restoring … from origin/main (PR head is untrusted)' e 'No plugins specified'. Quella run: 1435386 ms, 12 turni, 1 diniego",
+    "log, Commit sotto collaudo, tentativo 1: github.event.pull_request.head.sha=5a9afa7bea6676581dcdf0c9771c691d673debce, github.sha=40eaaaf557578b8ad293f1edbd06bf90bb34bfeb (merge commit): la premessa del punto 3 regge"
+  ],
+  "cosa_si_e_imparato": "Il meccanismo ha fatto quello che la tabella chiede: file assente, esito success, nessun verdetto per lo SHA, quindi «nessun verdetto», rosso, con commento. Cade invece la premessa che il silenzio dipenda dal verdetto precedente: 1 silenzio su 6 senza, contro 5 su 6 con. Il criterio di chiusura («un rerun pubblica un rimando al verdetto del tentativo 1») non si puo' piu' soddisfare alla lettera, perche' il tentativo 1 non ha verdetto. Rilanciare fino a ottenere un verdetto al tentativo 2 e un rimando al 3 vorrebbe dire adattare il criterio alla misura: non lo si fa senza Andrea.",
+  "esito": "fermo; nessun rerun lanciato; decisione ad Andrea",
+  "umano_coinvolto": true
+}

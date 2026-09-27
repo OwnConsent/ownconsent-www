@@ -8,15 +8,18 @@
 #   VERDETTO     file scritto dall'agente (puo' mancare)
 #   SHA          github.event.pull_request.head.sha, 40 caratteri esadecimali
 #   COMMENTI     output di `gh api …/issues/N/comments --paginate`: uno o piu'
-#                array JSON concatenati, uno per pagina
+#                array JSON concatenati, uno per pagina. Puo' non esistere: i
+#                commenti servono solo al rimando, e il workflow li legge solo
+#                quando lo script li chiede (uscita 3)
 #   ESITO        steps.ventaglio.outcome
 #   TRASCORSI_S  secondi misurati attorno allo step ventaglio
 #   BUDGET_MIN   timeout-minutes dello step ventaglio
 #   CORPO        file in cui si scrive l'inizio del commento
 #
 # Stampa una parola: verdetto | timeout | rimando | nessun-verdetto.
-# Esce 0 quando ha deciso, 2 sugli input sbagliati. Il colore del job lo
-# sceglie il workflow a partire dalla parola.
+# Esce 0 quando ha deciso, 2 sugli input sbagliati, 3 se per decidere servono
+# i commenti e COMMENTI non esiste (stampa servono-commenti, non scrive CORPO).
+# Il colore del job lo sceglie il workflow a partire dalla parola.
 set -euo pipefail
 
 # Misurato su #64 il 27/09: l'autore dei verdetti pubblicati dal job.
@@ -31,7 +34,6 @@ verdetto=$1 sha=$2 commenti=$3 esito=$4 trascorsi=$5 budget=$6 corpo=$7
 [[ "$sha" =~ ^[0-9a-f]{40}$ ]] || { echo "SHA non valido: '$sha'" >&2; exit 2; }
 [[ "$trascorsi" =~ ^[0-9]+$ ]] || { echo "TRASCORSI_S non valido: '$trascorsi'" >&2; exit 2; }
 [[ "$budget" =~ ^[1-9][0-9]*$ ]] || { echo "BUDGET_MIN non valido: '$budget'" >&2; exit 2; }
-[ -f "$commenti" ] || { echo "COMMENTI mancante: '$commenti'" >&2; exit 2; }
 
 corto=${sha:0:7}
 marcatore() { printf '<!-- cantiere-collaudo tipo=%s sha=%s -->\n' "$1" "$sha"; }
@@ -57,7 +59,13 @@ fi
 # 3. Rimando: conta solo un commento del job il cui PRIMO rigo e' il
 #    marcatore di un verdetto per lo stesso SHA. Un rimando non e' mai un
 #    verdetto, e un marcatore citato dentro un testo non conta. Si prende
-#    il piu' recente.
+#    il piu' recente. Verdetto e timeout sono gia' decisi: solo qui servono
+#    i commenti (finding di /code-review 65: leggerli prima faceva perdere un
+#    verdetto scritto quando l'API falliva).
+if [ ! -e "$commenti" ]; then
+  echo servono-commenti
+  exit 3
+fi
 url=$(jq -rn --arg autore "$AUTORE" --arg m "<!-- cantiere-collaudo tipo=verdetto sha=$sha -->" '
   [inputs | .[]
    | select(.user.login == $autore)

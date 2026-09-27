@@ -188,12 +188,37 @@ jobs:
         run: |
           verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
+          # I commenti servono solo al rimando: lo script li chiede con l'uscita 3,
+          # dopo aver escluso verdetto e timeout. Un verdetto scritto si pubblica
+          # senza nessuna chiamata all'API dei commenti (finding di /code-review 65).
+          # Il file si cancella prima: l'agente ha Write e poteva lasciarne uno.
           commenti="$RUNNER_TEMP/commenti.json"
-          gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate > "$commenti"
+          rm -f "$commenti"
           if [ -n "$INIZIO" ]; then trascorsi=$(( ${FINE:-$(date +%s)} - INIZIO )); else trascorsi=0; fi
           echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"
-          decisione=$(bash "$RUNNER_TEMP/collaudo-esito.sh" \
-            "$verdetto" "$SHA" "$commenti" "$ESITO_VENTAGLIO" "$trascorsi" "$BUDGET_VENTAGLIO_MIN" "$corpo")
+          decidi() {
+            bash "$RUNNER_TEMP/collaudo-esito.sh" \
+              "$verdetto" "$SHA" "$commenti" "$ESITO_VENTAGLIO" "$trascorsi" "$BUDGET_VENTAGLIO_MIN" "$corpo"
+          }
+          rc=0; decisione=$(decidi) || rc=$?
+          if [ "$rc" -eq 3 ]; then
+            echo "lettura dei commenti della PR ${PR}"
+            rc_gh=0; gh api "repos/$GITHUB_REPOSITORY/issues/$PR/comments" --paginate > "$commenti" || rc_gh=$?
+            # Una lettura fallita non e' «nessun verdetto»: non si sa se il commit
+            # ne abbia gia' uno. Rosso, con un messaggio suo.
+            if [ "$rc_gh" -ne 0 ]; then
+              printf 'Commit `%s`\n\n**Collaudo: commenti non leggibili** (`gh api`, uscita %s). Questo giro non ha scritto un verdetto, e senza i commenti non si sa se il commit ne abbia già uno.\n' \
+                "${SHA:0:7}" "$rc_gh" > "$corpo"
+              url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+              echo "::error title=Commenti non leggibili::${url}. gh api sui commenti della PR ${PR} e' uscito con ${rc_gh}: il job non decide fra rimando e nessun verdetto."
+              exit 1
+            fi
+            rc=0; decisione=$(decidi) || rc=$?
+          fi
+          if [ "$rc" -ne 0 ]; then
+            echo "::error title=Decisione non presa::collaudo-esito.sh e' uscito con ${rc} (${decisione})"
+            exit 1
+          fi
           echo "decisione: ${decisione}"
           if [ "$decisione" != "verdetto" ]; then
             url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")

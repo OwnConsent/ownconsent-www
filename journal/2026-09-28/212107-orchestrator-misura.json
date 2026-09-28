@@ -1,0 +1,55 @@
+{
+  "ts": "2026-09-28T21:21:07+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "04-verifica",
+  "tipo": "misura",
+  "titolo": "Esito del collaudo di #60: sei giri, verdetto non bloccante su df78532. Silenzio con verdetto precedente: 6 su 8 senza marcatore, 0 su 4 con marcatore per lo stesso SHA",
+  "contesto": "Brief di Andrea, 28/09 sera, che sostituisce un brief precedente. Il primo elencava quattro giri sulla #60 e dava il silenzio come 6 su 7 senza marcatore e 0 su 3 con. La misura sull'API ha trovato sei giri: la sessione si e' fermata prima di pubblicare, e il brief nuovo ha accolto l'obiezione. Ha scartato anche il conteggio del silenzio e chiesto di ricavarlo dai dati. Fatti in questo giro: descrizione della #60 aggiornata (solo il paragrafo sullo stato del collaudo e il punto 3), issue #70 per il seguito dei finding.",
+  "metodo": [
+    "giri: gh run list -R OwnConsent/ownconsent-www --workflow 'Verifica agentica su PR' -L 100, filtrato su headBranch corso/ricognizione-consegna-1 -> 6 run; attempts/N per il numero di tentativi",
+    "commenti: gh api repos/…/issues/60/comments e issues/68/comments, commenti di github-actions[bot] con orario di creazione confrontato con inizio e fine del job",
+    "decisione e verdetto: log per job con gh api --allow-escape-sequences repos/…/actions/jobs/<job>/logs, righe 'decisione: …' e 'verdetto: N byte'",
+    "versione eseguita: sha256 di .github/workflows/claude-pr-review.yml al merge commit letto nel log del checkout ('HEAD is now at <sha> Merge <head> into <base>')",
+    "TENTATIVI FALLITI: (1) il primo download del log della 36255932164 e' tornato vuoto (md5 d41d8cd9), il secondo ha dato 38456 byte con HTTP 200; (2) git fetch origin di 679d70d e di e61949e e' fallito al primo colpo: git show su un oggetto assente ha dato sha256 e3b0c442…, cioe' l'hash dell'input vuoto, scartato. Rifatto con un secondo fetch (679d70d) e con gh api contents?ref=<sha> (679d70d, e61949e): i due metodi concordano su 679d70d",
+    "TENTATIVO FALLITO sul commit: il primo commit di questa voce portava un Co-Authored-By scritto a mano oltre a quello del git hook, contro docs/JOURNAL.md (terza regola). Rifatto con git commit --amend prima del push, trailer lasciati al solo hook",
+    "gruppi del silenzio: (a) prima dell'inizio del tentativo esiste un commento di verdetto del bot sulla PR, ma nessuno con il marcatore '<!-- cantiere-collaudo tipo=verdetto sha=<head_sha> -->'; (b) esiste un commento con quel marcatore per lo stesso head_sha. Si contano solo i tentativi in cui l'agente e' partito e c'era un verdetto precedente"
+  ],
+  "giri_pr60": [
+    "run/tent | commit | merge commit | wf sha256 eseguito | esito | commento",
+    "36147873278/1 | c991c0e | — | e9ec1e7 (tabella 27/09) | fallito, 401 'Claude Code is not installed on this repository', agente non partito | nessun commento",
+    "36244241315/1 | b89b14a | — | 816f08e (tabella 27/09) | verde, 13:09:52-13:20:16Z | verdetto 5846599946, 13:20:08Z, senza marcatore",
+    "36245446819/1-2 | c033486 | — | 816f08e (tabella 27/09) | verde in entrambi i tentativi, senza verdetto | nessun commento",
+    "36255932164/1 | df78532 | 1f02bef | bd6908f929c74f4f94d6cd4185cf447ee4c5f716282ca6b14beb110ff417c709 | fallito allo step 'Verdetto pubblicato'; log: 'nessun commento sulla PR #60 creato dopo 2026-09-26T16:34:28Z' | nessun commento",
+    "36338238688/1 | df78532 | 679d70d (base efa9436, merge della #65 alle 17:46:39Z, run alle 17:47:23Z) | 5f08bf6e3e2537bdd46673a1090b5772d670c5ff85aee866db0165a8d1fe1485 | fallito allo step 'Pubblica il verdetto'; 'decisione: nessun-verdetto', 'verdetto: 0 byte' | 5858277284 'nessun verdetto', senza marcatore",
+    "36392440326/1 | df78532 | 679d70d | 5f08bf6e…1485 | verde; 'decisione: verdetto', 'verdetto: 4435 byte' | 5865692220, marcatore tipo=verdetto sha=df78532…, non bloccante (1 MEDIUM, 3 LOW, 1 INFO)"
+  ],
+  "silenzio_per_giro": [
+    "run/tent | PR | head | wf eseguito | gruppo | verdetto | fonte",
+    "36245446819/1 | #60 | c033486 | 816f08e | a | no | tabella della voce 2026-09-27/173259",
+    "36245446819/2 | #60 | c033486 | 816f08e | a | no | tabella 2026-09-27/173259",
+    "36255932164/1 | #60 | df78532 | bd6908f | a | no | tabella 2026-09-27/173259, riletto oggi nel log",
+    "36257241401/1 | #63 | abb25bb | b4edc18 | a | si' | tabella 2026-09-27/173259",
+    "36257241401/2 | #63 | abb25bb | b4edc18 | a | no | tabella 2026-09-27/173259",
+    "36268387115/1 | #64 | 82f0942 | 5cb7e17 | a | no | tabella 2026-09-27/173259",
+    "36338238688/1 | #60 | df78532 | 5f08bf6 | a | no | log di oggi; unico verdetto precedente 5846599946, senza marcatore",
+    "36392440326/1 | #60 | df78532 | 5f08bf6 | a | si' | log di oggi; precedenti 5846599946 (verdetto) e 5858277284 (non verdetto), nessuno con marcatore",
+    "36331061596/2 | #68 | 9b85022 | 9902a1e | b | si' | voce 2026-09-27/181005; commento precedente 5857430779 con marcatore",
+    "36331061596/3 | #68 | 9b85022 | 9902a1e | b | si' | voce 2026-09-27/181005",
+    "36331061596/4 | #68 | 9b85022 | 9902a1e | b | si' | voce 2026-09-27/181005",
+    "36333316998/1 | #68 | 9b85022 | 5f08bf6 (merge bba3c17 su ec4ee70) | b | si' | log di oggi: 'decisione: verdetto', 'verdetto: 1236 byte', commento 5857695061 con marcatore; riapertura della #68 alle 16:27:32Z"
+  ],
+  "evidenza": [
+    "gruppo (a), verdetto precedente senza marcatore: silenzio in 6 tentativi su 8",
+    "gruppo (b), verdetto precedente con marcatore tipo=verdetto per lo stesso SHA: silenzio in 0 tentativi su 4",
+    "esclusi perche' l'agente non e' partito (401): 34759498670/1 (#1), 34759596021/1 (#2), 36147873278/1 (#60)",
+    "non contati perche' senza verdetto precedente: 36151435641/1, 36244241315/1, 36248365541/1, 36256836415/1, 36266924329/1, 36309849626/1-4, 36331061596/1",
+    "rispetto alla cifra scartata del brief precedente (6 su 7 e 0 su 3) ci sono due tentativi in piu': 36392440326/1 nel gruppo (a) e 36333316998/1 nel gruppo (b), tutti e due con verdetto",
+    "le righe prese dalla tabella del 27/09 non sono state rimisurate oggi, salvo la 36255932164",
+    "descrizione #60: https://github.com/OwnConsent/ownconsent-www/pull/60; seguito dei finding: https://github.com/OwnConsent/ownconsent-www/issues/70"
+  ],
+  "osservazione": "Solo osservazione, senza conclusioni sulla causa. I due gruppi non sono confrontabili a parita' di tutto il resto: il gruppo (b) viene tutto dalla #68, con un diff di due righe; il gruppo (a) copre cinque versioni del workflow e tre PR.",
+  "esito": "descrizione della #60 aggiornata, issue #70 aperta, questa voce in una PR sua; niente sul ramo della #60, nessun giro lanciato",
+  "umano_coinvolto": true
+}

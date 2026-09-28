@@ -1,0 +1,17 @@
+{
+  "ts": "2026-09-25T16:04:51+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "correzione",
+  "corregge": "corso/ricognizione/consegna-1.md §1.3, righe della skill /collaudo e del workflow di collaudo (commit 4a07eda)",
+  "cosa_era_sbagliato": "Due cose. (1) La riga della skill riassumeva il comando come grep «collaudo|pr-fanout», piu' largo del vero, e la riga del workflow non citava 184350, che spiega lo spegnimento (registrato in 153655, che resta). (2) Trovata correggendo: la riga della skill diceva dichiarata in «CLAUDE.md, elenco delle skill». Non e' vero: l'elenco delle skill e' quello del plugin, fuori dal repository.",
+  "come_lo_so": [
+    "grep -l -i -E 'pr-fanout|/collaudo|skill collaudo|cantiere:collaudo' journal/*/*.json (escluso 25/09) -> 180122, 181016",
+    "grep -l -i -E 'claude-pr-review|Verifica agentica' journal/*/*.json (escluso 25/09) -> 184350, 181016, 082433, 084312, 152052",
+    "grep -n -i collaudo CLAUDE.md docs/DEFINITION-OF-DONE.md -> nessuna riga"
+  ],
+  "esito": "§1.3 riscritta con i comandi veri e con 184350; la voce superata resta. Via libera di Andrea",
+  "umano_coinvolto": true
+}

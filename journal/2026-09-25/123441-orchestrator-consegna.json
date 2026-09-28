@@ -1,0 +1,28 @@
+{
+  "ts": "2026-09-25T12:34:41+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "consegna",
+  "titolo": "Ricognizione della consegna 1 scritta in corso/ricognizione/consegna-1.md: punti 1, 2, 3, 5, 6 di /lezione, niente punto 4",
+  "contesto": "Mandato di Andrea: solo raccolta, copertura, rapporto fallimenti/successi, numeri e tag proposti; nessun modulo, slide, racconto o copione; nessuna delega a @case-study.",
+  "evidenza": [
+    "corso/ricognizione/consegna-1.md: intervallo dichiarato in cima (§0), buchi in cima (§1), rapporto (§2), numeri (§3), tag proposti non creati (§4), limiti (§5)",
+    "voci di questa sessione: 122626 decisione, 122651 gate, 123113 misura, 123417 fallimento, 123418 misura, questa"
+  ],
+  "dod_soddisfatta": {
+    "punto_4_non_eseguito": "si: nessun file in corso/ oltre al rapporto; @case-study non invocato",
+    "tag": "si: proposti, nessun git tag eseguito",
+    "codice_del_progetto": "non toccato: il diff del ramo contiene solo corso/ e journal/",
+    "journal_durante": "si: sei voci con ts da date -Is, tre commit intermedi"
+  },
+  "cosa_resta_ad_andrea": [
+    "la struttura del corso, dopo aver letto §1",
+    "a chi chiedere i buchi del §1.5: 4dcebd0 e 4cb1674 (chi li ha decisi), L15 (perche' non @privacy)",
+    "se fissare i refs/pull/*/head fuori da GitHub per il corso (§4.1)",
+    "questa sessione ha lavorato nella checkout principale, sul ramo corso/ricognizione-consegna-1 che vi era gia' attivo, e non in una worktree propria come chiede l'hook di avvio: lo segnalo, non l'ho corretto a meta' lavoro"
+  ],
+  "esito": "consegnata sul ramo; nessuna PR aperta",
+  "umano_coinvolto": false
+}

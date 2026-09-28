@@ -136,6 +136,20 @@ codice com'era, fallisce. Senza quella prova non è una correzione: è una spera
 **Le esclusioni motivate hanno una data di scadenza.** Quando la ragione che ha escluso
 qualcosa non vale più, la decisione si riapre invece di restare per inerzia.
 
+**Una scadenza si scrive in una coordinata che sopravvive a una ripianificazione:** un
+commit, un percorso di file, un numero di issue, o una condizione verificabile dal
+repo. Mai un'etichetta interna al piano — «PR-4», «lotto 3», «onda 2»: quando il
+piano viene sostituito, l'etichetta perde il referente e la scadenza evapora senza
+che nessuno la veda scadere.
+
+Il 13/09 alle 15:51 il collaudo agentico su PR e' stato spento, con una ragione buona
+e una scadenza scritta come «PR-4 della consegna 1»: falliva per un segreto mancante,
+e senza codice in site/ non aveva nulla da verificare. Il piano del 19/09 ha sostituito
+quella numerazione. Il primo codice in site/ e' arrivato con la PR #34 il 20/09; il
+workflow e' stato riacceso il 25/09, dodici giorni dopo, e nessuno si era accorto che
+la scadenza fosse passata. Nel frattempo la descrizione della skill /collaudo
+continuava a chiederlo su ogni PR prima del merge.
+
 **«Suonano uguali» non vuol dire «sono la stessa cosa».** Due cose con lo stesso nome si
 verificano sul codice prima di trattarle come una sola.
 

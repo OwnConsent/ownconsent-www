@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-25T17:39:41+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "decisione",
+  "titolo": "Corpo della PR #60 sostituito, con il via di Andrea; il collaudo della #60 resta una voce aperta con una condizione verificabile, non con un'etichetta",
+  "contesto": "Il corpo della #60, scritto da Andrea, conteneva l'errore sulla DoD gia' accettato (171218). Andrea: il collaudo non si rifa' adesso; si rifa' chiudendo e riaprendo la PR, solo dopo che la correzione del 401 sara' su main. Questa voce arriva un commit dopo la voce 173941: guard-tempo ha forzato il commit di quella mentre questa era in scrittura, il caso descritto proprio in 173941.",
+  "alternative": [
+    { "opzione": "scrivere la scadenza come «dopo la correzione del 401»", "scartata_perche": "e' un'etichetta, proprio il caso della regola appena scritta in CLAUDE.md (bafd710)" },
+    { "opzione": "rifare subito il collaudo chiudendo e riaprendo la PR", "scartata_perche": "fallirebbe di nuovo con 401; lo esclude Andrea" }
+  ],
+  "scelta": "Nel corpo della #60, punto 3 delle cose aperte: si rifa' chiudendo e riaprendo la PR quando la PR #61 sara' fusa su main; fino ad allora l'unico run e' 36147873278, fallito",
+  "evidenza": [
+    "$ gh pr edit 60 --body-file pr60-body.md -> https://github.com/OwnConsent/ownconsent-www/pull/60",
+    "$ gh pr view 60 --json body | diff - pr60-body.md -> differisce solo per l'a-capo finale",
+    "$ gh pr view 61 --json state -> OPEN, non fusa",
+    "$ gh run list --workflow 357095800 --limit 1 -> 36151435641 (ci/collaudo-token): la modifica del corpo non ha fatto partire nessun collaudo"
+  ],
+  "esito": "applicata",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T16:06:37+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "gate",
+  "titolo": "Regola per CLAUDE.md ferma: il caso che la genera dice che «la DoD continuava a dichiarare il collaudo», e la DoD del repository non lo nomina",
+  "contesto": "Andrea chiede di aggiungere a CLAUDE.md la regola sulle scadenze scritte in coordinate che sopravvivono a una ripianificazione, con il caso del collaudo spento il 13/09. La regola e' coerente con le misure (184350, 153654). Il caso contiene due affermazioni che ho misurato prima di scriverle.",
+  "evidenza": [
+    "$ grep -n -i collaudo docs/DEFINITION-OF-DONE.md CLAUDE.md -> nessuna riga",
+    "$ grep -rn -i 'collaudo\\|claude-pr-review\\|verifica agentica' docs/HANDOFF.md CLAUDE.md README.md -> nessuna riga",
+    "la DoD di CLAUDE.md elenca build/lint/typecheck, go test, test di @qa-test, prove-by-reversion, budget, evidenza, journal: nessun collaudo; docs/DEFINITION-OF-DONE.md rimanda al contesto ci",
+    "l'unico posto in cui ho visto «usala su ogni PR prima del merge» e' la descrizione della skill /collaudo nel plugin, fuori dal repository",
+    "$ gh api .../actions/workflows -> «Verifica agentica su PR» disabled_manually, updated_at 2026-09-13T15:51:23+02:00: alle 16:06 del 25/09 il workflow e' ancora spento, mentre il testo dice «rimasto spento fino al 25/09»"
+  ],
+  "chi_ha_deciso": "il metodo di CLAUDE.md: chi implementa misura, e si ferma se la misura contraddice la descrizione",
+  "cosa_serviva": "una decisione di Andrea sul testo del caso: dove dichiarava il collaudo la «DoD» (o se il riferimento e' alla descrizione della skill), e se «fino al 25/09» vuol dire «ancora oggi»",
+  "esito": "punti 1, 2 e 3 committati; punto 4 e PR fermi in attesa",
+  "umano_coinvolto": true
+}

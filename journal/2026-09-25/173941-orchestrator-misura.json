@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-25T17:39:41+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Punto di contatto fra guard-tempo e journal-check, osservato per la prima volta: un commit puo' precedere la propria voce di journal di qualche minuto",
+  "contesto": "guard-tempo.py (in funzione dal 24/09) conta i minuti dall'ultimo commit, con soglia 20, e forza il commit sul momento bloccando la scrittura successiva. guard-commit.sh e' un'altra cosa: conta i file non committati, con soglia 20. journal-check sollecita le voci solo alla chiusura della sessione. Quando guard-tempo scatta mentre la voce del commit non e' ancora scritta, il commit parte senza la sua voce. Descrizione dei meccanismi: Andrea, 25/09; non li ho letti, stanno nel plugin.",
+  "evidenza": [
+    "17:11:02 date -Is; 17:11:47 guard-tempo blocca la scrittura della voce 171147 («sono passati 65 minuti dall'ultimo commit (soglia 20) e ci sono 1 file non committati»)",
+    "17:12 commit bafd710 (CLAUDE.md) senza voce; la voce 171147 arriva in f0c831a, pochi minuti dopo, e dichiara lo scarto",
+    "in questa sessione guard-tempo e' scattato altre tre volte (12:26, 15:36, 16:04). A 12:26 e 15:36 ha fermato la scrittura di una seconda voce: il commit forzato portava gia' la propria. A 16:04 il commit 0a6bf3d e' partito con la voce scritta via Bash, e la nota su §5 e' stata lasciata cadere"
+  ],
+  "cosa_dice_la_misura": "Non e' un difetto di nessuno dei due meccanismi: uno impone il commit subito, l'altro controlla le voci alla fine. Nell'intervallo fra i due, un commit puo' precedere la sua voce. Chi legge il journal per commit deve cercare la voce anche nel commit successivo, non solo nello stesso.",
+  "esito": "registrata come misura",
+  "umano_coinvolto": true
+}

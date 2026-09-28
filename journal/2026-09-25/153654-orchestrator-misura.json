@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-25T15:36:54+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Il collaudo in CI e' spento per una decisione motivata di Andrea (13/09); la sua scadenza, «primo codice in site/», e' passata il 20/09 senza che nessuno lo riaccendesse o lo registrasse",
+  "contesto": "Andrea chiede se lo spegnimento di claude-pr-review.yml sia una decisione con una ragione o una dimenticanza. Misura sola, nessuna correzione.",
+  "evidenza": [
+    "$ git log --follow -- .github/workflows/claude-pr-review.yml -> un solo commit, 2c0b095 (impianto, 13/09 14:51): lo spegnimento non e' un commit",
+    "$ gh api repos/OwnConsent/ownconsent-www/actions/workflows -> «Verifica agentica su PR» disabled_manually, updated_at 2026-09-13T15:51:23+02:00; «Manutenzione agentica» disabled_manually, updated_at 15:51:24. Uno stato di GitHub, non del repository",
+    "$ gh api orgs/OwnConsent/audit-log -> 404: chi ha premuto non si legge da qui",
+    "journal/2026-09-13/184350-feature-decisione.json (18:43, tre ore dopo lo spegnimento, umano_coinvolto true): «Andrea chiarisce che falliva per il segreto mancante, che ora è configurato, e che l'ha disattivato deliberatamente finché non c'è codice da collaudare»; esclusione.scadenza «si riaccende all'apertura della PR-4 della consegna 1 (primo codice in site/)»",
+    "il primo codice in site/ e' la PR #34 (L05), fusa il 20/09; updated_at del workflow e' ancora 13/09 15:51:23: mai riacceso",
+    "«PR-4» e' la numerazione del piano a quattro PR del 13/09 (181722-orchestrator-decisione); il piano del 19/09 a undici lotti la sostituisce. grep -n 'claude-pr-review\\|riaccend' docs/plan/issue-8.json -> nessuna riga: la scadenza non e' passata nel piano nuovo",
+    "grep -i 'nightly\\|Manutenzione agentica\\|riaccend' journal/*/*.json -> nessuna voce spiega lo spegnimento della manutenzione notturna, un secondo dopo; nessuna voce registra la scadenza mancata"
+  ],
+  "cosa_dice_la_misura": "Tutte e due le cose, in due tempi. Lo spegnimento e' una decisione con una ragione e una scadenza, registrata (184350). La scadenza e' una dimenticanza: il suo innesco era scritto con un nome («PR-4») che e' sparito quando il piano e' stato rifatto, e non e' entrato nel piano nuovo. E' il caso della regola «le esclusioni motivate hanno una data di scadenza»: la ragione e' caduta il 20/09 e la decisione non si e' riaperta. Lo spegnimento della manutenzione notturna, un secondo dopo, il journal non lo copre.",
+  "esito": "registrata; nessuna modifica al workflow",
+  "umano_coinvolto": false
+}

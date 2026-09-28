@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-26T15:30:40+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "correzione",
+  "titolo": "Appendice di corso/firme-ricostruite.md: mancava la riga della PR #48 (7532799); rimessa e confronto tabella/appendice fatto con un comando",
+  "contesto": "Il collaudo della #60 ha segnalato (MEDIUM) che l'appendice, la copia congelata dei trailer PR per PR, aveva 32 righe contro le 33 della tabella. Mancava la #48, proprio la PR senza (#48) nel soggetto.",
+  "evidenza": [
+    "git fetch origin '+refs/pull/48/head:refs/remotes/pr/48'; gh pr view 48 -> base 8ae445b, head chore/ignora-pycache, un commit 763ed39",
+    "git log 8ae445b..pr/48 --format='%h:[%(trailers:key=Cantiere-Agent,valueonly)]' -> 763ed39:[]",
+    "diff delle coppie commit-PR (comando scritto nel file) su HEAD prima della correzione -> '< 7532799 #48'; dopo -> nessuna riga, 33 su 33",
+    "script di confronto dei conteggi per ruolo PR per PR, tabella contro appendice -> 'campi concordi su tutte le PR comuni: True'; sulla versione vecchia segnala solo '#48 solo in tabella'"
+  ],
+  "cosa_era_sbagliato": "L'appendice e' stata generata elencando le PR fino a #42 e la #48 e' rimasta fuori. Probabilmente perche' e' l'unica ricavata dal nome del ramo e non dal soggetto, ma non l'ho misurato. Nessun controllo confrontava le due parti.",
+  "esito": "riga aggiunta; il comando di confronto e' nel file, da rifare a ogni modifica. Nessun'altra differenza trovata",
+  "nota_trascrizione": "Voce scritta dopo le misure che riporta, nella stessa sessione del 26/09, prima del commit che le contiene.",
+  "umano_coinvolto": true
+}

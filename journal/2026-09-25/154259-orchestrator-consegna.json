@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-25T15:42:59+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "consegna",
+  "titolo": "Quattro correzioni alla ricognizione e al registro, in commit separati, e la misura sullo spegnimento del collaudo",
+  "contesto": "Secondo giro di Andrea sulla ricognizione della consegna 1. Lavoro in .claude/worktrees/ricognizione-c1, spinto su origin/corso/ricognizione-consegna-1.",
+  "evidenza": [
+    "b93f133 journal: worktree propria (153553)",
+    "9699402 misura: collaudo spento per decisione motivata (184350), scadenza mancata il 20/09 (153654); mio fallimento sul grep del mattino (153655)",
+    "cbb8315 correzione 1: fonte dei tetti 20/45 = maxTurns delle schede agenti, dato fornito da Andrea; 30/60 dal 24/09 (153813)",
+    "2b17109 correzione 2: voce di correzione 153839; campo corretta_da aggiunto a 110840 e 151439, nient'altro cambiato",
+    "9c367cd correzione 3: corso/firme-ricostruite.md (154130)",
+    "0195839 correzione 4: etichette L09 e L14 del 21/09 disambiguate (154243)"
+  ],
+  "dod_soddisfatta": {
+    "commit_separati": "si: uno per correzione, piu' la misura e la worktree",
+    "journal_durante": "si: sette voci con ts da date -Is, una per commit",
+    "niente_moduli_slide_racconto_copione": "si",
+    "workflow_non_toccato": "si: misura sola",
+    "worktree_propria": "si, dal primo commit di questo giro"
+  },
+  "cosa_resta_ad_andrea": [
+    "§1.3 della ricognizione dice ancora che grep «collaudo|pr-fanout» trova solo due voci e non cita 184350: e' sbagliato (153655). Non l'ho corretto perche' la misura era «senza correggere niente»; serve un tuo via",
+    "il collaudo in CI: la scadenza del 13/09 e' passata il 20/09; riaccenderlo o riscrivere la scadenza e' una tua decisione",
+    "lo spegnimento della manutenzione notturna (13/09 15:51:24) non ha voce di journal",
+    "il ramo locale corso/ricognizione-consegna-1 della checkout principale e' indietro rispetto al remoto"
+  ],
+  "esito": "consegnata sul ramo; nessuna PR aperta",
+  "umano_coinvolto": false
+}

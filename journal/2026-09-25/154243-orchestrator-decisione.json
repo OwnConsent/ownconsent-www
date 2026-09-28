@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T15:42:43+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "decisione",
+  "titolo": "Etichette doppie disambiguate nella ricognizione: «L09 (21/09)» e «L14 (21/09)» contro L09 e L14 del piano; conteggi per lotto separati",
+  "contesto": "Correzione 4 di Andrea. Nel journal l'etichetta L14 indica anche il rientro di F13/F14 di @qa-test (21/09, PR #42), e L09 anche il fix della raccolta dei test (21/09, PR #44). I conteggi per lotto della ricognizione li mescolavano.",
+  "alternative": [
+    { "opzione": "rietichettare le voci del 21/09 nel journal", "scartata_perche": "il journal si corregge solo per aggiunta; la disambiguazione sta nel documento che lo legge" },
+    { "opzione": "nomi nuovi senza data (per esempio L14-bis)", "scartata_perche": "un nome inventato che nel repository non compare da nessuna parte; la data e' verificabile sul ts delle voci" }
+  ],
+  "scelta": "§1.4 con una tabella nome-nel-file / etichetta-nel-journal / lavoro / chi / voci / PR, e la regola «un'etichetta indica un solo lavoro»; §1.1, §2 e §3 rifatti con i conteggi separati",
+  "evidenza": [
+    "L14 (21/09): 5 voci, tutte qa-test, 09:43-10:40; L14 del piano: 35 voci (orchestrator 27, qa-test 6, architect 2), 23/09 14:55 - 24/09 12:51",
+    "L09 (21/09): 5 voci, tutte orchestrator, 13:57-14:03; L09 del piano: 8 voci (accessibility 5, orchestrator 3), 22/09 10:45-10:59"
+  ],
+  "esito": "applicata; le voci del 21/09 non sono state toccate",
+  "umano_coinvolto": true
+}

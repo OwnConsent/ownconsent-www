@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T15:38:39+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "correzione",
+  "corregge": [
+    "2026-09-22/110840-orchestrator-consegna.json",
+    "2026-09-23/151439-orchestrator-gate.json"
+  ],
+  "cosa_era_sbagliato": "Entrambe attribuiscono l'arresto degli agenti al campo tetto_turni del piano: 110840 in costo_di_cantiere, «il tetto dei turni (45, tetto_turni del piano)»; 151439 in contesto, «entrambi al tetto (45 turni, tetto_turni del piano)». Quel campo non lo legge nessuno script, hook o workflow. Il 45 a cui gli agenti si sono fermati e' il maxTurns della scheda dell'agente, e coincideva per caso con il tetto_turni 45 di L10 e L14.",
+  "come_lo_so": [
+    "$ git grep -n tetto_turni -- ':!journal' ':!docs/plan/issue-8.json' ':!corso' -> nessuna riga, exit=1: nel repository nessun codice, hook (githooks/) o workflow (.github/) nomina il campo",
+    "controprova sui lotti in cui i due numeri non coincidono: L09 tetto_turni 50, arresto a 20 (105042); L08 40, arresto a 20 (092500); L07 110, arresto a 45 (171823). Se il campo fosse applicato, quegli arresti sarebbero caduti al valore del piano",
+    "la fonte del 45 sono i maxTurns delle schede degli agenti del plugin cantiere: dato fornito da Andrea il 25/09, fuori dal perimetro di questa sessione, che guard-paths blocca (122651). Gli hook del plugin non li ho potuti leggere: che nessuno di loro legga tetto_turni lo so dall'affermazione di Andrea e dalla controprova qui sopra, non da una lettura"
+  ],
+  "conseguenza": "Le due voci restano come sono, con un campo corretta_da che rimanda qui. Chi le cita per il corso cita anche questa. La ricognizione ne parla in corso/ricognizione/consegna-1.md §1.1 b.",
+  "esito": "la voce superata resta, questa la corregge",
+  "umano_coinvolto": true
+}

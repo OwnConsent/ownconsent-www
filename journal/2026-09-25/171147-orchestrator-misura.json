@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-25T17:11:47+02:00",
+  "agente": "orchestrator (sessione principale, /lezione ristretta)",
+  "issue": "8",
+  "lotto": null,
+  "stadio": "corso",
+  "tipo": "misura",
+  "titolo": "Regola sulle scadenze in CLAUDE.md (bafd710), col caso rimisurato: il collaudo e' stato riacceso oggi alle 16:22 e ha gia' girato sulla PR #60, fallito con 401",
+  "contesto": "Andrea accetta l'obiezione sulla DoD (160637) e mi dice che la mia misura «ancora spento» e' vecchia. Prima di scrivere ho rimisurato con i suoi comandi. bafd710 e' uscito senza questa voce: guard-tempo bloccava la scrittura della voce finche' non si committava CLAUDE.md. Prima del commit ho scartato con git checkout -- CLAUDE.md la versione del caso scritta alle 16:06 («ancora spento il 25/09»), superata dalla misura, e l'ho riscritta con il testo di Andrea.",
+  "evidenza": [
+    "$ gh workflow list --all -> «Verifica agentica su PR active 357095800»; anche «Manutenzione agentica active»; «PROVA L12 ... disabled_manually»",
+    "$ gh api .../actions/workflows/357095800 -> active, updated_at 2026-09-25T16:22:39+02:00 (alle 16:06, in 160637, era ancora 13/09 15:51:23: la misura non era sbagliata, era di prima della riaccensione)",
+    "$ gh run list --workflow 357095800 --limit 3 -> 36151435641 success (ci/collaudo-token, 17:01); 36147873278 failure (corso/ricognizione-consegna-1, 16:29); 34759596021 failure (13/09)",
+    "$ gh run view 36147873278 --log-failed -> «App token exchange failed: 401 Unauthorized - Claude Code is not installed on this repository»",
+    "$ gh run view 36147873278 --json headSha -> c991c0e: il collaudo della PR #60 e' girato sul ramo prima del punto 4",
+    "13/09 -> 25/09: dodici giorni, come dice il testo del caso"
+  ],
+  "cosa_dice_la_misura": "Il testo del caso di Andrea regge, e l'ho scritto parola per parola. Una cosa non combacia con il suo secondo messaggio («prima il punto 4, poi la PR»): la PR #60 esiste gia', aperta alle 16:29 sul ramo, e il suo unico collaudo e' girato su c991c0e, un ramo incompleto. Il workflow non scatta su synchronize: i commit successivi non verranno collaudati. Non apro una seconda PR; lo riporto.",
+  "esito": "regola e caso in CLAUDE.md sotto «Le esclusioni motivate hanno una data di scadenza»",
+  "umano_coinvolto": true
+}

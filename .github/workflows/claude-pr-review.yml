@@ -11,17 +11,26 @@ on:
   pull_request:
     types: [opened, ready_for_review, reopened]
 
-permissions:
-  contents: read
-  pull-requests: write
-  id-token: write
+# Ogni job dichiara i suoi permessi. Nessuno qui, perche' un permesso a livello
+# di workflow arriverebbe anche all'agente.
+permissions: {}
 
 concurrency:
   group: review-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
+env:
+  # Fonte unica del budget: la legge il timeout-minutes dello step ventaglio
+  # e la legge .github/scripts/collaudo-esito.sh per riconoscere il timeout.
+  BUDGET_VENTAGLIO_MIN: 30
+
+# Due job, perche' l'agente puo' scrivere $GITHUB_ENV e $GITHUB_PATH, e il
+# runner li applica agli step successivi dello stesso job (#69). Nel job
+# dell'agente, dopo l'agente, non si decide niente: si carica il file del
+# verdetto. Giudica e pubblica un altro job, su un runner nuovo, che del job
+# dell'agente riceve solo quel file, come dato, e due output valutati dal runner.
 jobs:
-  verifica:
+  ventaglio:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     # Rete di sicurezza: il budget che conta e' quello dello step ventaglio, e
@@ -29,25 +38,30 @@ jobs:
     # numero e' scritto a mano; tests/ci/test_collaudo_esito.py lo tiene sopra
     # il budget.
     timeout-minutes: 35
-    env:
-      # Fonte unica del budget: la legge il timeout-minutes dello step ventaglio
-      # e la legge .github/scripts/collaudo-esito.sh per riconoscere il timeout.
-      BUDGET_VENTAGLIO_MIN: 30
+    # Sola lettura: l'action con github_token non chiede l'OIDC (token.ts), e
+    # l'agente legge la PR con gh pr view e gh pr diff. Misura nel journal
+    # 2026-09-29/080841.
+    permissions:
+      contents: read
+      pull-requests: read
+    # Solo espressioni che il runner valuta da se': l'esito dello step agente e
+    # l'output di uno step che gira prima dell'agente. Mai un output di uno step
+    # successivo: girerebbe con l'ambiente che l'agente puo' aver cambiato.
+    outputs:
+      esito: ${{ steps.ventaglio.outcome }}
+      inizio: ${{ steps.inizio.outputs.t }}
     steps:
-      - uses: actions/checkout@v4
+      # L'action rimette comunque il token nell'URL di origin (git-config.ts):
+      # questo toglie solo quello del checkout. Il confine sono i permessi sopra.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      # Il verdetto lo pubblica il job, non l'agente: l'agente scrive un file e il
-      # passo «Pubblica il verdetto» lo commenta. Qui la cartella si svuota, perche'
-      # un .collaudo/verdetto.md arrivato col checkout passerebbe per il verdetto
-      # di un agente rimasto muto. Lo script della decisione si copia fuori dal
-      # workspace prima del ventaglio: l'agente ha Write, e quello che decide se il
-      # suo silenzio e' verde non deve essere un file che puo' riscrivere.
+      # Un .collaudo/verdetto.md arrivato col checkout passerebbe per il verdetto
+      # di un agente rimasto muto: la cartella si svuota prima del ventaglio.
       - name: Prepara la cartella del verdetto
-        run: |
-          rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
-          cp "$GITHUB_WORKSPACE/.github/scripts/collaudo-esito.sh" "$RUNNER_TEMP/collaudo-esito.sh"
+        run: rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
 
       # Lo SHA del commit sotto collaudo e' la chiave del verdetto. github.sha qui
       # e' il merge commit, non l'head della PR. Si stampa a ogni tentativo per
@@ -61,8 +75,9 @@ jobs:
           echo "github.event.pull_request.head.sha=${HEAD_SHA}"
           echo "github.sha=${MERGE_SHA}"
 
-      # Il contesto degli step non distingue uno step scaduto da uno fallito: il
-      # timeout si inferisce dal tempo misurato fra questi due passi.
+      # Il tempo del ventaglio lo legge il job pubblica dall'API dei job. Questo
+      # istante resta come riserva, se l'API non risponde: e' prima dell'agente,
+      # quindi l'agente non lo puo' toccare.
       - name: Inizio del ventaglio
         id: inizio
         run: echo "t=$(date +%s)" >> "$GITHUB_OUTPUT"
@@ -70,15 +85,14 @@ jobs:
       - name: Ventaglio di revisione
         id: ventaglio
         timeout-minutes: ${{ fromJSON(env.BUDGET_VENTAGLIO_MIN) }}
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@8ce9314fa9a404564fa7e954cd84f25bcba2b829 # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # Senza questo input l'azione si autentica come app GitHub di Claude, che
           # su questo repo non e' installata: il 25/09 il collaudo e' fallito cosi',
           # 401 su tre tentativi. Passando il token del workflow i permessi restano
-          # quelli dichiarati sopra — contents: read, pull-requests: write — invece
-          # dell'insieme completo che l'app pretende (Actions, Workflows e hook in
-          # scrittura compresi).
+          # quelli dichiarati sul job invece dell'insieme completo che l'app pretende
+          # (Actions, Workflows e hook in scrittura compresi).
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             Esegui la procedura di ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md sulla PR
@@ -108,26 +122,26 @@ jobs:
             ## Collaudo — run ${{ github.run_id }}, tentativo ${{ github.run_attempt }}
 
             A parte quel file, non modificare file. Non approvare. Non mergiare.
-          # Write serve al file del verdetto. Di gh pr restano solo le letture; i gh
-          # che scrivono sono anche vietati per nome, perche' in --permission-mode auto
-          # un comando non elencato puo' essere approvato lo stesso, e un commento
-          # dell'agente si aggiungerebbe a quello del job.
+          # Il verdetto si scrive in .collaudo/: la regola di percorso sta su Edit,
+          # perche' una regola Write(...) Claude Code l'accetta e non la consulta
+          # mai (docs, permissions). In --permission-mode auto questa allow non
+          # blocca una scrittura altrove, la manda al classificatore: il rimedio
+          # contro $GITHUB_ENV e $GITHUB_PATH e' il job separato, non questa riga.
+          # Di gh pr restano solo le letture; i gh che scrivono sono anche vietati
+          # per nome, perche' in auto un comando non elencato puo' essere approvato
+          # lo stesso, e un commento dell'agente si aggiungerebbe a quello del job.
           claude_args: |
             --max-turns 40
             --permission-mode auto
-            --allowedTools "Read,Grep,Glob,Write,Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Task"
+            --allowedTools "Read,Grep,Glob,Edit(./.collaudo/**),Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Task"
             --disallowedTools "Bash(gh pr comment *),Bash(gh pr review *),Bash(gh api *)"
             --model claude-opus-4-6
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fine del ventaglio
-        id: fine
-        if: ${{ !cancelled() }}
-        run: echo "t=$(date +%s)" >> "$GITHUB_OUTPUT"
-
-      # Misure, non logica: dove sta il file, se ce n'e' uno altrove (percorso
-      # relativo), e se l'agente ha sbattuto contro un permesso.
+      # Misure, non logica, e nessun output: da qui in poi l'ambiente puo' essere
+      # quello scelto dall'agente. Dove sta il file, se ce n'e' uno altrove, e se
+      # l'agente ha sbattuto contro un permesso.
       - name: Diagnostica del ventaglio
         if: ${{ !cancelled() }}
         env:
@@ -142,62 +156,165 @@ jobs:
             echo "execution_file non disponibile: '${ESECUZIONE}'"
           fi
 
-      # Un commento di GitHub non supera i 65536 caratteri. Qui si misura il file in
-      # byte: in UTF-8 i byte sono almeno quanti i caratteri, quindi un tetto in byte
-      # vale qualunque sia l'unita' che GitHub conta. Il perche' dei 60000 e' nel
-      # commit che li introduce.
-      - name: Misura il verdetto
-        id: misura
+      # Il solo file del verdetto passa al job pubblica. Se manca, nessun
+      # artifact: pubblica lo verifica con l'API prima di dire «nessun verdetto».
+      - name: Consegna il verdetto
         if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: verdetto-tentativo-${{ github.run_attempt }}
+          path: ${{ github.workspace }}/.collaudo/verdetto.md
+          if-no-files-found: ignore
+          retention-days: 1
+
+  # Giudica e pubblica. Runner nuovo: non eredita niente dall'ambiente del job
+  # ventaglio. Gira quando il ventaglio finisce in qualunque stato, tranne una
+  # run cancellata (a mano o dalla concurrency): expressions.md raccomanda
+  # !cancelled() per «regardless of its success or failure»; always() girerebbe
+  # anche su un annullamento. Cosa vede cancelled() quando e' il job ventaglio a
+  # scadere la documentazione non lo dice (journal 2026-09-29/080841, punto 6).
+  pubblica:
+    needs: ventaglio
+    if: ${{ !cancelled() && github.event.pull_request.draft == false }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # L'unico job che scrive sulla PR. actions: read serve all'API dei job e
+    # degli artifact della run.
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: write
+    steps:
+      # Solo lo script della decisione, dal commit sotto collaudo come prima.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/scripts
+
+      # Fuori dal workspace, in una cartella che non contiene altro. Il file si
+      # legge soltanto: mai eseguito, mai source, mai dentro un'espressione.
+      - name: Ricevi il verdetto
+        id: scarica
+        continue-on-error: true
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: verdetto-tentativo-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verdetto-ricevuto
+
+      # Il testo dell'agente si copia neutralizzando ogni «cantiere-collaudo»:
+      # il trattino diventa U+2011, che si legge uguale e non coincide col
+      # marcatore. Il marcatore vero lo antepone lo script. Un download fallito
+      # non e' «nessun verdetto» se l'artifact esiste: si chiede all'API.
+      - name: Prepara il verdetto
+        id: prepara
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SCARICATO: ${{ steps.scarica.outcome }}
+          RICEVUTO: ${{ runner.temp }}/verdetto-ricevuto/verdetto.md
+          ARTEFATTO: verdetto-tentativo-${{ github.run_attempt }}
         run: |
-          verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
+          trap 'echo "uscita=$?" >> "$GITHUB_OUTPUT"' EXIT
+          verdetto="$RUNNER_TEMP/verdetto.md"
+          rm -f "$verdetto"
+          if [ "$SCARICATO" = "success" ]; then
+            if [ ! -f "$RICEVUTO" ]; then
+              echo "::error title=Verdetto illeggibile::l'artifact ${ARTEFATTO} non contiene verdetto.md"
+              exit 4
+            fi
+            python3 - "$RICEVUTO" "$verdetto" <<'PY'
+          import re, sys
+          s = open(sys.argv[1], encoding='utf-8', errors='replace').read()
+          n = len(re.findall('cantiere-collaudo', s, flags=re.I))
+          s = re.sub('cantiere-collaudo', lambda m: m.group(0).replace('-', '‑'), s, flags=re.I)
+          open(sys.argv[2], 'w', encoding='utf-8').write(s)
+          print(f'occorrenze di cantiere-collaudo neutralizzate: {n}')
+          PY
+          else
+            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?name=$ARTEFATTO" --jq '.total_count')
+            if [ "$n" != "0" ]; then
+              echo "::error title=Verdetto illeggibile::download di ${ARTEFATTO} fallito, ma l'API ne conta ${n}"
+              exit 4
+            fi
+            echo "nessun artifact ${ARTEFATTO}: l'agente non ha scritto il verdetto"
+          fi
+          # Un commento di GitHub non supera i 65536 caratteri. Qui si misura il file in
+          # byte: in UTF-8 i byte sono almeno quanti i caratteri, quindi un tetto in byte
+          # vale qualunque sia l'unita' che GitHub conta. Il perche' dei 60000 e' nel
+          # commit che li introduce.
           byte=$(stat -c %s "$verdetto" 2>/dev/null || echo 0)
-          echo "byte=$byte" >> "$GITHUB_OUTPUT"
           if [ "$byte" -gt 60000 ]; then echo "lungo=true" >> "$GITHUB_OUTPUT"; else echo "lungo=false" >> "$GITHUB_OUTPUT"; fi
           echo "verdetto: $byte byte (tetto 60000)"
 
       - name: Conserva il verdetto intero
         id: artefatto
-        if: ${{ !cancelled() && steps.misura.outputs.lungo == 'true' }}
-        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && steps.prepara.outputs.lungo == 'true' }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: verdetto-completo-tentativo-${{ github.run_attempt }}
-          path: ${{ github.workspace }}/.collaudo/verdetto.md
+          path: ${{ runner.temp }}/verdetto.md
           if-no-files-found: error
 
-      # Pubblicare non e' piu' una scelta dell'agente: il 26/09 l'agente ha taciuto
+      # Pubblicare non e' una scelta dell'agente: il 26/09 l'agente ha taciuto
       # su 4 riesecuzioni su 5, e sul rerun anche con l'istruzione di commentare
-      # sempre (36257241401, tentativo 2). Gira anche se il ventaglio e' fallito
-      # (il perche' e' nel commit che lo introduce); non gira su una run cancellata
-      # dalla concurrency. Il rosso e' riservato al verdetto assente: un verdetto
-      # troppo lungo si pubblica troncato e resta verde.
+      # sempre (36257241401, tentativo 2). Il rosso e' riservato al verdetto
+      # assente: un verdetto troppo lungo si pubblica troncato e resta verde.
       # Verdetto assente: la decisione la prende .github/scripts/collaudo-esito.sh.
       # Timeout -> rosso; stesso commit gia' collaudato -> rimando, verde; altrimenti
       # -> «nessun verdetto», rosso. Il marcatore nel primo rigo lo scrive lo script.
+      # Ogni altra uscita -> «decisione non presa», senza marcatore, rosso.
       - name: Pubblica il verdetto
         if: ${{ !cancelled() }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
-          ESITO_VENTAGLIO: ${{ steps.ventaglio.outcome }}
-          LUNGO: ${{ steps.misura.outputs.lungo }}
+          ESITO_VENTAGLIO: ${{ needs.ventaglio.outputs.esito }}
+          INIZIO: ${{ needs.ventaglio.outputs.inizio }}
+          PREPARA: ${{ steps.prepara.outcome }}
+          USCITA_PREPARA: ${{ steps.prepara.outputs.uscita }}
+          LUNGO: ${{ steps.prepara.outputs.lungo }}
           ARTEFATTO_URL: ${{ steps.artefatto.outputs.artifact-url }}
           SHA: ${{ github.event.pull_request.head.sha }}
-          INIZIO: ${{ steps.inizio.outputs.t }}
-          FINE: ${{ steps.fine.outputs.t }}
         run: |
-          verdetto="$GITHUB_WORKSPACE/.collaudo/verdetto.md"
+          verdetto="$RUNNER_TEMP/verdetto.md"
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
+          # Nessun marcatore: una decisione non presa non e' un verdetto e non
+          # deve diventare il bersaglio di un rimando.
+          non_presa() {
+            printf 'Commit `%s`\n\n**Collaudo: decisione non presa (uscita %s).** %s Il job non sa se questo commit abbia un verdetto.\n' \
+              "${SHA:0:7}" "$1" "$2" > "$corpo"
+            url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+            echo "::error title=Decisione non presa::${url}. ${2} (uscita ${1})"
+            exit 1
+          }
+          if [ "$PREPARA" != "success" ]; then
+            non_presa "${USCITA_PREPARA:-sconosciuta}" "La preparazione del verdetto non e' riuscita."
+          fi
           # I commenti servono solo al rimando: lo script li chiede con l'uscita 3,
           # dopo aver escluso verdetto e timeout. Un verdetto scritto si pubblica
           # senza nessuna chiamata all'API dei commenti (finding di /code-review 65).
-          # Il file si cancella prima: l'agente ha Write e poteva lasciarne uno.
           commenti="$RUNNER_TEMP/commenti.json"
           rm -f "$commenti"
-          if [ -n "$INIZIO" ]; then trascorsi=$(( ${FINE:-$(date +%s)} - INIZIO )); else trascorsi=0; fi
+          # Il tempo del ventaglio si legge dall'API dei job: inizio e fine dello
+          # step come li registra GitHub. Se l'API non risponde, riserva: dall'inizio
+          # registrato prima dell'agente a adesso, che sovrastima.
+          tempi=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs" --paginate \
+            --jq '.jobs[] | select(.name == "ventaglio") | .steps[] | select(.name == "Ventaglio di revisione") | "\(.started_at) \(.completed_at)"' \
+            2>/dev/null | head -n 1) || tempi=""
+          read -r t0 t1 <<< "$tempi" || true
+          # date -d "" vale la mezzanotte di oggi: i campi vuoti si scartano prima.
+          if [ -n "${t0:-}" ] && [ -n "${t1:-}" ] && s0=$(date -d "$t0" +%s 2>/dev/null) && s1=$(date -d "$t1" +%s 2>/dev/null) && [ "$s1" -ge "$s0" ]; then
+            trascorsi=$((s1 - s0))
+            echo "ventaglio dall'API dei job: ${t0} -> ${t1}"
+          elif [[ "$INIZIO" =~ ^[0-9]+$ ]]; then
+            trascorsi=$(( $(date +%s) - INIZIO ))
+            echo "::warning title=Tempo del ventaglio stimato::l'API dei job non ha dato inizio e fine dello step ('${tempi}'): ${trascorsi} s dall'inizio registrato a adesso, per eccesso"
+          else
+            trascorsi=0
+            echo "::warning title=Tempo del ventaglio ignoto::ne' l'API dei job ne' l'inizio registrato ('${INIZIO}'): trascorsi=0"
+          fi
           echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"
           decidi() {
-            bash "$RUNNER_TEMP/collaudo-esito.sh" \
+            bash "$GITHUB_WORKSPACE/.github/scripts/collaudo-esito.sh" \
               "$verdetto" "$SHA" "$commenti" "$ESITO_VENTAGLIO" "$trascorsi" "$BUDGET_VENTAGLIO_MIN" "$corpo"
           }
           rc=0; decisione=$(decidi) || rc=$?
@@ -216,24 +333,26 @@ jobs:
             rc=0; decisione=$(decidi) || rc=$?
           fi
           if [ "$rc" -ne 0 ]; then
-            echo "::error title=Decisione non presa::collaudo-esito.sh e' uscito con ${rc} (${decisione})"
-            exit 1
+            non_presa "$rc" "collaudo-esito.sh ha risposto '${decisione}'."
           fi
           echo "decisione: ${decisione}"
-          if [ "$decisione" != "verdetto" ]; then
-            url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
-            case "$decisione" in
-              rimando)
-                echo "::notice title=Rimando al verdetto dello stesso commit::${url}. Questo giro non ha scritto un verdetto; il commit ${SHA} ne ha gia' uno."
-                exit 0 ;;
-              timeout)
-                echo "::error title=Timeout del ventaglio::${url}. Il ventaglio e' finito con esito ${ESITO_VENTAGLIO} dopo ${trascorsi} s, budget ${BUDGET_VENTAGLIO_MIN} min. Inferito dal tempo: il contesto degli step non distingue una scadenza da un fallimento."
-                exit 1 ;;
-              *)
-                echo "::error title=Nessun verdetto::${url}. Il collaudo non ha lasciato un verdetto e il commit ${SHA} non ne ha uno precedente (ventaglio: ${ESITO_VENTAGLIO}). Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
-                exit 1 ;;
-            esac
-          fi
+          case "$decisione" in
+            verdetto) ;;
+            rimando)
+              url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+              echo "::notice title=Rimando al verdetto dello stesso commit::${url}. Questo giro non ha scritto un verdetto; il commit ${SHA} ne ha gia' uno."
+              exit 0 ;;
+            timeout)
+              url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+              echo "::error title=Timeout del ventaglio::${url}. Il ventaglio e' finito con esito ${ESITO_VENTAGLIO} dopo ${trascorsi} s, budget ${BUDGET_VENTAGLIO_MIN} min. Inferito dal tempo: il contesto degli step non distingue una scadenza da un fallimento."
+              exit 1 ;;
+            nessun-verdetto)
+              url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
+              echo "::error title=Nessun verdetto::${url}. Il collaudo non ha lasciato un verdetto e il commit ${SHA} non ne ha uno precedente (ventaglio: ${ESITO_VENTAGLIO}). Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
+              exit 1 ;;
+            *)
+              non_presa "$rc" "collaudo-esito.sh ha risposto con una parola sconosciuta: '${decisione}'." ;;
+          esac
           if [ "$ESITO_VENTAGLIO" != "success" ]; then
             printf '> **Nota del workflow:** il ventaglio di revisione è terminato con esito `%s`. Il verdetto qui sotto potrebbe essere incompleto.\n\n' "$ESITO_VENTAGLIO" >> "$corpo"
           fi

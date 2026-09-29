@@ -1,0 +1,32 @@
+{
+  "ts": "2026-09-29T08:14:05+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Collaudo in due job: ventaglio (agente, sola lettura) e pubblica (runner nuovo, unico con pull-requests: write), il verdetto passa come artifact trattato solo come dato",
+  "contesto": "Issue #69: l'agente puo' scrivere $GITHUB_ENV e $GITHUB_PATH, e il runner li applica agli step successivi dello stesso job. Disegno del brief di Andrea del 29/09, fase 2; misure nella voce 080841. Scritto dalla sessione, non da un subagente: lavoro sequenziale su un contesto gia' caricato.",
+  "alternative": [
+    { "opzione": "controlli nello stesso job (ripulire PATH, NODE_OPTIONS, verificare gh prima di pubblicare)", "scartata_perche": "ogni controllo girerebbe con l'ambiente scelto dall'agente: il controllo stesso usa bash, env, which, scelti dal PATH che l'agente ha scritto. Si puo' solo aggiungere un controllo dopo l'altro senza chiudere il caso" },
+    { "opzione": "impronta dello script di decisione, confrontata con l'output di uno step precedente all'agente", "scartata_perche": "il confronto lo fa uno step successivo all'agente, con uno sha256sum e un bash risolti dal suo PATH; la voce 183934 lo aveva gia' scritto: 'L'impronta del punto 2 non chiude questo caso'" },
+    { "opzione": "job a valle con always()", "scartata_perche": "always() gira anche su una run annullata a mano; expressions.md:344 raccomanda !cancelled()" },
+    { "opzione": "passare a pubblica la durata o la presenza del verdetto come output del job ventaglio", "scartata_perche": "sarebbero output di step successivi all'agente; la durata viene dall'API dei job, la presenza dall'artifact e, se il download fallisce, dall'API degli artifact" }
+  ],
+  "evidenza": [
+    "prompt dell'agente identico a origin/main: confronto dei valori YAML, 'prompt identico: True' (al primo tentativo False: avevo tagliato il blocco due righe troppo presto; il secondo includeva il commento successivo; corretto al terzo)",
+    "actionlint 1.7.7 sul file nuovo: uscita 0 (senza shellcheck installato)",
+    "`date -d \"\" +%s` -> 1790632800, rc=0: una stringa vuota vale la mezzanotte di oggi. Il controllo dei campi vuoti dei tempi dell'API sta prima della conversione",
+    "banco a secco sui run: estratti (scratchpad, non committato): 11 casi, fra cui marcatore falso a meta' verdetto -> 1 sola occorrenza letterale di 'cantiere-collaudo', in prima riga; timeout con tempi API 19:00:00 -> 19:30:00 -> 'timeout dopo 30 minuti e 0 secondi'; JSON dei commenti non valido -> 'decisione non presa (uscita 2)' senza marcatore, rc 1",
+    "tests/ci con il workflow nuovo: 'Ran 101 tests', 'FAILED (errors=23)', tutti nei test che leggono jobs['verifica']: li aggiorna @qa-test"
+  ],
+  "limiti": [
+    "Edit(./.collaudo/**) al posto di Write: in auto mode restringe cio' che passa senza classificatore, non blocca",
+    "l'agente ha comunque il token (URL di origin, GH_TOKEN), di sola lettura",
+    "il testo neutralizzato usa U+2011 al posto del trattino: si legge uguale, non coincide col marcatore",
+    "se l'API dei job non risponde, il tempo e' dall'inizio registrato ad adesso: sovrastima, dichiarata con un warning",
+    "lo script di decisione viene dal checkout del commit sotto collaudo, come prima: la #69 isola l'agente, non l'autore della PR"
+  ],
+  "esito": "applicata nel workflow; test a @qa-test",
+  "umano_coinvolto": false
+}

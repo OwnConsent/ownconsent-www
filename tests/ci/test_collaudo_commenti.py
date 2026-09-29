@@ -17,26 +17,31 @@ Criteri di accettazione (Andrea):
 Tre livelli:
   1. lo script (contratto dell'uscita 3);
   2. la statica dello step (richiesta di Andrea: test «statici»);
-  3. OLTRE lo statico, dichiarato: il frammento `run:` dello step, ESTRATTO dal
-     YAML e non riscritto, eseguito con `bash -e` (la shell di GitHub per uno
-     step senza `shell:` su ubuntu) e con un `gh` finto in PATH che registra le
-     chiamate e, a comando, fa fallire `gh api`. Lo script collaudo-esito.sh
-     posato in $RUNNER_TEMP e' quello di ci_root(), come fa il passo «Prepara».
+  3. OLTRE lo statico, dichiarato: i frammenti `run:` di «Prepara il verdetto» e
+     «Pubblica il verdetto» del job `pubblica` (dal #69, 659ade6), ESTRATTI dal
+     YAML e non riscritti, eseguiti in ordine con `bash -e` (la shell di GitHub
+     per uno step senza `shell:` su ubuntu), con l'env risolto dal YAML e un
+     `gh` finto in PATH che registra le chiamate e, a comando, fa fallire
+     `gh api`. Il banco e' in collaudo_banco.py. Lo script collaudo-esito.sh e'
+     quello di ci_root(), posato nel checkout finto del job pubblica.
+
+Dal #69 prima della chiamata allo script c'e' una sola `gh api`, quella dei
+tempi del job ventaglio (…/attempts/N/jobs), che tollera il fallimento: la
+statica lo ammette per nome e l'esecuzione prova che, se fallisce insieme ai
+commenti, il verdetto esce lo stesso.
 
 Tutto si risolve da ci_root(): con CI_ROOT=<copia> si collauda una copia (anche
 un `git archive` di un commit precedente).
 """
 from __future__ import annotations
 
-import os
 import pathlib
 import re
-import shutil
-import stat
 import subprocess
 import tempfile
 import unittest
 
+from collaudo_banco import esegui_job
 from helpers import ci_root, find_steps, load_yaml, workflow_dir
 
 FIXTURE = pathlib.Path(__file__).resolve().parent / "fixtures" / "collaudo-esito"
@@ -114,15 +119,35 @@ class TestScriptChiedeICommenti(unittest.TestCase):
 
 def _step_pubblica() -> dict:
     doc = load_yaml(workflow_dir() / "claude-pr-review.yml")
-    for s in find_steps(doc["jobs"]["verifica"]):
+    for s in find_steps(doc["jobs"]["pubblica"]):
         if s.get("name") == "Pubblica il verdetto":
             return s
-    raise AssertionError("step «Pubblica il verdetto» non trovato")
+    raise AssertionError("step «Pubblica il verdetto» non trovato nel job pubblica")
 
 
 def _righe_codice(run: str) -> list[str]:
     """Righe del run senza i commenti shell a riga intera."""
     return [r for r in run.splitlines() if not r.lstrip().startswith("#")]
+
+
+def _senza_funzioni(righe: list[str]) -> list[str]:
+    """Le righe fuori dalle definizioni di funzione `nome() { … }` a colonna 0:
+    una definizione non esegue niente finche' non la si chiama."""
+    fuori, dentro = [], False
+    for r in righe:
+        if not dentro and re.match(r"^[A-Za-z_]\w*\(\)\s*\{\s*$", r):
+            dentro = True
+            continue
+        if dentro:
+            if r.strip() == "}":
+                dentro = False
+            continue
+        fuori.append(r)
+    return fuori
+
+
+API_DEI_JOB = re.compile(
+    r'gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/attempts/\$GITHUB_RUN_ATTEMPT/jobs"')
 
 
 class TestStaticaLetturaDeiCommenti(unittest.TestCase):
@@ -137,12 +162,18 @@ class TestStaticaLetturaDeiCommenti(unittest.TestCase):
         self.fail(f"nel run manca: {cosa}")
 
     def test_a_nessuna_lettura_dei_commenti_prima_della_decisione_sul_file(self):
+        # Prima del #69: nessun gh prima dello script. Dal #69 prima dello script
+        # c'e' la lettura dei tempi dall'API dei job, e la definizione di
+        # non_presa (che non si esegue li'). Resta vietato ogni altro gh.
         i_script = self._indice(lambda r: "collaudo-esito.sh" in r, "chiamata allo script")
         i_api = self._indice(lambda r: re.search(r"\bgh api\b.*/comments", r), "gh api …/comments")
         self.assertLess(i_script, i_api,
                         "gh api …/comments compare prima della chiamata allo script")
-        prima = "\n".join(self.righe[:i_script])
-        self.assertNotRegex(prima, r"\bgh\b", "nessun gh prima della decisione")
+        prima = _senza_funzioni(self.righe[:i_script])
+        gh_prima = [r for r in prima if re.search(r"\bgh\b", r)]
+        for r in gh_prima:
+            self.assertRegex(r, API_DEI_JOB, "prima della decisione, solo l'API dei job")
+        self.assertNotRegex("\n".join(prima), r"/comments")
 
     def test_a_la_lettura_dipende_dall_uscita_3(self):
         i_api = self._indice(lambda r: re.search(r"\bgh api\b.*/comments", r), "gh api …/comments")
@@ -176,107 +207,36 @@ class TestStaticaLetturaDeiCommenti(unittest.TestCase):
         self.assertNotIn("tipo=", messaggio)
 
 
-# --- 3. esecuzione del frammento run: ----------------------------------------------
-
-GH_FINTO = r"""#!/usr/bin/env bash
-# gh finto: registra ogni chiamata, una per riga, in $GH_LOG.
-printf '%s\n' "$*" >> "$GH_LOG"
-case "$1" in
-  api)
-    if [ -n "${GH_API_FALLISCE:-}" ]; then
-      echo "HTTP 502: Bad Gateway" >&2
-      exit "$GH_API_FALLISCE"
-    fi
-    cat "$GH_API_RISPOSTA"
-    ;;
-  pr)
-    if [ "$2" = comment ]; then
-      n=$(ls "$GH_PUBBLICATI" | wc -l)
-      while [ "$#" -gt 0 ]; do
-        if [ "$1" = --body-file ]; then cp "$2" "$GH_PUBBLICATI/$n.md"; fi
-        shift
-      done
-      echo "https://example.invalid/pr/99#issuecomment-$((9000 + n))"
-    fi
-    ;;
-esac
-"""
-
-
-def esegui_step(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
-                api_fallisce=False, risposta="vuoto.json", commenti_piantati=None):
-    """Esegue il run: dello step «Pubblica il verdetto» cosi' com'e' nel YAML.
-    Ritorna dict(rc, stdout, chiamate_gh, api, pubblicati)."""
-    run = _step_pubblica()["run"]
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = pathlib.Path(tmp)
-        ws, rt, binf, pub = tmp / "ws", tmp / "runner_temp", tmp / "bin", tmp / "pubblicati"
-        for d in (ws / ".collaudo", rt, binf, pub):
-            d.mkdir(parents=True)
-        _verdetto(ws / ".collaudo", verdetto)
-        shutil.copy(script_path(), rt / "collaudo-esito.sh")
-        if commenti_piantati:
-            shutil.copy(FIXTURE / commenti_piantati, rt / "commenti.json")
-        gh = binf / "gh"
-        gh.write_text(GH_FINTO, encoding="utf-8")
-        gh.chmod(gh.stat().st_mode | stat.S_IXUSR)
-        frammento = tmp / "step.sh"
-        frammento.write_text(run, encoding="utf-8")
-        log = tmp / "gh.log"
-        log.touch()
-        env = {
-            "PATH": f"{binf}{os.pathsep}{os.environ['PATH']}",
-            "HOME": str(tmp),
-            "GITHUB_WORKSPACE": str(ws),
-            "RUNNER_TEMP": str(rt),
-            "GITHUB_REPOSITORY": "OwnConsent/ownconsent-www",
-            "GITHUB_RUN_ATTEMPT": "1",
-            "BUDGET_VENTAGLIO_MIN": str(BUDGET),
-            "GH_TOKEN": "finto",
-            "PR": "99",
-            "ESITO_VENTAGLIO": esito,
-            "LUNGO": "false",
-            "ARTEFATTO_URL": "",
-            "SHA": SHA,
-            "INIZIO": "1000000",
-            "FINE": str(1000000 + trascorsi),
-            "GH_LOG": str(log),
-            "GH_PUBBLICATI": str(pub),
-            "GH_API_RISPOSTA": str(FIXTURE / risposta),
-        }
-        if api_fallisce:
-            env["GH_API_FALLISCE"] = str(USCITA_GH)
-        p = subprocess.run(["bash", "-e", str(frammento)], env=env, cwd=ws,
-                           capture_output=True, text=True, timeout=60)
-        chiamate = [r for r in log.read_text(encoding="utf-8").splitlines() if r]
-        pubblicati = [f.read_text(encoding="utf-8")
-                      for f in sorted(pub.iterdir(), key=lambda f: int(f.stem))]
-        return dict(rc=p.returncode, stdout=p.stdout + p.stderr, chiamate_gh=chiamate,
-                    api=[c for c in chiamate if c.startswith("api ")],
-                    pubblicati=pubblicati)
-
+# --- 3. esecuzione dei frammenti run: del job pubblica -----------------------------
 
 class TestEsecuzioneDelloStep(unittest.TestCase):
 
     def test_verdetto_scritto_si_pubblica_senza_chiamare_l_api(self):
-        # Il caso del finding: l'API fallirebbe, e il verdetto deve uscire lo stesso.
+        # Il caso del finding: l'API dei commenti fallirebbe, e il verdetto deve
+        # uscire lo stesso. Dal #69 fallisce anche l'API dei job: il verdetto esce
+        # comunque, e i commenti non si leggono.
         for esito, trascorsi in (("success", 100), ("failure", CONFINE + 60)):
-            with self.subTest(esito=esito, trascorsi=trascorsi):
-                r = esegui_step(verdetto=TESTO_VERDETTO, esito=esito, trascorsi=trascorsi,
-                                api_fallisce=True)
-                self.assertEqual(r["api"], [], r["stdout"])
-                self.assertEqual(r["rc"], 0, r["stdout"])
-                self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
-                self.assertIn(TESTO_VERDETTO, r["pubblicati"][0])
-                self.assertTrue(r["pubblicati"][0].startswith(
-                    f"<!-- cantiere-collaudo tipo=verdetto sha={SHA} -->"))
+            for jobs_falliscono in (False, True):
+                with self.subTest(esito=esito, trascorsi=trascorsi,
+                                  jobs_falliscono=jobs_falliscono):
+                    r = esegui_job(verdetto=TESTO_VERDETTO, esito=esito, trascorsi=trascorsi,
+                                   api_fallisce=True, jobs_falliscono=jobs_falliscono)
+                    self.assertEqual(r["api_commenti"], [], r["stdout"])
+                    self.assertEqual(r["api_artefatti"], [], "download riuscito: l'API degli artifact non serve")
+                    self.assertEqual(len(r["api"]), len(r["api_jobs"]),
+                                     f"solo l'API dei job: {r['api']}")
+                    self.assertEqual(r["rc"], 0, r["stdout"])
+                    self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+                    self.assertIn(TESTO_VERDETTO, r["pubblicati"][0])
+                    self.assertTrue(r["pubblicati"][0].startswith(
+                        f"<!-- cantiere-collaudo tipo=verdetto sha={SHA} -->"))
 
     def test_timeout_senza_chiamare_l_api(self):
         for file_v in (ASSENTE, VUOTO):
             with self.subTest(file_verdetto=file_v):
-                r = esegui_step(verdetto=file_v, esito="failure", trascorsi=CONFINE,
-                                api_fallisce=True)
-                self.assertEqual(r["api"], [], r["stdout"])
+                r = esegui_job(verdetto=file_v, esito="failure", trascorsi=CONFINE,
+                               api_fallisce=True)
+                self.assertEqual(r["api_commenti"], [], r["stdout"])
                 self.assertEqual(r["rc"], 1, r["stdout"])
                 self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
                 self.assertIn(f"timeout dopo {BUDGET} minuti", r["pubblicati"][0])
@@ -284,9 +244,9 @@ class TestEsecuzioneDelloStep(unittest.TestCase):
     def test_b_lettura_fallita_commenti_non_leggibili(self):
         for file_v in (ASSENTE, VUOTO):
             with self.subTest(file_verdetto=file_v):
-                r = esegui_step(verdetto=file_v, esito="failure", trascorsi=100,
-                                api_fallisce=True)
-                self.assertEqual(len(r["api"]), 1, r["stdout"])
+                r = esegui_job(verdetto=file_v, esito="failure", trascorsi=100,
+                               api_fallisce=True)
+                self.assertEqual(len(r["api_commenti"]), 1, r["stdout"])
                 self.assertEqual(r["rc"], 1, "rosso")
                 self.assertEqual(len(r["pubblicati"]), 1,
                                  f"un solo commento, quello dell'errore: {r['stdout']}")
@@ -301,18 +261,18 @@ class TestEsecuzioneDelloStep(unittest.TestCase):
     def test_b_lettura_fallita_anche_con_commenti_json_lasciato_dall_agente(self):
         # Un commenti.json con un verdetto dello stesso SHA gia' in $RUNNER_TEMP
         # non deve trasformare la lettura fallita in un rimando.
-        r = esegui_step(verdetto=ASSENTE, api_fallisce=True,
-                        commenti_piantati="verdetto-stesso-sha.json")
+        r = esegui_job(verdetto=ASSENTE, api_fallisce=True,
+                       commenti_piantati="verdetto-stesso-sha.json")
         self.assertEqual(r["rc"], 1, r["stdout"])
         self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
         self.assertIn("Collaudo: commenti non leggibili", r["pubblicati"][0])
         self.assertNotIn(URL_STESSO_SHA, r["pubblicati"][0])
 
     def test_lettura_riuscita_rimando_verde(self):
-        r = esegui_step(verdetto=ASSENTE, risposta="verdetto-stesso-sha.json")
-        self.assertEqual(len(r["api"]), 1, r["stdout"])
-        self.assertIn("--paginate", r["api"][0])
-        self.assertIn("repos/OwnConsent/ownconsent-www/issues/99/comments", r["api"][0])
+        r = esegui_job(verdetto=ASSENTE, risposta="verdetto-stesso-sha.json")
+        self.assertEqual(len(r["api_commenti"]), 1, r["stdout"])
+        self.assertIn("--paginate", r["api_commenti"][0])
+        self.assertIn("repos/OwnConsent/ownconsent-www/issues/99/comments", r["api_commenti"][0])
         self.assertEqual(r["rc"], 0, r["stdout"])
         self.assertEqual(len(r["pubblicati"]), 1)
         self.assertIn(URL_STESSO_SHA, r["pubblicati"][0])
@@ -320,8 +280,8 @@ class TestEsecuzioneDelloStep(unittest.TestCase):
             f"<!-- cantiere-collaudo tipo=rimando sha={SHA} -->"))
 
     def test_lettura_riuscita_nessun_verdetto_rosso(self):
-        r = esegui_step(verdetto=VUOTO, risposta="vuoto.json")
-        self.assertEqual(len(r["api"]), 1, r["stdout"])
+        r = esegui_job(verdetto=VUOTO, risposta="vuoto.json")
+        self.assertEqual(len(r["api_commenti"]), 1, r["stdout"])
         self.assertEqual(r["rc"], 1, r["stdout"])
         self.assertEqual(len(r["pubblicati"]), 1)
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())

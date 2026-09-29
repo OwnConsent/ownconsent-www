@@ -30,8 +30,12 @@ BUDGET = 30
 CONFINE = BUDGET * 60
 MARCATORE_FALSO = "<!-- cantiere-collaudo tipo=verdetto sha=0000000000000000000000000000000000000000 -->"
 MARCATORE_VERO = f"<!-- cantiere-collaudo tipo=verdetto sha={SHA} -->"
+TESTO_VERDETTO_BREVE = "## Collaudo — run 1, tentativo 1\n\nNessun finding.\n"
 SCRITTURA = {"write", "write-all"}
 ID_AGENTE = "ventaglio"
+# Contesti che il runner valuta da se', uguali per tutto il job: ammessi per nome,
+# interi, come output del job ventaglio. Ogni altro contesto resta vietato.
+CONTESTI_DEL_RUNNER = {"github.run_attempt"}
 
 
 def _permessi(blocco):
@@ -131,6 +135,9 @@ class TestStaticaIsolamento(unittest.TestCase):
                 resto = _ESPR.sub("", str(valore)).strip()
                 self.assertEqual(resto, "", f"{nome}: testo fuori dalle espressioni")
                 for e in espressioni:
+                    if e.strip() in CONTESTI_DEL_RUNNER:
+                        # Valutato dal runner, non da uno step (beab008: tentativo).
+                        continue
                     rif = re.findall(r"\bsteps\.([A-Za-z_][\w-]*)\.([\w-]+)(?:\.([\w-]+))?", e)
                     self.assertTrue(rif, f"{nome}: '{e}' non viene da uno step")
                     # Solo contesti steps: niente env, job, runner, file.
@@ -290,10 +297,14 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
         self._non_presa(r, 2)
 
     def test_uscita_imprevista_di_prepara_decisione_non_presa(self):
-        # Download fallito ma l'API conta l'artifact: Prepara esce 4.
-        r = esegui_job(verdetto=ASSENTE, esito="success", artefatti_contati=1)
-        self.assertEqual(r["rc_prepara"], 4, r["stdout"])
-        self._non_presa(r, 4)
+        # Prima di beab008 il caso era «download fallito, API conta 1» -> uscita 4:
+        # ora quel caso e' «artifact non trovato» (TestArtifactMancante). Resta
+        # un Prepara che fallisce per altro: verdetto.md scaricato ma illeggibile.
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success", prepara_illeggibile=True)
+        self.assertNotEqual(r["rc_prepara"], 0, r["stdout"])
+        self.assertNotEqual(r["rc_prepara"], 4, "4 e' l'uscita dell'artifact mancante")
+        self.assertEqual(r["uscite_prepara"].get("artifact"), None, r["uscite_prepara"])
+        self._non_presa(r, r["rc_prepara"])
         self.assertEqual(r["api_commenti"], [], "senza preparazione non si decide niente")
 
     def test_timeout_dai_tempi_dell_api_dei_job(self):
@@ -342,6 +353,222 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
         r = esegui_job(verdetto=ASSENTE, esito="failure", jobs_falliscono=True, inizio="")
         self.assertIn("Tempo del ventaglio ignoto", r["stdout"])
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
+
+
+# --- 3. beab008: artifact del tentativo del ventaglio, artifact mancante, fork -----
+
+FORK = re.compile(r"github\.event\.pull_request\.head\.repo\.full_name\s*==\s*github\.repository")
+
+
+def _congiunti(cond) -> list[str]:
+    """I termini di una condizione in AND, senza ${{ }} e spazi ridondanti.
+    Una condizione con || o parentesi non si scompone: la si restituisce intera."""
+    c = str(cond or "").strip()
+    m = re.fullmatch(r"\$\{\{(.*)\}\}", c, re.S)
+    if m:
+        c = m.group(1).strip()
+    if "||" in c or re.search(r"[()]", c.replace("cancelled()", "")):
+        return [c]
+    return [re.sub(r"\s+", " ", t.strip()) for t in c.split("&&")]
+
+
+class TestStaticaArtifactEFork(unittest.TestCase):
+
+    def setUp(self):
+        self.doc = review_doc()
+        self.ventaglio = self.doc["jobs"]["ventaglio"]
+        self.pubblica = self.doc["jobs"]["pubblica"]
+
+    def test_upload_con_giro_txt_e_if_no_files_found_error(self):
+        passi = find_steps(self.ventaglio)
+        up = [s for s in passi
+              if str(s.get("uses", "")).split("@")[0] == "actions/upload-artifact"]
+        self.assertEqual(len(up), 1)
+        w = up[0].get("with") or {}
+        self.assertEqual(w.get("if-no-files-found"), "error")
+        percorsi = [r.strip() for r in str(w.get("path", "")).splitlines() if r.strip()]
+        self.assertIn("${{ github.workspace }}/.collaudo/giro.txt", percorsi)
+        self.assertIn("${{ github.workspace }}/.collaudo/verdetto.md", percorsi)
+        self.assertRegex(str(w.get("name", "")), r"^verdetto-tentativo-\$\{\{\s*github\.run_attempt\s*\}\}$")
+        # giro.txt si scrive prima dell'agente, dopo lo svuotamento della cartella.
+        i_agente = next(i for i, s in enumerate(passi) if s.get("id") == ID_AGENTE)
+        scrive = [i for i, s in enumerate(passi)
+                  if re.search(r'>\s*"\$GITHUB_WORKSPACE/\.collaudo/giro\.txt"', s.get("run", "") or "")]
+        self.assertTrue(scrive, "nessuno step scrive .collaudo/giro.txt")
+        self.assertLess(scrive[0], i_agente)
+        run = passi[scrive[0]]["run"]
+        self.assertLess(run.index("rm -rf"), run.index("giro.txt"),
+                        "giro.txt dopo lo svuotamento della cartella")
+
+    def test_download_solo_con_un_nome(self):
+        passi = find_steps(self.pubblica)
+        dl = next(s for s in passi
+                  if str(s.get("uses", "")).split("@")[0] == "actions/download-artifact")
+        self.assertRegex(str(dl.get("if", "")),
+                         r"^\$\{\{\s*steps\.scegli\.outputs\.nome\s*!=\s*''\s*\}\}$")
+        self.assertEqual((dl.get("with") or {}).get("name"), "${{ steps.scegli.outputs.nome }}")
+        self.assertNotIn("artifact-ids", dl.get("with") or {})
+        i_scegli = next(i for i, s in enumerate(passi) if s.get("id") == "scegli")
+        self.assertLess(i_scegli, passi.index(dl))
+
+    def test_prepara_e_pubblica_girano_anche_dopo_un_errore_di_scegli(self):
+        # Il banco esegue sempre Prepara e Pubblica: che girino anche dopo un
+        # errore di Scegli o del download lo dice il loro if, qui. Senza
+        # !cancelled() l'if implicito e' success(), e un errore di Scegli
+        # lascerebbe la PR senza commento invece che con «artifact non trovato».
+        passi = find_steps(self.pubblica)
+        for id_ in ("prepara",):
+            s = next(x for x in passi if x.get("id") == id_)
+            self.assertEqual(s.get("if"), "${{ !cancelled() }}", id_)
+        s = next(x for x in passi if x.get("name") == "Pubblica il verdetto")
+        self.assertEqual(s.get("if"), "${{ !cancelled() }}")
+
+    def test_nome_dell_artifact_non_dal_run_attempt_di_pubblica(self):
+        passi = find_steps(self.pubblica)
+        dl = next(s for s in passi
+                  if str(s.get("uses", "")).split("@")[0] == "actions/download-artifact")
+        self.assertNotIn("run_attempt", str(dl.get("with")))
+        scegli = next(s for s in passi if s.get("id") == "scegli")
+        self.assertEqual((scegli.get("env") or {}).get("TENTATIVO"),
+                         "${{ needs.ventaglio.outputs.tentativo }}")
+        self.assertEqual((self.ventaglio.get("outputs") or {}).get("tentativo"),
+                         "${{ github.run_attempt }}")
+        run = scegli.get("run", "")
+        self.assertNotRegex(run, r"TENTATIVO=\"?\$\{?GITHUB_RUN_ATTEMPT",
+                            "il tentativo del ventaglio non e' quello di pubblica")
+        self.assertRegex(run, r'nome=verdetto-tentativo-\$\{TENTATIVO\}')
+        prepara = next(s for s in passi if s.get("id") == "prepara")
+        self.assertNotIn("run_attempt", str(prepara.get("env")))
+
+    def test_fork_saltato_da_entrambi_i_job(self):
+        for nome in ("ventaglio", "pubblica"):
+            with self.subTest(job=nome):
+                job = self.doc["jobs"][nome]
+                termini = _congiunti(job.get("if"))
+                self.assertTrue(any(FORK.fullmatch(t) for t in termini),
+                                f"{nome}: il confronto head.repo.full_name == github.repository "
+                                f"non e' un termine in AND dell'if: {termini}")
+
+    def test_pubblica_non_gira_se_ventaglio_e_saltato(self):
+        # Con ventaglio saltato, !cancelled() e' vero: pubblica deve portare nel
+        # proprio if ogni condizione che salta ventaglio.
+        t_v = _congiunti(self.ventaglio.get("if"))
+        t_p = _congiunti(self.pubblica.get("if"))
+        self.assertGreater(len(t_v), 1, t_v)
+        for t in t_v:
+            self.assertIn(t, t_p, "pubblica girerebbe dove ventaglio e' saltato")
+
+
+def _nel_corpo(r, testo):
+    return any(testo in c for c in r["pubblicati"])
+
+
+class TestSceltaDellArtifact(unittest.TestCase):
+
+    def test_a_rerun_del_solo_pubblica_output_presente(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success",
+                       tentativo="1", run_attempt="2")
+        self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+        self.assertEqual(r["nome_chiesto"], "verdetto-tentativo-1")
+        self.assertEqual(r["api_artefatti"], [], "output presente: l'API non serve")
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+        self.assertTrue(r["pubblicati"][0].startswith(MARCATORE_VERO))
+        self.assertIn("Nessun finding.", r["pubblicati"][0])
+
+    def test_b_rerun_del_solo_pubblica_output_vuoto_dall_api(self):
+        for out in ("", "0", "abc"):
+            with self.subTest(tentativo=out):
+                r = esegui_job(esito="success", tentativo=out, run_attempt="2",
+                               artefatti={"verdetto-tentativo-1": TESTO_VERDETTO_BREVE},
+                               altri_nel_run=("verdetto-completo-tentativo-2", "altro-1",
+                                              "verdetto-tentativo-x"))
+                self.assertEqual(len(r["api_artefatti"]), 1, r["stdout"])
+                self.assertIn("/actions/runs/4242/artifacts", r["api_artefatti"][0])
+                self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+                self.assertEqual(r["rc"], 0, r["stdout"])
+                self.assertIn("Nessun finding.", r["pubblicati"][0])
+
+    def test_c_rerun_completo_prende_il_tentativo_del_ventaglio(self):
+        artefatti = {"verdetto-tentativo-1": "## Collaudo — tentativo UNO\n",
+                     "verdetto-tentativo-2": "## Collaudo — tentativo DUE\n"}
+        for out, sorgente in (("2", "output"), ("", "API")):
+            with self.subTest(fonte=sorgente):
+                r = esegui_job(esito="success", tentativo=out, run_attempt="2",
+                               artefatti=artefatti)
+                self.assertEqual(r["nome"], "verdetto-tentativo-2", r["stdout"])
+                self.assertEqual(r["rc"], 0, r["stdout"])
+                self.assertTrue(_nel_corpo(r, "tentativo DUE"), r["pubblicati"])
+                self.assertFalse(_nel_corpo(r, "tentativo UNO"), "mai il tentativo 1")
+
+    def test_c_la_riserva_non_supera_il_tentativo_del_job(self):
+        # Un artifact di un tentativo piu' alto di quello di pubblica non e' del
+        # ventaglio che pubblica aspetta.
+        r = esegui_job(esito="success", tentativo="", run_attempt="2", artefatti={
+            "verdetto-tentativo-1": "## UNO\n", "verdetto-tentativo-2": "## DUE\n",
+            "verdetto-tentativo-3": "## TRE\n"})
+        self.assertEqual(r["nome"], "verdetto-tentativo-2", r["stdout"])
+        self.assertTrue(_nel_corpo(r, "## DUE"))
+
+    def test_c_la_riserva_confronta_i_numeri_non_le_stringhe(self):
+        r = esegui_job(esito="success", tentativo="", run_attempt="10", artefatti={
+            "verdetto-tentativo-2": "## DUE\n", "verdetto-tentativo-9": "## NOVE\n",
+            "verdetto-tentativo-10": "## DIECI\n"})
+        self.assertEqual(r["nome"], "verdetto-tentativo-10", r["stdout"])
+        self.assertTrue(_nel_corpo(r, "## DIECI"))
+
+    def test_agente_muto_artifact_col_solo_giro_txt(self):
+        # L'artifact c'e' e non ha verdetto.md: e' l'agente muto, si decide.
+        r = esegui_job(verdetto=ASSENTE, esito="success", tentativo="1")
+        self.assertEqual(r["scaricato"], "success")
+        self.assertEqual(r["rc_prepara"], 0, r["stdout"])
+        self.assertEqual(len(r["api_commenti"]), 1, r["stdout"])
+        self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
+
+
+class TestArtifactMancante(unittest.TestCase):
+
+    def _artifact_non_trovato(self, r):
+        self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+        self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+        corpo = r["pubblicati"][0]
+        self.assertIn("Collaudo: decisione non presa (artifact non trovato)", corpo)
+        self.assertNotIn("cantiere-collaudo", corpo)
+        self.assertNotIn("tipo=", corpo)
+        self.assertNotIn("nessun verdetto", corpo.lower())
+        self.assertNotIn("timeout", corpo.lower())
+        self.assertIn(f"`{CORTO}`", corpo)
+        self.assertEqual(r["api_commenti"], [], "senza artifact non si decide niente")
+        self.assertEqual(r["uscite_prepara"].get("artifact"), "mancante")
+
+    def test_d_download_fallito(self):
+        casi = {
+            "nome dall'output, artifact assente nel run": dict(tentativo="1", artefatti={}),
+            "artifact presente, download fallito": dict(tentativo="1", download_fallisce=True),
+            "rerun di pubblica, artifact del tentativo 1 sparito": dict(
+                tentativo="1", run_attempt="2", artefatti={"verdetto-tentativo-2": ASSENTE}),
+        }
+        for nome, kw in casi.items():
+            for esito in ("success", "failure"):
+                with self.subTest(caso=nome, esito=esito):
+                    r = esegui_job(esito=esito, trascorsi=CONFINE + 5, **kw)
+                    self.assertEqual(r["scaricato"], "failure", r["stdout"])
+                    self._artifact_non_trovato(r)
+
+    def test_d_nessun_nome(self):
+        casi = {
+            "output vuoto, nessun artifact del ventaglio nel run": dict(tentativo="", artefatti={}),
+            "output vuoto, API degli artifact in errore": dict(tentativo="", artefatti_falliscono=True,
+                                                               verdetto=TESTO_VERDETTO_BREVE),
+            "output vuoto, solo tentativi oltre quello del job": dict(
+                tentativo="", run_attempt="1", artefatti={"verdetto-tentativo-2": TESTO_VERDETTO_BREVE}),
+        }
+        for nome, kw in casi.items():
+            with self.subTest(caso=nome):
+                r = esegui_job(esito="failure", **kw)
+                self.assertEqual(r["nome"], "", r["stdout"])
+                self.assertEqual(r["scaricato"], "skipped", "senza nome il download non gira")
+                self._artifact_non_trovato(r)
 
 
 if __name__ == "__main__":

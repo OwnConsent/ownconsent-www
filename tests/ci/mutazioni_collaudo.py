@@ -37,7 +37,7 @@ M = [
      [f"{E}.TestStaticaWorkflow.test_parola_dello_script_e_colore_del_passo",
       f"{C}.TestEsecuzioneDelloStep.test_lettura_riuscita_nessun_verdetto_rosso"]),
     ("ramo-sconosciuto-senza-non_presa", WF,
-     'non_presa "$rc" "collaudo-esito.sh ha risposto con una parola sconosciuta: \'${decisione}\'." ;;',
+     'non_presa "uscita $rc" "collaudo-esito.sh ha risposto con una parola sconosciuta: \'${decisione}\'." ;;',
      'exit 1 ;;', False,
      [f"{E}.TestStaticaWorkflow.test_parola_dello_script_e_colore_del_passo"]),
     ("budget-ridefinito-in-pubblica", WF,
@@ -66,12 +66,12 @@ M = [
      ' \\\n            2>/dev/null | head -n 1) || tempi=""', ')', False,
      [f"{C}.TestEsecuzioneDelloStep.test_verdetto_scritto_si_pubblica_senza_chiamare_l_api"]),
     ("neutralizzazione-tolta", WF,
-     "          s = re.sub('cantiere-collaudo', lambda m: m.group(0).replace('-', '‑'), s, flags=re.I)\n",
+     "          s = re.sub('cantiere-collaudo', lambda m: m.group(0).replace('-', '\\u2011'), s, flags=re.I)\n",
      "          s = s\n", False,
      [f"{I}.TestEsecuzioneIsolamento.test_marcatore_falso_nel_testo_dell_agente_si_neutralizza"]),
     ("neutralizzazione-solo-minuscolo", WF,
-     "lambda m: m.group(0).replace('-', '‑'), s, flags=re.I)",
-     "lambda m: m.group(0).replace('-', '‑'), s)", False,
+     "lambda m: m.group(0).replace('-', '\\u2011'), s, flags=re.I)",
+     "lambda m: m.group(0).replace('-', '\\u2011'), s)", False,
      [f"{I}.TestEsecuzioneIsolamento.test_marcatore_falso_nel_testo_dell_agente_si_neutralizza"]),
     ("marcatore-accettato-ovunque", SC,
      '| split("\\n")[0] | rtrimstr("\\r") == $m)',
@@ -83,7 +83,7 @@ M = [
      [f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_dello_script_decisione_non_presa",
       f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_di_prepara_decisione_non_presa"]),
     ("non_presa-uscita-fissa", WF,
-     '"${SHA:0:7}" "$1" "$2" > "$corpo"', '"${SHA:0:7}" "1" "$2" > "$corpo"', False,
+     '"${SHA:0:7}" "$1" "$2" > "$corpo"', '"${SHA:0:7}" "uscita 9" "$2" > "$corpo"', False,
      [f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_dello_script_decisione_non_presa",
       f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_di_prepara_decisione_non_presa"]),
     ("non_presa-con-marcatore", WF,
@@ -127,8 +127,8 @@ M = [
      "      contents: read\n      actions: read\n", "      contents: write\n      actions: read\n", False,
      [f"{I}.TestStaticaIsolamento.test_pubblica_unico_job_con_pull_requests_write"]),
     ("always-al-posto-di-not-cancelled", WF,
-     "if: ${{ !cancelled() && github.event.pull_request.draft == false }}",
-     "if: ${{ always() && github.event.pull_request.draft == false }}", False,
+     "if: ${{ !cancelled() && github.event.pull_request.draft == false &&",
+     "if: ${{ always() && github.event.pull_request.draft == false &&", False,
      [f"{I}.TestStaticaIsolamento.test_pubblica_dipende_da_ventaglio_e_gira_con_not_cancelled"]),
     ("persist-credentials-tolto-in-pubblica", WF,
      "          persist-credentials: false\n          sparse-checkout", "          sparse-checkout", False,
@@ -172,6 +172,93 @@ M = [
      "claude-code-action@8ce9314fa9a404564fa7e954cd84f25bcba2b829 # v1",
      "claude-code-action@8ce9314fa9a404564fa7e954cd84f25bcba2b829", False,
      [f"{I}.TestStaticaIsolamento.test_uses_fissate_a_sha_con_il_tag_in_commento"]),
+    # --- beab008: artifact del tentativo del ventaglio, artifact mancante, fork ---
+    ("output-tentativo-da-altro-contesto", WF,
+     "      tentativo: ${{ github.run_attempt }}\n",
+     "      tentativo: ${{ github.event.pull_request.title }}\n", False,
+     [f"{I}.TestStaticaIsolamento.test_output_di_ventaglio_solo_da_step_non_successivi_all_agente"]),
+    ("output-tentativo-da-step-dopo-l-agente", WF,
+     r"(      tentativo: )\$\{\{ github\.run_attempt \}\}\n(.*?      - name: Diagnostica del ventaglio\n)",
+     r"\1${{ steps.diagnostica.outputs.t }}\n\2        id: diagnostica\n", True,
+     [f"{I}.TestStaticaIsolamento.test_output_di_ventaglio_solo_da_step_non_successivi_all_agente"]),
+    ("nome-dal-run-attempt-di-pubblica-nel-download", WF,
+     "          name: ${{ steps.scegli.outputs.nome }}\n",
+     "          name: verdetto-tentativo-${{ github.run_attempt }}\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_nome_dell_artifact_non_dal_run_attempt_di_pubblica",
+      f"{I}.TestStaticaArtifactEFork.test_download_solo_con_un_nome",
+      f"{I}.TestSceltaDellArtifact.test_a_rerun_del_solo_pubblica_output_presente"]),
+    ("nome-dal-run-attempt-di-pubblica-in-scegli", WF,
+     "          TENTATIVO: ${{ needs.ventaglio.outputs.tentativo }}\n",
+     "          TENTATIVO: ${{ github.run_attempt }}\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_nome_dell_artifact_non_dal_run_attempt_di_pubblica",
+      f"{I}.TestSceltaDellArtifact.test_a_rerun_del_solo_pubblica_output_presente"]),
+    ("scegli-ignora-l-output", WF,
+     'if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then', 'if false; then', False,
+     [f"{I}.TestSceltaDellArtifact.test_a_rerun_del_solo_pubblica_output_presente",
+      f"{I}.TestArtifactMancante.test_d_download_fallito"]),
+    ("riserva-senza-limite", WF,
+     """ | awk -v m="$GITHUB_RUN_ATTEMPT" '$1 <= m'""", "", False,
+     [f"{I}.TestSceltaDellArtifact.test_c_la_riserva_non_supera_il_tentativo_del_job",
+      f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
+    ("riserva-il-piu-basso", WF,
+     "| sort -n | tail -n 1)", "| sort -n | head -n 1)", False,
+     [f"{I}.TestSceltaDellArtifact.test_c_rerun_completo_prende_il_tentativo_del_ventaglio"]),
+    ("riserva-ordine-lessicografico", WF,
+     "| sort -n | tail -n 1)", "| sort | tail -n 1)", False,
+     [f"{I}.TestSceltaDellArtifact.test_c_la_riserva_confronta_i_numeri_non_le_stringhe"]),
+    ("riserva-accetta-ogni-nome", WF,
+     r"""sed -n 's/^verdetto-tentativo-\([1-9][0-9]*\)$/\1/p'""",
+     r"""sed -n 's/^.*tentativo-\([1-9][0-9]*\)$/\1/p'""", False,
+     [f"{I}.TestSceltaDellArtifact.test_b_rerun_del_solo_pubblica_output_vuoto_dall_api"]),
+    ("prepara-download-fallito-come-agente-muto", WF,
+     r'          if \[ "\$SCARICATO" != "success" \]; then\n.*?exit 4\n          fi\n', "", True,
+     [f"{I}.TestArtifactMancante.test_d_download_fallito",
+      f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
+    ("pubblica-ignora-artifact-mancante", WF,
+     r'          if \[ "\$ARTIFACT" = "mancante" \]; then\n.*?\n          fi\n', "", True,
+     [f"{I}.TestArtifactMancante.test_d_download_fallito"]),
+    ("download-senza-if", WF,
+     "        if: ${{ steps.scegli.outputs.nome != '' }}\n", "", False,
+     [f"{I}.TestStaticaArtifactEFork.test_download_solo_con_un_nome",
+      f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
+    ("upload-if-no-files-found-ignore", WF,
+     "          if-no-files-found: error\n          retention-days: 1\n",
+     "          if-no-files-found: ignore\n          retention-days: 1\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_upload_con_giro_txt_e_if_no_files_found_error"]),
+    ("upload-senza-giro-txt", WF,
+     "            ${{ github.workspace }}/.collaudo/giro.txt\n", "", False,
+     [f"{I}.TestStaticaArtifactEFork.test_upload_con_giro_txt_e_if_no_files_found_error"]),
+    ("giro-txt-non-scritto", WF,
+     '          echo "tentativo ${GITHUB_RUN_ATTEMPT}" > "$GITHUB_WORKSPACE/.collaudo/giro.txt"\n', "", False,
+     [f"{I}.TestStaticaArtifactEFork.test_upload_con_giro_txt_e_if_no_files_found_error"]),
+    ("fork-tolto-da-ventaglio", WF,
+     "    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository\n",
+     "    if: github.event.pull_request.draft == false\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_fork_saltato_da_entrambi_i_job"]),
+    ("fork-tolto-da-pubblica", WF,
+     " && github.event.pull_request.head.repo.full_name == github.repository }}", " }}", False,
+     [f"{I}.TestStaticaArtifactEFork.test_fork_saltato_da_entrambi_i_job",
+      f"{I}.TestStaticaArtifactEFork.test_pubblica_non_gira_se_ventaglio_e_saltato"]),
+    ("fork-in-or-in-pubblica", WF,
+     " && github.event.pull_request.head.repo.full_name == github.repository }}",
+     " || github.event.pull_request.head.repo.full_name == github.repository }}", False,
+     [f"{I}.TestStaticaArtifactEFork.test_fork_saltato_da_entrambi_i_job",
+      f"{I}.TestStaticaArtifactEFork.test_pubblica_non_gira_se_ventaglio_e_saltato"]),
+    ("fork-invertito-in-ventaglio", WF,
+     "draft == false && github.event.pull_request.head.repo.full_name == github.repository\n",
+     "draft == false && github.event.pull_request.head.repo.full_name != github.repository\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_fork_saltato_da_entrambi_i_job",
+      f"{I}.TestStaticaArtifactEFork.test_pubblica_non_gira_se_ventaglio_e_saltato"]),
+    ("prepara-illeggibile-come-agente-muto", WF,
+     '          if [ -f "$RICEVUTO" ]; then\n', '          if [ -r "$RICEVUTO" ]; then\n', False,
+     [f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_di_prepara_decisione_non_presa"]),
+    ("non_presa-artifact-con-marcatore", WF,
+     """non_presa "artifact non trovato" "L'artifact""",
+     """non_presa "artifact non trovato" "<!-- cantiere-collaudo tipo=verdetto --> L'artifact""", False,
+     [f"{I}.TestArtifactMancante.test_d_download_fallito"]),
+    ("prepara-senza-not-cancelled", WF,
+     "        id: prepara\n        if: ${{ !cancelled() }}\n", "        id: prepara\n", False,
+     [f"{I}.TestStaticaArtifactEFork.test_prepara_e_pubblica_girano_anche_dopo_un_errore_di_scegli"]),
 ]
 
 
@@ -184,8 +271,9 @@ def applica(root, file, vecchio, nuovo, rx):
         n = s.count(vecchio)
         t = s.replace(vecchio, nuovo)
     if n != 1:
-        raise SystemExit(f"mutazione non applicabile: {n} occorrenze di {vecchio!r} in {file}")
+        return f"NON APPLICABILE: {n} occorrenze"
     open(p, "w", encoding="utf-8").write(t)
+    return None
 
 
 def esegui(root, target):
@@ -216,8 +304,12 @@ for nome, file, vecchio, nuovo, rx, bersagli in M:
         continue
     root = tempfile.mkdtemp(prefix=f"mut-{nome}-")
     shutil.copytree(f"{WT}/.github", f"{root}/.github")
-    applica(root, file, vecchio, nuovo, rx)
+    errore = applica(root, file, vecchio, nuovo, rx)
     print(f"## {nome}  ({file})")
+    if errore:
+        print(f"   {errore}")
+        shutil.rmtree(root)
+        continue
     for b in bersagli:
         rc, ultima = esegui(root, b)
         print(f"   $ CI_ROOT={root} python3 -m unittest {b}\n     -> rc={rc} '{ultima}'  {'ROSSO' if rc else 'VERDE!!'}")

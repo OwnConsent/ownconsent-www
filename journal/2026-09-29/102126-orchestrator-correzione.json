@@ -1,0 +1,34 @@
+{
+  "ts": "2026-09-29T10:21:26+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Correggo 659ade6: il nome dell'artifact viene dal tentativo del job ventaglio, l'artifact esiste sempre (giro.txt), e un artifact che manca da' «decisione non presa (artifact non trovato)», mai «nessun verdetto». PR da fork: entrambi i job saltati",
+  "contesto": "Brief di Andrea del 29/09 sulla #72, punti 1 e 2. Il rischio l'ha trovato @qa-test (voce 081528); la misura e' la voce 101938. Correggo la mia forma di 659ade6, che in Prepara trattava un download fallito con 0 artifact nell'API come agente muto.",
+  "correzione_di": "659ade6 (workflow) e voce 081405, limite 'se l'API dei job non risponde' invariato; cambia la lettura dell'artifact",
+  "cosa_cambia": [
+    "ventaglio: output 'tentativo: ${{ github.run_attempt }}', valutato dal runner come gli altri due. La cartella .collaudo riceve giro.txt prima dell'agente; l'upload carica verdetto.md e giro.txt con if-no-files-found: error. Un agente muto lascia un artifact col solo giro.txt",
+    "pubblica: nuovo step 'Scegli il verdetto'. Nome = verdetto-tentativo-<output tentativo>; se l'output e' vuoto, dall'API degli artifact il tentativo piu' alto non oltre quello del job. Il download gira solo con un nome: name vuoto scaricherebbe tutti gli artifact del run (download-artifact action.yml:6)",
+    "Prepara: download non riuscito o non eseguito -> output artifact=mancante, uscita 4; niente piu' domanda all'API sul conteggio. Artifact senza verdetto.md -> agente muto, si prosegue verso lo script. Prepara gira con !cancelled(), cosi' un errore di Scegli diventa 'artifact non trovato'",
+    "Pubblica: artifact=mancante -> 'Collaudo: decisione non presa (artifact non trovato)', senza marcatore, rosso. Le altre uscite restano 'decisione non presa (uscita N)'",
+    "fork: condizione esplicita github.event.pull_request.head.repo.full_name == github.repository su ventaglio e su pubblica, con il motivo in commento. Su pubblica serve anche li': con ventaglio saltato, !cancelled() da solo lo farebbe girare. Non verificabile dal vivo senza un fork"
+  ],
+  "alternative": [
+    { "opzione": "nome senza tentativo e overwrite: true", "scartata_perche": "upload-artifact action.yml:37-42: overwrite cancella l'artifact con lo stesso nome; con un agente muto al tentativo 2 non si caricherebbe niente e resterebbe il verdetto del tentativo 1, pubblicato come se fosse nuovo" },
+    { "opzione": "solo l'output tentativo, senza riserva dall'API", "scartata_perche": "la documentazione dei rerun non dice se un job rieseguito da solo veda needs.ventaglio.outputs; senza riserva, se non li vede, ogni rerun di pubblica finirebbe in 'artifact non trovato'" },
+    { "opzione": "cercare sempre l'artifact dall'API, il piu' recente", "scartata_perche": "in un rerun completo con upload fallito prenderebbe quello del tentativo precedente; l'output del job ventaglio e' la fonte che dice quale tentativo ha girato" }
+  ],
+  "evidenza": [
+    "actionlint 1.7.7 sul workflow: uscita 0",
+    "banco a secco sui run: estratti (Scegli, Prepara, Pubblica), gh finto: 14 casi. 'rerun del solo pubblica, output presente (tentativo 1, job al 2)' -> nome 'verdetto-tentativo-1', verdetto pubblicato; 'output vuoto, API: tentativo-1', job al 2 -> 'verdetto-tentativo-1' (fonte: API degli artifact); 'rerun completo, output vuoto, API: tentativo-1 e -2' -> 'verdetto-tentativo-2'; 'output vuoto, API senza artifact' e 'download fallito' -> 'decisione non presa (artifact non trovato)', rc 1, nessun marcatore; 'agente muto: artifact con il solo giro.txt' -> 'nessun verdetto'",
+    "tests/ci subito dopo la modifica: 'Ran 118 tests', 'FAILED (failures=25)'. I test eseguiti simulano ancora 'download fallito = agente muto', e il test statico sugli output di ventaglio non conosce l'output tentativo. Li aggiorna @qa-test"
+  ],
+  "limiti": [
+    "resta una riserva che puo' sbagliare: output tentativo vuoto e, nello stesso tentativo, upload del ventaglio fallito -> si prenderebbe l'artifact di un tentativo precedente. L'output e' vuoto solo se il runner non valuta gli output del job ventaglio; quando succeda lo dice la 3b per il rerun del solo pubblica, non per gli altri casi",
+    "giro.txt e' scrivibile dall'agente (Edit(./.collaudo/**)): puo' cancellarlo o cambiarlo. Se cancella anche verdetto.md l'upload fallisce e l'esito e' 'artifact non trovato', rosso; il contenuto di giro.txt non si legge"
+  ],
+  "esito": "applicata; test e mutazioni a @qa-test",
+  "umano_coinvolto": false
+}

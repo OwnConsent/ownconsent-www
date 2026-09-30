@@ -309,19 +309,18 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
 
     def test_timeout_dai_tempi_dell_api_dei_job(self):
         # Il tempo viene dallo step «Ventaglio di revisione» del job ventaglio
-        # nell'API dei job. La riserva (INIZIO) punta sempre alla risposta
-        # opposta: se l'API non fosse usata, o fosse letta male, il test cade.
-        adesso = int(dt.datetime.now().timestamp())
+        # nell'API dei job dell'attempt del ventaglio. Dal 78bd1c7 non c'e' piu'
+        # una riserva: se l'API non fosse usata, o fosse letta male, il test cade
+        # (decisione non presa, o durata sbagliata per le esche della risposta).
         casi = [
-            (CONFINE, "timeout", str(adesso)),
-            (CONFINE - 1, "nessun-verdetto", str(adesso - 10 * CONFINE)),
-            (CONFINE + 125, "timeout", str(adesso)),
+            (CONFINE, "timeout"),
+            (CONFINE - 1, "nessun-verdetto"),
+            (CONFINE + 125, "timeout"),
         ]
-        for trascorsi, atteso, inizio in casi:
+        for trascorsi, atteso in casi:
             for file_v in (ASSENTE, VUOTO):
                 with self.subTest(trascorsi=trascorsi, file_verdetto=file_v):
-                    r = esegui_job(verdetto=file_v, esito="failure", trascorsi=trascorsi,
-                                   inizio=inizio)
+                    r = esegui_job(verdetto=file_v, esito="failure", trascorsi=trascorsi)
                     self.assertEqual(len(r["api_jobs"]), 1, r["stdout"])
                     self.assertIn("/actions/runs/4242/attempts/1/jobs", r["api_jobs"][0])
                     self.assertEqual(r["rc"], 1, r["stdout"])
@@ -334,26 +333,116 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
                     else:
                         self.assertIn("nessun verdetto", corpo.lower())
                         self.assertNotIn("timeout", corpo.lower())
-                    self.assertIn("ventaglio dall'API dei job", r["stdout"])
+                    self.assertIn("ventaglio dall'API dei job, attempt 1", r["stdout"])
 
     def test_timeout_con_esito_success_non_e_timeout(self):
         r = esegui_job(verdetto=ASSENTE, esito="success", trascorsi=CONFINE + 60)
         self.assertEqual(r["rc"], 1, r["stdout"])
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
 
-    def test_api_dei_job_muta_riserva_dall_inizio_registrato(self):
-        # Se l'API dei job non risponde, il tempo e' da INIZIO ad adesso, per
-        # eccesso, dichiarato con un warning.
-        adesso = int(dt.datetime.now().timestamp())
-        r = esegui_job(verdetto=ASSENTE, esito="failure", jobs_falliscono=True,
-                       inizio=str(adesso - CONFINE - 5))
-        self.assertIn("Tempo del ventaglio stimato", r["stdout"])
-        self.assertEqual(r["rc"], 1, r["stdout"])
-        self.assertIn(f"timeout dopo {BUDGET} minuti", r["pubblicati"][0])
-        r = esegui_job(verdetto=ASSENTE, esito="failure", jobs_falliscono=True, inizio="")
-        self.assertIn("Tempo del ventaglio ignoto", r["stdout"])
-        self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
 
+class TestTempiDelVentaglio(unittest.TestCase):
+    """78bd1c7 (voce 2026-09-30/082932): i tempi si chiedono all'attempt del
+    ventaglio, solo quando servono (verdetto vuoto ed esito non success), e senza
+    tempi la decisione non si prende. Sostituisce
+    test_api_dei_job_muta_riserva_dall_inizio_registrato: la riserva
+    «adesso - INIZIO» e' stata tolta di proposito."""
+
+    def _tempi_non_leggibili(self, r):
+        self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+        self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+        corpo = r["pubblicati"][0]
+        self.assertIn("Collaudo: decisione non presa (tempi non leggibili)", corpo)
+        self.assertNotIn("cantiere-collaudo", corpo)
+        self.assertNotIn("tipo=", corpo)
+        self.assertNotIn("nessun verdetto", corpo.lower())
+        # Il messaggio spiega che il tempo serve «a riconoscere un timeout»: si
+        # vieta l'esito timeout, non la parola.
+        self.assertNotIn("collaudo: timeout", corpo.lower())
+        self.assertIn(f"`{CORTO}`", corpo)
+        self.assertEqual(r["api_commenti"], [], "senza tempi non si decide niente")
+
+    def test_1_rerun_del_solo_pubblica_tempi_dall_attempt_del_ventaglio(self):
+        # Job al tentativo 2, ventaglio al 1: l'attempt 2 ha la copia del
+        # ventaglio senza step, l'attempt 1 i tempi. /attempts/2 non si chiede.
+        for trascorsi, atteso in ((CONFINE, "timeout"), (CONFINE - 1, "nessun verdetto")):
+            with self.subTest(trascorsi=trascorsi):
+                r = esegui_job(verdetto=ASSENTE, esito="failure", tentativo="1",
+                               run_attempt="2", trascorsi=trascorsi,
+                               tempi={"1": trascorsi, "2": None})
+                self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+                self.assertEqual(r["tentativo_scelto"], "1")
+                self.assertEqual(len(r["api_jobs"]), 1, r["api_jobs"])
+                self.assertIn("/actions/runs/4242/attempts/1/jobs", r["api_jobs"][0])
+                self.assertFalse([c for c in r["chiamate_gh"] if "/attempts/2/" in c],
+                                 "l'attempt di pubblica non si chiede mai")
+                self.assertEqual(r["rc"], 1, r["stdout"])
+                self.assertIn(atteso, r["pubblicati"][0].lower())
+
+    def test_1_rerun_del_solo_pubblica_con_verdetto(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success", tentativo="1",
+                       run_attempt="2", tempi={"1": 100, "2": None})
+        self.assertEqual(r["nome"], "verdetto-tentativo-1")
+        self.assertEqual(r["api"], [], "verdetto scritto: nessuna API")
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        self.assertTrue(r["pubblicati"][0].startswith(MARCATORE_VERO))
+
+    def test_2_tempi_che_servono_e_non_arrivano(self):
+        casi = {
+            "API dei job in errore": dict(jobs_falliscono=True),
+            "attempt del ventaglio senza step": dict(tempi={"1": None}),
+            "completed_at vuoto": dict(tempi={"1": "vuoti"}),
+            "attempt del ventaglio sconosciuto all'API (404)": dict(tempi={}),
+        }
+        for nome, kw in casi.items():
+            for file_v in (ASSENTE, VUOTO):
+                for esito in ("failure", "cancelled", ""):
+                    with self.subTest(caso=nome, file_verdetto=file_v, esito=esito):
+                        r = esegui_job(verdetto=file_v, esito=esito, trascorsi=CONFINE + 5, **kw)
+                        self.assertEqual(len(r["api_jobs"]), 1, r["stdout"])
+                        self._tempi_non_leggibili(r)
+
+    def test_3_esito_success_nessuna_chiamata_ai_job(self):
+        for file_v, atteso in ((ASSENTE, "nessun verdetto"), (VUOTO, "nessun verdetto"),
+                               (TESTO_VERDETTO_BREVE, "Nessun finding.")):
+            with self.subTest(file_verdetto=file_v):
+                r = esegui_job(verdetto=file_v, esito="success", jobs_falliscono=True,
+                               trascorsi=CONFINE + 60)
+                self.assertEqual(r["api_jobs"], [], r["stdout"])
+                self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+                corpo = r["pubblicati"][0]
+                if file_v == TESTO_VERDETTO_BREVE:
+                    self.assertEqual(r["rc"], 0, r["stdout"])
+                    self.assertIn(atteso, corpo)
+                    self.assertTrue(corpo.startswith(MARCATORE_VERO))
+                else:
+                    self.assertEqual(r["rc"], 1, r["stdout"])
+                    self.assertIn(atteso, corpo.lower())
+                self.assertNotIn("tempi non leggibili", corpo)
+
+    def test_3_verdetto_scritto_esito_failure_nessuna_chiamata_ai_job(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="failure", jobs_falliscono=True,
+                       trascorsi=CONFINE + 60)
+        self.assertEqual(r["api_jobs"], [], r["stdout"])
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        corpo = r["pubblicati"][0]
+        self.assertTrue(corpo.startswith(MARCATORE_VERO))
+        self.assertIn("Nessun finding.", corpo)
+        self.assertIn("terminato con esito `failure`", corpo)
+
+    def test_4_output_tentativo_mancante_riserva_sull_artifact_e_tempi(self):
+        for trascorsi, atteso in ((CONFINE, "timeout"), (CONFINE - 1, "nessun verdetto")):
+            with self.subTest(trascorsi=trascorsi):
+                r = esegui_job(verdetto=ASSENTE, esito="failure", tentativo="",
+                               run_attempt="2",
+                               artefatti={"verdetto-tentativo-1": ASSENTE},
+                               tempi={"1": trascorsi, "2": None})
+                self.assertEqual(len(r["api_artefatti"]), 1, r["stdout"])
+                self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+                self.assertEqual(r["tentativo_scelto"], "1")
+                self.assertEqual(len(r["api_jobs"]), 1, r["api_jobs"])
+                self.assertIn("/attempts/1/jobs", r["api_jobs"][0])
+                self.assertIn(atteso, r["pubblicati"][0].lower())
 
 # --- 3. beab008: artifact del tentativo del ventaglio, artifact mancante, fork -----
 

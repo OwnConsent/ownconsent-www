@@ -49,13 +49,13 @@ jobs:
       contents: read
       pull-requests: read
     # Solo espressioni che il runner valuta da se': l'esito dello step agente e
-    # l'output di uno step che gira prima dell'agente. Mai un output di uno step
-    # successivo: girerebbe con l'ambiente che l'agente puo' aver cambiato.
+    # il tentativo del run. Mai un output di uno step successivo all'agente:
+    # girerebbe con l'ambiente che l'agente puo' aver cambiato.
     outputs:
       esito: ${{ steps.ventaglio.outcome }}
-      inizio: ${{ steps.inizio.outputs.t }}
-      # Il tentativo in cui questo job ha girato, che da' il nome all'artifact.
-      # Un rerun del solo job pubblica ha un run_attempt suo, piu' alto.
+      # Il tentativo in cui questo job ha girato: da' il nome all'artifact e
+      # l'attempt da cui pubblica legge i tempi. Un rerun del solo job pubblica
+      # ha un run_attempt suo, piu' alto.
       tentativo: ${{ github.run_attempt }}
     steps:
       # L'action rimette comunque il token nell'URL di origin (git-config.ts):
@@ -85,13 +85,6 @@ jobs:
           echo "tentativo ${GITHUB_RUN_ATTEMPT}"
           echo "github.event.pull_request.head.sha=${HEAD_SHA}"
           echo "github.sha=${MERGE_SHA}"
-
-      # Il tempo del ventaglio lo legge il job pubblica dall'API dei job. Questo
-      # istante resta come riserva, se l'API non risponde: e' prima dell'agente,
-      # quindi l'agente non lo puo' toccare.
-      - name: Inizio del ventaglio
-        id: inizio
-        run: echo "t=$(date +%s)" >> "$GITHUB_OUTPUT"
 
       - name: Ventaglio di revisione
         id: ventaglio
@@ -209,11 +202,17 @@ jobs:
 
       # Fuori dal workspace, in una cartella che non contiene altro. Il file si
       # legge soltanto: mai eseguito, mai source, mai dentro un'espressione.
-      # L'artifact e' del run, non del tentativo (API degli artifact: solo
-      # workflow_run.id). Si cerca quello del tentativo in cui ha girato il
-      # ventaglio: dall'output del job e, se e' vuoto, dall'API degli artifact
-      # (il piu' alto non oltre il tentativo di questo job). Senza nome non si
-      # scarica niente: un name vuoto scaricherebbe tutti gli artifact del run.
+      # Quale esecuzione del ventaglio si giudica: il suo tentativo. Da qui
+      # vengono sia il nome dell'artifact sia l'attempt da cui si leggono i
+      # tempi. L'artifact e' del run, non del tentativo (API degli artifact: solo
+      # workflow_run.id). Senza nome non si scarica niente: un name vuoto
+      # scaricherebbe tutti gli artifact del run.
+      # Riserva, se l'output del job manca: il tentativo piu' alto, non oltre
+      # quello di questo job, fra gli artifact del run. Il caso: il runner salta
+      # un output che «may contain secret» (docs, outputs dei job), e qualunque
+      # step dopo l'agente che stampi a inizio riga «::add-mask::1» maschera il
+      # valore; la Diagnostica stampa con ls i nomi dei file che l'agente mette in
+      # .collaudo, a capo compresi (journal 2026-09-30, correzione).
       - name: Scegli il verdetto
         id: scegli
         env:
@@ -228,7 +227,10 @@ jobs:
               | sed -n 's/^verdetto-tentativo-\([1-9][0-9]*\)$/\1/p' | awk -v m="$GITHUB_RUN_ATTEMPT" '$1 <= m' | sort -n | tail -n 1)
           fi
           echo "tentativo del ventaglio: ${TENTATIVO:-nessuno} (fonte: ${fonte}); tentativo di questo job: ${GITHUB_RUN_ATTEMPT}"
-          if [ -n "$TENTATIVO" ]; then echo "nome=verdetto-tentativo-${TENTATIVO}" >> "$GITHUB_OUTPUT"; fi
+          if [ -n "$TENTATIVO" ]; then
+            echo "tentativo=${TENTATIVO}" >> "$GITHUB_OUTPUT"
+            echo "nome=verdetto-tentativo-${TENTATIVO}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Ricevi il verdetto
         id: scarica
@@ -304,7 +306,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
           ESITO_VENTAGLIO: ${{ needs.ventaglio.outputs.esito }}
-          INIZIO: ${{ needs.ventaglio.outputs.inizio }}
+          TENTATIVO: ${{ steps.scegli.outputs.tentativo }}
           PREPARA: ${{ steps.prepara.outcome }}
           USCITA_PREPARA: ${{ steps.prepara.outputs.uscita }}
           ARTIFACT: ${{ steps.prepara.outputs.artifact }}
@@ -335,23 +337,28 @@ jobs:
           # senza nessuna chiamata all'API dei commenti (finding di /code-review 65).
           commenti="$RUNNER_TEMP/commenti.json"
           rm -f "$commenti"
-          # Il tempo del ventaglio si legge dall'API dei job: inizio e fine dello
-          # step come li registra GitHub. Se l'API non risponde, riserva: dall'inizio
-          # registrato prima dell'agente a adesso, che sovrastima.
-          tempi=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs" --paginate \
-            --jq '.jobs[] | select(.name == "ventaglio") | .steps[] | select(.name == "Ventaglio di revisione") | "\(.started_at) \(.completed_at)"' \
-            2>/dev/null | head -n 1) || tempi=""
-          read -r t0 t1 <<< "$tempi" || true
-          # date -d "" vale la mezzanotte di oggi: i campi vuoti si scartano prima.
-          if [ -n "${t0:-}" ] && [ -n "${t1:-}" ] && s0=$(date -d "$t0" +%s 2>/dev/null) && s1=$(date -d "$t1" +%s 2>/dev/null) && [ "$s1" -ge "$s0" ]; then
-            trascorsi=$((s1 - s0))
-            echo "ventaglio dall'API dei job: ${t0} -> ${t1}"
-          elif [[ "$INIZIO" =~ ^[0-9]+$ ]]; then
-            trascorsi=$(( $(date +%s) - INIZIO ))
-            echo "::warning title=Tempo del ventaglio stimato::l'API dei job non ha dato inizio e fine dello step ('${tempi}'): ${trascorsi} s dall'inizio registrato a adesso, per eccesso"
-          else
-            trascorsi=0
-            echo "::warning title=Tempo del ventaglio ignoto::ne' l'API dei job ne' l'inizio registrato ('${INIZIO}'): trascorsi=0"
+          # Il tempo serve solo a riconoscere un timeout: verdetto assente ed esito
+          # diverso da success. Negli altri casi l'API non si chiama. Si legge
+          # dall'API dei job dell'attempt del ventaglio, non di questo job: nel
+          # rerun del solo pubblica la copia del ventaglio nel nuovo attempt non
+          # dava ancora i tempi (journal 2026-09-29/104703). Nessuna stima: senza
+          # tempi la decisione non si prende.
+          trascorsi=0
+          if [ ! -s "$verdetto" ] && [ "$ESITO_VENTAGLIO" != "success" ]; then
+            tempi=""
+            if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then
+              tempi=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$TENTATIVO/jobs" --paginate \
+                --jq '.jobs[] | select(.name == "ventaglio") | .steps[] | select(.name == "Ventaglio di revisione") | "\(.started_at) \(.completed_at)"' \
+                2>/dev/null | head -n 1) || tempi=""
+            fi
+            read -r t0 t1 <<< "$tempi" || true
+            # date -d "" vale la mezzanotte di oggi: i campi vuoti si scartano prima.
+            if [ -n "${t0:-}" ] && [ -n "${t1:-}" ] && s0=$(date -d "$t0" +%s 2>/dev/null) && s1=$(date -d "$t1" +%s 2>/dev/null) && [ "$s1" -ge "$s0" ]; then
+              trascorsi=$((s1 - s0))
+              echo "ventaglio dall'API dei job, attempt ${TENTATIVO}: ${t0} -> ${t1}"
+            else
+              non_presa "tempi non leggibili" "L'API dei job (attempt '${TENTATIVO}') non ha dato inizio e fine dello step ventaglio ('${tempi}'), e senza verdetto il tempo serve a riconoscere un timeout."
+            fi
           fi
           echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"
           decidi() {

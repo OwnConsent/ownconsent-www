@@ -1,0 +1,33 @@
+{
+  "ts": "2026-09-30T08:29:32+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Correggo beab008 sui finding di /code-review 72: i tempi si leggono dall'attempt del ventaglio, nessuna stima, e un tempo che serve e non c'e' da' «decisione non presa (tempi non leggibili)». La riserva sull'artifact resta, col caso scritto",
+  "contesto": "Brief di Andrea del 30/09. /code-review 72 ha trovato due difetti, medio e basso, sul tempo del ventaglio in pubblica. Il medio e' lo stesso che ho osservato nella 3b (voce 2026-09-29/104703), e la proposta di correzione era mia. Lavoro della sessione, test a @qa-test.",
+  "correzione_di": "beab008 e 659ade6: tempi da /attempts/$GITHUB_RUN_ATTEMPT/jobs e riserva 'adesso - INIZIO'",
+  "cosa_cambia": [
+    "1, medio: 'Scegli il verdetto' esporta anche l'output tentativo, cioe' il tentativo risolto una volta sola. Da quel valore vengono sia il nome dell'artifact sia l'attempt da cui 'Pubblica' chiede i tempi, /actions/runs/{run}/attempts/{tentativo}/jobs. Mai github.run_attempt di pubblica",
+    "2, basso: tolta la riserva 'adesso - INIZIO'. Tolti anche lo step 'Inizio del ventaglio' e l'output inizio del job ventaglio, che non avevano altri usi. L'API dei job si chiama solo se il verdetto e' vuoto e l'esito non e' success, gli unici casi in cui collaudo-esito.sh guarda il tempo. Se in quei casi l'API non da' inizio e fine: 'Collaudo: decisione non presa (tempi non leggibili)', senza marcatore, rosso. Negli altri casi trascorsi=0 e nessuna chiamata",
+    "3, riserva sull'artifact: resta, col caso in commento nel YAML, perche' ho trovato un caso con fonte. E' ostile, non di esercizio normale: lo dico perche' Andrea decida se basta"
+  ],
+  "punto_3_il_caso": [
+    "fonte, github/docs data/reusables/actions/jobs/section-defining-outputs-for-jobs.md: 'Job outputs containing expressions are evaluated on the runner at the end of each job. Outputs containing secrets are redacted on the runner and not sent to GitHub Actions. If an output is skipped because it may contain a secret, you will see the following warning message: \"Skip output `{output.Key}` since it may contain secret.\"' E' l'unico caso documentato che ho trovato in cui un output definito manca",
+    "in esercizio normale non succede: i segreti del workflow sono CLAUDE_CODE_OAUTH_TOKEN e GITHUB_TOKEN, nessuno vale '1' o '2'",
+    "caso ostile: un valore diventa segreto anche con il comando '::add-mask::' stampato a inizio riga da uno step. Lo step 'Diagnostica del ventaglio' gira dopo l'agente e fa `ls -la \"$GITHUB_WORKSPACE/.collaudo/\"`, cioe' elenca file che l'agente puo' creare. Misura locale: con un file di nome 'x' + a capo + '::add-mask::1', `ls -la <dir> | cat -A` stampa la riga '::add-mask::1$'. Non misurato su GitHub: che il runner esegua quel comando e salti l'output tentativo lo dice la documentazione, non una prova",
+    "in quel caso la riserva trova l'artifact giusto: dopo un rerun completo gli artifact dei tentativi precedenti non esistono piu' (voce 2026-09-29/104703: 404 su 11022261661), e il tentativo risolto da' anche i tempi. Senza riserva l'esito sarebbe 'artifact non trovato', rosso: onesto anche quello",
+    "segnalato, non corretto: la Diagnostica e' un canale da cui l'agente puo' emettere comandi di workflow, per esempio con `ls -b` che scrive l'a capo come \\n. Fuori dal brief"
+  ],
+  "alternative": [
+    { "opzione": "tempi dall'attempt di pubblica, con la riserva 'adesso - INIZIO'", "scartata_perche": "3b: l'attempt 2 non dava i tempi e la riserva ha stimato 354 s contro 298; un rerun fatto ore dopo su un giro senza verdetto dichiarerebbe un timeout mai avvenuto" },
+    { "opzione": "togliere la riserva sull'artifact", "scartata_perche": "il brief dice che resta se si trova un caso con fonte, e il caso c'e' (sopra). La scelta resta ad Andrea, col caso scritto" }
+  ],
+  "evidenza": [
+    "actionlint 1.7.7: uscita 0. `grep -n 'INIZIO\\|inizio'` sul workflow: solo testo nei commenti e nel messaggio d'errore",
+    "banco a secco (scratchpad) su Scegli, Prepara e Pubblica estratti dal YAML, con un gh finto che risponde per attempt. 'verdetto, esito success' -> nessuna chiamata a /jobs. 'agente muto, esito failure, API in errore' e 'API senza step' -> 'decisione non presa (tempi non leggibili)', rc 1. 'agente muto, esito success, API in errore' -> nessuna chiamata a /jobs, 'nessun verdetto'. 'verdetto, esito failure, API in errore' -> nessuna chiamata a /jobs, verdetto pubblicato con la nota sull'esito. 'rerun solo pubblica: job 2, output 1, attempt 2 senza step' -> chiamata a /attempts/1/jobs, 'ventaglio dall'API dei job, attempt 1'. 'output mancante, riserva API: tentativo-1, job 2' -> tempi da /attempts/1/jobs"
+  ],
+  "esito": "applicata; test e mutazioni a @qa-test",
+  "umano_coinvolto": false
+}

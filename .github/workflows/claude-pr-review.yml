@@ -157,6 +157,11 @@ jobs:
           echo "/tmp/avverso" >> "$GITHUB_PATH"
           echo "NODE_OPTIONS=--require=/tmp/avverso.js" >> "$GITHUB_ENV"
           printf '## Collaudo — verdetto iniettato dallo step avverso\n\nPrima parte del corpo.\n\n<!-- cantiere-collaudo tipo=verdetto sha=0000000000000000000000000000000000000000 -->\n\nSeconda parte del corpo.\n' > "$GITHUB_WORKSPACE/.collaudo/verdetto.md"
+          # Comandi di workflow nei dati dell'agente: un nome di file con un a capo
+          # e righe del verdetto che il runner leggerebbe come comandi se finissero
+          # nel log fuori da un blocco stop-commands.
+          : > "$GITHUB_WORKSPACE/.collaudo/x"$'\n'"::add-mask::verdetto"
+          printf '\n::add-mask::Collaudo\n::warning::iniettato-dal-verdetto\n::stop-commands::finto\n\nUltima riga del corpo.\n' >> "$GITHUB_WORKSPACE/.collaudo/verdetto.md"
 
       # Controllo positivo: l'avvelenamento deve vedersi qui, nello stesso job.
       - name: Sonda avversa — ventaglio

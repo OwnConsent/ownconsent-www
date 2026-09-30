@@ -370,7 +370,11 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
         pubblicati = [f.read_text(encoding="utf-8")
                       for f in sorted(pub.iterdir(), key=lambda f: int(f.stem))]
         api = [c for c in chiamate if c.startswith("api ")]
-        return dict(rc=p2.returncode, tentativo_scelto=u0.get("tentativo", ""), rc_scegli=p0.returncode, rc_prepara=p1.returncode,
+        return dict(rc=p2.returncode, tentativo_scelto=u0.get("tentativo", ""),
+                    stdout_passi={"scegli": p0.stdout, "prepara": p1.stdout,
+                                  "pubblica": p2.stdout},
+                    stderr_passi={"scegli": p0.stderr, "prepara": p1.stderr,
+                                  "pubblica": p2.stderr}, rc_scegli=p0.returncode, rc_prepara=p1.returncode,
                     uscite_prepara=uscite, nome=nome, nome_chiesto=nome_chiesto,
                     scaricato=scaricato,
                     stdout=p0.stdout + p0.stderr + p1.stdout + p1.stderr + p2.stdout + p2.stderr,

@@ -136,8 +136,8 @@ M = [
      "          fetch-depth: 0\n          persist-credentials: false\n", "          fetch-depth: 0\n", False,
      [f"{I}.TestStaticaIsolamento.test_persist_credentials_false_su_ogni_checkout"]),
     ("output-da-step-dopo-l-agente", WF,
-     r"(      esito: \$\{\{ steps\.ventaglio\.outcome \}\}\n)(.*?      - name: Diagnostica del ventaglio\n)",
-     r"\1      x: ${{ steps.diagnostica.outputs.y }}\n\2        id: diagnostica\n",
+     r"(      esito: \$\{\{ steps\.ventaglio\.outcome \}\}\n)(.*?)(      # Il file del verdetto, se c'e', e giro\.txt passano)",
+     r"\1      x: ${{ steps.dopo.outputs.y }}\n\2      - name: Dopo l'agente\n        id: dopo\n        run: true\n\n\3",
      True,
      [f"{I}.TestStaticaIsolamento.test_output_di_ventaglio_solo_da_step_non_successivi_all_agente"]),
     ("output-dagli-outputs-dell-agente", WF,
@@ -177,8 +177,8 @@ M = [
      "      tentativo: ${{ github.event.pull_request.title }}\n", False,
      [f"{I}.TestStaticaIsolamento.test_output_di_ventaglio_solo_da_step_non_successivi_all_agente"]),
     ("output-tentativo-da-step-dopo-l-agente", WF,
-     r"(      tentativo: )\$\{\{ github\.run_attempt \}\}\n(.*?      - name: Diagnostica del ventaglio\n)",
-     r"\1${{ steps.diagnostica.outputs.t }}\n\2        id: diagnostica\n", True,
+     r"(      tentativo: )\$\{\{ github\.run_attempt \}\}\n(.*?)(      # Il file del verdetto, se c'e', e giro\.txt passano)",
+     r"\1${{ steps.dopo.outputs.y }}\n\2      - name: Dopo l'agente\n        id: dopo\n        run: true\n\n\3", True,
      [f"{I}.TestStaticaIsolamento.test_output_di_ventaglio_solo_da_step_non_successivi_all_agente"]),
     ("nome-dal-run-attempt-di-pubblica-nel-download", WF,
      "          name: ${{ steps.scegli.outputs.nome }}\n",
@@ -192,23 +192,9 @@ M = [
      [f"{I}.TestStaticaArtifactEFork.test_nome_dell_artifact_non_dal_run_attempt_di_pubblica",
       f"{I}.TestSceltaDellArtifact.test_a_rerun_del_solo_pubblica_output_presente"]),
     ("scegli-ignora-l-output", WF,
-     'if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then\n            fonte=', 'if false; then\n            fonte=', False,
+     'if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then\n            echo "tentativo del ventaglio', 'if false; then\n            echo "tentativo del ventaglio', False,
      [f"{I}.TestSceltaDellArtifact.test_a_rerun_del_solo_pubblica_output_presente",
       f"{I}.TestArtifactMancante.test_d_download_fallito"]),
-    ("riserva-senza-limite", WF,
-     """ | awk -v m="$GITHUB_RUN_ATTEMPT" '$1 <= m'""", "", False,
-     [f"{I}.TestSceltaDellArtifact.test_c_la_riserva_non_supera_il_tentativo_del_job",
-      f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
-    ("riserva-il-piu-basso", WF,
-     "| sort -n | tail -n 1)", "| sort -n | head -n 1)", False,
-     [f"{I}.TestSceltaDellArtifact.test_c_rerun_completo_prende_il_tentativo_del_ventaglio"]),
-    ("riserva-ordine-lessicografico", WF,
-     "| sort -n | tail -n 1)", "| sort | tail -n 1)", False,
-     [f"{I}.TestSceltaDellArtifact.test_c_la_riserva_confronta_i_numeri_non_le_stringhe"]),
-    ("riserva-accetta-ogni-nome", WF,
-     r"""sed -n 's/^verdetto-tentativo-\([1-9][0-9]*\)$/\1/p'""",
-     r"""sed -n 's/^.*tentativo-\([1-9][0-9]*\)$/\1/p'""", False,
-     [f"{I}.TestSceltaDellArtifact.test_b_rerun_del_solo_pubblica_output_vuoto_dall_api"]),
     ("prepara-download-fallito-come-agente-muto", WF,
      r'          if \[ "\$SCARICATO" != "success" \]; then\n.*?exit 4\n          fi\n', "", True,
      [f"{I}.TestArtifactMancante.test_d_download_fallito",
@@ -249,7 +235,7 @@ M = [
      [f"{I}.TestStaticaArtifactEFork.test_fork_saltato_da_entrambi_i_job",
       f"{I}.TestStaticaArtifactEFork.test_pubblica_non_gira_se_ventaglio_e_saltato"]),
     ("prepara-illeggibile-come-agente-muto", WF,
-     '          if [ -f "$RICEVUTO" ]; then\n', '          if [ -r "$RICEVUTO" ]; then\n', False,
+     '          if [ -f "$RICEVUTO" ]; then\n            python3', '          if [ -r "$RICEVUTO" ]; then\n            python3', False,
      [f"{I}.TestEsecuzioneIsolamento.test_uscita_imprevista_di_prepara_decisione_non_presa"]),
     ("non_presa-artifact-con-marcatore", WF,
      """non_presa "artifact non trovato" "L'artifact""",
@@ -281,15 +267,76 @@ M = [
      'if [ ! -s "$verdetto" ] && [ "$ESITO_VENTAGLIO"', 'if [ "$ESITO_VENTAGLIO"', False,
      [f"{I}.TestTempiDelVentaglio.test_3_verdetto_scritto_esito_failure_nessuna_chiamata_ai_job",
       f"{C}.TestEsecuzioneDelloStep.test_verdetto_scritto_si_pubblica_senza_chiamare_l_api"]),
-    ("riserva-artifact-tolta", WF,
-     r'            TENTATIVO=\$\(gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/artifacts".*?tail -n 1\)\n',
-     "            :\n", True,
-     [f"{I}.TestTempiDelVentaglio.test_4_output_tentativo_mancante_riserva_sull_artifact_e_tempi",
-      f"{I}.TestSceltaDellArtifact.test_b_rerun_del_solo_pubblica_output_vuoto_dall_api"]),
     ("scegli-non-esporta-tentativo", WF,
      '            echo "tentativo=${TENTATIVO}" >> "$GITHUB_OUTPUT"\n', "", False,
-     [f"{I}.TestTempiDelVentaglio.test_1_rerun_del_solo_pubblica_tempi_dall_attempt_del_ventaglio",
-      f"{I}.TestTempiDelVentaglio.test_4_output_tentativo_mancante_riserva_sull_artifact_e_tempi"]),
+     [f"{I}.TestTempiDelVentaglio.test_1_rerun_del_solo_pubblica_tempi_dall_attempt_del_ventaglio"]),
+    # --- ca50180: riserva tolta, niente dopo l'agente, stop-commands, riga dei tempi ---
+    ("riserva-ripristinata", WF,
+     """          else
+            echo "l'output tentativo del job ventaglio manca o non e' un numero: nessun artifact da cercare"
+          fi
+""",
+     """          else
+            TENTATIVO=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" --paginate --jq '.artifacts[].name' \\
+              | sed -n 's/^verdetto-tentativo-\\([1-9][0-9]*\\)$/\\1/p' | awk -v m="$GITHUB_RUN_ATTEMPT" '$1 <= m' | sort -n | tail -n 1)
+            if [ -n "$TENTATIVO" ]; then
+              echo "tentativo=${TENTATIVO}" >> "$GITHUB_OUTPUT"
+              echo "nome=verdetto-tentativo-${TENTATIVO}" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+""", False,
+     [f"{I}.TestSceltaDellArtifact.test_b_output_tentativo_mancante_o_non_numerico_nessuna_riserva",
+      f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
+    ("diagnostica-ripristinata-dopo-l-agente", WF,
+     "      # Il file del verdetto, se c'e', e giro.txt passano",
+     """      - name: Diagnostica del ventaglio
+        if: ${{ !cancelled() }}
+        run: ls -la "$GITHUB_WORKSPACE/.collaudo/" || true
+
+      # Il file del verdetto, se c'e', e giro.txt passano""", False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_ventaglio_dopo_l_agente_solo_l_upload"]),
+    ("stop-commands-rimosso", WF,
+     r'          echo "::stop-commands::\$\{blocco\}"\n(.*?)          echo "::\$\{blocco\}::"\n', r"\1", True,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("stop-commands-chiuso-prima-del-cat", WF,
+     r'(          echo "::stop-commands::\$\{blocco\}"\n)(.*?)(          echo "::\$\{blocco\}::"\n)', r"\1\3\2", True,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("stop-commands-token-fisso", WF,
+     "blocco=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \\n')", "blocco=0123456789abcdef0123456789abcdef", False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_token_nuovo_a_ogni_esecuzione"]),
+    ("stop-commands-token-da-espressione", WF,
+     "blocco=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \\n')", "blocco=${{ github.run_id }}", False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands"]),
+    ("stop-commands-chiusura-su-altra-variabile", WF,
+     '          echo "::${blocco}::"\n', '          echo "::${fine}::"\n', False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("stop-commands-a-capo-finale-tolto", WF,
+     '            cat "$RICEVUTO" || echo "(verdetto.md non leggibile)"\n            echo\n',
+     '            cat "$RICEVUTO" || echo "(verdetto.md non leggibile)"\n', False,
+     [f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("cat-del-verdetto-fuori-dal-blocco", WF,
+     '          echo "decisione: ${decisione}"\n', '          echo "decisione: ${decisione}"\n          cat "$verdetto"\n', False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("verdetto-su-stderr-fuori-dal-blocco", WF,
+     '          echo "decisione: ${decisione}"\n', '          echo "decisione: ${decisione}"\n          head -c 4000 "$verdetto" >&2\n', False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("print-python-del-testo", WF,
+     "          print(f'occorrenze di cantiere-collaudo neutralizzate: {n}')\n", "          print(s)\n", False,
+     [f"{I}.TestStaticaDatiDellAgenteNelLog.test_dati_dell_agente_nel_log_solo_fra_stop_commands",
+      f"{I}.TestStopCommandsEseguito.test_righe_dell_agente_solo_dentro_il_blocco"]),
+    ("riga-dei-tempi-unica", WF,
+     r'          if \[ "\$tempi_letti" = "si" \]; then\n.*?\n          fi\n',
+     '          echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"\n', True,
+     [f"{I}.TestRigaDeiTempi.test_tempi_non_letti"]),
+    ("riga-dei-tempi-sempre-non-letti", WF,
+     'if [ "$tempi_letti" = "si" ]; then', 'if false; then', False,
+     [f"{I}.TestRigaDeiTempi.test_tempi_letti"]),
 ]
 
 
@@ -314,6 +361,16 @@ def esegui(root, target):
                        capture_output=True, text=True)
     righe = [r for r in p.stderr.strip().splitlines() if r.strip()]
     return p.returncode, righe[-1] if righe else ""
+
+
+def esiste(target):
+    """Il bersaglio esiste nei test NON mutati? Un nome sbagliato darebbe un rosso
+    falso (AttributeError del loader, rc=1)."""
+    p = subprocess.run([sys.executable, "-c",
+                        "import sys, unittest; s = unittest.defaultTestLoader.loadTestsFromName(sys.argv[1]);"
+                        " sys.exit(0 if s.countTestCases() else 1)", target],
+                       cwd=TESTS, capture_output=True, text=True)
+    return p.returncode == 0
 
 
 def falliti(root):
@@ -343,6 +400,9 @@ for nome, file, vecchio, nuovo, rx, bersagli in M:
         continue
     for b in bersagli:
         rc, ultima = esegui(root, b)
+        if not esiste(b):
+            print(f"   BERSAGLIO INESISTENTE: {b}")
+            continue
         print(f"   $ CI_ROOT={root} python3 -m unittest {b}\n     -> rc={rc} '{ultima}'  {'ROSSO' if rc else 'VERDE!!'}")
     f, tot = falliti(root)
     print(f"   tre moduli: {' '.join(tot)}; falliti: {len(f)}")

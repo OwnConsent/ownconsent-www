@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-30T09:13:06+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Comandi di workflow dai dati dell'agente: via la Diagnostica dal job ventaglio; in pubblica i dati dell'agente vanno nel log solo fra stop-commands con un token nuovo a ogni esecuzione. La riga dei tempi non letti non sembra piu' una misura",
+  "contesto": "Brief di Andrea del 30/09, punti 2 e 3. La voce 082932 aveva segnalato, senza correggerlo, che la Diagnostica del ventaglio stampava con ls i nomi dei file creati dall'agente, a capo compresi: un canale per emettere comandi di workflow. La riga 'ventaglio: success, 0 s su un budget di 30 min' era nella voce 084858.",
+  "correzione_di": "659ade6 (step 'Diagnostica del ventaglio' tenuto dopo l'agente) e 78bd1c7 (riga dei tempi con 0 s anche quando i tempi non sono letti)",
+  "cosa_cambia": [
+    "2a: tolto lo step 'Diagnostica del ventaglio'. Dopo l'agente, nel job ventaglio resta solo la consegna dell'artifact. Si perde la riga con num_turns e permission_denials dall'execution_file, che sta sul runner del ventaglio e che pubblica non puo' leggere",
+    "2b: in 'Prepara il verdetto', dopo un download riuscito, un blocco '::stop-commands::<token>' ... '::<token>::' contiene ls -la della cartella ricevuta e cat di verdetto.md. Il token e' `od -An -N16 -tx1 /dev/urandom`, 32 cifre esadecimali nuove a ogni esecuzione. ls e cat non fanno fallire lo step, cosi' il blocco si chiude sempre. E' l'unico punto di pubblica in cui dati dell'agente vanno nel log",
+    "2b, le altre stampe di pubblica, controllate una per una: valori del runner (TENTATIVO validato, ESITO_VENTAGLIO), il nome dell'artifact costruito dal workflow, numeri (occorrenze, byte, secondi), URL e tempi dall'API di GitHub, la parola di collaudo-esito.sh. Nessuna contiene testo dell'agente",
+    "3: se i tempi non sono stati letti, la riga e' 'ventaglio: <esito>; tempi non letti (non servono)'. Se sono stati letti resta 'ventaglio: <esito>, N s su un budget di 30 min'"
+  ],
+  "evidenza": [
+    "misura sul log della 5a (run 36679919844), prima della modifica: pubblica non stampava dati dell'agente. download-artifact stampa nome, ID, dimensione e digest; Prepara stampava due numeri",
+    "actionlint 1.7.7: uscita 0",
+    "banco a secco con un verdetto che contiene '::add-mask::Collaudo', '::warning::iniettato-dal-verdetto', '::stop-commands::finto' e il marcatore falso: le righe compaiono fra '::stop-commands::34bea827a20bd0114f63504d5d9346e3' e '::34bea827a20bd0114f63504d5d9346e3::'; commento con il marcatore vero in prima riga; 'ventaglio: success; tempi non letti (non servono)'. Con esito failure e tempi dall'API: 'ventaglio: failure, 100 s su un budget di 30 min'"
+  ],
+  "cosa_non_e_misurato": "Che il runner ignori davvero i comandi dentro il blocco: lo dira' la #74 estesa, con l'API delle annotazioni.",
+  "esito": "applicata; test statico, test e mutazioni a @qa-test",
+  "umano_coinvolto": false
+}

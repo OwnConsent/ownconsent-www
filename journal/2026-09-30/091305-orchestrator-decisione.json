@@ -1,0 +1,19 @@
+{
+  "ts": "2026-09-30T09:13:05+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Riserva sull'artifact tolta: un output tentativo mancante o non numerico da' «decisione non presa (artifact non trovato)», rosso",
+  "contesto": "Decisione di Andrea, brief del 30/09 dopo la voce 082932. L'unico caso con fonte in cui l'output tentativo manca e' ostile: l'output mascherato come possibile segreto. Nel caso ostile si chiude.",
+  "alternative": [
+    { "opzione": "riserva mantenuta per il caso ostile: il tentativo piu' alto fra gli artifact del run, non oltre quello di pubblica", "scartata_perche": "serve solo quando qualcuno ha manomesso gli output del job ventaglio; li' l'esito giusto e' fermarsi, non aggirare la manomissione e pubblicare come se niente fosse. Inoltre la riserva era una seconda fonte per decidere quale esecuzione del ventaglio giudicare, mentre artifact e tempi devono venire da una sola" }
+  ],
+  "evidenza": [
+    "'Scegli il verdetto' ora accetta solo un output tentativo che corrisponde a ^[1-9][0-9]*$. Altrimenti stampa 'l'output tentativo del job ventaglio manca o non e' un numero: nessun artifact da cercare' e non esporta ne' nome ne' tentativo; il download non gira e Prepara scrive artifact=mancante. Lo step non ha piu' GH_TOKEN",
+    "banco a secco, caso 'output tentativo vuoto' -> nome '', '::error title=Artifact non trovato::'nessun nome', download: skipped', commento 'Collaudo: decisione non presa (artifact non trovato)', rc 1, nessun marcatore"
+  ],
+  "esito": "applicata; test e mutazione (riserva ripristinata -> rosso) a @qa-test",
+  "umano_coinvolto": true
+}

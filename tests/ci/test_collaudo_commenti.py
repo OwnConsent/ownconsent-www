@@ -26,9 +26,10 @@ Tre livelli:
      quello di ci_root(), posato nel checkout finto del job pubblica.
 
 Dal #69 prima della chiamata allo script c'e' una sola `gh api`, quella dei
-tempi del job ventaglio (…/attempts/N/jobs), che tollera il fallimento: la
-statica lo ammette per nome e l'esecuzione prova che, se fallisce insieme ai
-commenti, il verdetto esce lo stesso.
+tempi del job ventaglio (…/attempts/$TENTATIVO/jobs, dal 78bd1c7 l'attempt del
+ventaglio): la statica lo ammette per nome. Dal 78bd1c7 con un verdetto scritto
+non si chiama affatto, e l'esecuzione lo prova anche con l'API dei job e dei
+commenti in errore.
 
 Tutto si risolve da ci_root(): con CI_ROOT=<copia> si collauda una copia (anche
 un `git archive` di un commit precedente).
@@ -147,7 +148,7 @@ def _senza_funzioni(righe: list[str]) -> list[str]:
 
 
 API_DEI_JOB = re.compile(
-    r'gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/attempts/\$GITHUB_RUN_ATTEMPT/jobs"')
+    r'gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/attempts/\$TENTATIVO/jobs"')
 
 
 class TestStaticaLetturaDeiCommenti(unittest.TestCase):
@@ -214,7 +215,8 @@ class TestEsecuzioneDelloStep(unittest.TestCase):
     def test_verdetto_scritto_si_pubblica_senza_chiamare_l_api(self):
         # Il caso del finding: l'API dei commenti fallirebbe, e il verdetto deve
         # uscire lo stesso. Dal #69 fallisce anche l'API dei job: il verdetto esce
-        # comunque, e i commenti non si leggono.
+        # comunque, e i commenti non si leggono. Dal 78bd1c7 con un verdetto
+        # scritto non si chiama nessuna API, neanche quella dei job.
         for esito, trascorsi in (("success", 100), ("failure", CONFINE + 60)):
             for jobs_falliscono in (False, True):
                 with self.subTest(esito=esito, trascorsi=trascorsi,
@@ -223,8 +225,7 @@ class TestEsecuzioneDelloStep(unittest.TestCase):
                                    api_fallisce=True, jobs_falliscono=jobs_falliscono)
                     self.assertEqual(r["api_commenti"], [], r["stdout"])
                     self.assertEqual(r["api_artefatti"], [], "download riuscito: l'API degli artifact non serve")
-                    self.assertEqual(len(r["api"]), len(r["api_jobs"]),
-                                     f"solo l'API dei job: {r['api']}")
+                    self.assertEqual(r["api"], [], "con un verdetto scritto nessuna API")
                     self.assertEqual(r["rc"], 0, r["stdout"])
                     self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
                     self.assertIn(TESTO_VERDETTO, r["pubblicati"][0])

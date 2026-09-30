@@ -30,8 +30,12 @@ BUDGET = 30
 CONFINE = BUDGET * 60
 MARCATORE_FALSO = "<!-- cantiere-collaudo tipo=verdetto sha=0000000000000000000000000000000000000000 -->"
 MARCATORE_VERO = f"<!-- cantiere-collaudo tipo=verdetto sha={SHA} -->"
+TESTO_VERDETTO_BREVE = "## Collaudo — run 1, tentativo 1\n\nNessun finding.\n"
 SCRITTURA = {"write", "write-all"}
 ID_AGENTE = "ventaglio"
+# Contesti che il runner valuta da se', uguali per tutto il job: ammessi per nome,
+# interi, come output del job ventaglio. Ogni altro contesto resta vietato.
+CONTESTI_DEL_RUNNER = {"github.run_attempt"}
 
 
 def _permessi(blocco):
@@ -131,6 +135,9 @@ class TestStaticaIsolamento(unittest.TestCase):
                 resto = _ESPR.sub("", str(valore)).strip()
                 self.assertEqual(resto, "", f"{nome}: testo fuori dalle espressioni")
                 for e in espressioni:
+                    if e.strip() in CONTESTI_DEL_RUNNER:
+                        # Valutato dal runner, non da uno step (beab008: tentativo).
+                        continue
                     rif = re.findall(r"\bsteps\.([A-Za-z_][\w-]*)\.([\w-]+)(?:\.([\w-]+))?", e)
                     self.assertTrue(rif, f"{nome}: '{e}' non viene da uno step")
                     # Solo contesti steps: niente env, job, runner, file.
@@ -290,27 +297,30 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
         self._non_presa(r, 2)
 
     def test_uscita_imprevista_di_prepara_decisione_non_presa(self):
-        # Download fallito ma l'API conta l'artifact: Prepara esce 4.
-        r = esegui_job(verdetto=ASSENTE, esito="success", artefatti_contati=1)
-        self.assertEqual(r["rc_prepara"], 4, r["stdout"])
-        self._non_presa(r, 4)
+        # Prima di beab008 il caso era «download fallito, API conta 1» -> uscita 4:
+        # ora quel caso e' «artifact non trovato» (TestArtifactMancante). Resta
+        # un Prepara che fallisce per altro: verdetto.md scaricato ma illeggibile.
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success", prepara_illeggibile=True)
+        self.assertNotEqual(r["rc_prepara"], 0, r["stdout"])
+        self.assertNotEqual(r["rc_prepara"], 4, "4 e' l'uscita dell'artifact mancante")
+        self.assertEqual(r["uscite_prepara"].get("artifact"), None, r["uscite_prepara"])
+        self._non_presa(r, r["rc_prepara"])
         self.assertEqual(r["api_commenti"], [], "senza preparazione non si decide niente")
 
     def test_timeout_dai_tempi_dell_api_dei_job(self):
         # Il tempo viene dallo step «Ventaglio di revisione» del job ventaglio
-        # nell'API dei job. La riserva (INIZIO) punta sempre alla risposta
-        # opposta: se l'API non fosse usata, o fosse letta male, il test cade.
-        adesso = int(dt.datetime.now().timestamp())
+        # nell'API dei job dell'attempt del ventaglio. Dal 78bd1c7 non c'e' piu'
+        # una riserva: se l'API non fosse usata, o fosse letta male, il test cade
+        # (decisione non presa, o durata sbagliata per le esche della risposta).
         casi = [
-            (CONFINE, "timeout", str(adesso)),
-            (CONFINE - 1, "nessun-verdetto", str(adesso - 10 * CONFINE)),
-            (CONFINE + 125, "timeout", str(adesso)),
+            (CONFINE, "timeout"),
+            (CONFINE - 1, "nessun-verdetto"),
+            (CONFINE + 125, "timeout"),
         ]
-        for trascorsi, atteso, inizio in casi:
+        for trascorsi, atteso in casi:
             for file_v in (ASSENTE, VUOTO):
                 with self.subTest(trascorsi=trascorsi, file_verdetto=file_v):
-                    r = esegui_job(verdetto=file_v, esito="failure", trascorsi=trascorsi,
-                                   inizio=inizio)
+                    r = esegui_job(verdetto=file_v, esito="failure", trascorsi=trascorsi)
                     self.assertEqual(len(r["api_jobs"]), 1, r["stdout"])
                     self.assertIn("/actions/runs/4242/attempts/1/jobs", r["api_jobs"][0])
                     self.assertEqual(r["rc"], 1, r["stdout"])
@@ -323,26 +333,487 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
                     else:
                         self.assertIn("nessun verdetto", corpo.lower())
                         self.assertNotIn("timeout", corpo.lower())
-                    self.assertIn("ventaglio dall'API dei job", r["stdout"])
+                    self.assertIn("ventaglio dall'API dei job, attempt 1", r["stdout"])
 
     def test_timeout_con_esito_success_non_e_timeout(self):
         r = esegui_job(verdetto=ASSENTE, esito="success", trascorsi=CONFINE + 60)
         self.assertEqual(r["rc"], 1, r["stdout"])
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
 
-    def test_api_dei_job_muta_riserva_dall_inizio_registrato(self):
-        # Se l'API dei job non risponde, il tempo e' da INIZIO ad adesso, per
-        # eccesso, dichiarato con un warning.
-        adesso = int(dt.datetime.now().timestamp())
-        r = esegui_job(verdetto=ASSENTE, esito="failure", jobs_falliscono=True,
-                       inizio=str(adesso - CONFINE - 5))
-        self.assertIn("Tempo del ventaglio stimato", r["stdout"])
-        self.assertEqual(r["rc"], 1, r["stdout"])
-        self.assertIn(f"timeout dopo {BUDGET} minuti", r["pubblicati"][0])
-        r = esegui_job(verdetto=ASSENTE, esito="failure", jobs_falliscono=True, inizio="")
-        self.assertIn("Tempo del ventaglio ignoto", r["stdout"])
+
+class TestTempiDelVentaglio(unittest.TestCase):
+    """78bd1c7 (voce 2026-09-30/082932): i tempi si chiedono all'attempt del
+    ventaglio, solo quando servono (verdetto vuoto ed esito non success), e senza
+    tempi la decisione non si prende. Sostituisce
+    test_api_dei_job_muta_riserva_dall_inizio_registrato: la riserva
+    «adesso - INIZIO» e' stata tolta di proposito."""
+
+    def _tempi_non_leggibili(self, r):
+        self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+        self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+        corpo = r["pubblicati"][0]
+        self.assertIn("Collaudo: decisione non presa (tempi non leggibili)", corpo)
+        self.assertNotIn("cantiere-collaudo", corpo)
+        self.assertNotIn("tipo=", corpo)
+        self.assertNotIn("nessun verdetto", corpo.lower())
+        # Il messaggio spiega che il tempo serve «a riconoscere un timeout»: si
+        # vieta l'esito timeout, non la parola.
+        self.assertNotIn("collaudo: timeout", corpo.lower())
+        self.assertIn(f"`{CORTO}`", corpo)
+        self.assertEqual(r["api_commenti"], [], "senza tempi non si decide niente")
+
+    def test_1_rerun_del_solo_pubblica_tempi_dall_attempt_del_ventaglio(self):
+        # Job al tentativo 2, ventaglio al 1: l'attempt 2 ha la copia del
+        # ventaglio senza step, l'attempt 1 i tempi. /attempts/2 non si chiede.
+        for trascorsi, atteso in ((CONFINE, "timeout"), (CONFINE - 1, "nessun verdetto")):
+            with self.subTest(trascorsi=trascorsi):
+                r = esegui_job(verdetto=ASSENTE, esito="failure", tentativo="1",
+                               run_attempt="2", trascorsi=trascorsi,
+                               tempi={"1": trascorsi, "2": None})
+                self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+                self.assertEqual(r["tentativo_scelto"], "1")
+                self.assertEqual(len(r["api_jobs"]), 1, r["api_jobs"])
+                self.assertIn("/actions/runs/4242/attempts/1/jobs", r["api_jobs"][0])
+                self.assertFalse([c for c in r["chiamate_gh"] if "/attempts/2/" in c],
+                                 "l'attempt di pubblica non si chiede mai")
+                self.assertEqual(r["rc"], 1, r["stdout"])
+                self.assertIn(atteso, r["pubblicati"][0].lower())
+
+    def test_1_rerun_del_solo_pubblica_con_verdetto(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success", tentativo="1",
+                       run_attempt="2", tempi={"1": 100, "2": None})
+        self.assertEqual(r["nome"], "verdetto-tentativo-1")
+        self.assertEqual(r["api"], [], "verdetto scritto: nessuna API")
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        self.assertTrue(r["pubblicati"][0].startswith(MARCATORE_VERO))
+
+    def test_2_tempi_che_servono_e_non_arrivano(self):
+        casi = {
+            "API dei job in errore": dict(jobs_falliscono=True),
+            "attempt del ventaglio senza step": dict(tempi={"1": None}),
+            "completed_at vuoto": dict(tempi={"1": "vuoti"}),
+            "attempt del ventaglio sconosciuto all'API (404)": dict(tempi={}),
+        }
+        for nome, kw in casi.items():
+            for file_v in (ASSENTE, VUOTO):
+                for esito in ("failure", "cancelled", ""):
+                    with self.subTest(caso=nome, file_verdetto=file_v, esito=esito):
+                        r = esegui_job(verdetto=file_v, esito=esito, trascorsi=CONFINE + 5, **kw)
+                        self.assertEqual(len(r["api_jobs"]), 1, r["stdout"])
+                        self._tempi_non_leggibili(r)
+
+    def test_3_esito_success_nessuna_chiamata_ai_job(self):
+        for file_v, atteso in ((ASSENTE, "nessun verdetto"), (VUOTO, "nessun verdetto"),
+                               (TESTO_VERDETTO_BREVE, "Nessun finding.")):
+            with self.subTest(file_verdetto=file_v):
+                r = esegui_job(verdetto=file_v, esito="success", jobs_falliscono=True,
+                               trascorsi=CONFINE + 60)
+                self.assertEqual(r["api_jobs"], [], r["stdout"])
+                self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+                corpo = r["pubblicati"][0]
+                if file_v == TESTO_VERDETTO_BREVE:
+                    self.assertEqual(r["rc"], 0, r["stdout"])
+                    self.assertIn(atteso, corpo)
+                    self.assertTrue(corpo.startswith(MARCATORE_VERO))
+                else:
+                    self.assertEqual(r["rc"], 1, r["stdout"])
+                    self.assertIn(atteso, corpo.lower())
+                self.assertNotIn("tempi non leggibili", corpo)
+
+    def test_3_verdetto_scritto_esito_failure_nessuna_chiamata_ai_job(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="failure", jobs_falliscono=True,
+                       trascorsi=CONFINE + 60)
+        self.assertEqual(r["api_jobs"], [], r["stdout"])
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        corpo = r["pubblicati"][0]
+        self.assertTrue(corpo.startswith(MARCATORE_VERO))
+        self.assertIn("Nessun finding.", corpo)
+        self.assertIn("terminato con esito `failure`", corpo)
+
+
+# --- 3. beab008: artifact del tentativo del ventaglio, artifact mancante, fork -----
+
+FORK = re.compile(r"github\.event\.pull_request\.head\.repo\.full_name\s*==\s*github\.repository")
+
+
+def _congiunti(cond) -> list[str]:
+    """I termini di una condizione in AND, senza ${{ }} e spazi ridondanti.
+    Una condizione con || o parentesi non si scompone: la si restituisce intera."""
+    c = str(cond or "").strip()
+    m = re.fullmatch(r"\$\{\{(.*)\}\}", c, re.S)
+    if m:
+        c = m.group(1).strip()
+    if "||" in c or re.search(r"[()]", c.replace("cancelled()", "")):
+        return [c]
+    return [re.sub(r"\s+", " ", t.strip()) for t in c.split("&&")]
+
+
+class TestStaticaArtifactEFork(unittest.TestCase):
+
+    def setUp(self):
+        self.doc = review_doc()
+        self.ventaglio = self.doc["jobs"]["ventaglio"]
+        self.pubblica = self.doc["jobs"]["pubblica"]
+
+    def test_upload_con_giro_txt_e_if_no_files_found_error(self):
+        passi = find_steps(self.ventaglio)
+        up = [s for s in passi
+              if str(s.get("uses", "")).split("@")[0] == "actions/upload-artifact"]
+        self.assertEqual(len(up), 1)
+        w = up[0].get("with") or {}
+        self.assertEqual(w.get("if-no-files-found"), "error")
+        percorsi = [r.strip() for r in str(w.get("path", "")).splitlines() if r.strip()]
+        self.assertIn("${{ github.workspace }}/.collaudo/giro.txt", percorsi)
+        self.assertIn("${{ github.workspace }}/.collaudo/verdetto.md", percorsi)
+        self.assertRegex(str(w.get("name", "")), r"^verdetto-tentativo-\$\{\{\s*github\.run_attempt\s*\}\}$")
+        # giro.txt si scrive prima dell'agente, dopo lo svuotamento della cartella.
+        i_agente = next(i for i, s in enumerate(passi) if s.get("id") == ID_AGENTE)
+        scrive = [i for i, s in enumerate(passi)
+                  if re.search(r'>\s*"\$GITHUB_WORKSPACE/\.collaudo/giro\.txt"', s.get("run", "") or "")]
+        self.assertTrue(scrive, "nessuno step scrive .collaudo/giro.txt")
+        self.assertLess(scrive[0], i_agente)
+        run = passi[scrive[0]]["run"]
+        self.assertLess(run.index("rm -rf"), run.index("giro.txt"),
+                        "giro.txt dopo lo svuotamento della cartella")
+
+    def test_download_solo_con_un_nome(self):
+        passi = find_steps(self.pubblica)
+        dl = next(s for s in passi
+                  if str(s.get("uses", "")).split("@")[0] == "actions/download-artifact")
+        self.assertRegex(str(dl.get("if", "")),
+                         r"^\$\{\{\s*steps\.scegli\.outputs\.nome\s*!=\s*''\s*\}\}$")
+        self.assertEqual((dl.get("with") or {}).get("name"), "${{ steps.scegli.outputs.nome }}")
+        self.assertNotIn("artifact-ids", dl.get("with") or {})
+        i_scegli = next(i for i, s in enumerate(passi) if s.get("id") == "scegli")
+        self.assertLess(i_scegli, passi.index(dl))
+
+    def test_prepara_e_pubblica_girano_anche_dopo_un_errore_di_scegli(self):
+        # Il banco esegue sempre Prepara e Pubblica: che girino anche dopo un
+        # errore di Scegli o del download lo dice il loro if, qui. Senza
+        # !cancelled() l'if implicito e' success(), e un errore di Scegli
+        # lascerebbe la PR senza commento invece che con «artifact non trovato».
+        passi = find_steps(self.pubblica)
+        for id_ in ("prepara",):
+            s = next(x for x in passi if x.get("id") == id_)
+            self.assertEqual(s.get("if"), "${{ !cancelled() }}", id_)
+        s = next(x for x in passi if x.get("name") == "Pubblica il verdetto")
+        self.assertEqual(s.get("if"), "${{ !cancelled() }}")
+
+    def test_nome_dell_artifact_non_dal_run_attempt_di_pubblica(self):
+        passi = find_steps(self.pubblica)
+        dl = next(s for s in passi
+                  if str(s.get("uses", "")).split("@")[0] == "actions/download-artifact")
+        self.assertNotIn("run_attempt", str(dl.get("with")))
+        scegli = next(s for s in passi if s.get("id") == "scegli")
+        self.assertEqual((scegli.get("env") or {}).get("TENTATIVO"),
+                         "${{ needs.ventaglio.outputs.tentativo }}")
+        self.assertEqual((self.ventaglio.get("outputs") or {}).get("tentativo"),
+                         "${{ github.run_attempt }}")
+        run = scegli.get("run", "")
+        self.assertNotRegex(run, r"TENTATIVO=\"?\$\{?GITHUB_RUN_ATTEMPT",
+                            "il tentativo del ventaglio non e' quello di pubblica")
+        self.assertRegex(run, r'nome=verdetto-tentativo-\$\{TENTATIVO\}')
+        prepara = next(s for s in passi if s.get("id") == "prepara")
+        self.assertNotIn("run_attempt", str(prepara.get("env")))
+
+    def test_fork_saltato_da_entrambi_i_job(self):
+        for nome in ("ventaglio", "pubblica"):
+            with self.subTest(job=nome):
+                job = self.doc["jobs"][nome]
+                termini = _congiunti(job.get("if"))
+                self.assertTrue(any(FORK.fullmatch(t) for t in termini),
+                                f"{nome}: il confronto head.repo.full_name == github.repository "
+                                f"non e' un termine in AND dell'if: {termini}")
+
+    def test_pubblica_non_gira_se_ventaglio_e_saltato(self):
+        # Con ventaglio saltato, !cancelled() e' vero: pubblica deve portare nel
+        # proprio if ogni condizione che salta ventaglio.
+        t_v = _congiunti(self.ventaglio.get("if"))
+        t_p = _congiunti(self.pubblica.get("if"))
+        self.assertGreater(len(t_v), 1, t_v)
+        for t in t_v:
+            self.assertIn(t, t_p, "pubblica girerebbe dove ventaglio e' saltato")
+
+
+def _nel_corpo(r, testo):
+    return any(testo in c for c in r["pubblicati"])
+
+
+class TestSceltaDellArtifact(unittest.TestCase):
+
+    def test_a_rerun_del_solo_pubblica_output_presente(self):
+        r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success",
+                       tentativo="1", run_attempt="2")
+        self.assertEqual(r["nome"], "verdetto-tentativo-1", r["stdout"])
+        self.assertEqual(r["nome_chiesto"], "verdetto-tentativo-1")
+        self.assertEqual(r["api_artefatti"], [], "output presente: l'API non serve")
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+        self.assertTrue(r["pubblicati"][0].startswith(MARCATORE_VERO))
+        self.assertIn("Nessun finding.", r["pubblicati"][0])
+
+    def test_b_output_tentativo_mancante_o_non_numerico_nessuna_riserva(self):
+        # ca50180 (voce 2026-09-30/091305): la riserva sull'API degli artifact e'
+        # tolta. Anche se l'API elencherebbe verdetto-tentativo-1, un output
+        # tentativo vuoto o non numerico chiude: artifact non trovato, nessuna
+        # chiamata all'API degli artifact ne' a quella dei job, nessun download.
+        for out in ("", "abc", "0", "01", " 1", "1 "):
+            for run_attempt in ("1", "2"):
+                with self.subTest(tentativo=out, run_attempt=run_attempt):
+                    r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="failure",
+                                   tentativo=out, run_attempt=run_attempt,
+                                   artefatti={"verdetto-tentativo-1": TESTO_VERDETTO_BREVE},
+                                   tempi={"1": CONFINE + 5, "2": CONFINE + 5})
+                    self.assertEqual(r["api"], [], r["chiamate_gh"])
+                    self.assertEqual(r["nome"], "", r["stdout"])
+                    self.assertEqual(r["tentativo_scelto"], "")
+                    self.assertEqual(r["scaricato"], "skipped", "senza nome il download non gira")
+                    _artifact_non_trovato(self, r)
+
+    def test_c_rerun_completo_prende_il_tentativo_del_ventaglio(self):
+        artefatti = {"verdetto-tentativo-1": "## Collaudo — tentativo UNO\n",
+                     "verdetto-tentativo-2": "## Collaudo — tentativo DUE\n"}
+        r = esegui_job(esito="success", tentativo="2", run_attempt="2", artefatti=artefatti)
+        self.assertEqual(r["nome"], "verdetto-tentativo-2", r["stdout"])
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        self.assertTrue(_nel_corpo(r, "tentativo DUE"), r["pubblicati"])
+        self.assertFalse(_nel_corpo(r, "tentativo UNO"), "mai il tentativo 1")
+
+    def test_agente_muto_artifact_col_solo_giro_txt(self):
+        # L'artifact c'e' e non ha verdetto.md: e' l'agente muto, si decide.
+        r = esegui_job(verdetto=ASSENTE, esito="success", tentativo="1")
+        self.assertEqual(r["scaricato"], "success")
+        self.assertEqual(r["rc_prepara"], 0, r["stdout"])
+        self.assertEqual(len(r["api_commenti"]), 1, r["stdout"])
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
 
+
+def _artifact_non_trovato(self, r):
+    self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+    self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+    corpo = r["pubblicati"][0]
+    self.assertIn("Collaudo: decisione non presa (artifact non trovato)", corpo)
+    self.assertNotIn("cantiere-collaudo", corpo)
+    self.assertNotIn("tipo=", corpo)
+    self.assertNotIn("nessun verdetto", corpo.lower())
+    self.assertNotIn("timeout", corpo.lower())
+    self.assertIn(f"`{CORTO}`", corpo)
+    self.assertEqual(r["api_commenti"], [], "senza artifact non si decide niente")
+    self.assertEqual(r["uscite_prepara"].get("artifact"), "mancante")
+
+
+class TestArtifactMancante(unittest.TestCase):
+
+    def test_d_download_fallito(self):
+        casi = {
+            "nome dall'output, artifact assente nel run": dict(tentativo="1", artefatti={}),
+            "artifact presente, download fallito": dict(tentativo="1", download_fallisce=True),
+            "rerun di pubblica, artifact del tentativo 1 sparito": dict(
+                tentativo="1", run_attempt="2", artefatti={"verdetto-tentativo-2": ASSENTE}),
+        }
+        for nome, kw in casi.items():
+            for esito in ("success", "failure"):
+                with self.subTest(caso=nome, esito=esito):
+                    r = esegui_job(esito=esito, trascorsi=CONFINE + 5, **kw)
+                    self.assertEqual(r["scaricato"], "failure", r["stdout"])
+                    _artifact_non_trovato(self, r)
+
+    def test_d_nessun_nome(self):
+        for kw in (dict(tentativo="", artefatti={}), dict(tentativo="", verdetto=TESTO_VERDETTO_BREVE)):
+            with self.subTest(**{k: str(v)[:20] for k, v in kw.items()}):
+                r = esegui_job(esito="failure", **kw)
+                self.assertEqual(r["nome"], "", r["stdout"])
+                self.assertEqual(r["scaricato"], "skipped", "senza nome il download non gira")
+                self.assertEqual(r["api"], [], r["chiamate_gh"])
+                _artifact_non_trovato(self, r)
+
+
+# --- 4. ca50180: niente dopo l'agente, dati dell'agente fra stop-commands, tempi ---
+
+# Cio' che nei run di pubblica porta dati dell'agente: il file ricevuto, la sua
+# cartella, la copia neutralizzata e la sua parte troncata.
+_DATI = r'(?:\$\{?RICEVUTO\}?|\$\{?verdetto\}?|\$\{?parte\}?|\$RUNNER_TEMP/verdetto)'
+_LETTORI = re.compile(
+    r'(?:^|[;&|(\s])(?:cat|ls|head|tail|less|more|od|xxd|hexdump|strings|grep|sed|awk|jq|nl|tac|base64)\b[^;&|]*?' + _DATI)
+# Una redirezione dello stdout verso un file (non &1, &2, /dev/stdout, /dev/stderr).
+_A_FILE = re.compile(r'(?<![0-9&])>>?\s*"?(?!&|/dev/std)[$/\w]')
+_APRI = re.compile(r'^\s*echo\s+"::stop-commands::\$\{?(\w+)\}?"\s*$')
+_CHIUDI = re.compile(r'^\s*echo\s+"::\$\{?(\w+)\}?::"\s*$')
+
+
+def _analizza_run(run: str):
+    """Ritorna (letture_fuori, blocchi, prints_fuori, assegnazioni).
+    letture_fuori: righe shell che mandano dati dell'agente sullo stdout (o stderr)
+    fuori da un blocco stop-commands. Il corpo dei heredoc python si analizza a
+    parte: un print() che non stampi solo un numero conta come lettura."""
+    letture, prints, blocchi, assegna = [], [], [], {}
+    aperto = None
+    heredoc = None
+    for n, riga in enumerate(run.splitlines(), 1):
+        if heredoc is not None:
+            if riga.strip() == heredoc:
+                heredoc = None
+                continue
+            if re.search(r"\bprint\s*\(", riga) and not re.fullmatch(
+                    r"\s*print\(f'[^{}']*\{n\}'\)\s*", riga):
+                if aperto is None:
+                    prints.append((n, riga.strip()))
+            continue
+        codice = riga.split(" #")[0] if not riga.lstrip().startswith("#") else ""
+        if not codice.strip():
+            continue
+        m = re.search(r"<<-?\s*'?(\w+)'?", codice)
+        if m:
+            heredoc = m.group(1)
+        m = re.match(r"^\s*(\w+)=(.*)$", codice)
+        if m:
+            assegna.setdefault(m.group(1), []).append((n, m.group(2)))
+        m = _APRI.match(codice)
+        if m:
+            aperto = (m.group(1), n)
+            continue
+        m = _CHIUDI.match(codice)
+        if m and aperto is not None and m.group(1) == aperto[0]:
+            blocchi.append((aperto[0], aperto[1], n))
+            aperto = None
+            continue
+        if _LETTORI.search(codice) and not _A_FILE.search(codice.split("||")[0]):
+            if aperto is None:
+                letture.append((n, codice.strip()))
+    if aperto is not None:
+        blocchi.append((aperto[0], aperto[1], None))
+    return letture, blocchi, prints, assegna
+
+
+class TestStaticaDatiDellAgenteNelLog(unittest.TestCase):
+
+    def setUp(self):
+        self.doc = review_doc()
+        self.ventaglio = self.doc["jobs"]["ventaglio"]
+        self.pubblica = self.doc["jobs"]["pubblica"]
+
+    def test_ventaglio_dopo_l_agente_solo_l_upload(self):
+        passi = find_steps(self.ventaglio)
+        i = next(k for k, s in enumerate(passi) if s.get("id") == ID_AGENTE)
+        dopo = passi[i + 1:]
+        self.assertEqual(len(dopo), 1, [s.get("name") for s in dopo])
+        self.assertEqual(str(dopo[0].get("uses", "")).split("@")[0], "actions/upload-artifact")
+        self.assertNotIn("run", dopo[0])
+
+    def test_dati_dell_agente_nel_log_solo_fra_stop_commands(self):
+        blocchi_tot = 0
+        for s in find_steps(self.pubblica):
+            run = s.get("run")
+            if not run:
+                continue
+            with self.subTest(step=s.get("name")):
+                letture, blocchi, prints, assegna = _analizza_run(run)
+                self.assertEqual(letture, [], "dati dell'agente sullo stdout fuori dal blocco")
+                self.assertEqual(prints, [], "print() di python con dati dell'agente fuori dal blocco")
+                for var, apre, chiude in blocchi:
+                    blocchi_tot += 1
+                    self.assertIsNotNone(chiude, f"blocco {var} aperto alla riga {apre} e mai chiuso")
+                    # Il token: da /dev/urandom, nello step, prima dell'apertura,
+                    # assegnato una volta sola, mai da un'espressione ne' dall'env.
+                    self.assertNotIn(var, s.get("env") or {})
+                    righe = assegna.get(var, [])
+                    self.assertEqual(len(righe), 1, f"{var} assegnato {len(righe)} volte")
+                    n, valore = righe[0]
+                    self.assertLess(n, apre)
+                    self.assertIn("/dev/urandom", valore)
+                    self.assertNotIn("${{", valore)
+                    self.assertRegex(valore, r"^\$\(")
+        self.assertGreaterEqual(blocchi_tot, 1, "nessun blocco stop-commands in pubblica")
+
+    def test_la_diagnostica_del_verdetto_sta_nel_blocco(self):
+        # Il controllo sopra passa anche se la diagnostica sparisce: questo dice
+        # che c'e' e che sta fra apertura e chiusura.
+        prepara = next(s for s in find_steps(self.pubblica) if s.get("id") == "prepara")
+        run = prepara["run"].splitlines()
+        _, blocchi, _, _ = _analizza_run(prepara["run"])
+        self.assertEqual(len(blocchi), 1, blocchi)
+        _, apre, chiude = blocchi[0]
+        dentro = "\n".join(run[apre:chiude - 1])
+        self.assertRegex(dentro, r'\bls -la\b.*RICEVUTO')
+        self.assertRegex(dentro, r'\bcat "\$RICEVUTO"')
+
+
+_INIETTATE = ["::add-mask::Collaudo", "::warning::iniettato-dal-verdetto", "::stop-commands::finto"]
+TESTO_INIETTATO = ("## Collaudo — run 1, tentativo 1\n\nPrima riga.\n"
+                   + "\n".join(_INIETTATE) + "\nUltima riga, senza a capo finale")
+
+
+def _blocco_del_log(test, r):
+    """(token, righe_prima, righe_dentro, righe_dopo) dello stdout di Prepara."""
+    righe = r["stdout_passi"]["prepara"].splitlines()
+    aperture = [i for i, l in enumerate(righe) if re.fullmatch(r"::stop-commands::[0-9a-f]{32}", l)]
+    test.assertEqual(len(aperture), 1, righe)
+    i = aperture[0]
+    token = righe[i].split("::")[2]
+    chiusure = [k for k, l in enumerate(righe) if l == f"::{token}::"]
+    test.assertEqual(len(chiusure), 1, righe)
+    k = chiusure[0]
+    test.assertLess(i, k)
+    return token, righe[:i], righe[i + 1:k], righe[k + 1:]
+
+
+class TestStopCommandsEseguito(unittest.TestCase):
+
+    def test_righe_dell_agente_solo_dentro_il_blocco(self):
+        r = esegui_job(verdetto=TESTO_INIETTATO, esito="success")
+        self.assertEqual(r["rc"], 0, r["stdout"])
+        token, prima, dentro, dopo = _blocco_del_log(self, r)
+        self.assertRegex(token, r"^[0-9a-f]{32}$")
+        for riga in _INIETTATE:
+            with self.subTest(riga=riga):
+                self.assertIn(riga, dentro, "la riga del verdetto e' nel blocco")
+                fuori = prima + dopo + r["stdout_passi"]["scegli"].splitlines() \
+                    + r["stdout_passi"]["pubblica"].splitlines()
+                errori = "\n".join(r["stderr_passi"].values()).splitlines()
+                self.assertNotIn(riga, fuori + errori, "riga del verdetto fuori dal blocco")
+        # Un file che non finisce con un a capo non si incolla alla riga dopo:
+        # l'ultima riga del verdetto resta intera, e la chiusura su una riga sua
+        # (_blocco_del_log la cerca come riga esatta).
+        self.assertIn("Ultima riga, senza a capo finale", dentro)
+        # Il commento: marcatore vero in prima riga, il testo come testo.
+        corpo = r["pubblicati"][0]
+        self.assertEqual(corpo.split("\n")[0], MARCATORE_VERO)
+        self.assertEqual(corpo.count("cantiere-collaudo"), 1)
+        for riga in _INIETTATE:
+            self.assertIn(riga, corpo)
+
+    def test_token_nuovo_a_ogni_esecuzione(self):
+        t1 = _blocco_del_log(self, esegui_job(verdetto=TESTO_INIETTATO, esito="success"))[0]
+        t2 = _blocco_del_log(self, esegui_job(verdetto=TESTO_INIETTATO, esito="success"))[0]
+        self.assertNotEqual(t1, t2)
+
+    def test_agente_muto_il_blocco_c_e_e_si_chiude(self):
+        r = esegui_job(verdetto=ASSENTE, esito="success")
+        _, _, dentro, _ = _blocco_del_log(self, r)
+        self.assertTrue(any("giro.txt" in l for l in dentro), dentro)
+
+
+class TestRigaDeiTempi(unittest.TestCase):
+
+    def _righe(self, r):
+        return [l for l in r["stdout_passi"]["pubblica"].splitlines() if l.startswith("ventaglio:")]
+
+    def test_tempi_non_letti(self):
+        casi = [(ASSENTE, "success"), (VUOTO, "success"), (TESTO_VERDETTO_BREVE, "success"),
+                (TESTO_VERDETTO_BREVE, "failure")]
+        for file_v, esito in casi:
+            with self.subTest(file_verdetto=file_v[:10], esito=esito):
+                r = esegui_job(verdetto=file_v, esito=esito, trascorsi=CONFINE + 60)
+                self.assertEqual(self._righe(r), [f"ventaglio: {esito}; tempi non letti (non servono)"])
+                self.assertNotIn(" s su un budget", r["stdout"])
+
+    def test_tempi_letti(self):
+        for trascorsi in (100, CONFINE):
+            with self.subTest(trascorsi=trascorsi):
+                r = esegui_job(verdetto=ASSENTE, esito="failure", trascorsi=trascorsi)
+                self.assertEqual(self._righe(r),
+                                 [f"ventaglio: failure, {trascorsi} s su un budget di {BUDGET} min"])
+                self.assertNotIn("tempi non letti", r["stdout"])
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-29T08:44:44+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Fase 4 della #69: i tre giri dal vivo. Sulla #74 il PATH avvelenato vale nel job ventaglio e non arriva a pubblica; il runner rifiuta NODE_OPTIONS da solo. Errore mio: commit della #73 senza firma",
+  "contesto": "Brief di Andrea del 29/09, fase 4. PR #72 (collaudo-isolamento -> main), #73 (base, impilata), #74 (avversaria, impilata). Le sonde della #74 le ha autorizzate Andrea con due vincoli: solo nel ramo avverso, verificato con `git diff origin/main collaudo-isolamento | grep -c -i 'sonda\\|avverso\\|testimone'` -> 0 prima del push; shell /usr/bin/bash e percorsi assoluti.",
+  "evidenza": [
+    "#72, run 36531638891: ventaglio success, pubblica failure. L'agente ha taciuto (H3, non conta). Log di pubblica: 'Unable to download artifact(s): Artifact not found for name: verdetto-tentativo-1'; 'nessun artifact verdetto-tentativo-1: l'agente non ha scritto il verdetto'; 'ventaglio dall'API dei job: 2026-09-29T06:33:06Z -> 2026-09-29T06:34:50Z'; 'lettura dei commenti della PR 72'; 'decisione: nessun-verdetto'. Commento https://github.com/OwnConsent/ownconsent-www/pull/72#issuecomment-5884995365, 'Collaudo: nessun verdetto (ventaglio: success)'. Il ramo del verdetto assente e' misurato dal vivo",
+    "#73, run 36531660050: ventaglio success, pubblica success. GITHUB_TOKEN Permissions di ventaglio: 'Contents: read', 'Metadata: read', 'PullRequests: read'; di pubblica: 'Actions: read', 'Contents: read', 'Metadata: read', 'PullRequests: write'. 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 649 bytes'; in pubblica 'Total of 1 artifact(s) downloaded'; 'decisione: verdetto'. Commento https://github.com/OwnConsent/ownconsent-www/pull/73#issuecomment-5884989712, prima riga '<!-- cantiere-collaudo tipo=verdetto sha=cb63f2cbc4b2f3bd78416729055d4b0626da3b59 -->'. Nessun rerun: non e' uscito silenzio",
+    "punto 5 della fase 1, ora dal vivo: pubblica ha letto i tempi dello step agente dall'API mentre il run era in corso: #73 '06:33:19Z -> 06:34:24Z', 65 s; #74 '06:33:47Z -> 06:43:29Z', 582 s",
+    "#74, run 36531699740, controllo positivo nel job ventaglio: 'SONDA ventaglio PATH=/tmp/avverso:/home/runner/.local/bin:/home/runner/.bun/bin:/tmp/avverso'; 'SONDA ventaglio which gh=/tmp/avverso/gh'; 'gh finto: --version'; '-rw-r--r-- 1 runner runner 0 Sep 29 06:43 /tmp/testimone-gh'. La sonda con shell /usr/bin/bash e' partita, step success",
+    "#74, NODE_OPTIONS: step 'Avverso' -> '##[error]Can't store NODE_OPTIONS output parameter using '$GITHUB_ENV' command.'; sonda ventaglio 'NODE_OPTIONS=<vuoto>'; '/tmp/testimone-node': No such file or directory. Il runner rifiuta da se' quel vettore: nella #74 un NODE_OPTIONS pulito in pubblica non prova l'isolamento, lo prova il PATH",
+    "#74, job pubblica, prima e dopo la pubblicazione: 'PATH=/snap/bin:/home/runner/.local/bin:…' senza /tmp/avverso; 'NODE_OPTIONS=<vuoto>'; 'which gh=/usr/bin/gh'; '/usr/bin/ls: cannot access' per /tmp/testimone-gh, /tmp/testimone-node, /tmp/avverso, /tmp/avverso.js, prima e dopo",
+    "#74, commento https://github.com/OwnConsent/ownconsent-www/pull/74#issuecomment-5885100626: prima riga '<!-- cantiere-collaudo tipo=verdetto sha=f7dda11be7a3e2683afaa3aafa6343b9f9fbc4b2 -->'; a meta' corpo 'cantiere' + E2 80 91 (U+2011) + 'collaudo … sha=0000…'; `grep -c cantiere-collaudo` sul corpo -> 1. Log: 'occorrenze di cantiere-collaudo neutralizzate: 1'",
+    "prova a secco (4.4), banco nello scratchpad sui run: estratti dal commit 3a3ae19, gh pr comment intercettato: timeout dai tempi API (19:00:00 -> 19:30:00) -> 'timeout dopo 30 minuti e 0 secondi', rc 1; commenti illeggibili (gh api 7) -> 'commenti non leggibili (gh api, uscita 7)', rc 1; JSON dei commenti non valido -> 'decisione non presa (uscita 2)', rc 1, nessun marcatore; script che esce 5 -> 'decisione non presa (uscita 5)'; download fallito con artifact presente -> 'decisione non presa (uscita 4)'; API degli artifact in errore -> 'decisione non presa (uscita 1)'; API dei job in errore -> riserva dall'inizio registrato con warning"
+  ],
+  "fallimenti": [
+    "commit cb63f2c della #73 fatto senza CANTIERE_AGENT: `git log -1 --format='%(trailers:key=Cantiere-Agent,valueonly)'` vuoto, mentre aa8b2de (#66) e 9b85022 (#68) portano 'orchestrator'. Risulta di una persona. Non riscritto: la PR era aperta e il suo giro e' legato a quell'head. Il commit della #74 (f7dda11) e' firmato",
+    "nella fase 2 il blocco del prompt e' stato tagliato male due volte prima di risultare identico (voce 081405)"
+  ],
+  "cosa_non_e_misurato": "Il timeout del job ventaglio (35 min) e cosa vede !cancelled() a valle; il comportamento di 'Re-run failed jobs' sul nome dell'artifact, che dipende da run_attempt (rischio segnalato da @qa-test nella voce 081528); le PR da fork.",
+  "esito": "fase 4 conforme all'atteso su #73 e #74; #72 non conta (H3). PR impilate lasciate aperte per Andrea",
+  "umano_coinvolto": true
+}

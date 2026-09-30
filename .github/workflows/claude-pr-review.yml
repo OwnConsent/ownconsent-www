@@ -31,7 +31,11 @@ env:
 # dell'agente riceve solo quel file, come dato, e due output valutati dal runner.
 jobs:
   ventaglio:
-    if: github.event.pull_request.draft == false
+    # Una PR da fork non si collauda: al runner non arrivano segreti, quindi
+    # l'agente non parte, e il token e' di sola lettura, quindi nessun job potrebbe
+    # commentare (docs: forked-secrets, pull_request_forked_repos_link). Saltati
+    # entrambi i job, per costruzione; non verificato dal vivo.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     # Rete di sicurezza: il budget che conta e' quello dello step ventaglio, e
     # scade prima di questo. Il job non accetta env qui (contexts.md), quindi il
@@ -45,11 +49,14 @@ jobs:
       contents: read
       pull-requests: read
     # Solo espressioni che il runner valuta da se': l'esito dello step agente e
-    # l'output di uno step che gira prima dell'agente. Mai un output di uno step
-    # successivo: girerebbe con l'ambiente che l'agente puo' aver cambiato.
+    # il tentativo del run. Mai un output di uno step successivo all'agente:
+    # girerebbe con l'ambiente che l'agente puo' aver cambiato.
     outputs:
       esito: ${{ steps.ventaglio.outcome }}
-      inizio: ${{ steps.inizio.outputs.t }}
+      # Il tentativo in cui questo job ha girato: da' il nome all'artifact e
+      # l'attempt da cui pubblica legge i tempi. Un rerun del solo job pubblica
+      # ha un run_attempt suo, piu' alto.
+      tentativo: ${{ github.run_attempt }}
     steps:
       # L'action rimette comunque il token nell'URL di origin (git-config.ts):
       # questo toglie solo quello del checkout. Il confine sono i permessi sopra.
@@ -60,8 +67,12 @@ jobs:
 
       # Un .collaudo/verdetto.md arrivato col checkout passerebbe per il verdetto
       # di un agente rimasto muto: la cartella si svuota prima del ventaglio.
+      # giro.txt fa esistere l'artifact anche quando l'agente tace: cosi' per
+      # pubblica un artifact mancante e' un guasto, non un agente muto.
       - name: Prepara la cartella del verdetto
-        run: rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
+        run: |
+          rm -rf "$GITHUB_WORKSPACE/.collaudo" && mkdir -p "$GITHUB_WORKSPACE/.collaudo"
+          echo "tentativo ${GITHUB_RUN_ATTEMPT}" > "$GITHUB_WORKSPACE/.collaudo/giro.txt"
 
       # Lo SHA del commit sotto collaudo e' la chiave del verdetto. github.sha qui
       # e' il merge commit, non l'head della PR. Si stampa a ogni tentativo per
@@ -74,13 +85,6 @@ jobs:
           echo "tentativo ${GITHUB_RUN_ATTEMPT}"
           echo "github.event.pull_request.head.sha=${HEAD_SHA}"
           echo "github.sha=${MERGE_SHA}"
-
-      # Il tempo del ventaglio lo legge il job pubblica dall'API dei job. Questo
-      # istante resta come riserva, se l'API non risponde: e' prima dell'agente,
-      # quindi l'agente non lo puo' toccare.
-      - name: Inizio del ventaglio
-        id: inizio
-        run: echo "t=$(date +%s)" >> "$GITHUB_OUTPUT"
 
       - name: Ventaglio di revisione
         id: ventaglio
@@ -168,32 +172,23 @@ jobs:
           /usr/bin/ls -la /tmp/avverso /tmp/testimone-gh /tmp/testimone-node 2>&1 || true
           [ -e /tmp/testimone-node ] && /usr/bin/cat /tmp/testimone-node || true
 
-      # Misure, non logica, e nessun output: da qui in poi l'ambiente puo' essere
-      # quello scelto dall'agente. Dove sta il file, se ce n'e' uno altrove, e se
-      # l'agente ha sbattuto contro un permesso.
-      - name: Diagnostica del ventaglio
-        if: ${{ !cancelled() }}
-        env:
-          ESECUZIONE: ${{ steps.ventaglio.outputs.execution_file }}
-        run: |
-          ls -la "$GITHUB_WORKSPACE/.collaudo/" || true
-          echo "file verdetto*.md trovati:"
-          find "$GITHUB_WORKSPACE" /tmp "$HOME" -name 'verdetto*.md' -printf '%p %s byte %TT\n' 2>/dev/null | sort -u || true
-          if [ -n "$ESECUZIONE" ] && [ -f "$ESECUZIONE" ]; then
-            jq -c '[.[] | select(.type == "result")] | last | {num_turns, permission_denials_count: (.permission_denials | length), permission_denials}' "$ESECUZIONE" || true
-          else
-            echo "execution_file non disponibile: '${ESECUZIONE}'"
-          fi
+      # Dopo l'agente, in questo job, solo la consegna del file: ogni step qui
+      # gira nell'ambiente che l'agente puo' aver cambiato, e cio' che stampa puo'
+      # diventare un comando di workflow (un nome di file con un a capo e
+      # «::add-mask::…»). La diagnostica sul verdetto si fa in pubblica.
 
-      # Il solo file del verdetto passa al job pubblica. Se manca, nessun
-      # artifact: pubblica lo verifica con l'API prima di dire «nessun verdetto».
+      # Il file del verdetto, se c'e', e giro.txt passano al job pubblica.
+      # Nome col tentativo: un nome gia' presente nel run fa fallire l'upload
+      # (overwrite false), e overwrite cancellerebbe quello del tentativo prima.
       - name: Consegna il verdetto
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: verdetto-tentativo-${{ github.run_attempt }}
-          path: ${{ github.workspace }}/.collaudo/verdetto.md
-          if-no-files-found: ignore
+          path: |
+            ${{ github.workspace }}/.collaudo/verdetto.md
+            ${{ github.workspace }}/.collaudo/giro.txt
+          if-no-files-found: error
           retention-days: 1
 
   # Giudica e pubblica. Runner nuovo: non eredita niente dall'ambiente del job
@@ -204,7 +199,9 @@ jobs:
   # scadere la documentazione non lo dice (journal 2026-09-29/080841, punto 6).
   pubblica:
     needs: ventaglio
-    if: ${{ !cancelled() && github.event.pull_request.draft == false }}
+    # Stessa condizione del job ventaglio: con ventaglio saltato, !cancelled()
+    # da solo farebbe girare questo job.
+    if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # L'unico job che scrive sulla PR. actions: read serve all'API dei job e
@@ -232,49 +229,83 @@ jobs:
 
       # Fuori dal workspace, in una cartella che non contiene altro. Il file si
       # legge soltanto: mai eseguito, mai source, mai dentro un'espressione.
+      # Quale esecuzione del ventaglio si giudica: il suo tentativo, dall'output
+      # del job. Da qui vengono sia il nome dell'artifact sia l'attempt da cui si
+      # leggono i tempi. L'artifact e' del run, non del tentativo (API degli
+      # artifact: solo workflow_run.id). Nessuna riserva: l'output manca solo se
+      # il runner lo salta come possibile segreto, cioe' in un caso ostile, e li'
+      # si chiude: «decisione non presa (artifact non trovato)». Senza nome non si
+      # scarica niente: un name vuoto scaricherebbe tutti gli artifact del run.
+      - name: Scegli il verdetto
+        id: scegli
+        env:
+          TENTATIVO: ${{ needs.ventaglio.outputs.tentativo }}
+        run: |
+          if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then
+            echo "tentativo del ventaglio: ${TENTATIVO}; tentativo di questo job: ${GITHUB_RUN_ATTEMPT}"
+            echo "tentativo=${TENTATIVO}" >> "$GITHUB_OUTPUT"
+            echo "nome=verdetto-tentativo-${TENTATIVO}" >> "$GITHUB_OUTPUT"
+          else
+            echo "l'output tentativo del job ventaglio manca o non e' un numero: nessun artifact da cercare"
+          fi
+
       - name: Ricevi il verdetto
         id: scarica
+        if: ${{ steps.scegli.outputs.nome != '' }}
         continue-on-error: true
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: verdetto-tentativo-${{ github.run_attempt }}
+          name: ${{ steps.scegli.outputs.nome }}
           path: ${{ runner.temp }}/verdetto-ricevuto
 
       # Il testo dell'agente si copia neutralizzando ogni «cantiere-collaudo»:
       # il trattino diventa U+2011, che si legge uguale e non coincide col
-      # marcatore. Il marcatore vero lo antepone lo script. Un download fallito
-      # non e' «nessun verdetto» se l'artifact esiste: si chiede all'API.
+      # marcatore. Il marcatore vero lo antepone lo script. Un artifact che non
+      # si trova o non si scarica non e' mai «nessun verdetto»: e' «artifact non
+      # trovato», e la decisione non si prende.
       - name: Prepara il verdetto
         id: prepara
+        if: ${{ !cancelled() }}
         env:
-          GH_TOKEN: ${{ github.token }}
           SCARICATO: ${{ steps.scarica.outcome }}
           RICEVUTO: ${{ runner.temp }}/verdetto-ricevuto/verdetto.md
-          ARTEFATTO: verdetto-tentativo-${{ github.run_attempt }}
+          ARTEFATTO: ${{ steps.scegli.outputs.nome }}
         run: |
           trap 'echo "uscita=$?" >> "$GITHUB_OUTPUT"' EXIT
           verdetto="$RUNNER_TEMP/verdetto.md"
           rm -f "$verdetto"
-          if [ "$SCARICATO" = "success" ]; then
-            if [ ! -f "$RICEVUTO" ]; then
-              echo "::error title=Verdetto illeggibile::l'artifact ${ARTEFATTO} non contiene verdetto.md"
-              exit 4
-            fi
+          if [ "$SCARICATO" != "success" ]; then
+            echo "artifact=mancante" >> "$GITHUB_OUTPUT"
+            echo "::error title=Artifact non trovato::'${ARTEFATTO:-nessun nome}', download: ${SCARICATO:-non eseguito}"
+            exit 4
+          fi
+          echo "artifact ricevuto: ${ARTEFATTO}"
+          # Diagnostica: cosa c'e' nell'artifact e il testo dell'agente, com'e'
+          # arrivato. E' l'unico punto del job in cui dati dell'agente vanno nel
+          # log, e stanno fra stop-commands e il suo token: una riga come
+          # «::add-mask::…» o «::warning::…» resta testo. Il token e' nuovo a ogni
+          # esecuzione, quindi il testo non lo puo' contenere per chiudere il blocco.
+          blocco=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
+          echo "::stop-commands::${blocco}"
+          ls -la "$(dirname "$RICEVUTO")" || true
+          if [ -f "$RICEVUTO" ]; then
+            echo "--- verdetto.md come l'ha scritto l'agente:"
+            cat "$RICEVUTO" || echo "(verdetto.md non leggibile)"
+            echo
+            echo "--- fine di verdetto.md"
+          fi
+          echo "::${blocco}::"
+          if [ -f "$RICEVUTO" ]; then
             python3 - "$RICEVUTO" "$verdetto" <<'PY'
           import re, sys
           s = open(sys.argv[1], encoding='utf-8', errors='replace').read()
           n = len(re.findall('cantiere-collaudo', s, flags=re.I))
-          s = re.sub('cantiere-collaudo', lambda m: m.group(0).replace('-', '‑'), s, flags=re.I)
+          s = re.sub('cantiere-collaudo', lambda m: m.group(0).replace('-', '\u2011'), s, flags=re.I)
           open(sys.argv[2], 'w', encoding='utf-8').write(s)
           print(f'occorrenze di cantiere-collaudo neutralizzate: {n}')
           PY
           else
-            n=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?name=$ARTEFATTO" --jq '.total_count')
-            if [ "$n" != "0" ]; then
-              echo "::error title=Verdetto illeggibile::download di ${ARTEFATTO} fallito, ma l'API ne conta ${n}"
-              exit 4
-            fi
-            echo "nessun artifact ${ARTEFATTO}: l'agente non ha scritto il verdetto"
+            echo "l'artifact ${ARTEFATTO} non contiene verdetto.md: l'agente non ha scritto il verdetto"
           fi
           # Un commento di GitHub non supera i 65536 caratteri. Qui si misura il file in
           # byte: in UTF-8 i byte sono almeno quanti i caratteri, quindi un tetto in byte
@@ -307,9 +338,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
           ESITO_VENTAGLIO: ${{ needs.ventaglio.outputs.esito }}
-          INIZIO: ${{ needs.ventaglio.outputs.inizio }}
+          TENTATIVO: ${{ steps.scegli.outputs.tentativo }}
           PREPARA: ${{ steps.prepara.outcome }}
           USCITA_PREPARA: ${{ steps.prepara.outputs.uscita }}
+          ARTIFACT: ${{ steps.prepara.outputs.artifact }}
           LUNGO: ${{ steps.prepara.outputs.lungo }}
           ARTEFATTO_URL: ${{ steps.artefatto.outputs.artifact-url }}
           SHA: ${{ github.event.pull_request.head.sha }}
@@ -318,40 +350,53 @@ jobs:
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
           # Nessun marcatore: una decisione non presa non e' un verdetto e non
           # deve diventare il bersaglio di un rimando.
+          # $1 e' il motivo fra parentesi: «uscita N» o «artifact non trovato».
           non_presa() {
-            printf 'Commit `%s`\n\n**Collaudo: decisione non presa (uscita %s).** %s Il job non sa se questo commit abbia un verdetto.\n' \
+            printf 'Commit `%s`\n\n**Collaudo: decisione non presa (%s).** %s Il job non sa se questo commit abbia un verdetto.\n' \
               "${SHA:0:7}" "$1" "$2" > "$corpo"
             url=$(gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file "$corpo")
-            echo "::error title=Decisione non presa::${url}. ${2} (uscita ${1})"
+            echo "::error title=Decisione non presa::${url}. ${2} (${1})"
             exit 1
           }
+          if [ "$ARTIFACT" = "mancante" ]; then
+            non_presa "artifact non trovato" "L'artifact del ventaglio non si e' trovato o non si e' scaricato."
+          fi
           if [ "$PREPARA" != "success" ]; then
-            non_presa "${USCITA_PREPARA:-sconosciuta}" "La preparazione del verdetto non e' riuscita."
+            non_presa "uscita ${USCITA_PREPARA:-sconosciuta}" "La preparazione del verdetto non e' riuscita."
           fi
           # I commenti servono solo al rimando: lo script li chiede con l'uscita 3,
           # dopo aver escluso verdetto e timeout. Un verdetto scritto si pubblica
           # senza nessuna chiamata all'API dei commenti (finding di /code-review 65).
           commenti="$RUNNER_TEMP/commenti.json"
           rm -f "$commenti"
-          # Il tempo del ventaglio si legge dall'API dei job: inizio e fine dello
-          # step come li registra GitHub. Se l'API non risponde, riserva: dall'inizio
-          # registrato prima dell'agente a adesso, che sovrastima.
-          tempi=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT/jobs" --paginate \
-            --jq '.jobs[] | select(.name == "ventaglio") | .steps[] | select(.name == "Ventaglio di revisione") | "\(.started_at) \(.completed_at)"' \
-            2>/dev/null | head -n 1) || tempi=""
-          read -r t0 t1 <<< "$tempi" || true
-          # date -d "" vale la mezzanotte di oggi: i campi vuoti si scartano prima.
-          if [ -n "${t0:-}" ] && [ -n "${t1:-}" ] && s0=$(date -d "$t0" +%s 2>/dev/null) && s1=$(date -d "$t1" +%s 2>/dev/null) && [ "$s1" -ge "$s0" ]; then
-            trascorsi=$((s1 - s0))
-            echo "ventaglio dall'API dei job: ${t0} -> ${t1}"
-          elif [[ "$INIZIO" =~ ^[0-9]+$ ]]; then
-            trascorsi=$(( $(date +%s) - INIZIO ))
-            echo "::warning title=Tempo del ventaglio stimato::l'API dei job non ha dato inizio e fine dello step ('${tempi}'): ${trascorsi} s dall'inizio registrato a adesso, per eccesso"
-          else
-            trascorsi=0
-            echo "::warning title=Tempo del ventaglio ignoto::ne' l'API dei job ne' l'inizio registrato ('${INIZIO}'): trascorsi=0"
+          # Il tempo serve solo a riconoscere un timeout: verdetto assente ed esito
+          # diverso da success. Negli altri casi l'API non si chiama. Si legge
+          # dall'API dei job dell'attempt del ventaglio, non di questo job: nel
+          # rerun del solo pubblica la copia del ventaglio nel nuovo attempt non
+          # dava ancora i tempi (journal 2026-09-29/104703). Nessuna stima: senza
+          # tempi la decisione non si prende.
+          trascorsi=0; tempi_letti=no
+          if [ ! -s "$verdetto" ] && [ "$ESITO_VENTAGLIO" != "success" ]; then
+            tempi=""
+            if [[ "$TENTATIVO" =~ ^[1-9][0-9]*$ ]]; then
+              tempi=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$TENTATIVO/jobs" --paginate \
+                --jq '.jobs[] | select(.name == "ventaglio") | .steps[] | select(.name == "Ventaglio di revisione") | "\(.started_at) \(.completed_at)"' \
+                2>/dev/null | head -n 1) || tempi=""
+            fi
+            read -r t0 t1 <<< "$tempi" || true
+            # date -d "" vale la mezzanotte di oggi: i campi vuoti si scartano prima.
+            if [ -n "${t0:-}" ] && [ -n "${t1:-}" ] && s0=$(date -d "$t0" +%s 2>/dev/null) && s1=$(date -d "$t1" +%s 2>/dev/null) && [ "$s1" -ge "$s0" ]; then
+              trascorsi=$((s1 - s0)); tempi_letti=si
+              echo "ventaglio dall'API dei job, attempt ${TENTATIVO}: ${t0} -> ${t1}"
+            else
+              non_presa "tempi non leggibili" "L'API dei job (attempt '${TENTATIVO}') non ha dato inizio e fine dello step ventaglio ('${tempi}'), e senza verdetto il tempo serve a riconoscere un timeout."
+            fi
           fi
-          echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"
+          if [ "$tempi_letti" = "si" ]; then
+            echo "ventaglio: ${ESITO_VENTAGLIO}, ${trascorsi} s su un budget di ${BUDGET_VENTAGLIO_MIN} min"
+          else
+            echo "ventaglio: ${ESITO_VENTAGLIO}; tempi non letti (non servono)"
+          fi
           decidi() {
             bash "$GITHUB_WORKSPACE/.github/scripts/collaudo-esito.sh" \
               "$verdetto" "$SHA" "$commenti" "$ESITO_VENTAGLIO" "$trascorsi" "$BUDGET_VENTAGLIO_MIN" "$corpo"
@@ -372,7 +417,7 @@ jobs:
             rc=0; decisione=$(decidi) || rc=$?
           fi
           if [ "$rc" -ne 0 ]; then
-            non_presa "$rc" "collaudo-esito.sh ha risposto '${decisione}'."
+            non_presa "uscita $rc" "collaudo-esito.sh ha risposto '${decisione}'."
           fi
           echo "decisione: ${decisione}"
           case "$decisione" in
@@ -390,7 +435,7 @@ jobs:
               echo "::error title=Nessun verdetto::${url}. Il collaudo non ha lasciato un verdetto e il commit ${SHA} non ne ha uno precedente (ventaglio: ${ESITO_VENTAGLIO}). Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato."
               exit 1 ;;
             *)
-              non_presa "$rc" "collaudo-esito.sh ha risposto con una parola sconosciuta: '${decisione}'." ;;
+              non_presa "uscita $rc" "collaudo-esito.sh ha risposto con una parola sconosciuta: '${decisione}'." ;;
           esac
           if [ "$ESITO_VENTAGLIO" != "success" ]; then
             printf '> **Nota del workflow:** il ventaglio di revisione è terminato con esito `%s`. Il verdetto qui sotto potrebbe essere incompleto.\n\n' "$ESITO_VENTAGLIO" >> "$corpo"

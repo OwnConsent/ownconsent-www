@@ -4,10 +4,19 @@ Non e' un test (nessun prefisso test_): lo usano test_collaudo_commenti.py e
 test_collaudo_isolamento.py.
 
 Dal #69 (659ade6) il collaudo e' in due job: `ventaglio` (l'agente) e `pubblica`.
-Qui si eseguono, in ordine e cosi' come sono nel YAML, i due step di `pubblica`
-che contano: «Prepara il verdetto» e «Pubblica il verdetto». Lo step di upload
-del verdetto lungo non si esegue: il suo unico effetto sul seguito e' l'output
-artifact-url, che il banco simula.
+Qui si eseguono, in ordine e cosi' come sono nel YAML, gli step `run:` di
+`pubblica` che contano: «Scegli il verdetto» (da beab008), «Prepara il verdetto»
+e «Pubblica il verdetto». Gli step `uses:` si simulano:
+  - «Ricevi il verdetto» (download-artifact): il suo `if:` si valuta (sono
+    ammesse solo le forme che il banco conosce); con un nome, scarica
+    l'artifact con quel nome se esiste nel run, altrimenti outcome failure;
+    con name vuoto scarica TUTTI gli artifact del run, ognuno in una
+    sottocartella col suo nome (download-artifact action.yml, input name:
+    'If unspecified, all artifacts for the run are downloaded');
+  - «Conserva il verdetto intero»: solo l'output artifact-url.
+
+Un artifact del ventaglio contiene sempre giro.txt (beab008) e, se l'agente
+l'ha scritto, verdetto.md. «Agente muto» = artifact col solo giro.txt.
 
 Fedelta' al YAML:
   - il `run:` e' estratto, non riscritto, ed eseguito con `bash -e` (la shell di
@@ -20,8 +29,10 @@ Fedelta' al YAML:
     finto ($GITHUB_WORKSPACE/.github/scripts), come fa lo step di checkout.
 
 Un `gh` finto in PATH registra le chiamate e risponde a tre API:
-  - …/actions/runs/N/artifacts?name=…   (JSON {"total_count": N})
-  - …/actions/runs/N/attempts/N/jobs     (JSON dei job, filtrato con il --jq vero)
+  - …/actions/runs/N/artifacts           (JSON degli artifact del run, --jq vero)
+  - …/actions/runs/N/attempts/A/jobs     (JSON dei job DELL'ATTEMPT A, filtrato con il
+                                          --jq vero; un attempt che il banco non
+                                          conosce risponde 404)
   - …/issues/N/comments                  (fixture dei commenti)
 e a `gh pr comment --body-file`, di cui conserva i corpi.
 """
@@ -73,8 +84,17 @@ case "$1" in
           echo "HTTP 502: Bad Gateway" >&2
           exit 1
         fi
-        risposta=$GH_JOBS_RISPOSTA ;;
-      */artifacts\?name=*)
+        a=${percorso%/jobs}; a=${a##*/attempts/}
+        risposta="$GH_JOBS_DIR/$a.json"
+        if [ ! -f "$risposta" ]; then
+          echo "HTTP 404: Not Found" >&2
+          exit 1
+        fi ;;
+      */actions/runs/*/artifacts)
+        if [ -n "${GH_ARTIFACTS_FALLISCE:-}" ]; then
+          echo "HTTP 502: Bad Gateway" >&2
+          exit 1
+        fi
         risposta=$GH_ARTIFACTS_RISPOSTA ;;
       *)
         echo "gh finto: api inattesa: $percorso" >&2
@@ -134,10 +154,24 @@ def iso(t: dt.datetime) -> str:
     return t.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def risposta_jobs(trascorsi: int) -> dict:
-    """JSON dell'API dei job. Lo step che conta dura `trascorsi` secondi; attorno,
-    esche con durate diverse: un altro job con uno step dallo stesso nome (messo
-    prima), e altri step del job ventaglio che durano molto di piu'."""
+def risposta_jobs(trascorsi) -> dict:
+    """JSON dell'API dei job di un attempt. Lo step che conta dura `trascorsi`
+    secondi; attorno, esche con durate diverse: un altro job con uno step dallo
+    stesso nome (messo prima), e altri step del job ventaglio che durano molto di
+    piu'. trascorsi=None: l'attempt in cui il ventaglio non ha girato (rerun del
+    solo pubblica: la copia del ventaglio non ha gli step, voce 2026-09-29/104703).
+    trascorsi="vuoti": lo step c'e' ma completed_at e' null."""
+    if trascorsi is None:
+        return {"total_count": 2, "jobs": [
+            {"name": "ventaglio", "steps": []},
+            {"name": "pubblica", "steps": [
+                {"name": "Pubblica il verdetto", "number": 5,
+                 "started_at": iso(T0), "completed_at": None}]}]}
+    if trascorsi == "vuoti":
+        return {"total_count": 1, "jobs": [
+            {"name": "ventaglio", "steps": [
+                {"name": "Ventaglio di revisione", "number": 5,
+                 "started_at": iso(T0), "completed_at": None}]}]}
     fine = T0 + dt.timedelta(seconds=trascorsi)
     lontano = T0 + dt.timedelta(hours=5)
     return {"total_count": 3, "jobs": [
@@ -147,7 +181,7 @@ def risposta_jobs(trascorsi: int) -> dict:
         {"name": "ventaglio", "steps": [
             {"name": "Set up job", "number": 1,
              "started_at": iso(T0 - dt.timedelta(hours=5)), "completed_at": iso(T0)},
-            {"name": "Inizio del ventaglio", "number": 4,
+            {"name": "Commit sotto collaudo", "number": 4,
              "started_at": iso(T0 - dt.timedelta(hours=4)), "completed_at": iso(T0)},
             {"name": "Ventaglio di revisione", "number": 5,
              "started_at": iso(T0), "completed_at": iso(fine)},
@@ -159,28 +193,52 @@ def risposta_jobs(trascorsi: int) -> dict:
     ]}
 
 
+NOME_DI = "verdetto-tentativo-{}".format
+IF_DOWNLOAD = "${{ steps.scegli.outputs.nome != '' }}"
+
+
+def _posa_artifact(cartella: pathlib.Path, verdetto) -> None:
+    cartella.mkdir(parents=True, exist_ok=True)
+    (cartella / "giro.txt").write_text("tentativo ?\n", encoding="utf-8")
+    if verdetto != ASSENTE:
+        (cartella / "verdetto.md").write_text("" if verdetto == VUOTO else verdetto,
+                                              encoding="utf-8")
+
+
 def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
                api_fallisce=False, risposta="vuoto.json", commenti_piantati=None,
-               jobs_falliscono=False, inizio=None, artefatti_contati=None,
-               scaricato=None, testo_grezzo=None):
-    """Esegue «Prepara il verdetto» e poi «Pubblica il verdetto» del job pubblica.
+               jobs_falliscono=False, tentativo="1", run_attempt="1", tempi=None,
+               artefatti=None, download_fallisce=False, artefatti_falliscono=False,
+               altri_nel_run=("verdetto-completo-tentativo-1",), prepara_illeggibile=False):
+    """Esegue Scegli, (Ricevi simulato), Prepara, Pubblica del job pubblica.
 
-    verdetto          ASSENTE (nessun artifact), VUOTO, o il testo del file
-    esito             needs.ventaglio.outputs.esito
-    trascorsi         durata dello step agente secondo l'API dei job
-    jobs_falliscono   l'API dei job risponde con un errore
-    inizio            needs.ventaglio.outputs.inizio (default: adesso, cosi' la
-                      riserva darebbe ~0 s e non puo' simulare un timeout)
-    artefatti_contati total_count dell'API degli artifact (default: 1 se c'e'
-                      un verdetto, 0 altrimenti)
-    scaricato         outcome del download (default: success se c'e' un verdetto)
+    verdetto          contenuto dell'artifact del tentativo `tentativo`:
+                      ASSENTE (solo giro.txt: agente muto), VUOTO, o il testo
+    tentativo         needs.ventaglio.outputs.tentativo ("" = output vuoto)
+    run_attempt       github.run_attempt / GITHUB_RUN_ATTEMPT del job pubblica
+    artefatti         {nome: contenuto} degli artifact del ventaglio nel run;
+                      default {verdetto-tentativo-<tentativo o run_attempt>: verdetto}
+    altri_nel_run     altri nomi che l'API elenca (non del ventaglio)
+    download_fallisce il download fallisce anche se l'artifact esiste
+    artefatti_falliscono l'API degli artifact risponde con un errore
+    tempi             {attempt: trascorsi | None | "vuoti"} per l'API dei job, per
+                      attempt; default: l'attempt del ventaglio (il tentativo
+                      valido, o il piu' alto degli artifact non oltre run_attempt,
+                      o run_attempt) con `trascorsi`, ogni altro attempt fino a
+                      run_attempt senza step
+    esito, trascorsi, jobs_falliscono, api_fallisce, risposta,
+    commenti_piantati: come prima (vedi test_collaudo_commenti.py)
 
-    Ritorna dict(rc, rc_prepara, uscite_prepara, stdout, chiamate_gh, api,
-    api_commenti, pubblicati)."""
+    Ritorna dict(rc, rc_prepara, uscite_prepara, nome, scaricato, stdout,
+    chiamate_gh, api, api_commenti, api_jobs, api_artefatti, pubblicati)."""
     doc = review_doc()
     job = doc["jobs"]["pubblica"]
+    scegli = step_di(job, "Scegli il verdetto")
+    scarica = step_di(job, "Ricevi il verdetto")
     prepara = step_di(job, "Prepara il verdetto")
     pubblica = step_di(job, "Pubblica il verdetto")
+    if artefatti is None:
+        artefatti = {NOME_DI(tentativo or run_attempt): verdetto}
     with tempfile.TemporaryDirectory() as tmp:
         tmp = pathlib.Path(tmp)
         ws, rt, binf, pub = tmp / "ws", tmp / "runner_temp", tmp / "bin", tmp / "pubblicati"
@@ -188,33 +246,31 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
             d.mkdir(parents=True)
         shutil.copy(script_path(), ws / ".github" / "scripts" / "collaudo-esito.sh")
         c_temp = str(rt)
-        # Il download, se c'e' un artifact, lo posa dove dice il YAML.
-        scarica = step_di(job, "Ricevi il verdetto")
-        destinazione = pathlib.Path(risolvi(scarica["with"]["path"], {"runner.temp": c_temp}))
-        if verdetto != ASSENTE:
-            destinazione.mkdir(parents=True)
-            f = destinazione / "verdetto.md"
-            if testo_grezzo is not None:
-                f.write_bytes(testo_grezzo)
-            else:
-                f.write_text("" if verdetto == VUOTO else verdetto, encoding="utf-8")
-        if scaricato is None:
-            scaricato = "success" if verdetto != ASSENTE else "failure"
-        if artefatti_contati is None:
-            artefatti_contati = 0 if verdetto == ASSENTE else 1
         if commenti_piantati:
             shutil.copy(FIXTURE / commenti_piantati, rt / "commenti.json")
         f_art = tmp / "artifacts.json"
-        f_art.write_text(json.dumps({"total_count": artefatti_contati}), encoding="utf-8")
-        f_jobs = tmp / "jobs.json"
-        f_jobs.write_text(json.dumps(risposta_jobs(trascorsi)), encoding="utf-8")
+        nomi_run = list(altri_nel_run) + list(artefatti)
+        f_art.write_text(json.dumps({"total_count": len(nomi_run), "artifacts": [
+            {"id": 100 + i, "name": n} for i, n in enumerate(nomi_run)]}), encoding="utf-8")
+        if tempi is None:
+            if re.fullmatch(r"[1-9][0-9]*", tentativo or ""):
+                a_v = tentativo
+            else:
+                numeri = [int(m.group(1)) for n in artefatti
+                          for m in [re.fullmatch(r"verdetto-tentativo-([1-9][0-9]*)", n)] if m
+                          and int(m.group(1)) <= int(run_attempt)]
+                a_v = str(max(numeri)) if numeri else run_attempt
+            tempi = {str(a): None for a in range(1, max(int(run_attempt), int(a_v)) + 1)}
+            tempi[a_v] = trascorsi
+        d_jobs = tmp / "jobs"
+        d_jobs.mkdir()
+        for a, t in tempi.items():
+            (d_jobs / f"{a}.json").write_text(json.dumps(risposta_jobs(t)), encoding="utf-8")
         gh = binf / "gh"
         gh.write_text(GH_FINTO, encoding="utf-8")
         gh.chmod(gh.stat().st_mode | stat.S_IXUSR)
         log = tmp / "gh.log"
         log.touch()
-        if inizio is None:
-            inizio = str(int(dt.datetime.now().timestamp()))
 
         base = {
             "PATH": f"{binf}{os.pathsep}{os.environ['PATH']}",
@@ -223,17 +279,19 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
             "RUNNER_TEMP": c_temp,
             "GITHUB_REPOSITORY": REPO,
             "GITHUB_RUN_ID": RUN_ID,
-            "GITHUB_RUN_ATTEMPT": ATTEMPT,
+            "GITHUB_RUN_ATTEMPT": run_attempt,
             "GH_LOG": str(log),
             "GH_PUBBLICATI": str(pub),
             "GH_API_RISPOSTA": str(FIXTURE / risposta),
-            "GH_JOBS_RISPOSTA": str(f_jobs),
+            "GH_JOBS_DIR": str(d_jobs),
             "GH_ARTIFACTS_RISPOSTA": str(f_art),
         }
         if api_fallisce:
             base["GH_API_FALLISCE"] = str(USCITA_GH)
         if jobs_falliscono:
             base["GH_JOBS_FALLISCE"] = "1"
+        if artefatti_falliscono:
+            base["GH_ARTIFACTS_FALLISCE"] = "1"
         for k, v in (doc.get("env") or {}).items():
             base[k] = str(v)
         for k, v in (job.get("env") or {}).items():
@@ -242,12 +300,11 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
         contesto = {
             "github.token": "finto",
             "runner.temp": c_temp,
-            "github.run_attempt": ATTEMPT,
+            "github.run_attempt": run_attempt,
             "github.event.pull_request.number": PR,
             "github.event.pull_request.head.sha": SHA,
-            "steps.scarica.outcome": scaricato,
             "needs.ventaglio.outputs.esito": esito,
-            "needs.ventaglio.outputs.inizio": inizio,
+            "needs.ventaglio.outputs.tentativo": tentativo,
         }
 
         def esegui_step(step, nome_file):
@@ -268,10 +325,43 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
                     uscite[k] = v
             return p, uscite
 
+        p0, u0 = esegui_step(scegli, "scegli")
+        nome = u0.get("nome", "")
+        contesto["steps.scegli.outputs.nome"] = nome
+        contesto["steps.scegli.outputs.tentativo"] = u0.get("tentativo", "")
+
+        # «Ricevi il verdetto», simulato. L'if si valuta solo nelle forme note.
+        cond = scarica.get("if")
+        if cond is None:
+            gira = p0.returncode == 0
+        elif str(cond).strip() == IF_DOWNLOAD:
+            gira = p0.returncode == 0 and nome != ""
+        else:
+            raise AssertionError(f"if del download non previsto dal banco: {cond!r}")
+        destinazione = pathlib.Path(risolvi(scarica["with"]["path"], {"runner.temp": c_temp}))
+        nome_chiesto = risolvi(scarica["with"].get("name", ""), contesto)
+        if not gira:
+            scaricato = "skipped"
+        elif download_fallisce:
+            scaricato = "failure"
+        elif nome_chiesto == "":
+            for n, v in artefatti.items():
+                _posa_artifact(destinazione / n, v)
+            scaricato = "success"
+        elif nome_chiesto in artefatti:
+            _posa_artifact(destinazione, artefatti[nome_chiesto])
+            scaricato = "success"
+        else:
+            scaricato = "failure"
+        if prepara_illeggibile and (destinazione / "verdetto.md").exists():
+            (destinazione / "verdetto.md").chmod(0)
+        contesto["steps.scarica.outcome"] = scaricato
+
         p1, uscite = esegui_step(prepara, "prepara")
         contesto["steps.prepara.outcome"] = "success" if p1.returncode == 0 else "failure"
         contesto["steps.prepara.outputs.uscita"] = uscite.get("uscita", "")
         contesto["steps.prepara.outputs.lungo"] = uscite.get("lungo", "")
+        contesto["steps.prepara.outputs.artifact"] = uscite.get("artifact", "")
         contesto["steps.artefatto.outputs.artifact-url"] = (
             "https://example.invalid/artifacts/1" if uscite.get("lungo") == "true" else "")
         p2, _ = esegui_step(pubblica, "pubblica")
@@ -280,8 +370,14 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
         pubblicati = [f.read_text(encoding="utf-8")
                       for f in sorted(pub.iterdir(), key=lambda f: int(f.stem))]
         api = [c for c in chiamate if c.startswith("api ")]
-        return dict(rc=p2.returncode, rc_prepara=p1.returncode, uscite_prepara=uscite,
-                    stdout=p1.stdout + p1.stderr + p2.stdout + p2.stderr,
+        return dict(rc=p2.returncode, tentativo_scelto=u0.get("tentativo", ""),
+                    stdout_passi={"scegli": p0.stdout, "prepara": p1.stdout,
+                                  "pubblica": p2.stdout},
+                    stderr_passi={"scegli": p0.stderr, "prepara": p1.stderr,
+                                  "pubblica": p2.stderr}, rc_scegli=p0.returncode, rc_prepara=p1.returncode,
+                    uscite_prepara=uscite, nome=nome, nome_chiesto=nome_chiesto,
+                    scaricato=scaricato,
+                    stdout=p0.stdout + p0.stderr + p1.stdout + p1.stderr + p2.stdout + p2.stderr,
                     chiamate_gh=chiamate, api=api,
                     api_commenti=[c for c in api if "/comments" in c],
                     api_jobs=[c for c in api if "/jobs" in c],

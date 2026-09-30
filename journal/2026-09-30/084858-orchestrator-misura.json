@@ -1,0 +1,21 @@
+{
+  "ts": "2026-09-30T08:48:58+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Prova dal vivo di 2685b1d sulla #73: giro completo e rerun del solo pubblica usano verdetto-tentativo-1, senza stime. Il ramo dei tempi non si e' visto: con verdetto scritto ed esito success l'API dei job non si chiama, per costruzione",
+  "contesto": "Brief di Andrea del 30/09, punto 5, dopo il push di 2685b1d. 5a: close/reopen della #73. 5b: `gh run rerun --job` sul job pubblica, dopo la fine di 5a. Nessun altro rerun.",
+  "evidenza": [
+    "5a, run 36679919844, tentativo 1: ventaglio 109772911429 success, pubblica 109773315542 success. 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 724 bytes. Artifact ID is 11081581366'; 'tentativo del ventaglio: 1 (fonte: output del job ventaglio); tentativo di questo job: 1'; '  name: verdetto-tentativo-1'; 'artifact ricevuto: verdetto-tentativo-1'; 'ventaglio: success, 0 s su un budget di 30 min'; 'decisione: verdetto'. Commento https://github.com/OwnConsent/ownconsent-www/pull/73#issuecomment-5905733884, prima riga '<!-- cantiere-collaudo tipo=verdetto sha=cb63f2cbc4b2f3bd78416729055d4b0626da3b59 -->'",
+    "5b, `gh run rerun --job 109773315542` -> tentativo 2: pubblica 109773522243 success. 'tentativo del ventaglio: 1 (fonte: output del job ventaglio); tentativo di questo job: 2'; '  name: verdetto-tentativo-1'; 'Total of 1 artifact(s) downloaded'; 'artifact ricevuto: verdetto-tentativo-1'; 'decisione: verdetto'. `grep -c 'Tempo del ventaglio\\|per eccesso'` sul log -> 0. Nessun 'nessun verdetto'. Commento https://github.com/OwnConsent/ownconsent-www/pull/73#issuecomment-5905752897, marcatore in prima riga, '## Collaudo — run 36679919844, tentativo 1'",
+    "divergenza dall'atteso del brief: in 5b l'atteso diceva 'tempi letti da /attempts/1/jobs'. Il log non li mostra perche' con verdetto scritto ed esito success il punto 2 dello stesso brief vieta la chiamata: 'ventaglio: success, 0 s'. Il ramo dei tempi (verdetto assente, esito non success) non e' riproducibile a comando dal vivo; lo coprono TestTempiDelVentaglio e il banco a secco (voce 082932)",
+    "misura a margine, fuori dal workflow, alle 08:48: `gh api …/runs/36679919844/attempts/1/jobs` -> ventaglio id=109772911429 run_attempt=1 '2026-09-30T06:45:42Z 2026-09-30T06:47:02Z'; attempts/2 -> ventaglio id=109773524288 run_attempt=2, stessi orari. L'endpoint dell'attempt 1 da' l'esecuzione originale con i suoi tempi",
+    "precisazione sul brief ('nel rerun del solo pubblica la copia di ventaglio porta tentativo 1'): nell'API la copia porta run_attempt=2 e un id nuovo. Il valore 1 e' quello di needs.ventaglio.outputs.tentativo, l'output valutato nel tentativo 1, ed e' quello che il workflow usa",
+    "difetto estetico, non corretto: la riga 'ventaglio: success, 0 s su un budget di 30 min' stampa 0 s anche quando il tempo non e' stato misurato. Il valore non viene mai usato in quei casi, ma la riga sembra una misura"
+  ],
+  "cosa_non_e_misurato": "Dal vivo: il ramo 'tempi non leggibili' e la lettura dei tempi da /attempts/<tentativo del ventaglio> dentro il workflow; il caso ostile che fa saltare l'output tentativo (voce 082932).",
+  "esito": "5a e 5b conformi sulla scelta dell'artifact e sull'assenza di stime; il ramo dei tempi resta verificato solo a secco",
+  "umano_coinvolto": false
+}

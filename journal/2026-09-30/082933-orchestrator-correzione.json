@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-30T08:29:33+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Correzione della voce 2026-09-29/104704: il primo commit senza firma e' della sessione della #65, il 27/09. La variabile era vuota, il commit e' stato rifatto prima del push e per questo non compare sul ramo",
+  "contesto": "Nella voce 104704 ho scritto che il primo caso 'non l'ho ritrovato con grep' e che 'il conteggio e' suo'. Andrea, nel brief del 30/09, indica la fonte.",
+  "correzione_di": "journal/2026-09-29/104704-orchestrator-fallimento.json, campo contesto",
+  "evidenza": [
+    "fonte indicata da Andrea: il rapporto della sessione della #65 del 27/09, nella nota sul comando 'CANTIERE_AGENT=orchestrator git commit'. CANTIERE_AGENT era vuota, il commit e' uscito senza firma ed e' stato rifatto prima del push",
+    "perche' il grep non l'aveva trovato: il caso sta nel rapporto di quella sessione, non nel journal e non sul ramo. Un commit rifatto prima del push non lascia traccia in git log",
+    "cb63f2c resta il secondo caso, e il primo arrivato sul remoto"
+  ],
+  "cosa_si_e_imparato": "Un 'non l'ho ritrovato' riguarda il posto in cui ho cercato, non il fatto. La voce 104704 doveva dire dove avevo cercato, cioe' solo il journal, invece di rimandare il conteggio ad Andrea.",
+  "umano_coinvolto": true
+}

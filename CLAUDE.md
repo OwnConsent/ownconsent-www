@@ -154,8 +154,9 @@ continuava a chiederlo su ogni PR prima del merge.
 `.github/workflows/claude-pr-review.yml`, `.github/scripts/collaudo-esito.sh`,
 `tests/ci/test_collaudo_*.py`, `tests/ci/collaudo_banco.py`,
 `tests/ci/mutazioni_collaudo.py` e `tests/ci/fixtures/collaudo-esito/`. Su un diff che
-lo tocca l'agente tace: il collaudo di quella PR non prova niente, né a favore né
-contro. La verifica è fatta di:
+lo tocca il collaudo è il meccanismo che giudica sé stesso: il suo esito non prova
+niente, né a favore né contro, anche quando arriva un verdetto. In più, sui diff
+osservati l'agente ha taciuto. La verifica è fatta di:
 1. test e mutazioni sui frammenti `run:` estratti dal YAML: ogni regola ha una mutazione
    che la fa diventare rossa;
 2. una PR impilata — base il ramo della PR, diff di un solo file banale — per il
@@ -178,18 +179,13 @@ Il confine: chi viene giudicato non deve poter toccare chi giudica. Tutto ciò c
 job dell'agente viene dopo l'agente è inaffidabile; i dati dell'agente sono dati, mai
 eseguiti, e nel log stanno solo fra `stop-commands`.
 
-Sulla #65 l'agente ha taciuto 4 volte su 4; prima, senza un verdetto precedente, il
-silenzio era 0 su 5 (`journal/2026-09-27/173259`). Le #66 e #67, di controllo, hanno
-avuto il verdetto (`174454`); la #68, impilata sulla #65, al primo giro, nei 3 rerun e
-alla riapertura (`181005`, `183324`). Resta, per esclusione e mai misurato in positivo,
-il contenuto del diff. Il rimando non si è mai visto dal vivo: la #65 si è chiusa con
-un criterio sostitutivo (`183324`). Sulla #72 un giro, un silenzio; la #73, impilata,
-ha avuto il verdetto in 5 giri dell'agente su 5; sulla #74, avversaria, il PATH
-avvelenato nel job dell'agente non è arrivato a `pubblica`, e i comandi di workflow
-scritti nel verdetto sono rimasti testo (`2026-09-29/084444` e `104703`,
-`2026-09-30/084858` e `094320`). I difetti li ha trovati `/code-review`: uno sulla #65
-(`2026-09-27/182303`), tre sulla #72 in due passate (`2026-09-30/082932`,
-`2026-10-01/090545`).
+Sulla #65 l'agente ha taciuto 4 volte su 4 (`journal/2026-09-27/173259`); le #66, #67
+e #68, con lo stesso workflow o con un diff banale, hanno avuto il verdetto (`174454`,
+`181005`): resta, per esclusione e mai misurato in positivo, il contenuto del diff.
+Sulla #72, silenzio; sulla #74, avversaria, il PATH avvelenato si è fermato al job
+dell'agente e i comandi di workflow sono rimasti testo (`2026-09-29/084444`,
+`2026-09-30/094320`). I difetti li ha trovati `/code-review`: uno sulla #65
+(`2026-09-27/182303`), tre sulla #72 (`2026-09-30/082932`, `2026-10-01/090545`).
 
 **«Suonano uguali» non vuol dire «sono la stessa cosa».** Due cose con lo stesso nome si
 verificano sul codice prima di trattarle come una sola.

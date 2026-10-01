@@ -1,0 +1,27 @@
+{
+  "ts": "2026-10-01T12:46:23+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "La regola sul collaudo del collaudo non si fonda piu' su H3: il fondamento e' che il meccanismo giudica se' stesso. Caso ridotto da 12 a 7 righe",
+  "contesto": "Brief di Andrea dell'01/10 sulla PR #75. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "corregge": "2026-10-01/120226-orchestrator-decisione.json",
+  "cosa_era_sbagliato": "La regola diceva «Su un diff che lo tocca l'agente tace: il collaudo di quella PR non prova niente, né a favore né contro». Il fondamento era H3, che la stessa voce 120226 dichiarava retta per esclusione e mai misurata in positivo: una regola appoggiata su un comportamento non riproducibile a comando, cioe' quello che la regola stessa vieta di usare come criterio. Il caso riassumeva cio' che le voci gia' dicono ed era lungo 12 righe contro le 7 del caso della regola modello.",
+  "come_lo_so": "Brief di Andrea. In piu', sulla #75 stessa il collaudo ha scritto il verdetto (run 36846716155, tentativo 1, commento di github-actions su 0c54425): con la frase vecchia, una PR sul meccanismo che riceve un verdetto sembrerebbe fuori dalla regola. La #75 pero' non tocca i file del meccanismo, quindi non e' una misura contro H3.",
+  "cosa_cambia": [
+    "CLAUDE.md, regola: «Su un diff che lo tocca il collaudo è il meccanismo che giudica sé stesso: il suo esito non prova niente, né a favore né contro, anche quando arriva un verdetto. In più, sui diff osservati l'agente ha taciuto.» H3 passa da ragione a dato a supporto",
+    "CLAUDE.md, caso: restano #65 4 silenzi su 4; #66, #67 e #68 verdetto con lo stesso workflow o con un diff banale; «per esclusione e mai misurato in positivo»; #72 silenzio; #74 PATH avvelenato fermo al job dell'agente e comandi di workflow rimasti testo; /code-review uno sulla #65 e tre sulla #72",
+    "CLAUDE.md, caso, tolti: lo 0 su 5 prima della #65, il dettaglio dei giri della #68 (primo giro, 3 rerun, riapertura), il rimando mai visto dal vivo e il criterio sostitutivo della #65, la #73 con i 5 giri su 5, «in due passate», e i rimandi alle voci 183324, 2026-09-29/104703 e 2026-09-30/084858. Stanno tutti nelle voci citate o nella 120226"
+  ],
+  "evidenza": [
+    "righe del caso, contate sul file: prima 12 (CLAUDE.md:181-192 a 0c54425), dopo 7; caso della regola modello (scadenza, CLAUDE.md:145-151): 7",
+    "`git diff --stat` -> 'CLAUDE.md | 24 ++++++++++--------------', '10 insertions(+), 14 deletions(-)'",
+    "`awk 'length>90' CLAUDE.md` -> solo le tre righe gia' lunghe su main (due della tabella delle modalita', una dell'elenco di Misura): nessuna riga nuova oltre 90 colonne",
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 143 tests in 3.767s', 'OK'"
+  ],
+  "cosa_non_e_misurato": "Se il collaudo del nuovo commit scrivera' il verdetto. Qualunque esito, per la regola cosi' riscritta, non prova niente sulla regola.",
+  "esito": "applicata; la voce 120226 resta, questa la corregge. PR #75 non mergiata",
+  "umano_coinvolto": true
+}

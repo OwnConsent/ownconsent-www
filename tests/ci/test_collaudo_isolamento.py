@@ -476,6 +476,26 @@ class TestStaticaArtifactEFork(unittest.TestCase):
         self.assertLess(run.index("rm -rf"), run.index("giro.txt"),
                         "giro.txt dopo lo svuotamento della cartella")
 
+    def test_retention_e_giorni_del_messaggio(self):
+        # Il 7 compare in due punti del workflow: la retention dell'upload di
+        # verdetto-tentativo-* e il messaggio di Pubblica per l'artifact mancante.
+        # Questo test li tiene uguali, e uguali al valore deciso (voce 090545).
+        up = [s for s in find_steps(self.ventaglio)
+              if str(s.get("uses", "")).split("@")[0] == "actions/upload-artifact"
+              and str((s.get("with") or {}).get("name", "")).startswith("verdetto-tentativo-")]
+        self.assertEqual(len(up), 1)
+        giorni = (up[0].get("with") or {}).get("retention-days")
+        self.assertIsInstance(giorni, int)
+        self.assertNotIsInstance(giorni, bool)
+        self.assertEqual(giorni, GIORNI_RETENTION)
+        run = step_di(self.pubblica, "Pubblica il verdetto")["run"]
+        motivi = re.findall(r'non_presa "(artifact non trovato[^"]*)"', run)
+        self.assertEqual(len(motivi), 1, motivi)
+        m = re.fullmatch(r"artifact non trovato: mai caricato o scaduto dopo (\d+) giorni; "
+                         r"serve «Re-run all jobs»", motivi[0])
+        self.assertIsNotNone(m, motivi[0])
+        self.assertEqual(int(m.group(1)), giorni, "giorni del messaggio diversi dalla retention")
+
     def test_download_solo_con_un_nome(self):
         passi = find_steps(self.pubblica)
         dl = next(s for s in passi
@@ -588,11 +608,26 @@ class TestSceltaDellArtifact(unittest.TestCase):
         self.assertIn("nessun verdetto", r["pubblicati"][0].lower())
 
 
+# 3e59f5e (voce 2026-10-01/090545): un messaggio solo per artifact mai caricato o
+# scaduto, perche' l'API non elenca gli scaduti. Il 7 deve coincidere con la
+# retention-days dell'upload: lo tiene coerente test_retention_e_giorni_del_messaggio.
+GIORNI_RETENTION = 7
+MOTIVO_ARTIFACT = (f"artifact non trovato: mai caricato o scaduto dopo {GIORNI_RETENTION} giorni; "
+                   "serve «Re-run all jobs»")
+CORPO_ARTIFACT_NON_TROVATO = (
+    f"Commit `{CORTO}`\n\n**Collaudo: decisione non presa ({MOTIVO_ARTIFACT}).** "
+    "L'artifact del ventaglio non si e' trovato o non si e' scaricato. "
+    "Il job non sa se questo commit abbia un verdetto.\n")
+
+
 def _artifact_non_trovato(self, r):
     self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
     self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
     corpo = r["pubblicati"][0]
-    self.assertIn("Collaudo: decisione non presa (artifact non trovato)", corpo)
+    # Il commento intero, carattere per carattere: la frase e' tutta o niente.
+    self.assertEqual(corpo, CORPO_ARTIFACT_NON_TROVATO)
+    self.assertIn(f"**Collaudo: decisione non presa ({MOTIVO_ARTIFACT}).**", corpo)
+    self.assertIn(f"({MOTIVO_ARTIFACT})", r["stdout"], "l'annotazione ::error riporta il motivo")
     self.assertNotIn("cantiere-collaudo", corpo)
     self.assertNotIn("tipo=", corpo)
     self.assertNotIn("nessun verdetto", corpo.lower())

@@ -150,6 +150,47 @@ workflow e' stato riacceso il 25/09, dodici giorni dopo, e nessuno si era accort
 la scadenza fosse passata. Nel frattempo la descrizione della skill /collaudo
 continuava a chiederlo su ogni PR prima del merge.
 
+**Un cambio al collaudo non si collauda su sé stesso.** Il meccanismo è
+`.github/workflows/claude-pr-review.yml`, `.github/scripts/collaudo-esito.sh`,
+`tests/ci/test_collaudo_*.py`, `tests/ci/collaudo_banco.py`,
+`tests/ci/mutazioni_collaudo.py` e `tests/ci/fixtures/collaudo-esito/`. Su un diff che
+lo tocca l'agente tace: il collaudo di quella PR non prova niente, né a favore né
+contro. La verifica è fatta di:
+1. test e mutazioni sui frammenti `run:` estratti dal YAML: ogni regola ha una mutazione
+   che la fa diventare rossa;
+2. una PR impilata — base il ramo della PR, diff di un solo file banale — per il
+   percorso normale dal vivo;
+3. una PR impilata avversaria se il cambio tocca un confine di fiducia: step iniettato
+   dopo l'agente, sonde con controllo positivo nel job dell'agente, verifica nel job che
+   pubblica;
+4. una prova a secco — frammento estratto, pubblicazione intercettata — per i rami che
+   dal vivo non si attivano a comando;
+5. `/code-review` sul numero della PR, lanciato da Andrea e ripetuto dopo ogni
+   correzione di gravità media o superiore.
+
+Le PR impilate non si mergiano: si chiudono e il ramo si cancella. Un criterio di
+chiusura che dipende da un comportamento non riproducibile a comando, come il silenzio
+dell'agente, non è un criterio: si sostituisce con uno verificabile, e il comportamento
+resta osservazione aperta. Ogni guasto pubblica il suo nome; nessuna stima passa per
+misura; ciò che non è misurato dal vivo va in «Limiti noti» nella descrizione della PR.
+
+Il confine: chi viene giudicato non deve poter toccare chi giudica. Tutto ciò che nel
+job dell'agente viene dopo l'agente è inaffidabile; i dati dell'agente sono dati, mai
+eseguiti, e nel log stanno solo fra `stop-commands`.
+
+Sulla #65 l'agente ha taciuto 4 volte su 4; prima, senza un verdetto precedente, il
+silenzio era 0 su 5 (`journal/2026-09-27/173259`). Le #66 e #67, di controllo, hanno
+avuto il verdetto (`174454`); la #68, impilata sulla #65, al primo giro, nei 3 rerun e
+alla riapertura (`181005`, `183324`). Resta, per esclusione e mai misurato in positivo,
+il contenuto del diff. Il rimando non si è mai visto dal vivo: la #65 si è chiusa con
+un criterio sostitutivo (`183324`). Sulla #72 un giro, un silenzio; la #73, impilata,
+ha avuto il verdetto in 5 giri dell'agente su 5; sulla #74, avversaria, il PATH
+avvelenato nel job dell'agente non è arrivato a `pubblica`, e i comandi di workflow
+scritti nel verdetto sono rimasti testo (`2026-09-29/084444` e `104703`,
+`2026-09-30/084858` e `094320`). I difetti li ha trovati `/code-review`: uno sulla #65
+(`2026-09-27/182303`), tre sulla #72 in due passate (`2026-09-30/082932`,
+`2026-10-01/090545`).
+
 **«Suonano uguali» non vuol dire «sono la stessa cosa».** Due cose con lo stesso nome si
 verificano sul codice prima di trattarle come una sola.
 

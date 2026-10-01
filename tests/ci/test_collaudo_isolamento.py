@@ -575,8 +575,9 @@ class TestSceltaDellArtifact(unittest.TestCase):
     def test_b_output_tentativo_mancante_o_non_numerico_nessuna_riserva(self):
         # ca50180 (voce 2026-09-30/091305): la riserva sull'API degli artifact e'
         # tolta. Anche se l'API elencherebbe verdetto-tentativo-1, un output
-        # tentativo vuoto o non numerico chiude: artifact non trovato, nessuna
-        # chiamata all'API degli artifact ne' a quella dei job, nessun download.
+        # tentativo vuoto o non numerico chiude, nessuna chiamata all'API degli
+        # artifact ne' a quella dei job, nessun download. Da 5a65f8c il messaggio
+        # e' suo: «output «tentativo» … mancante o non valido», non l'artifact scaduto.
         for out in ("", "abc", "0", "01", " 1", "1 "):
             for run_attempt in ("1", "2"):
                 with self.subTest(tentativo=out, run_attempt=run_attempt):
@@ -588,7 +589,7 @@ class TestSceltaDellArtifact(unittest.TestCase):
                     self.assertEqual(r["nome"], "", r["stdout"])
                     self.assertEqual(r["tentativo_scelto"], "")
                     self.assertEqual(r["scaricato"], "skipped", "senza nome il download non gira")
-                    _artifact_non_trovato(self, r)
+                    _senza_tentativo(self, r)
 
     def test_c_rerun_completo_prende_il_tentativo_del_ventaglio(self):
         artefatti = {"verdetto-tentativo-1": "## Collaudo — tentativo UNO\n",
@@ -633,8 +634,35 @@ def _artifact_non_trovato(self, r):
     self.assertNotIn("nessun verdetto", corpo.lower())
     self.assertNotIn("timeout", corpo.lower())
     self.assertIn(f"`{CORTO}`", corpo)
-    self.assertEqual(r["api_commenti"], [], "senza artifact non si decide niente")
+    self.assertEqual(r["api"], [], f"nessuna API: {r['chiamate_gh']}")
     self.assertEqual(r["uscite_prepara"].get("artifact"), "mancante")
+    self.assertEqual(r["rc_prepara"], 4, r["stdout"])
+
+
+# 5a65f8c (voce 2026-10-01/101052): senza un tentativo valido il download non si
+# tenta, e il messaggio e' suo, non quello dell'artifact scaduto.
+MOTIVO_SENZA_TENTATIVO = "output «tentativo» del job ventaglio mancante o non valido"
+CORPO_SENZA_TENTATIVO = (
+    f"Commit `{CORTO}`\n\n**Collaudo: decisione non presa ({MOTIVO_SENZA_TENTATIVO}).** "
+    "Senza quel valore il job non sa quale esecuzione del ventaglio giudicare, "
+    "e il download non e' stato tentato. "
+    "Il job non sa se questo commit abbia un verdetto.\n")
+
+
+def _senza_tentativo(self, r):
+    self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+    self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+    corpo = r["pubblicati"][0]
+    self.assertEqual(corpo, CORPO_SENZA_TENTATIVO)
+    self.assertIn(f"({MOTIVO_SENZA_TENTATIVO})", r["stdout"], "l'annotazione ::error riporta il motivo")
+    self.assertNotIn("cantiere-collaudo", corpo)
+    self.assertNotIn("scaduto", corpo)
+    self.assertEqual(r["api"], [], f"nessuna API: {r['chiamate_gh']}")
+    self.assertEqual(r["nome"], "", r["stdout"])
+    self.assertEqual(r["tentativo_scelto"], "")
+    self.assertEqual(r["scaricato"], "skipped", "senza tentativo il download non si tenta")
+    self.assertEqual(r["uscite_prepara"].get("artifact"), "senza-tentativo")
+    self.assertEqual(r["rc_prepara"], 4, r["stdout"])
 
 
 class TestArtifactMancante(unittest.TestCase):
@@ -660,7 +688,7 @@ class TestArtifactMancante(unittest.TestCase):
                 self.assertEqual(r["nome"], "", r["stdout"])
                 self.assertEqual(r["scaricato"], "skipped", "senza nome il download non gira")
                 self.assertEqual(r["api"], [], r["chiamate_gh"])
-                _artifact_non_trovato(self, r)
+                _senza_tentativo(self, r)
 
 
 # --- 4. ca50180: niente dopo l'agente, dati dell'agente fra stop-commands, tempi ---

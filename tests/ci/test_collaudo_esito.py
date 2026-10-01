@@ -299,10 +299,14 @@ class TestInputSbagliati(unittest.TestCase):
 
 
 # --- statica del workflow -------------------------------------------------------
+#
+# Dal #69 (659ade6) il job unico `verifica` e' diviso in `ventaglio` (l'agente) e
+# `pubblica` (decide e pubblica). Ogni asserzione di prima e' portata sul job che
+# ora porta la cosa verificata; il budget e' passato a env di workflow.
 
 def _review():
     doc = load_yaml(workflow_dir() / "claude-pr-review.yml")
-    return doc, doc["jobs"]["verifica"]
+    return doc, doc["jobs"]["ventaglio"], doc["jobs"]["pubblica"]
 
 
 def _argomenti_dello_script(run: str) -> list[str]:
@@ -320,36 +324,47 @@ def _step(job, nome=None, id_=None):
     raise AssertionError(f"step non trovato: name={nome!r} id={id_!r}")
 
 
+def _testo_dello_step(step: dict) -> str:
+    """Tutto cio' che uno step dichiara, come testo: run, with, env."""
+    return "\n".join(str(step.get(k) or "") for k in ("run", "with", "env", "uses"))
+
+
 class TestStaticaWorkflow(unittest.TestCase):
 
     def setUp(self):
-        self.doc, self.job = _review()
-        self.pubblica = _step(self.job, nome="Pubblica il verdetto")
+        self.doc, self.ventaglio, self.job_pubblica = _review()
+        self.pubblica = _step(self.job_pubblica, nome="Pubblica il verdetto")
 
-    def test_budget_intero_definito_dal_job(self):
-        v = (self.job.get("env") or {}).get("BUDGET_VENTAGLIO_MIN")
+    def test_budget_intero_definito_dal_workflow(self):
+        v = (self.doc.get("env") or {}).get("BUDGET_VENTAGLIO_MIN")
         self.assertIsInstance(v, int)
         self.assertNotIsInstance(v, bool)
         self.assertGreater(v, 0)
 
     def test_timeout_dello_step_ventaglio_legge_il_budget(self):
-        tm = _step(self.job, id_="ventaglio").get("timeout-minutes")
+        tm = _step(self.ventaglio, id_="ventaglio").get("timeout-minutes")
         self.assertIsInstance(tm, str)
         self.assertRegex(tm, r"^\$\{\{\s*fromJSON\(\s*env\.BUDGET_VENTAGLIO_MIN\s*\)\s*\}\}$")
 
     def test_fonte_unica_del_budget(self):
         # Il passo di pubblicazione passa $BUDGET_VENTAGLIO_MIN allo script e non
-        # lo ridefinisce; nessun altro step lo ridefinisce.
+        # lo ridefinisce. Dal #69 la fonte e' l'env del workflow, che arriva a
+        # entrambi i job: nessun job e nessuno step lo ridefinisce.
         argomenti = _argomenti_dello_script(self.pubblica.get("run", ""))
         self.assertEqual(len(argomenti), 7, argomenti)
         self.assertEqual(argomenti[5], "$BUDGET_VENTAGLIO_MIN", "BUDGET_MIN e' il sesto argomento")
-        for s in find_steps(self.job):
-            self.assertNotIn("BUDGET_VENTAGLIO_MIN", s.get("env") or {}, s.get("name"))
-        self.assertNotIn("BUDGET_VENTAGLIO_MIN", self.doc.get("env") or {})
+        self.assertIn("BUDGET_VENTAGLIO_MIN", self.doc.get("env") or {})
+        for nome_job, job in self.doc["jobs"].items():
+            self.assertNotIn("BUDGET_VENTAGLIO_MIN", job.get("env") or {}, nome_job)
+            for s in find_steps(job):
+                self.assertNotIn("BUDGET_VENTAGLIO_MIN", s.get("env") or {},
+                                 f"{nome_job}: {s.get('name')}")
+                self.assertNotRegex(s.get("run", "") or "", r"\bBUDGET_VENTAGLIO_MIN=",
+                                    f"{nome_job}: {s.get('name')} lo riassegna nel run")
 
     def test_timeout_del_job_35_e_sopra_il_budget(self):
-        self.assertEqual(self.job.get("timeout-minutes"), 35)
-        self.assertGreater(self.job["timeout-minutes"], self.job["env"]["BUDGET_VENTAGLIO_MIN"])
+        self.assertEqual(self.ventaglio.get("timeout-minutes"), 35)
+        self.assertGreater(self.ventaglio["timeout-minutes"], self.doc["env"]["BUDGET_VENTAGLIO_MIN"])
 
     def test_pubblica_gira_se_non_cancellato(self):
         self.assertEqual(self.pubblica.get("if"), "${{ !cancelled() }}")
@@ -375,16 +390,40 @@ class TestStaticaWorkflow(unittest.TestCase):
         rami = dict(re.findall(r"^\s*([\w*-]+)\)(.*?);;", m.group(1), re.S | re.M))
         self.assertIn("exit 0", rami.get("rimando", ""))
         self.assertIn("exit 1", rami.get("timeout", ""))
-        self.assertIn("exit 1", rami.get("*", ""))
+        self.assertIn("exit 1", rami.get("nessun-verdetto", ""))
+        self.assertRegex(rami.get("*", ""), r"\bnon_presa\b",
+                         "una parola sconosciuta passa da «decisione non presa»")
 
-    def test_script_copiato_fuori_dal_workspace_prima_del_ventaglio(self):
-        passi = find_steps(self.job)
-        nomi = [s.get("name") or s.get("id") for s in passi]
-        i_cp = next(i for i, s in enumerate(passi)
-                    if "collaudo-esito.sh" in s.get("run", "") and "cp " in s.get("run", ""))
-        i_v = next(i for i, s in enumerate(passi) if s.get("id") == "ventaglio")
-        self.assertLess(i_cp, i_v, nomi)
-        self.assertIn('"$RUNNER_TEMP/collaudo-esito.sh"', self.pubblica.get("run", ""))
+    def test_script_eseguito_dal_checkout_di_pubblica(self):
+        # Sostituisce test_script_copiato_fuori_dal_workspace_prima_del_ventaglio:
+        # la copia in $RUNNER_TEMP e' stata tolta di proposito in 659ade6 (#69),
+        # perche' non era una difesa. Ora il confine e' il job: lo script lo
+        # esegue pubblica dal proprio checkout, e il job dell'agente non lo tocca.
+        run = self.pubblica.get("run", "")
+        chiamate = re.findall(r'bash\s+"([^"]*collaudo-esito\.sh)"', run)
+        self.assertEqual(chiamate, ["$GITHUB_WORKSPACE/.github/scripts/collaudo-esito.sh"],
+                         "lo script si esegue dal checkout del job pubblica")
+        self.assertNotIn("$RUNNER_TEMP/collaudo-esito.sh", run)
+        passi = find_steps(self.job_pubblica)
+        i_pub = passi.index(self.pubblica)
+        checkout = [i for i, s in enumerate(passi)
+                    if str(s.get("uses", "")).startswith("actions/checkout@")]
+        self.assertTrue(checkout, "il job pubblica non ha un checkout")
+        self.assertLess(checkout[0], i_pub, "il checkout viene prima della pubblicazione")
+        sparse = (passi[checkout[0]].get("with") or {}).get("sparse-checkout")
+        if sparse is not None:
+            self.assertIn(".github/scripts", str(sparse).split(),
+                          "lo sparse-checkout deve portare .github/scripts")
+        # Nessun altro step di pubblica copia o sposta lo script.
+        for s in passi:
+            if s is self.pubblica:
+                continue
+            self.assertNotIn("collaudo-esito.sh", _testo_dello_step(s), s.get("name"))
+        # Il job dell'agente non copia, non esegue, non nomina lo script.
+        for s in find_steps(self.ventaglio):
+            self.assertNotIn("collaudo-esito.sh", _testo_dello_step(s),
+                             f"ventaglio: {s.get('name') or s.get('id')}")
+        self.assertNotIn("collaudo-esito.sh", str(self.ventaglio.get("outputs") or {}))
 
     def test_trigger_invariato(self):
         on = on_triggers(self.doc)

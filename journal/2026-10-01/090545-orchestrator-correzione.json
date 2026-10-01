@@ -1,0 +1,33 @@
+{
+  "ts": "2026-10-01T09:05:45+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Retention dell'artifact del verdetto da 1 a 7 giorni; l'artifact mancante dice «mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»». Un messaggio solo, perche' l'API non elenca gli artifact scaduti",
+  "contesto": "Finding del secondo /code-review 72 (basso): con retention-days: 1, un rerun del solo pubblica dopo 24 ore trova l'artifact scaduto e pubblica «artifact non trovato» senza dire perche'. Brief di Andrea del 01/10.",
+  "correzione_di": "659ade6 (retention-days: 1) e beab008 (messaggio 'artifact non trovato'). Il valore 1 veniva dal brief del 29/09, fase 2 ('upload come artifact del solo file del verdetto, se esiste, con retention 1 giorno'), senza motivazione; io l'ho applicato senza chiederne una e senza scrivere nel workflow cosa comportava per i rerun",
+  "misura": [
+    "orologio: `date -u` -> 2026-10-01T07:04:23Z. Run con artifact scaduto: 36531660050 (verdetto-tentativo-1, id 11016464506, expires_at 2026-09-30T06:34:25Z, voce 2026-09-29/101938), 36531699740, 36543816064",
+    "GET /repos/OwnConsent/ownconsent-www/actions/runs/{36531660050,36531699740,36543816064}/artifacts -> total_count=0 per tutti e tre; con ?name=verdetto-tentativo-1 sul primo -> total_count=0. La lista del run non elenca gli artifact scaduti, ne' con expired: true ne' altrimenti",
+    "GET /repos/OwnConsent/ownconsent-www/actions/artifacts?name=verdetto-tentativo-1 -> total=2, solo 11083557049 e 11083167721, expired=false: nemmeno la lista del repository elenca quello scaduto",
+    "GET /repos/OwnConsent/ownconsent-www/actions/artifacts/11016464506 -> 404 Not Found. GET …/artifacts/11016464506/zip -> 'gh: Artifact has expired (HTTP 410)'",
+    "documentazione, github/rest-api-description @2b78fb0c5361, api.github.com.json: schema artifact, 'expired': {'description': 'Whether or not the artifact has expired.', 'type': 'boolean'}; 'List workflow run artifacts': 'Lists artifacts for a workflow run.', risposte ['200'], senza dire se include gli scaduti; 'Download an artifact': risposte ['302', '410']. Il 410 sullo zip e' l'unico segnale di scadenza documentato, e richiede l'id, che la lista non da' piu'",
+    "conclusione: la misura non conferma un campo expired utilizzabile, quindi niente ramo 'artifact scaduto' distinto. download-artifact cerca per nome nella lista del run e, come per un artifact mai caricato, non lo trova"
+  ],
+  "cosa_cambia": [
+    "claude-pr-review.yml:166 'retention-days: 7', con il motivo in commento alle righe 163-165: il verdetto e' pubblico comunque, sette giorni coprono un rerun del solo pubblica, oltre serve «Re-run all jobs»",
+    "claude-pr-review.yml:328 il motivo di non_presa per l'artifact mancante: «artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»», con il perche' in commento alle righe 326-327. Commento pubblicato: '**Collaudo: decisione non presa (artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»).**'",
+    "il 7 compare in due punti, l'upload e il messaggio. In un primo momento li avevo legati con una variabile di workflow, RETENZIONE_VERDETTO_GIORNI; l'ho tolta prima del commit perche' il brief chiedeva 'retention-days: 7' scritto li'. La coerenza fra i due la verifica un test"
+  ],
+  "evidenza": [
+    "actionlint 1.7.7: uscita 0",
+    "prova a secco (banco nello scratchpad, Scegli + Prepara + Pubblica estratti): 'artifact assente o scaduto (download fallito)' -> '::error title=Artifact non trovato::'verdetto-tentativo-1', download: failure', commento con il messaggio nuovo, rc 1, nessun marcatore. 'output tentativo mancante (nessun download)' -> stesso commento, download skipped"
+  ],
+  "limiti": [
+    "lo stesso messaggio vale quando manca l'output tentativo (caso ostile, voce 2026-09-30/091305): li' «mai caricato o scaduto» non descrive la causa vera. Il brief chiede un messaggio solo; lo segnalo e non lo cambio"
+  ],
+  "esito": "applicata; test e mutazioni a @qa-test",
+  "umano_coinvolto": true
+}

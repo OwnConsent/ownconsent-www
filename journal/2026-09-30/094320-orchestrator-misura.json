@@ -1,0 +1,25 @@
+{
+  "ts": "2026-09-30T09:43:20+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "#74 estesa e #73 su fe816e5: i comandi di workflow nel verdetto restano testo dentro stop-commands, nessuna annotazione iniettata, «Collaudo» non mascherato, PATH pulito in pubblica. #73: verdetto con marcatore e riga dei tempi nella forma nuova",
+  "contesto": "Brief di Andrea del 30/09, punti 4 e 5. Push di fe816e5 su collaudo-isolamento. Sul ramo esperimento-isolamento-avverso: merge di origin/collaudo-isolamento (a1b665d), con il conflitto nel workflow risolto prendendo la versione della base e riapplicando lo step avverso del giro precedente; poi il commit 2e2728f con le aggiunte: file .collaudo/'x'+a capo+'::add-mask::verdetto' e, nel verdetto, le righe '::add-mask::Collaudo', '::warning::iniettato-dal-verdetto', '::stop-commands::finto'. Chiusura e riapertura di #74 e #73.",
+  "evidenza": [
+    "vincolo del brief, prima di riaprire: `git diff origin/main origin/collaudo-isolamento -- .github/workflows | grep -i 'sonda\\|avverso\\|testimone\\|iniettato\\|add-mask'` -> 2 righe, entrambe commenti del workflow che citano '«::add-mask::…»'. Sul diff completo 7 occorrenze: journal e la costante _INIETTATE di tests/ci/test_collaudo_isolamento.py. Nessuno step avverso ne' sonda sulla base",
+    "firme: 2e2728f -> 'orchestrator'. Il merge a1b665d e' senza firma per costruzione: githooks/prepare-commit-msg:25 'case \"$SORGENTE\" in merge|squash) exit 0'",
+    "#74, run 36684239342: ventaglio 109786299367 success, pubblica 109789280935 success. Controllo positivo in ventaglio: 'SONDA ventaglio PATH=/tmp/avverso:/home/runner/.local/bin:/home/runner/.bun/bin:/tmp/avverso', 'SONDA ventaglio which gh=/tmp/avverso/gh'",
+    "#74, pubblica, step 'Prepara il verdetto': '::stop-commands::***' (il runner maschera da se' il token), poi 'total 16', 'giro.txt' 12 byte, 'verdetto.md' 294 byte, '## Collaudo — verdetto iniettato dallo step avverso', '::add-mask::Collaudo', '::warning::iniettato-dal-verdetto', '::stop-commands::finto', 'Ultima riga del corpo.', '--- fine di verdetto.md', '::***::' alle 07:41:51.0486649Z. Le righe iniettate compaiono come testo letterale",
+    "#74, annotazioni: `gh api repos/OwnConsent/ownconsent-www/check-runs/109789280935/annotations` (pubblica) -> warning Node.js 20, notice 'Verdetto pubblicato', notice sull'etichetta ubuntu-latest; check run 109786299367 (ventaglio) -> warning Node.js 20, failure 'Can't store NODE_OPTIONS output parameter using '$GITHUB_ENV' command.', notice ubuntu-latest. Messaggi che contengono 'iniettato' nei due check run: 0",
+    "#74, «Collaudo» non mascherato dopo il blocco: 07:41:51.0712114Z, nel testo dello step 'Pubblica il verdetto', '**Collaudo: decisione non presa (%s).**'; in tutto il job pubblica 4 righe con 'Collaudo' in chiaro. Le uniche righe con '***' dopo il blocco: '::***::' e 'GH_TOKEN: ***'",
+    "#74, il file col nome 'x'+a capo+'::add-mask::verdetto' non arriva a pubblica: l'upload carica per nome solo verdetto.md e giro.txt (listing sopra), e nel job ventaglio nessuno step lo elenca piu'. In ventaglio le sole righe mascherate sono token e segreti",
+    "#74, PATH in pubblica prima e dopo: 'SONDA pubblica prima PATH=/snap/bin:/home/runner/.local/bin:…', 'NODE_OPTIONS=<vuoto>', 'which gh=/usr/bin/gh', '/usr/bin/ls: cannot access' per /tmp/testimone-gh, /tmp/testimone-node, /tmp/avverso e /tmp/avverso.js; 'SONDA pubblica dopo' identica",
+    "#74, commento https://github.com/OwnConsent/ownconsent-www/pull/74#issuecomment-5906549351: riga 1 '<!-- cantiere-collaudo tipo=verdetto sha=2e2728fd710afaa672dabc056c66058321e519ae -->'; riga 8 'cantiere' + U+2011 + 'collaudo tipo=verdetto sha=0000…'; righe 12-14 le tre righe iniettate come testo; 'cantiere-collaudo' letterale: 1 occorrenza. Log: 'occorrenze di cantiere-collaudo neutralizzate: 1', 'ventaglio: success; tempi non letti (non servono)', 'decisione: verdetto'",
+    "#73, run 36684293518: ventaglio 109786472084 success, pubblica 109786933597 success. 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 796 bytes. Artifact ID is 11083167721'; 'tentativo del ventaglio: 1; tentativo di questo job: 1'; '::stop-commands::***' … giro.txt 12 byte, verdetto.md 954 byte … '::***::'; 'ventaglio: success; tempi non letti (non servono)'; 'decisione: verdetto'. Commento https://github.com/OwnConsent/ownconsent-www/pull/73#issuecomment-5906434938, prima riga '<!-- cantiere-collaudo tipo=verdetto sha=cb63f2cbc4b2f3bd78416729055d4b0626da3b59 -->', '## Collaudo — run 36684293518, tentativo 1'"
+  ],
+  "cosa_non_e_misurato": "Che il runner sospenda i comandi anche per lo stderr dentro il blocco: lo step non manda dati dell'agente su stderr. Il ramo dei tempi letti e quello 'tempi non leggibili' dal vivo (voce 084858).",
+  "esito": "punti 4 e 5 conformi all'atteso; nessun rerun",
+  "umano_coinvolto": false
+}

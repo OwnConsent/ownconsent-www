@@ -1,0 +1,18 @@
+{
+  "ts": "2026-09-29T10:47:04+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "Secondo caso di commit senza firma: cb63f2c, sulla #73, e l'hook non l'ha negato",
+  "contesto": "Il 29/09 alle 08:33 ho creato il ramo esperimento-isolamento-base e ho committato il file dell'esperimento senza CANTIERE_AGENT. Andrea, nel brief delle 10 circa, lo conta come secondo caso di commit senza firma. Il primo non l'ho ritrovato con `grep -rli 'senza firma\\|non firmat' journal`: il conteggio e' suo.",
+  "evidenza": [
+    "`git log -1 --format='%h %an | %(trailers:key=Cantiere-Agent,valueonly)'` -> 'cb63f2c Andrea Pernici |', vuoto; aa8b2de (#66) e 9b85022 (#68) -> 'orchestrator'",
+    "githooks/prepare-commit-msg:27-28: 'AGENTE=\"${CANTIERE_AGENT:-}\"' e '[ -z \"$AGENTE\" ] && exit 0'. Una variabile assente vale 'commit di una persona', e l'hook esce con 0: non nega il commit, lo lascia senza firma. E' il comportamento dichiarato alle righe 12-14 ('Variabile assente = il commit non viene da Claude Code = e' di una persona, e non si firma')",
+    "githooks/prepare-commit-msg:7-8 dice che la variabile la antepone l'hook agent-env.py del plugin a ogni git lanciato da Claude Code. In questa sessione il commit cb63f2c, lanciato da Claude Code senza la variabile, e' uscito senza firma: quell'antepositore qui non ha agito. Non ho verificato perche'",
+    "da quel momento ogni mio commit porta `export CANTIERE_AGENT=orchestrator` e `[ -n \"$CANTIERE_AGENT\" ]` prima del commit, e il trailer controllato dopo: f7dda11, 3ced141, 5b06e83, beab008 -> 'orchestrator'"
+  ],
+  "cosa_si_e_imparato": "Una firma assente non si vede al commit: l'hook, per come e' scritto, non distingue una persona da un agente che ha dimenticato la variabile. Il controllo sta prima del commit (variabile valorizzata) e dopo (trailer letto). cb63f2c non e' stato riscritto: e' l'head su cui sono legati i giri della #73.",
+  "umano_coinvolto": true
+}

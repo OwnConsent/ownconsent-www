@@ -1,0 +1,20 @@
+{
+  "ts": "2026-09-29T10:19:38+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Artifact e rerun: l'artifact appartiene al run, non al tentativo; un nome ripetuto fa fallire l'upload. Cosa vede un job rieseguito da solo negli output del job a monte la documentazione non lo dice",
+  "contesto": "Brief di Andrea del 29/09 sulla #72, punto 1: prima di correggere il rischio trovato da @qa-test (voce 081528), misurare con le fonti se un artifact del tentativo 1 si scarica da un job rieseguito al tentativo 2, e cosa fa un rerun completo che ricarica lo stesso nome.",
+  "evidenza": [
+    "API, `gh api repos/OwnConsent/ownconsent-www/actions/runs/36531660050/artifacts` -> un solo oggetto: id 11016464506, name 'verdetto-tentativo-1', size_in_bytes 649, expires_at 2026-09-30T06:34:25Z, workflow_run {id 36531660050, head_sha cb63f2c…}. Nessun campo per il tentativo: l'artifact e' del run",
+    "download-artifact d3f86a1, README.md:76-79: 'Optional. If unspecified, the action will download artifacts from the current repo and the current workflow run.' action.yml:5-10: 'name' oppure 'artifact-ids', 'Either inputs `artifact-ids` or `name` can be used, but not both'; name vuoto: 'If unspecified, all artifacts for the run are downloaded.' Quindi un artifact del tentativo 1 si scarica al tentativo 2 dello stesso run, per nome o per id. Dedotto dalla documentazione: la prova e' la 3b",
+    "upload-artifact ea165f8, action.yml:37-42, overwrite: 'If true, an artifact with a matching name will be deleted before a new one is uploaded. If false, the action will fail if an artifact for the given name already exists.' default 'false'. README.md:62-64: 'it is no longer possible to upload to the same named Artifact multiple times … Otherwise you _will_ encounter an error.' README.md:393: con overwrite 'this will give the Artifact a new ID, the previous one will no longer exist'. Un rerun completo con lo stesso nome fallirebbe; con overwrite cancellerebbe l'artifact del tentativo precedente. Il tentativo resta nel nome, overwrite resta false",
+    "rerun, github/docs content/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs.md: 'The workflow will also use the same `GITHUB_SHA` … and `GITHUB_REF`'; 'gh run rerun --job JOB_ID' per un job solo. Non dice se un job rieseguito da solo veda needs.<job>.outputs del job non rieseguito, ne' che github.run_attempt veda: il valore del tentativo nel job rieseguito si misura nella 3b",
+    "difetto confermato sulla forma di 3ced141: pubblica calcola il nome da github.run_attempt del proprio job. Con un rerun del solo pubblica (tentativo 2) cerca 'verdetto-tentativo-2', che non esiste; Prepara chiede all'API, conta 0 e prosegue come 'agente muto' -> 'nessun verdetto', un'affermazione falsa. Dedotto dal codice: il rischio di @qa-test regge"
+  ],
+  "cosa_non_e_misurato": "needs.ventaglio.outputs in un job rieseguito da solo: la correzione legge il tentativo del ventaglio da quell'output e, se e' vuoto, dall'API degli artifact del run. Quale delle due fonti si usa lo dira' il log della 3b.",
+  "esito": "si corregge: nome dal tentativo del job ventaglio, un file-sentinella caricato sempre, artifact mancante -> 'decisione non presa (artifact non trovato)'",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,36 @@
+{
+  "ts": "2026-10-01T12:02:26+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "La regola su come si collauda un cambio al collaudo va nel CLAUDE.md, con il caso delle PR #65-#74 e i rimandi alle voci",
+  "contesto": "Brief di Andrea dell'01/10, dopo il merge della #72. Il metodo usato su #65 e #72 (PR impilate, PR avversaria, prova a secco, /code-review ripetuto) stava solo nelle voci del journal e nelle descrizioni delle PR. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "alternative": [
+    { "opzione": "regola nel CLAUDE.md, sezione Metodo, nel formato delle altre: frase in grassetto, corpo, paragrafo del caso", "scelta": true },
+    { "opzione": "solo nel journal", "scartata_perche": "il CLAUDE.md e' quello che gli agenti leggono prima di lavorare; il journal si legge quando si cerca qualcosa, cioe' dopo aver gia' aperto la PR sbagliata" }
+  ],
+  "evidenza": [
+    "formato misurato su origin/main d3d9689, CLAUDE.md:139-151, regola della scadenza: frase in grassetto che e' la regola (5 righe), riga vuota, un paragrafo di caso in prosa (7 righe) con date e numero di PR. Nessuna sezione 'riferimenti': i riferimenti stanno dentro il caso. In quella regola non ci sono rimandi a voci del journal; qui ci sono, perche' il brief chiede di rimandare invece di riassumere",
+    "perimetro, `git ls-files | grep -i -E 'collaud|tests/ci|^\\.github/'` piu' gli import dei test: .github/workflows/claude-pr-review.yml (444 righe), .github/scripts/collaudo-esito.sh (88), tests/ci/test_collaudo_esito.py, test_collaudo_commenti.py, test_collaudo_isolamento.py, tests/ci/collaudo_banco.py (banco che esegue i frammenti run: di pubblica), tests/ci/mutazioni_collaudo.py (banco delle mutazioni), tests/ci/fixtures/collaudo-esito/ (11 file)",
+    "fuori dal perimetro scritto nella regola, per scelta mia da confermare: tests/ci/helpers.py, che i test del collaudo importano ma che serve anche ai test di ci.yml; .github/workflows/ci.yml, che alla riga 58 esegue tests/ci. Il banco della prova a secco non e' nel repository: le voci lo danno nello scratchpad",
+    "#65, 4 silenzi su 4: voce 2026-09-27/173259, tabella, run 36309849626 tentativi 1-4, e conteggio '9902a1e (#65): silenzio 4 su 4 — senza precedente 4/4'; fuori dalla #65 senza precedente 0 su 5",
+    "#66 e #67, verdetto: voce 2026-09-27/174454, run 36330323825 e 36330329032, un giro per braccio",
+    "#68, verdetto al primo giro e nei 3 rerun: voce 2026-09-27/181005, run 36331061596 tentativi 1-4; alla riapertura: voce 2026-09-27/183324, run 36333316998",
+    "#72, silenzio: voce 2026-09-29/084444, run 36531638891, 'nessun verdetto (ventaglio: success)'. Un giro",
+    "#73, verdetto in ogni giro: voci 2026-09-29/084444 (run 36531660050), 2026-09-29/104703 (run 36543816064, tentativi 1 e 3; il tentativo 2 e' un rerun del solo pubblica), 2026-09-30/084858 (run 36679919844, piu' un rerun del solo pubblica), 2026-09-30/094320 (run 36684293518). L'agente ha girato 5 volte, 5 verdetti",
+    "#74, esiti: voce 2026-09-29/084444 (run 36531699740: PATH avvelenato visibile nel job ventaglio, assente in pubblica; NODE_OPTIONS rifiutato dal runner) e voce 2026-09-30/094320 (run 36684239342: comandi di workflow nel verdetto rimasti testo fra stop-commands, 0 annotazioni iniettate)",
+    "/code-review: 65 una volta, un difetto (voce 2026-09-27/182303); 72 due volte, prima passata un medio e un basso (voce 2026-09-30/082932), seconda un basso (voce 2026-10-01/090545)",
+    "`gh pr list --state all`: #66, #67, #68, #73, #74 CLOSED; #65 e #72 MERGED. `git ls-remote --heads origin | grep esperimento` -> nessuna riga: i rami delle PR impilate sono cancellati",
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' dopo la modifica -> 'Ran 143 tests', 'OK'"
+  ],
+  "divergenze_dal_brief": [
+    "il brief scrive 'su quel diff l'agente tace (H3)' come un fatto. Le voci 174454 e 181005 dicono che H3 regge per esclusione, con un giro per braccio, e che non e' mai stata misurata in positivo. I silenzi osservati sono 5 su 5 (4 sulla #65, 1 sulla #72). Nella regola resta 'l'agente tace', e il caso dice 'per esclusione e mai misurato in positivo'",
+    "i numeri del brief coincidono con le fonti. Due precisazioni: sulla #73 i verdetti pubblicati sono 7 ma l'agente ha girato 5 volte, perche' due sono rerun del solo pubblica; sulla #74 il verdetto e' quello scritto dallo step avverso, non dall'agente",
+    "la worktree indicata dal brief non esisteva: l'ho creata con `git worktree add -b claude-md/collaudo-del-collaudo ../www-claude-md-collaudo origin/main` dopo un fetch. Il main locale era a 7c4001f, 56 commit dietro origin/main d3d9689"
+  ],
+  "cosa_non_e_misurato": "Se il collaudo di questa PR scrivera' il verdetto. H3 non separa i file del meccanismo dalla prosa che parla del silenzio: il diff della #65 conteneva tutti e due, e questo diff contiene solo la seconda.",
+  "esito": "applicata; PR verso main, non mergiata",
+  "umano_coinvolto": true
+}

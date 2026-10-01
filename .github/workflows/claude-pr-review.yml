@@ -196,10 +196,13 @@ jobs:
       # Quale esecuzione del ventaglio si giudica: il suo tentativo, dall'output
       # del job. Da qui vengono sia il nome dell'artifact sia l'attempt da cui si
       # leggono i tempi. L'artifact e' del run, non del tentativo (API degli
-      # artifact: solo workflow_run.id). Nessuna riserva: l'output manca solo se
-      # il runner lo salta come possibile segreto, cioe' in un caso ostile, e li'
-      # si chiude: «decisione non presa (artifact non trovato)». Senza nome non si
-      # scarica niente: un name vuoto scaricherebbe tutti gli artifact del run.
+      # artifact: solo workflow_run.id). Nessuna riserva. L'unico caso documentato
+      # di output mancante e' un valore mascherato: il runner salta un output che
+      # «may contain secret», e qualcosa deve aver registrato quel valore con
+      # «::add-mask::». E' un caso ostile, e si chiude con un messaggio suo:
+      # «decisione non presa (output «tentativo» del job ventaglio mancante o non
+      # valido)». Senza un tentativo valido il download non si tenta: un name
+      # vuoto scaricherebbe tutti gli artifact del run.
       - name: Scegli il verdetto
         id: scegli
         env:
@@ -238,6 +241,11 @@ jobs:
           trap 'echo "uscita=$?" >> "$GITHUB_OUTPUT"' EXIT
           verdetto="$RUNNER_TEMP/verdetto.md"
           rm -f "$verdetto"
+          if [ -z "$ARTEFATTO" ]; then
+            echo "artifact=senza-tentativo" >> "$GITHUB_OUTPUT"
+            echo "::error title=Output tentativo non valido::l'output tentativo del job ventaglio manca o non e' un numero: download non tentato"
+            exit 4
+          fi
           if [ "$SCARICATO" != "success" ]; then
             echo "artifact=mancante" >> "$GITHUB_OUTPUT"
             echo "::error title=Artifact non trovato::'${ARTEFATTO:-nessun nome}', download: ${SCARICATO:-non eseguito}"
@@ -322,6 +330,9 @@ jobs:
             echo "::error title=Decisione non presa::${url}. ${2} (${1})"
             exit 1
           }
+          if [ "$ARTIFACT" = "senza-tentativo" ]; then
+            non_presa "output «tentativo» del job ventaglio mancante o non valido" "Senza quel valore il job non sa quale esecuzione del ventaglio giudicare, e il download non e' stato tentato."
+          fi
           if [ "$ARTIFACT" = "mancante" ]; then
             # L'API non distingue un artifact scaduto da uno mai caricato: le liste
             # degli artifact non elencano quelli scaduti (journal 2026-10-01).

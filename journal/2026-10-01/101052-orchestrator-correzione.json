@@ -1,0 +1,23 @@
+{
+  "ts": "2026-10-01T10:10:52+02:00",
+  "agente": "orchestrator",
+  "issue": "69",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "L'output tentativo mancante o non valido ha un messaggio suo: «decisione non presa (output «tentativo» del job ventaglio mancante o non valido)». «artifact non trovato: mai caricato o scaduto…» resta solo per il download fallito con un tentativo valido",
+  "contesto": "Brief di Andrea del 01/10. La voce 090545 aveva dichiarato come limite che il messaggio unico valeva anche per l'output tentativo mancante, dove «mai caricato o scaduto» non descrive la causa vera.",
+  "correzione_di": "3e59f5e: un solo ramo artifact=mancante per due cause diverse, download fallito e output tentativo mancante",
+  "cosa_cambia": [
+    "claude-pr-review.yml:196-202, commento di 'Scegli il verdetto': l'unico caso documentato di output mancante e' un valore mascherato (il runner salta un output che «may contain secret»), cioe' un caso ostile, e ha un messaggio suo. Senza un tentativo valido il download non si tenta",
+    "claude-pr-review.yml:244-248, 'Prepara il verdetto': senza nome (Scegli non l'ha esportato) scrive artifact=senza-tentativo, '::error title=Output tentativo non valido::…download non tentato', uscita 4. Il ramo artifact=mancante (download fallito con un nome) resta dopo",
+    "claude-pr-review.yml:333-335, 'Pubblica il verdetto': con artifact=senza-tentativo, non_presa con il motivo «output «tentativo» del job ventaglio mancante o non valido». Il controllo di artifact=mancante e il messaggio di scadenza a 7 giorni restano invariati",
+    "Il download era gia' saltato senza nome (if: steps.scegli.outputs.nome != ''); cambia solo cosa si pubblica"
+  ],
+  "evidenza": [
+    "actionlint 1.7.7: uscita 0",
+    "prova a secco (banco nello scratchpad, Scegli + Prepara + Pubblica estratti). 'download fallito, tentativo 1' -> nome 'verdetto-tentativo-1', artifact=mancante, commento '**Collaudo: decisione non presa (artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»).**', rc 1, nessun marcatore, 0 chiamate gh api. 'output tentativo vuoto' e 'output tentativo abc' -> nome '', artifact=senza-tentativo, commento '**Collaudo: decisione non presa (output «tentativo» del job ventaglio mancante o non valido).** Senza quel valore il job non sa quale esecuzione del ventaglio giudicare, e il download non e' stato tentato.', rc 1, nessun marcatore, 0 chiamate gh api"
+  ],
+  "esito": "applicata; test e mutazioni a @qa-test",
+  "umano_coinvolto": true
+}

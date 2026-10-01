@@ -160,7 +160,10 @@ jobs:
             ${{ github.workspace }}/.collaudo/verdetto.md
             ${{ github.workspace }}/.collaudo/giro.txt
           if-no-files-found: error
-          retention-days: 1
+          # Il verdetto e' pubblico comunque, nel commento sulla PR; sette giorni
+          # coprono un rerun del solo job pubblica. Oltre serve «Re-run all jobs»,
+          # e il messaggio di pubblica per l'artifact mancante cita lo stesso 7.
+          retention-days: 7
 
   # Giudica e pubblica. Runner nuovo: non eredita niente dall'ambiente del job
   # ventaglio. Gira quando il ventaglio finisce in qualunque stato, tranne una
@@ -320,7 +323,9 @@ jobs:
             exit 1
           }
           if [ "$ARTIFACT" = "mancante" ]; then
-            non_presa "artifact non trovato" "L'artifact del ventaglio non si e' trovato o non si e' scaricato."
+            # L'API non distingue un artifact scaduto da uno mai caricato: le liste
+            # degli artifact non elencano quelli scaduti (journal 2026-10-01).
+            non_presa "artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»" "L'artifact del ventaglio non si e' trovato o non si e' scaricato."
           fi
           if [ "$PREPARA" != "success" ]; then
             non_presa "uscita ${USCITA_PREPARA:-sconosciuta}" "La preparazione del verdetto non e' riuscita."

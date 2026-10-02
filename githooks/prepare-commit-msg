@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 # Firma ogni commit con il ruolo che lo ha prodotto.
 #
+# Provenienza: OwnConsent/cantiere, template/githooks/prepare-commit-msg e
+# template/githooks/ruoli a 762e0a3df854a2e38001945b1d76f0161dca2eb3 (merge della
+# PR #16), copiati il 02/10/2026. I due file arrivano insieme: senza githooks/ruoli
+# questo hook nega ogni commit fatto da Claude Code.
+#
 #   Cantiere-Agent: <ruolo>     leggibile a macchina, si cerca con git log --grep
 #   Co-Authored-By: ...         visibile come co-autore nell'interfaccia GitHub
 #

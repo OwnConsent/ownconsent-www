@@ -1,0 +1,35 @@
+{
+  "ts": "2026-10-02T18:35:45+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Registro delle firme autodichiarate: dal 26/09 al 01/10 il plugin non era caricato in 6 sessioni su 7 (riferito da Andrea) e il git hook vecchio usciva con 0 senza variabile (misurato)",
+  "contesto": "Brief di Andrea del 02/10: portare githooks/prepare-commit-msg e githooks/ruoli da OwnConsent/cantiere (762e0a3, merge della PR #16 di cantiere) e registrare cio' che si sa delle firme Cantiere-Agent. Lavoro sequenziale di una sessione sola: nessuna delega. La voce separa cio' che ha misurato questa sessione, cio' che ha misurato Andrea con comandi ! in questa sessione, e cio' che Andrea riferisce da una sessione di cantiere del 02/10 e che qui non e' stato ripetuto.",
+  "evidenza": [
+    "MISURATO DA QUESTA SESSIONE — `claude plugin list` -> 'No plugins installed. Use `claude plugin install` to install a plugin.'",
+    "MISURATO DA QUESTA SESSIONE — githooks/prepare-commit-msg a 98bec5e, righe 27-28: 'AGENTE=\"${CANTIERE_AGENT:-}\"' e '[ -z \"$AGENTE\" ] && exit 0': senza variabile l'hook vecchio esce con 0 e il commit passa senza firma",
+    "MISURATO DA QUESTA SESSIONE — `git config --get core.hooksPath` -> '/home/andreapernici/src/ownconsent/www/githooks': l'hook attivo e' quello del checkout principale, quindi quello nuovo si attiva solo dopo merge e pull",
+    "MISURATO DA QUESTA SESSIONE — con il plugin caricato i suoi hook girano: guard-paths.sh ha negato 3 percorsi fuori dal progetto (il checkout di cantiere, '../www-firma', i transcript in ~/.claude/projects) con 'GATE: il percorso ... porta fuori dal progetto'; guard-tempo.py ha negato una modifica con 'COMMIT PRIMA DI CONTINUARE: sono passati 1629 minuti dall'ultimo commit (soglia 20) e ci sono 2 file non committati'; agent-env.py ha negato un comando con 'FIRMA: env toglie CANTIERE_AGENT, ma questa chiamata viene da «orchestrator»'",
+    "MISURATO DA QUESTA SESSIONE — `echo \"CANTIERE_AGENT=[$CANTIERE_AGENT]\"` -> 'CANTIERE_AGENT=[orchestrator]', senza averlo scritto nel comando",
+    "MISURATO DA QUESTA SESSIONE — sha256 dei due file nella worktree uguali a quelli stampati dal comando ! di Andrea sulla sorgente: 89b81d8ed16364c182202a220914255055ff61ca06b58f8446eeb2d50856ad65 prepare-commit-msg, 245cfa0f02ee349c5008d6195b0ad657f63b311f2a7de630cd6c2c41de09810f ruoli; commit 9061831",
+    "MISURATO DA QUESTA SESSIONE — hook nuovo eseguito direttamente dalla worktree, CLAUDECODE=1 e CANTIERE_AGENT=orchestrator messo dal plugin: uscita 0, in coda al messaggio 'Cantiere-Agent: orchestrator' e 'Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>'. Ripetuto dopo il commento di provenienza: stesso esito",
+    "MISURATO DA ANDREA con comando ! in questa sessione, sul file identico a cantiere — CLAUDECODE=1 senza CANTIERE_AGENT: 'COMMIT NEGATO: sessione Claude Code senza CANTIERE_AGENT', uscita 1, messaggio invariato; CLAUDECODE=1 con CANTIERE_AGENT=pippo: 'COMMIT NEGATO: «pippo» non e' un ruolo di cantiere (elenco: githooks/ruoli)', uscita 1, messaggio invariato; senza CLAUDECODE e senza variabile: uscita 0, messaggio invariato",
+    "MISURATO DA ANDREA con comando ! in questa sessione — checkout di cantiere: `git status -sb` -> '## main...origin/main'; `git rev-parse HEAD main` -> 762e0a3df854a2e38001945b1d76f0161dca2eb3 due volte; `git log --oneline -5 main` -> in cima '762e0a3 Merge pull request #16 from OwnConsent/firma-sessione'",
+    "MISURATO DA QUESTA SESSIONE — `cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 143 tests in 3.587s', 'OK'",
+    "RIFERITO DA ANDREA, da una sessione di cantiere del 02/10, non ripetuto qui — nei transcript di questo progetto, dal 13/09 al 25/09 tracce degli hook del plugin in 17 sessioni su 19; dal 26/09 al 01/10 assenti in 6 su 7, con l'eccezione della sessione c33a0f36 del 01/10",
+    "RIFERITO DA ANDREA, non ripetuto qui — in ~/.claude.json la voce cantiere@inline sta sotto pluginUsage, cioe' il plugin e' stato caricato solo via --plugin-dir e mai installato in modo persistente",
+    "RIFERITO DA ANDREA, non ripetuto qui — le firme Cantiere-Agent dei commit fatti dal 26/09 al 01/10 sono autodichiarate: la variabile era scritta a mano nel comando di commit",
+    "RIFERITO DA ANDREA, non ripetuto qui — i prompt di pianificazione chiedevano di scrivere CANTIERE_AGENT a mano, e questo ha nascosto il sintomo. Il confronto con i comandi di commit nei transcript non e' stato fatto da questa sessione",
+    "MISURATO DA QUESTA SESSIONE — `git worktree list` elenca 6 worktree accanto al progetto (www-collaudo-rimando-sha, www-esp-a, www-esp-c, www-esp-i, www-esp-iso-avverso, www-esp-iso-base); oggi, a plugin caricato, la stessa operazione su '../www-firma' e' stata negata da guard-paths.sh. RIFERITO DA ANDREA: le worktree accanto al progetto (es. ../www-collaudo-isolamento) sono state possibili solo a plugin spento"
+  ],
+  "differenze": [
+    "Il commento in testa a githooks/prepare-commit-msg, copiato identico da cantiere, dice che fino al 25/09 le tracce degli hook del plugin ci sono «in ogni sessione». Il numero riferito da Andrea e' 17 su 19: il commento di cantiere e' inesatto. Qui resta identico alla sorgente; si corregge in cantiere.",
+    "Il brief chiedeva la worktree in /home/andreapernici/src/ownconsent/www-firma e la copia fatta da questa sessione. guard-paths.sh ha negato entrambe: la worktree e' in .claude/worktrees/firma e i due file li ha copiati Andrea con un comando !.",
+    "Il brief chiedeva la provenienza nello stesso commit della copia. guard-tempo.py ha negato la modifica prima di un commit: la copia identica e' in 9061831, il commento di provenienza e questa voce nel commit successivo. Decisione di Andrea."
+  ],
+  "cosa_non_e_misurato": "Tutto cio' che sta sotto RIFERITO DA ANDREA: questa sessione non ha letto i transcript, ne' ~/.claude.json, ne' il checkout di cantiere, perche' guard-paths.sh li tiene fuori dal perimetro. L'hook nuovo non e' stato provato dentro un vero `git commit`: core.hooksPath punta al checkout principale, dove c'e' ancora quello vecchio.",
+  "esito": "hook e ruoli copiati in 9061831; provenienza e voce nel commit successivo; PR aperta verso main, non mergiata",
+  "umano_coinvolto": true
+}

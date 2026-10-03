@@ -1,0 +1,25 @@
+{
+  "ts": "2026-10-03T21:41:50+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "PR #80 su c340dfa: nel log del job `ci` 'Image: ubuntu-24.04', 176 test verdi; il collaudo non ha lasciato un verdetto e `pubblica` e' rosso",
+  "contesto": "Seguito delle voci 2026-10-03/213627 e 213846. PR #80 aperta da ci/ubuntu-2404 verso main con i commit 41661d8 e c340dfa. Il brief chiedeva la riga «Image» dal log del job `ci` e diceva che su questa PR, che non tocca il meccanismo di collaudo, il collaudo conta.",
+  "evidenza": [
+    "`gh pr checks 80 -R OwnConsent/ownconsent-www --watch` -> 'ci pass 1m36s' (run 37148655973), 'ventaglio pass 1m18s' e 'pubblica fail 8s' (run 37148655971)",
+    "`gh run view 37148655973 --log`, job ci, gruppo «Runner Image» -> 'Image: ubuntu-24.04', 'Version: 20260927.320.1', 'Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260927.320'; gruppo «Operating System» -> 'Ubuntu', '24.04.5'",
+    "Stesso log, passo «Collaudo del workflow (tests/ci)» -> 'Python 3.12.3', 'PyYAML 6.0.1', 'Ran 176 tests in 3.978s', 'OK', senza skipped",
+    "`gh run view 37148655971 --log-failed`, job pubblica, passo «Pubblica il verdetto» -> 'ventaglio: success; tempi non letti (non servono)', 'decisione: nessun-verdetto', '##[error]... Il collaudo non ha lasciato un verdetto e il commit c340dfa6b57491c79fabd543b806e4ab780d785a non ne ha uno precedente (ventaglio: success)', 'Process completed with exit code 1'",
+    "`gh run view 37148655971 --json jobs` -> ventaglio: tutti i passi success, compreso «Ventaglio di revisione»; pubblica: «Conserva il verdetto intero» skipped, «Pubblica il verdetto» failure. Artefatto verdetto-tentativo-1: 144 byte",
+    "`gh pr view 80 --json comments` -> un commento di github-actions delle 19:40:38Z: 'Commit `c340dfa`', '**Collaudo: nessun verdetto** (ventaglio: `success`). Non vuol dire che il collaudo abbia trovato problemi: non si sa se abbia revisionato.'"
+  ],
+  "differenze": [
+    "Il brief dava per scontato un verdetto del collaudo su questa PR. Non c'e': l'agente ha taciuto, come sulla #65 e sulla #72 (CLAUDE.md). Il diff della #80 tocca tre file di .github/workflows/ ma non il meccanismo di collaudo. Che il silenzio dipenda dal contenuto del diff resta l'ipotesi per esclusione gia' scritta in CLAUDE.md: questa e' un'osservazione in piu', non una misura in positivo.",
+    "Il rosso di `pubblica` e' il meccanismo che dichiara il proprio guasto con il suo nome, non un difetto trovato nel diff."
+  ],
+  "cosa_non_e_misurato": "Perche' l'agente ha taciuto: il log del passo «Ventaglio di revisione» non e' stato letto oltre l'esito. L'immagine dei job ventaglio e pubblica in questa run. Un secondo tentativo: il push di questa voce fa ripartire il collaudo su un SHA nuovo, e il suo esito non e' in questa voce. I workflow di manutenzione notturna e di note di rilascio dal vivo.",
+  "esito": "riga «Image» misurata; collaudo senza verdetto su c340dfa, riportato ad Andrea; PR non mergiata",
+  "umano_coinvolto": true
+}

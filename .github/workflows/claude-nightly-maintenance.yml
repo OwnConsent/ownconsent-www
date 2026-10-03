@@ -16,7 +16,10 @@ permissions:
 
 jobs:
   manutenzione:
-    runs-on: ubuntu-latest
+    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
+    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
+    # prova in una PR sua, non arriva da solo.
+    runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4

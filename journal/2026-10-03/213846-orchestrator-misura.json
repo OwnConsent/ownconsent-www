@@ -1,0 +1,32 @@
+{
+  "ts": "2026-10-03T21:38:46+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "tests/ci/test_runs_on.py: 12 casi, tests/ci da 164 a 176; 6 mutazioni su 6 rosse",
+  "contesto": "Seguito della voce 2026-10-03/213627 (commit 41661d8). Brief di Andrea del 03/10: un test che, letto col parser YAML e non con grep, vieti in ogni job di ogni workflow un runs-on mancante, mobile o scritto come espressione, con .github/workflows/claude-pr-review.yml come eccezione esplicita e un caso che fallisce se l'eccezione nomina un file che non esiste o che e' gia' fissato. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "evidenza": [
+    "`cd tests/ci && python3 -m unittest -v test_runs_on` -> 'Ran 12 tests in 0.039s', 'OK'",
+    "`cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 176 tests in 3.808s', 'OK (skipped=2)'; con CI=true 'Ran 176 tests in 5.245s', 'OK'. Erano 164 nella voce 2026-10-03/181118",
+    "MUTAZIONE M1, chiesta dal brief — copia di .github/workflows in .work/mut/m1, ci.yml riga 23 riportata a 'runs-on: ubuntu-latest', CI_ROOT sulla copia: 'FAIL: test_ogni_job_ha_un_runs_on_esplicito_e_non_mobile ... (workflow='.github/workflows/ci.yml')', \"job `ci`: etichetta mobile: 'ubuntu-latest'\", 'FAILED (failures=1)'",
+    "MUTAZIONE M2, chiesta dal brief — copia del test in .work/mut/m2 con '.github/workflows/ci.yml' aggiunto a ECCEZIONI, oggetti veri: 'FAIL: test_nessuna_eccezione_e_gia_fissata ... (workflow='.github/workflows/ci.yml')', \".github/workflows/ci.yml ha gia' un runs-on esplicito e fisso in ogni job: l'eccezione non serve piu', toglila da ECCEZIONI\", 'FAILED (failures=1)'",
+    "MUTAZIONE M3 — ci.yml della copia con 'runs-on: [self-hosted, ubuntu-latest]': 'FAIL: test_ogni_job_ha_un_runs_on_esplicito_e_non_mobile', \"etichetta mobile: 'ubuntu-latest'\", 'FAILED (failures=1)'",
+    "MUTAZIONE M4 — ci.yml della copia con 'runs-on: ${{ matrix.os }}': 'FAILED (failures=1)', messaggio \"job `ci`: runs-on contiene un'espressione ('${{ matrix.os }}'): questo test non la valuta e non puo' dire quale immagine esce. Scrivi l'etichetta per esteso\"",
+    "MUTAZIONE M5 — copia del test con '.github/workflows/non-esiste.yml' aggiunto a ECCEZIONI: 'FAIL: test_ogni_eccezione_e_un_workflow_che_esiste', \"['.github/workflows/non-esiste.yml'] != [] : in ECCEZIONI ci sono file che non sono workflow di .github/workflows/: toglili\", 'FAILED (failures=1)'",
+    "MUTAZIONE M6, lo stato dopo la PR sul collaudo se l'eccezione restasse — copia con le 2 righe runs-on di claude-pr-review.yml portate a ubuntu-24.04: 'FAIL: test_nessuna_eccezione_e_gia_fissata ... (workflow='.github/workflows/claude-pr-review.yml')', 'FAILED (failures=1)'",
+    "Dopo le mutazioni `git status -sb` -> '## ci/ubuntu-2404...origin/main [ahead 1]', '?? tests/ci/test_runs_on.py': gli originali non sono stati toccati, le copie stanno in .work/ (ignorata, .gitignore riga 1)"
+  ],
+  "differenze": [
+    "Il brief elenca tre etichette mobili (ubuntu-latest, windows-latest, macos-latest). Il test vieta ogni etichetta con `latest` fra i trattini, senza distinguere maiuscole: prende anche 'ubuntu-latest-4-cores' e 'Ubuntu-Latest'. Piu' largo del brief: da confermare o restringere.",
+    "Non chiesti dal brief e aggiunti perche' altrimenti il test li avrebbe lasciati passare senza dirlo: un job che chiama un workflow riusabile (`uses:` senza runs-on) fallisce con un messaggio suo; una mappa con solo `group:` fallisce; un file senza job leggibili fallisce. Nessuno dei tre casi esiste oggi nei workflow.",
+    "Il brief chiedeva due mutazioni; ne sono state eseguite sei.",
+    "guard-paths.sh ha negato due comandi con 'GATE: il percorso ... porta fuori dal progetto'. Il primo risaliva di due livelli da tests/ci per tornare alla radice della worktree, come nella voce 2026-10-03/114511: rilanciato con il percorso assoluto. Il secondo era la prima scrittura di questa voce: la risalita compariva solo come testo citato in questo campo, e il gate legge il comando intero. La voce e' stata riscritta senza quel letterale. In nessuno dei due casi il comando negato era partito.",
+    "Il test l'ha scritto chi ha fatto la modifica, su richiesta del brief: non e' un test di accettazione di una spec e non e' passato da @qa-test.",
+    "Le mutazioni sono comandi lanciati a mano su copie in .work/, non uno script versionato: tests/ci/mutazioni_collaudo.py e' del meccanismo di collaudo e non e' stato toccato."
+  ],
+  "cosa_non_e_misurato": "Il test nel job `ci` di GitHub e la riga «Image» del log: si misurano sulla PR. Un workflow con ancore YAML o con `runs-on` ereditato da `defaults`: non esistono qui e non sono stati provati. Un'etichetta di runner self-hosted o di runner piu' grande dal nome arbitrario che punti a un'immagine mobile: dal file non si vede.",
+  "esito": "test e voce nello stesso commit",
+  "umano_coinvolto": true
+}

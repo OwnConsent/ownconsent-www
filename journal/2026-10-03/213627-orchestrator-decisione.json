@@ -1,0 +1,41 @@
+{
+  "ts": "2026-10-03T21:36:27+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "runs-on fissato a ubuntu-24.04 in ci.yml, claude-nightly-maintenance.yml e claude-release-comms.yml; claude-pr-review.yml resta su ubuntu-latest fino alla sua PR",
+  "contesto": "Brief di Andrea del 03/10: l'etichetta ubuntu-latest passa a Ubuntu 26.04 fra il 19/10 e il 19/11/2026. Lasciata mobile, l'immagine del job `ci` cambierebbe sotto una PR qualunque, in un giorno non scelto, e un rosso dovuto all'immagine si confonderebbe con un rosso dovuto al diff. Lavoro sequenziale di una sessione sola: nessuna delega. Worktree .claude/worktrees/runner-2404, ramo ci/ubuntu-2404 da origin/main (e5cd753). claude-pr-review.yml e' nel perimetro del meccanismo di collaudo (CLAUDE.md): non si tocca qui.",
+  "alternative": [
+    {
+      "opzione": "migrare subito a ubuntu-26.04",
+      "scartata_perche": "su 26.04 nulla di questo repository e' misurato: secondo il rapporto di cantiere riferito da Andrea cambiano python3 (3.14), bash e jq, forse coreutils, e PyYAML su 26.04 non e' misurato. tests/ci dipende da python3 e PyYAML dell'immagine (ADR-0003 D7), i frammenti run: del collaudo da bash e jq. Migrare qui metterebbe nello stesso diff il cambio di etichetta e un cambio di ambiente non provato"
+    },
+    {
+      "opzione": "lasciare ubuntu-latest",
+      "scartata_perche": "il passaggio arriva a scaglioni in un mese (19/10-19/11), senza un commit di questo repository che lo segni: due run dello stesso SHA possono girare su immagini diverse, e la data del cambio non la sceglie nessuno qui"
+    }
+  ],
+  "evidenza": [
+    "MISURATO DA QUESTA SESSIONE — `gh issue view 14748 -R actions/runner-images --json title,state,createdAt,url,body` -> title '[Ubuntu] `ubuntu-latest` label will use Ubuntu 26.04 in November 2026', state OPEN, createdAt 2026-09-17T13:42:04Z; nel corpo: 'This change will be rolled out over a period of several weeks beginning October 19, 2026. We plan to complete the migration by November 19, 2026.' e, fra i rimedi, 'Switch back to Ubuntu 24.04 by specifying the `ubuntu-24.04` label.' e 'Use `ubuntu-26.04` to test against the new image explicitly.'",
+    "MISURATO DA QUESTA SESSIONE — la tabella delle differenze nel corpo della issue elenca sistema operativo, kernel, systemd e otto strumenti a versione invariata; python3, bash, jq, coreutils e PyYAML non ci sono: da quella fonte non si ricava cosa cambia per questo repository",
+    "RIFERITO DA ANDREA, non letto da questa sessione — misura del 03/10, rapporto in cantiere: su 26.04 cambiano python3 (3.14), bash, jq e forse coreutils; PyYAML su 26.04 non e' misurato. Il checkout di cantiere e' fuori dal perimetro di questa sessione (guard-paths.sh)",
+    "MISURATO DA QUESTA SESSIONE — prima: `grep -n runs-on .github/workflows/*.yml` su origin/main (e5cd753) -> 5 righe, tutte 'runs-on: ubuntu-latest': ci.yml:20, claude-nightly-maintenance.yml:19, claude-release-comms.yml:21, claude-pr-review.yml:39 e :179",
+    "MISURATO DA QUESTA SESSIONE — dopo: stesso comando -> ci.yml:23, claude-nightly-maintenance.yml:22, claude-release-comms.yml:24 'runs-on: ubuntu-24.04'; claude-pr-review.yml:39 e :179 invariati. `git diff --stat` -> '3 files changed, 12 insertions(+), 3 deletions(-)': tre righe di commento e la riga runs-on per file, nient'altro",
+    "MISURATO DA QUESTA SESSIONE — voce 2026-09-21/153619: nell'immagine ubuntu-latest di allora python3 3.12.3 e PyYAML 6.0.1, cioe' la 24.04; in locale oggi `python3 --version` -> 'Python 3.12.3', PyYAML 6.0.1"
+  ],
+  "piano": [
+    "In questo ramo, commit successivo: tests/ci/test_runs_on.py, che vieta etichette mobili ed espressioni in runs-on in ogni workflow, con claude-pr-review.yml come eccezione esplicita che non puo' restare dimenticata.",
+    "PR successiva, non questa: prova su ubuntu-26.04 (python3, PyYAML, bash, jq misurati nel log del job) prima di spostare l'etichetta.",
+    "PR sul meccanismo di collaudo, non questa: claude-pr-review.yml fissato e l'eccezione tolta dal test. Scadenza verificabile dal repo: il caso sull'eccezione in tests/ci/test_runs_on.py diventa rosso quando il file e' fissato e l'eccezione e' ancora li'.",
+    "Aggiornamenti delle action: PR successiva, non questa."
+  ],
+  "limiti": [
+    "ubuntu-24.04 fissa la serie, non la build: l'immagine 24.04 continua ad aggiornarsi ogni settimana.",
+    "Fino alla PR sul collaudo, i due job di claude-pr-review.yml restano su ubuntu-latest e passeranno a 26.04 quando lo decide GitHub."
+  ],
+  "cosa_non_e_misurato": "Niente su ubuntu-26.04. La riga «Image» nel log del job `ci` con l'etichetta fissata: si misura sulla PR. I workflow di manutenzione notturna e di note di rilascio non partono su una PR: la loro immagine dopo il cambio non e' misurata dal vivo. La data fino a cui GitHub tiene disponibile ubuntu-24.04.",
+  "esito": "applicata nei tre workflow, nello stesso commit di questa voce; non mergiata",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,42 @@
+{
+  "ts": "2026-10-03T11:45:11+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Hook di firma ricopiato da cantiere a 76cbc5d (contenuto del merge della #17, da61c9b); primo commit agentico firmato dall'hook della #77; la provenienza ora la verifica un test in tests/ci",
+  "contesto": "Brief di Andrea del 03/10: ripropagare githooks/prepare-commit-msg e githooks/ruoli da OwnConsent/cantiere dopo la PR #17 di cantiere, e aggiungere in tests/ci un controllo che il commento di provenienza dica il vero. Lavoro sequenziale di una sessione sola: nessuna delega. I due file li ha copiati Andrea con un comando ! nella worktree .claude/worktrees/firma-17, perche' guard-paths.sh tiene il checkout di cantiere fuori dal perimetro. La voce separa cio' che ha misurato questa sessione da cio' che ha misurato Andrea con comandi ! in questa sessione.",
+  "evidenza": [
+    "MISURATO DA ANDREA con comando ! — checkout di cantiere: `git status -sb` -> '## main...origin/main'; `git rev-parse HEAD main` -> 76cbc5df576ca38135a54b3e454d1f31460f3a1c due volte",
+    "MISURATO DA ANDREA con comando ! — `git log --oneline --merges -12 main` -> '76cbc5d Merge pull request #18 from OwnConsent/guard-paths-heredoc', 'da61c9b Merge pull request #17 from OwnConsent/hook-correzioni', '762e0a3 Merge pull request #16 from OwnConsent/firma-sessione'; `git log --oneline -5 main -- template/githooks` -> in cima 'be0e7dd fix(firma): review della PR 17 — trailer letti senza la configurazione, il diniego in rebase dice come annullarlo'",
+    "MISURATO DA ANDREA con comando ! — sha256 della sorgente: 1ac8b5ced9411dae7fde2fd536ea4d5bb17ad7f4aed0a9086a9e68ca808eb18e template/githooks/prepare-commit-msg, 245cfa0f02ee349c5008d6195b0ad657f63b311f2a7de630cd6c2c41de09810f template/githooks/ruoli",
+    "MISURATO DA QUESTA SESSIONE — `sha256sum githooks/prepare-commit-msg githooks/ruoli` nella worktree dopo la copia -> 1ac8b5ced9411dae7fde2fd536ea4d5bb17ad7f4aed0a9086a9e68ca808eb18e e 245cfa0f02ee349c5008d6195b0ad657f63b311f2a7de630cd6c2c41de09810f: uguali alla sorgente",
+    "MISURATO DA QUESTA SESSIONE — `git status -sb` e `git diff --stat` dopo la copia -> ' M githooks/prepare-commit-msg', '1 file changed, 90 insertions(+), 28 deletions(-)': githooks/ruoli era gia' identico a cantiere, stesso sha256 della voce 2026-10-02/183545",
+    "MISURATO DA QUESTA SESSIONE — primo commit 2f33daf4713336a308eaec2338dd56ae2a7fe6f5, messaggio scritto senza trailer; `git log -1 --format='%(trailers)'` -> 'Cantiere-Agent: orchestrator' e 'Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>'. E' il primo commit agentico dentro un vero `git commit` dopo l'attivazione dell'hook della #77",
+    "MISURATO DA QUESTA SESSIONE — l'hook che ha firmato 2f33daf e' quello della #77, non quello nuovo: `git config --get core.hooksPath` -> '/home/andreapernici/src/ownconsent/www/githooks'; sha256 di quel prepare-commit-msg b71222027d7b5b3863d52d08832860fc64875e4e551553d4441a018f3de3491c, diverso da quello della worktree",
+    "MISURATO DA QUESTA SESSIONE — `echo \"CANTIERE_AGENT=[$CANTIERE_AGENT]\"` -> 'CANTIERE_AGENT=[orchestrator]', senza averlo scritto nel comando; `git --version` -> 'git version 2.43.0'",
+    "MISURATO DA QUESTA SESSIONE — `curl -o /dev/null -w '%{http_code}'` su raw.githubusercontent.com/OwnConsent/cantiere/76cbc5df576ca38135a54b3e454d1f31460f3a1c/template/githooks/prepare-commit-msg e /ruoli -> 200 e 200",
+    "MISURATO DA QUESTA SESSIONE — tests/ci/test_githooks_provenienza.py, locale senza CI: 'Ran 8 tests in 0.007s', 'OK (skipped=2)', i due salti con 'SALTATO: CI non vale «true». ... Questo salto NON dice che i file sono identici alla sorgente.'",
+    "MISURATO DA QUESTA SESSIONE — stesso test con CI=true sui file veri: 'Ran 8 tests in 0.161s', 'OK'",
+    "MISURATO DA QUESTA SESSIONE — mutazione, CI=true e CI_ROOT su una copia con la riga 247 dell'hook cambiata da 'exit 0' a 'exit 1': 'FAIL: test_prepare_commit_msg_identico_tolta_la_provenienza', 'FAILED (failures=1)'",
+    "MISURATO DA QUESTA SESSIONE — mutazione, copia con 'pippo' aggiunto in coda a ruoli: 'FAIL: test_ruoli_identico', 'FAILED (failures=1)'",
+    "MISURATO DA QUESTA SESSIONE — download fallito, copia con lo SHA del commento sostituito da 40 zeri: 'FAILED (failures=2)', 'SORGENTE NON SCARICATA, confronto non eseguito: download fallito dopo 3 tentativi: ... <HTTPError 404: 'Not Found'>'. Nessun salto",
+    "MISURATO DA QUESTA SESSIONE — `cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 151 tests in 3.932s', 'OK (skipped=2)'; con CI=true 'Ran 151 tests in 3.957s', 'OK'. Erano 143 nella voce 2026-10-02/183545",
+    "MISURATO DA QUESTA SESSIONE — hook nuovo con il commento di provenienza (sha256 d44f427ea15f6c6a0749811ab580d7d2c20e37a5f2a432df42ce90550b9cde03) eseguito direttamente dalla worktree, CLAUDECODE=1 e CANTIERE_AGENT=orchestrator messo dal plugin: uscita 0, in coda al messaggio 'Cantiere-Agent: orchestrator' e 'Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>'",
+    "MISURATO DA ANDREA con comando ! sull'hook della worktree con il commento di provenienza, `env -u CLAUDECODE -u CANTIERE_AGENT GIT_EDITOR=: <caso> githooks/prepare-commit-msg .prova-msg.tmp message` — CLAUDECODE=1 senza CANTIERE_AGENT: 'COMMIT NEGATO: sessione Claude Code senza CANTIERE_AGENT: il commit uscirebbe senza firma. Se sei una persona, committa da un terminale fuori da Claude Code: anche i comandi dati con ! hanno CLAUDECODE=1.', uscita=1, messaggio invariato",
+    "MISURATO DA ANDREA, stesso comando — CLAUDECODE=1 CANTIERE_AGENT=pippo: 'COMMIT NEGATO: «pippo» non e' un ruolo di cantiere (elenco: githooks/ruoli).', uscita=1, messaggio invariato",
+    "MISURATO DA ANDREA, stesso comando — senza CLAUDECODE e senza CANTIERE_AGENT (X=1): uscita=0, messaggio invariato, nessun trailer"
+  ],
+  "differenze": [
+    "Il brief chiedeva un primo commit con i due file insieme. 2f33daf contiene solo githooks/prepare-commit-msg: ruoli non e' cambiato dalla #77. Confermato da Andrea.",
+    "Il brief chiedeva di ricavare il merge della #17 dal primo comando ! di Andrea: le sei righe di `git log --oneline -6 main` non lo mostravano. Questa sessione ha provato a cercarlo e guard-paths.sh l'ha negato ('GATE: il percorso ... porta fuori dal progetto'); lo ha stampato Andrea con un secondo comando !.",
+    "Questa sessione ha provato a scrivere una voce di journal gia' nel primo commit. guard-tempo.py l'ha negata: 'COMMIT PRIMA DI CONTINUARE: sono passati 865 minuti dall'ultimo commit (soglia 20) e ci sono 1 file non committati'. Il primo `git commit`, che nominava anche quella voce, e' uscito con 'fatal: pathspec ... did not match any files' e non ha committato nulla; il secondo tentativo, con il solo hook, e' 2f33daf.",
+    "Fra 2f33daf e questo commit il file dell'hook non porta provenienza: la copia identica ha tolto il commento della #77 (cantiere 762e0a3) e quello nuovo arriva qui.",
+    "Il test l'ha scritto chi ha fatto la modifica, su richiesta del brief: non e' un test di accettazione di una spec e non e' passato da @qa-test.",
+    "Un primo comando di prova in tests/ci con '../../.work/x' e' stato negato da guard-paths.sh, che ha letto la risalita come uscita dal progetto; rilanciato dalla radice della worktree."
+  ],
+  "cosa_non_e_misurato": "Il test nel job `ci` di GitHub: qui e' stato lanciato solo in locale con CI=true scritto a mano. Un download che fallisce per la rete e non per un 404: provato solo con uno SHA inesistente. L'hook nuovo dentro un vero `git commit`: core.hooksPath punta al checkout principale, dove fino al merge e al pull resta quello della #77; i commit di questo ramo li ha firmati quello. I casi di rebase e di amend introdotti dalla #17 di cantiere non sono stati provati qui. Il checkout di cantiere non e' stato letto da questa sessione, e gli SHA completi di da61c9b e be0e7dd non sono stati stampati.",
+  "esito": "hook identico a cantiere in 2f33daf; provenienza, test e questa voce nel commit successivo; PR aperta verso main, non mergiata",
+  "umano_coinvolto": true
+}

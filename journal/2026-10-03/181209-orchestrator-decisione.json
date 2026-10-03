@@ -1,0 +1,32 @@
+{
+  "ts": "2026-10-03T18:12:09+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Il plugin cantiere e' abilitato in modo stabile da .claude/settings.local.json del checkout principale, file locale e non tracciato",
+  "contesto": "Fino al 02/10 il plugin si caricava solo con --plugin-dir, e dal 26/09 al 01/10 non e' stato caricato (voce 2026-10-02/183545). Decisione e modifica di Andrea del 03/10; questa sessione la registra su suo brief e non ha scritto il file. La voce separa cio' che ha misurato questa sessione da cio' che riferisce Andrea.",
+  "alternative": [
+    { "opzione": "--plugin-dir a ogni avvio", "scartata_perche": "dimenticabile: e' quello che e' successo dal 26/09 al 01/10 (voce 2026-10-02/183545)" },
+    { "opzione": "impostazioni utente", "scartata_perche": "valgono in ogni progetto, e non per il profilo claude-own" },
+    { "opzione": "impostazioni di progetto tracciate (.claude/settings.json)", "scartata_perche": "entrano nel collaudo in CI" },
+    { "opzione": "variabile nel profilo di shell", "scartata_perche": "motivo non dato nel brief di Andrea: da chiedere, non lo scrive questa sessione" }
+  ],
+  "evidenza": [
+    "MISURATO DA QUESTA SESSIONE — contenuto di .claude/settings.local.json nel checkout principale, 387 byte, data 03/10 17:58: {\"enabledMcpjsonServers\": [\"github\", \"playwright\", \"postgres\", \"figma\", \"sentry\"], \"extraKnownMarketplaces\": {\"cantiere\": {\"source\": {\"source\": \"directory\", \"path\": \"/home/andreapernici/src/ownconsent/cantiere\"}}}, \"enabledPlugins\": {\"cantiere@cantiere\": true}, \"attribution\": {\"commit\": \"\"}}. Nessun segreto",
+    "MISURATO DA QUESTA SESSIONE — copia di sicurezza .claude/settings.local.json.bak-2026-10-03, 111 byte, data 13/09 15:23: {\"enabledMcpjsonServers\": [\"github\", \"playwright\", \"postgres\", \"figma\", \"sentry\"]}. La differenza fra i due file sono le tre chiavi extraKnownMarketplaces, enabledPlugins, attribution",
+    "MISURATO DA QUESTA SESSIONE — `git check-ignore -v .claude/settings.local.json` -> '.gitignore:13:.claude/*\t.claude/settings.local.json': il file non e' tracciato",
+    "MISURATO DA QUESTA SESSIONE — `echo \"CANTIERE_AGENT=[$CANTIERE_AGENT]\"` nel checkout principale e nella worktree .claude/worktrees/provenienza -> 'CANTIERE_AGENT=[orchestrator]' tutte e due le volte, senza averlo scritto nel comando; `git --version` -> 'git version 2.43.0'. Con quali flag sia partita la sessione, questa sessione non lo vede",
+    "MISURATO DA QUESTA SESSIONE — commit c7ae04550dbe26cc10007fdc6acd47489e058146 fatto nella worktree, messaggio scritto senza trailer: `git log -1 --format='%(trailers)'` -> 'Cantiere-Agent: orchestrator' e 'Co-Authored-By: cantiere-orchestrator <orchestrator@cantiere.invalid>'; `git log -1 --format=%B | grep -c Co-Authored-By` -> 1; `grep -ci claude` -> 0: il co-autore predefinito di Claude Code non c'e'",
+    "RIFERITO DA ANDREA, misure sue del 03/10 senza flag, non ripetute qui — checkout principale, worktree in .claude/worktrees/ e profilo claude-own danno tutti 'CANTIERE_AGENT=[orchestrator]'; un commit in worktree porta Cantiere-Agent e il Co-Authored-By di cantiere, senza quello predefinito di Claude Code",
+    "RIFERITO DA ANDREA, non misurato qui — il marketplace utente «cantiere» con sorgente GitHub e' stato rimosso da Andrea, perche' dichiarava lo stesso nome di quello con sorgente cartella"
+  ],
+  "limiti": [
+    "Chi clona il repository non ha il plugin finche' non crea lo stesso file: .claude/settings.local.json non e' tracciato e la sorgente e' un percorso assoluto di questa macchina (/home/andreapernici/src/ownconsent/cantiere), che richiede anche un checkout di cantiere in quel punto.",
+    "Il secondo strato resta githooks/prepare-commit-msg: senza plugin, in una sessione Claude Code il commit e' negato."
+  ],
+  "cosa_non_e_misurato": "Le impostazioni utente e l'elenco dei marketplace: questa sessione non li ha letti. Il profilo claude-own. Una sessione partita con il file assente. Il motivo per cui la variabile nel profilo di shell e' stata scartata.",
+  "esito": "applicata da Andrea il 03/10; registrata qui",
+  "umano_coinvolto": true
+}

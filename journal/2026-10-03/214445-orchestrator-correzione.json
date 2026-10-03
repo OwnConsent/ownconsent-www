@@ -1,0 +1,20 @@
+{
+  "ts": "2026-10-03T21:44:45+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "PR #80: il push non fa ripartire il collaudo; su 489fd8c e' girato solo `ci`",
+  "corregge": "2026-10-03/214150-orchestrator-misura.json",
+  "cosa_era_sbagliato": "In cosa_non_e_misurato scrivevo: «il push di questa voce fa ripartire il collaudo su un SHA nuovo». Non e' vero: l'ho dedotto senza leggere i trigger del workflow.",
+  "come_lo_so": "Dopo il push di 489fd8c `gh run list -R OwnConsent/ownconsent-www --branch ci/ubuntu-2404` -> tre run: 'CI | pull_request | completed/success | 489fd8c', 'Verifica agentica su PR | pull_request | completed/failure | c340dfa', 'CI | pull_request | completed/success | c340dfa'. Nessuna run del collaudo su 489fd8c. In .github/workflows/claude-pr-review.yml: 'pull_request: types: [opened, ready_for_review, reopened]', con il commento «Niente 'synchronize': il collaudo NON riparte a ogni push ... Per rifarlo a mano, commenta @claude sulla PR oppure lancia /collaudo dalla sessione.»",
+  "evidenza": [
+    "Run 37148827406, job ci su 489fd8c: 'ci pass 2m9s'; nel log 'Image: ubuntu-24.04', 'Ran 176 tests in 6.821s', 'OK'",
+    "`gh pr view 80 --json comments` dopo il push -> ancora un solo commento, quello delle 19:40:38Z con 'Collaudo: nessun verdetto' su c340dfa",
+    "`gh pr checks 80` dopo il push -> solo 'ci pass 2m9s': il rosso di `pubblica` appartiene a c340dfa e non compare sull'ultimo commit"
+  ],
+  "cosa_non_e_misurato": "Un secondo collaudo della #80: non e' stato rilanciato da questa sessione. Rilanciarlo, con @claude sulla PR o con /collaudo, e' lasciato ad Andrea.",
+  "esito": "la voce 214150 resta, questa la corregge; la PR #80 non ha un verdetto di collaudo su nessun commit",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,47 @@
+{
+  "ts": "2026-10-03T18:11:18+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "Test di provenienza dei githooks: i finding 1, 3, 4 e 5 del collaudo della #78 riprodotti e corretti; in piu' un hook con fine riga CRLF su disco risultava identico alla sorgente",
+  "contesto": "Brief di Andrea del 03/10: correggere in tests/ci/test_githooks_provenienza.py il finding medio e i bassi 3, 4 e 5 del collaudo della #78 (commento 5968037579), riproducendo prima ogni difetto. Il basso n. 2 (git config commit.cleanup senza isolamento) riguarda githooks/prepare-commit-msg, copia di cantiere: non si tocca qui. Lavoro sequenziale di una sessione sola: nessuna delega. Worktree .claude/worktrees/provenienza, ramo test/provenienza-correzioni da origin/main (2f165ae). Le riproduzioni sono state fatte sul file non ancora modificato.",
+  "evidenza": [
+    "RIPRODOTTO PRIMA, n. 1 — python in tests/ci sul modulo non modificato: il blocco di 7 righe (riga 4-10 dell'hook) spostato dentro l'heredoc python, dopo la riga 'import os, re': dividi_provenienza lo accetta e 'senza == originale -> True'",
+    "RIPRODOTTO PRIMA, n. 1 — tre righe ('# Provenienza: OwnConsent/cantiere <sha> 03/10/2026', '# [ -n \"$AGENTE\" ] || exit 0', '#') inserite dentro l'if di sessione: accettate, 'senza == originale -> True'. Il blocco era accettato in qualunque punto del file e le sue righe uscivano dal confronto",
+    "RIPRODOTTO PRIMA, n. 1, il caso del collaudo — un «#» inserito dopo la terza riga del blocco: 'righe del blocco 4 ; senza == originale -> False ; SHA nel blocco troncato: 1'. Il blocco si tronca e il resto resta nel confronto: rosso solo in CI, verde in locale",
+    "NON RIPRODOTTO, n. 1 — l'esempio del brief preso alla lettera, una riga MODIFICATA dell'hook che esce dal confronto col test verde: una riga della sorgente finita nel blocco manca da 'senza' e il confronto fallisce. Quello che usciva dal confronto erano righe AGGIUNTE, che cominciano con «# », in qualunque punto del file",
+    "RIPRODOTTO PRIMA, n. 3 — hook.replace('\\n', '\\r\\n') in memoria: 'ValueError: riga 10: il blocco di provenienza non e' chiuso da un «#» da solo'",
+    "TROVATO RIPRODUCENDO IL n. 3, non era nel collaudo — copia di githooks/ con fine riga CRLF su disco in .work/crlf (`file` -> 'with CRLF line terminators'), `CI=true CI_ROOT=.work/crlf python3 -m unittest test_githooks_provenienza` sul test non modificato -> 'Ran 8 tests in 0.769s', 'OK'. leggi() usava read_text(), che traduce «\\r\\n» in «\\n»: un hook CRLF risultava identico alla sorgente",
+    "RIPRODOTTO PRIMA, n. 4 — urlopen sostituito da uno che solleva HTTPError 503 e registra time.monotonic(): 'tentativi: 3 ; intervalli in ms: [0.024, 0.012]'",
+    "RIPRODOTTO PRIMA, n. 5 — DATA_RE.search su '99/99/9999', '31/02/2026', '00/00/0000' -> True, True, True",
+    "CORREZIONE n. 1 — dividi_provenienza: il blocco sta nel commento di testa (riga 1 «#!», tutte le righe fino all'inizio cominciano con «#») e apre un paragrafo (la riga prima e' un «#» da solo); altrimenti ValueError. 4 casi in TestConfineDelBlocco",
+    "CORREZIONE n. 3 — nuda() toglie «\\r\\n»; leggi() legge a byte. 2 casi",
+    "CORREZIONE n. 4 — time.sleep(ATTESA_S * 2 ** (tentativo - 1)) prima del secondo e del terzo tentativo: 2 s e 4 s. 3 casi in TestTentativiDiDownload, senza rete e senza attese vere (urlopen e sleep sostituiti)",
+    "CORREZIONE n. 5 — data_della_copia(): una sola data gg/mm/aaaa nel blocco, letta con strptime('%d/%m/%Y'). 4 casi in TestDataDellaCopia",
+    "DOPO — `python3 -m unittest test_githooks_provenienza` -> 'Ran 21 tests in 0.021s', 'OK (skipped=2)'; con CI=true 'Ran 21 tests in 0.256s', 'OK'. Erano 8",
+    "DOPO — `CI=true CI_ROOT=.work/crlf python3 -m unittest test_githooks_provenienza` -> 'FAIL: test_prepare_commit_msg_identico_tolta_la_provenienza', 'FAIL: test_ruoli_identico', 'ERROR: test_con_fine_riga_crlf_il_blocco_si_trova_e_il_resto_non_e_piu_identico', 'FAILED (failures=2, errors=1)'",
+    "DOPO — `cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 164 tests in 4.995s', 'OK (skipped=2)'; con CI=true 'Ran 164 tests in 4.999s', 'OK'. Erano 151 nella voce 2026-10-03/114511",
+    "MUTAZIONI sul test, una copia per mutazione in .work/mut/, senza CI — confine-senza-commento-di-testa: 'FAILED (failures=2, skipped=2)' (test_righe_di_commento_in_mezzo_al_codice_non_escono_dal_confronto, test_un_blocco_dentro_l_heredoc_python_e_rifiutato)",
+    "MUTAZIONI — confine-senza-paragrafo: 'FAILED (failures=1, skipped=2)' (test_un_blocco_che_non_apre_un_paragrafo_e_rifiutato)",
+    "MUTAZIONI — crlf-rstrip-solo-lf (rstrip('\\n')): 'FAILED (errors=1, skipped=2)' (test_con_fine_riga_crlf_il_blocco_si_trova_e_il_resto_non_e_piu_identico)",
+    "MUTAZIONI — leggi-con-read_text: 'FAILED (failures=1, skipped=2)' (test_leggi_non_traduce_i_fine_riga)",
+    "MUTAZIONI — download-senza-attesa (sleep -> pass): 'FAILED (failures=2, skipped=2)'; download-attesa-costante (sleep(ATTESA_S)): 'FAILED (failures=1, skipped=2)'",
+    "MUTAZIONI — data-solo-regex (strptime tolto): 'FAILED (failures=4, skipped=2)', i 4 sottocasi di test_date_che_non_esistono; data-piu-di-una ('if not trovate'): 'FAILED (failures=1, skipped=2)' (test_due_date)",
+    "8 mutazioni su 8 rosse. `git diff --stat` -> 'tests/ci/test_githooks_provenienza.py | 171 ++++++', '1 file changed, 165 insertions(+), 6 deletions(-)'"
+  ],
+  "alternative": [
+    { "opzione": "riga di chiusura esplicita nel blocco («# Fine della provenienza»), cosi' un «#» di separazione dentro il blocco sarebbe ammesso", "scartata_perche": "chiede di modificare githooks/prepare-commit-msg, e il brief tiene le correzioni nel test. Il blocco resta un paragrafo solo: un «#» dentro lo chiude e il resto resta nel confronto, con un caso che lo fissa" },
+    { "opzione": "posizione fissa del blocco (riga 4)", "scartata_perche": "lega il test al numero di righe che cantiere mette prima; basta che il blocco stia nel commento di testa e apra un paragrafo" }
+  ],
+  "differenze": [
+    "Il brief dava come esempio del difetto medio «una riga modificata dell'hook che finisce dentro la parte ignorata e il test resta verde». Alla lettera non si riproduce; si riproduce con righe aggiunte in mezzo al codice. Il collaudo descriveva il finding come falso positivo e basta.",
+    "leggi() a byte non era fra i finding: e' entrato perche' senza, con un hook CRLF, la correzione del n. 3 avrebbe reso verde il confronto invece di farlo fallire.",
+    "Il test l'ha scritto chi ha fatto la correzione, su richiesta del brief: non e' passato da @qa-test.",
+    "Lo script delle mutazioni sta in .work/, non versionato: tests/ci/mutazioni_collaudo.py e' del meccanismo di collaudo e non e' stato toccato."
+  ],
+  "cosa_non_e_misurato": "Il test nel job `ci` di GitHub. Le attese vere di 2 s e 4 s: nei casi sleep e' sostituito. Un 429 o un 5xx veri da raw.githubusercontent.com. Con CI_ROOT su una copia gia' CRLF il caso CRLF in memoria da' ERROR (raddoppia i «\\r»): e' rosso insieme ai due confronti, non e' stato reso indipendente. Un 404 si ritenta come ogni altro errore e ora costa 6 s di attesa in piu'. splitlines() divide anche su «\\r» da solo, «\\x0c» e simili, bash solo su «\\n»: non toccato.",
+  "esito": "correzioni e casi in tests/ci/test_githooks_provenienza.py, nello stesso commit di questa voce; n. 2 non corretto qui, da correggere in cantiere",
+  "umano_coinvolto": true
+}

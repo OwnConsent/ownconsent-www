@@ -1,0 +1,23 @@
+{
+  "ts": "2026-10-03T18:19:31+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "titolo": "Abilitazione del plugin: il motivo per cui la variabile nel profilo di shell e' stata scartata",
+  "corregge": "2026-10-03/181209-orchestrator-decisione.json",
+  "cosa_era_sbagliato": "Nel campo alternative, l'opzione «variabile nel profilo di shell» portava come motivo «non dato nel brief di Andrea: da chiedere, non lo scrive questa sessione». Il motivo mancava; non era sbagliato cio' che c'era.",
+  "come_lo_so": "Lo ha dato Andrea il 03/10 dopo il rapporto di questa sessione, riferendolo dal rapporto di cantiere del 02/10. Questa sessione non ha letto quel rapporto e non ha misurato nessuno dei tre punti.",
+  "alternative": [
+    {
+      "opzione": "variabile nel profilo di shell",
+      "scartata_perche": "RIFERITO DA ANDREA, dal rapporto di cantiere del 02/10: (1) vale per ogni progetto lanciato da quella shell, quindi gli hook di cantiere girerebbero anche in progetti che non usano cantiere; (2) dipende dal profilo della shell: una sessione lanciata da un'altra shell, da un IDE o senza quel profilo perde il plugin senza avviso; (3) il plugin resta @inline, cioe' caricato con lo stesso meccanismo di --plugin-dir, non abilitato nelle impostazioni"
+    }
+  ],
+  "evidenza": [
+    "MISURATO DA QUESTA SESSIONE — `gh pr checks 79 -R OwnConsent/ownconsent-www` alle 18:19 -> 'ci pass 1m55s' (run 37136033079), 'ventaglio pending' (run 37136033041); nel log del run, passo «Collaudo del workflow (tests/ci)»: 'Ran 164 tests in 4.815s', 'OK', senza skipped. Il test nel job `ci` era fra le cose non misurate della voce 181118"
+  ],
+  "esito": "la voce 181209 resta com'e'; questa ne completa il campo alternative",
+  "umano_coinvolto": true
+}

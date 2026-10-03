@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 # Firma ogni commit con il ruolo che lo ha prodotto.
 #
+# Provenienza: OwnConsent/cantiere, template/githooks/prepare-commit-msg e
+# template/githooks/ruoli a 76cbc5df576ca38135a54b3e454d1f31460f3a1c, copiati il
+# 03/10/2026. Il contenuto risale al merge della PR #17 (da61c9b); l'ultimo commit
+# su template/githooks e' be0e7dd. I due file arrivano insieme: senza githooks/ruoli
+# questo hook nega ogni commit fatto da Claude Code. Tolto questo blocco, il file e'
+# identico alla sorgente: lo verifica tests/ci/test_githooks_provenienza.py.
+#
 #   Cantiere-Agent: <ruolo>     leggibile a macchina, si cerca con git log --grep
 #   Co-Authored-By: ...         visibile come co-autore nell'interfaccia GitHub
 #

@@ -36,10 +36,11 @@ jobs:
     # commentare (docs: forked-secrets, pull_request_forked_repos_link). Saltati
     # entrambi i job, per costruzione; non verificato dal vivo.
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
-    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
-    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
-    # prova in una PR sua, non arriva da solo.
-    runs-on: ubuntu-24.04
+    # Immagine fissata a ubuntu-26.04: migrazione fatta con una prova, non per
+    # il calendario di ubuntu-latest (actions/runner-images#14748). Prove del
+    # 04/10: sul repo cantiere e qui, PR #84 e #85 (journal/2026-10-04/163102
+    # e 180008).
+    runs-on: ubuntu-26.04
     # Rete di sicurezza: il budget che conta e' quello dello step ventaglio, e
     # scade prima di questo. Il job non accetta env qui (contexts.md), quindi il
     # numero e' scritto a mano; tests/ci/test_collaudo_esito.py lo tiene sopra
@@ -63,7 +64,7 @@ jobs:
     steps:
       # L'action rimette comunque il token nell'URL di origin (git-config.ts):
       # questo toglie solo quello del checkout. Il confine sono i permessi sopra.
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -92,7 +93,7 @@ jobs:
       - name: Ventaglio di revisione
         id: ventaglio
         timeout-minutes: ${{ fromJSON(env.BUDGET_VENTAGLIO_MIN) }}
-        uses: anthropics/claude-code-action@8ce9314fa9a404564fa7e954cd84f25bcba2b829 # v1
+        uses: anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea # v1.0.241
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # Senza questo input l'azione si autentica come app GitHub di Claude, che
@@ -156,7 +157,7 @@ jobs:
       # (overwrite false), e overwrite cancellerebbe quello del tentativo prima.
       - name: Consegna il verdetto
         if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verdetto-tentativo-${{ github.run_attempt }}
           path: |
@@ -179,10 +180,11 @@ jobs:
     # Stessa condizione del job ventaglio: con ventaglio saltato, !cancelled()
     # da solo farebbe girare questo job.
     if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository }}
-    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
-    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
-    # prova in una PR sua, non arriva da solo.
-    runs-on: ubuntu-24.04
+    # Immagine fissata a ubuntu-26.04: migrazione fatta con una prova, non per
+    # il calendario di ubuntu-latest (actions/runner-images#14748). Prove del
+    # 04/10: sul repo cantiere e qui, PR #84 e #85 (journal/2026-10-04/163102
+    # e 180008).
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     # L'unico job che scrive sulla PR. actions: read serve all'API dei job e
     # degli artifact della run.
@@ -192,7 +194,7 @@ jobs:
       pull-requests: write
     steps:
       # Solo lo script della decisione, dal commit sotto collaudo come prima.
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           sparse-checkout: .github/scripts
@@ -226,7 +228,7 @@ jobs:
         id: scarica
         if: ${{ steps.scegli.outputs.nome != '' }}
         continue-on-error: true
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: ${{ steps.scegli.outputs.nome }}
           path: ${{ runner.temp }}/verdetto-ricevuto
@@ -297,7 +299,7 @@ jobs:
       - name: Conserva il verdetto intero
         id: artefatto
         if: ${{ !cancelled() && steps.prepara.outputs.lungo == 'true' }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verdetto-completo-tentativo-${{ github.run_attempt }}
           path: ${{ runner.temp }}/verdetto.md

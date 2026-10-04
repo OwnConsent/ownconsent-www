@@ -330,7 +330,8 @@ jobs:
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
           # Nessun marcatore: una decisione non presa non e' un verdetto e non
           # deve diventare il bersaglio di un rimando.
-          # $1 e' il motivo fra parentesi: «uscita N» o «artifact non trovato».
+          # $1 e' il motivo fra parentesi: «uscita N», o il nome del guasto
+          # («artifact non trovato», «artifact presente ma non scaricato», …).
           non_presa() {
             printf 'Commit `%s`\n\n**Collaudo: decisione non presa (%s).** %s Il job non sa se questo commit abbia un verdetto.\n' \
               "${SHA:0:7}" "$1" "$2" > "$corpo"

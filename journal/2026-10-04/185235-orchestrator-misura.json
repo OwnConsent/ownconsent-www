@@ -1,0 +1,18 @@
+{
+  "ts": "2026-10-04T18:52:35+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "/code-review sulla PR #86 (f8b92e8): nessun finding; due note cosmetiche, una corretta",
+  "contesto": "/code-review 86 lanciato da Andrea dopo l'apertura della PR.",
+  "evidenza": [
+    "esito del revisore: 'no findings' su f8b92e8; in locale 'Ran 191 tests in 4.254s', 'OK (skipped=2)'",
+    "non verificato dal revisore: mutazioni_collaudo.py non eseguito, voci di journal non lette, filtro non rieseguito col jq interno di gh (si appoggia alla prova a secco della PR)",
+    "nota 1, riga 333 di claude-pr-review.yml: il commento di non_presa elencava solo «uscita N» o «artifact non trovato». Corretto in questo commit: solo un commento, nessuna riga eseguita cambia",
+    "nota 2, riga 366: «integrità» con l'accento fra messaggi in ASCII. Lasciato: e' il testo dato da Andrea nel brief, e il test confronta il commento intero"
+  ],
+  "esito": "nessuna correzione di gravita' media o superiore: /code-review non va ripetuto per questo commit",
+  "umano_coinvolto": true
+}

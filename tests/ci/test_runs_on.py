@@ -29,14 +29,12 @@ from helpers import all_workflow_paths, ci_root, load_yaml
 
 # Workflow esclusi dalla regola, come percorsi relativi alla radice.
 #
-# .github/workflows/claude-pr-review.yml e' nel perimetro del meccanismo di
-# collaudo (CLAUDE.md, «Un cambio al collaudo non si collauda su se' stesso»):
-# i suoi job restano su ubuntu-latest finche' non li fissa la PR sul collaudo,
-# che toglie anche questa riga. Non serve ricordarselo: quando il file e'
-# fissato e l'eccezione e' ancora qui, TestEccezioni diventa rosso.
-ECCEZIONI = frozenset({
-    ".github/workflows/claude-pr-review.yml",
-})
+# Vuota: nessun workflow e' escluso. L'unica eccezione,
+# .github/workflows/claude-pr-review.yml, e' stata tolta dalla PR che ne ha
+# fissato i due job a ubuntu-24.04. Un'eccezione nuova si scrive qui con la
+# sua ragione; TestEccezioni diventa rosso se nomina un file che non esiste
+# o che e' gia' fissato.
+ECCEZIONI: frozenset[str] = frozenset()
 
 MOBILE_RE = re.compile(r"(^|-)latest($|-)", re.IGNORECASE)
 

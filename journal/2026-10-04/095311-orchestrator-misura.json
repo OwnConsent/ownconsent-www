@@ -1,0 +1,30 @@
+{
+  "ts": "2026-10-04T09:53:11+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "claude-pr-review.yml: i due job a ubuntu-24.04, ECCEZIONI vuota; tests/ci 176 verdi, mutazione rossa su entrambi i job",
+  "contesto": "Seguito delle voci 2026-10-03/213627 e 213846 (PR #80): la #80 aveva lasciato claude-pr-review.yml su ubuntu-latest perche' e' nel perimetro del meccanismo di collaudo, con un'eccezione in tests/ci/test_runs_on.py. Brief di Andrea del 04/10: fissare i due job (ventaglio, pubblica) a ubuntu-24.04 con lo stesso commento della #80, togliere il file da ECCEZIONI lasciando la costante vuota. Vale «Un cambio al collaudo non si collauda su se' stesso»: il collaudo di questa PR non prova niente. PR impilata avversaria non prevista dal brief: runs-on non tocca un confine di fiducia. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "evidenza": [
+    "`git diff --stat` prima del commit -> '.github/workflows/claude-pr-review.yml | 10 ++++++++--', 'tests/ci/test_runs_on.py | 14 ++++++--------', '2 files changed, 14 insertions(+), 10 deletions(-)'",
+    "`cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py'` senza CI -> 'Ran 176 tests in 3.691s', 'OK (skipped=2)'; con CI=true -> 'Ran 176 tests in 4.328s', 'OK'. 176 come nella voce 2026-10-03/213846: nessun caso aggiunto o tolto",
+    "`python3 -m unittest -v test_runs_on` -> 'Ran 12 tests in 0.038s', 'OK'",
+    "CONTROLLO M0 — copia di .github in .work/mut2404/m0 non modificata, CI_ROOT sulla copia, solo test_ogni_job_ha_un_runs_on_esplicito_e_non_mobile: 'Ran 1 test in 0.020s', 'OK'",
+    "MUTAZIONE M1, chiesta dal brief — copia in .work/mut2404/m1, riga 42 di claude-pr-review.yml (job ventaglio) riportata a 'runs-on: ubuntu-latest': 'FAIL: test_ogni_job_ha_un_runs_on_esplicito_e_non_mobile ... (workflow='.github/workflows/claude-pr-review.yml')', \"job `ventaglio`: etichetta mobile: 'ubuntu-latest'\", 'FAILED (failures=1)'",
+    "MUTAZIONE M2 — copia in .work/mut2404/m2, riga 185 (job pubblica) riportata a 'runs-on: ubuntu-latest': stesso test, \"job `pubblica`: etichetta mobile: 'ubuntu-latest'\", 'FAILED (failures=1)'",
+    "Banco esistente, `cd tests/ci && python3 mutazioni_collaudo.py` sul workflow modificato, due giri: rc=0; nel secondo giro, contato con grep sull'output, 84 mutazioni, 117 righe 'ROSSO', 0 righe 'VERDE'",
+    "Dopo le mutazioni `git status -sb` -> '## collaudo/ubuntu-2404...origin/main', ' M .github/workflows/claude-pr-review.yml', ' M tests/ci/test_runs_on.py': le copie di M0-M2 stanno in .work/ (ignorata); delle cartelle temporanee mut-* del banco ne restano 0"
+  ],
+  "differenze": [
+    "Il brief chiedeva la mutazione su uno dei due job; e' stata eseguita su ciascuno dei due, piu' un controllo senza mutazione.",
+    "Con ECCEZIONI vuota test_nessuna_eccezione_e_gia_fissata non ha piu' nessun sotto-caso e passa a vuoto; test_ogni_eccezione_e_un_workflow_che_esiste confronta due insiemi vuoti. Tornano a mordere quando un'eccezione viene aggiunta. E' quello che il brief chiede con «la costante resta, vuota».",
+    "La costante e' annotata `frozenset[str]`: un frozenset() vuoto non ha un tipo di elemento da cui dedurlo. Non chiesto dal brief.",
+    "Il banco mutazioni_collaudo.py non e' stato esteso con la mutazione su runs-on: test_runs_on.py non e' fra i moduli del meccanismo di collaudo e il brief non lo chiede. M1 e M2 sono comandi a mano su copie, come nella 213846.",
+    "guard-paths.sh ha negato la prima scrittura di questa voce con 'GATE: il percorso ... porta fuori dal progetto': il nome della skill di revisione, scritto con la barra iniziale, compariva come testo in questo file e il gate legge il comando intero. Stesso caso della 213846. La voce e' stata riscritta senza quel letterale; il comando negato non era partito, e con lui non era partito il commit."
+  ],
+  "cosa_non_e_misurato": "La riga «Image» nei log dei job ventaglio e pubblica e il percorso normale dal vivo: si misurano sulla PR impilata, voce successiva. Il collaudo di questa PR, qualunque esito abbia, non e' una misura. La skill code-review sul numero della PR la lancia Andrea.",
+  "esito": "workflow, test e voce nello stesso commit",
+  "umano_coinvolto": true
+}

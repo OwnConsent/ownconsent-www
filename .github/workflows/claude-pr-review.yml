@@ -36,7 +36,10 @@ jobs:
     # commentare (docs: forked-secrets, pull_request_forked_repos_link). Saltati
     # entrambi i job, per costruzione; non verificato dal vivo.
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
+    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
+    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
+    # prova in una PR sua, non arriva da solo.
+    runs-on: ubuntu-24.04
     # Rete di sicurezza: il budget che conta e' quello dello step ventaglio, e
     # scade prima di questo. Il job non accetta env qui (contexts.md), quindi il
     # numero e' scritto a mano; tests/ci/test_collaudo_esito.py lo tiene sopra
@@ -176,7 +179,10 @@ jobs:
     # Stessa condizione del job ventaglio: con ventaglio saltato, !cancelled()
     # da solo farebbe girare questo job.
     if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository }}
-    runs-on: ubuntu-latest
+    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
+    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
+    # prova in una PR sua, non arriva da solo.
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     # L'unico job che scrive sulla PR. actions: read serve all'API dei job e
     # degli artifact della run.

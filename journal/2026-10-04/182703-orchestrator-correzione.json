@@ -1,0 +1,15 @@
+{
+  "ts": "2026-10-04T18:27:03+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "correzione",
+  "corregge": "2026-10-04/181634-orchestrator-gate.json",
+  "titolo": "il ramo «artifact presente ma download fallito -> uscita 4» era nel brief a memoria: tolto con beab008",
+  "cosa_era_sbagliato": "Il brief del 04/10 sul passaggio a ubuntu-26.04 e node24 dava per esistente su main un ramo «artifact presente ma download fallito» con esito «decisione non presa (uscita 4)», e chiedeva di verificarci dentro il digest di download-artifact v8. La voce 181634 riporta quell'attesa come contesto del fermo. Il ramo non esiste: beab008 (29/09, #69) l'ha fuso in «artifact non trovato».",
+  "come_lo_so": "claude-pr-review.yml su main, righe 255-258 e 342-345; tests/ci/test_collaudo_isolamento.py righe 300-301 e 673; Andrea, dopo il fermo: «Il ramo uscita 4 l'avevo dato per esistente a memoria: è stato tolto con beab008. Errore mio nel brief.»",
+  "nota": "La voce 181634 sta sul ramo locale collaudo/ubuntu-2604-node24 (commit 75535a3), non su questo: arriva su main con quella PR, ribasata dopo questa.",
+  "esito": "la voce superata resta, questa la corregge; il ramo distinto si costruisce qui, col nome «artifact presente ma non scaricato», non «uscita 4»",
+  "umano_coinvolto": true
+}

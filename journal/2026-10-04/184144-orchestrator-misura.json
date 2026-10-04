@@ -1,0 +1,25 @@
+{
+  "ts": "2026-10-04T18:41:44+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "PR #86 (artifact presente ma non scaricato): tests/ci 191 OK, 98 mutazioni tutte rosse, prova a secco dei tre rami, impilata #87 con verdetto",
+  "contesto": "Seguito delle voci 2026-10-04/182701 e 182702. Commit ad55dcb sul ramo collaudo/artifact-presente, PR #86 verso main. PR impilata #87, ramo esperimento-artifact-presente (9ac86ee), base collaudo/artifact-presente, un solo file identico a quello delle #66-#68 (sha256 aec8f40809256faf…). Il collaudo della #86 non conta: giudica se' stesso.",
+  "evidenza": [
+    "`env -u CI python3 -m unittest discover -s . -p 'test_*.py'` in tests/ci -> 'Ran 191 tests in 7.310s', 'OK (skipped=2)'; con CI=true -> 'Ran 191 tests in 6.701s', 'OK'. Su main erano 188",
+    "`python3 mutazioni_collaudo.py` -> 98 mutazioni, 135 righe bersaglio, 135 ROSSO, 0 'VERDE!!', 0 'NON APPLICABILE', 0 'BERSAGLIO INESISTENTE', 0 mutazioni con 'falliti: 0'. 14 nuove",
+    "prova a secco, frammento run: di «Pubblica il verdetto» estratto dal YAML, gh api al gh vero, gh pr comment intercettato, ARTIFACT=mancante: run 37214752012 + verdetto-tentativo-1 -> log 'secondo l'API del run: presente', commento '**Collaudo: decisione non presa (artifact presente ma non scaricato: integrità non verificata o download fallito).** Non rilanciare l'agente: va guardato il log del job pubblica.', uscita 1",
+    "prova a secco, stesso run + verdetto-tentativo-9 -> 'assente', commento '(artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»).** L'artifact del ventaglio non si e' trovato.', uscita 1",
+    "prova a secco, run 1 -> 'gh: Not Found (HTTP 404)', 'illeggibile', commento '(API degli artifact non leggibile).** Il download dell'artifact non e' riuscito, e l'API non ha detto se l'artifact c'e'.', uscita 1",
+    "`gh pr checks 87` -> 'ci pass 2m5s', 'ventaglio pass 1m42s', 'pubblica pass 6s'; run 37217512948, tentativo 1, head_sha 9ac86eea036cc58008f178ddbf313fa7a043629c",
+    "log del job ventaglio 111480942493: 'Image: ubuntu-24.04', 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 1112 bytes. Artifact ID is 11308858453'",
+    "log del job pubblica 111481253588: 'tentativo del ventaglio: 1; tentativo di questo job: 1', 'Total of 1 artifact(s) downloaded', 'artifact ricevuto: verdetto-tentativo-1', 'occorrenze di cantiere-collaudo neutralizzate: 0', 'verdetto: 1644 byte (tetto 60000)', 'ventaglio: success; tempi non letti (non servono)', 'decisione: verdetto'. La riga «secondo l'API del run» compare solo nel testo dello script stampato dal runner, non eseguita: il run ha usato il workflow della #86 e l'API degli artifact non e' stata chiamata",
+    "commento di github-actions[bot] sulla #87, 2026-10-04T16:40:21Z, prima riga '<!-- cantiere-collaudo tipo=verdetto sha=9ac86eea036cc58008f178ddbf313fa7a043629c -->', poi 'Nessun finding.'",
+    "annotazioni dei due job (check-runs/<id>/annotations): un warning 'Node.js 20 is deprecated' per job (checkout, upload-artifact, download-artifact: e' la PR delle versioni a toglierlo) e il notice 'Verdetto pubblicato'; nessun'altra"
+  ],
+  "cosa_non_e_misurato": "Nessuno dei tre rami del download fallito e' girato su un runner: dal vivo c'e' solo il percorso normale. expired true mai osservato. $ENV nel --jq del gh del runner non misurato. Un digest sbagliato dal vivo non e' stato prodotto. Una run dell'impilata: osservazione, non frequenza.",
+  "esito": "PR #86 e #87 aperte; nessuna mergiata, nessuna chiusa: le chiude Andrea. /code-review sulla #86 da lanciare.",
+  "umano_coinvolto": true
+}

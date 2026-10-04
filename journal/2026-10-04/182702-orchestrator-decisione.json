@@ -1,0 +1,36 @@
+{
+  "ts": "2026-10-04T18:27:02+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "un download non riuscito ha tre nomi: artifact non trovato, artifact presente ma non scaricato, API degli artifact non leggibile",
+  "contesto": "download-artifact v8 fallisce per default anche su un digest che non torna (v8.0.0: «Hash mismatches will now error by default»), dopo aver scaricato. Su main ogni download non riuscito pubblica «artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve Re-run all jobs», che per un artifact presente e' falso e manda a rilanciare l'agente. Decisione di Andrea del 04/10: ramo distinto, in una PR sua, prima di quella delle versioni. La logica sta nello step «Pubblica il verdetto», l'unico col token e con actions: read; Prepara resta com'e' (artifact=mancante, uscita 4) e la sua annotazione passa da «Artifact non trovato» ad «Artifact non scaricato», perche' li' non si sa quale dei due casi sia.",
+  "alternative": [
+    {
+      "opzione": "lasciare «artifact non trovato» per ogni download fallito",
+      "scartata_perche": "il messaggio direbbe «mai caricato o scaduto» di un artifact che c'e', e «Re-run all jobs» rilancerebbe l'agente per un problema di integrita' o di rete del job pubblica"
+    },
+    {
+      "opzione": "digest-mismatch: warn sul download",
+      "scartata_perche": "pubblicherebbe un verdetto il cui hash non torna, proprio nel passaggio fra il job dell'agente e quello che pubblica"
+    },
+    {
+      "opzione": "filtrare per nome nella shell, con jq --arg dopo un gh api senza filtro",
+      "scartata_perche": "due processi e una risposta intera in una variabile; il --jq di gh legge $ENV (misurato), e cosi' dell'API nella shell arriva solo una parola"
+    },
+    {
+      "opzione": "trattare una risposta senza expired come assente",
+      "scartata_perche": "una forma inattesa non e' un'informazione sull'artifact: e' «API non leggibile»"
+    }
+  ],
+  "evidenza": [
+    ".github/workflows/claude-pr-review.yml: ramo ARTIFACT=mancante dello step «Pubblica il verdetto»",
+    "il brief chiedeva i casi assente, presente, presente ma scaduto, API in errore: scaduto vale come assente",
+    "differenza dal brief: la seconda frase di «artifact non trovato» passa da «non si e' trovato o non si e' scaricato» a «non si e' trovato», perche' ora il secondo caso ha il suo messaggio",
+    "non delegato: lavoro sequenziale di una sessione sola; codice, test e mutazioni sono dello stesso agente, la revisione indipendente e' /code-review lanciato da Andrea"
+  ],
+  "esito": "applicata sul ramo collaudo/artifact-presente",
+  "umano_coinvolto": true
+}

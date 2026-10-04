@@ -234,8 +234,9 @@ jobs:
       # Il testo dell'agente si copia neutralizzando ogni «cantiere-collaudo»:
       # il trattino diventa U+2011, che si legge uguale e non coincide col
       # marcatore. Il marcatore vero lo antepone lo script. Un artifact che non
-      # si trova o non si scarica non e' mai «nessun verdetto»: e' «artifact non
-      # trovato», e la decisione non si prende.
+      # si scarica non e' mai «nessun verdetto»: la decisione non si prende. Se
+      # l'artifact manchi o ci sia lo chiede all'API lo step «Pubblica il
+      # verdetto», che ha il token: qui si sa solo che il download non e' riuscito.
       - name: Prepara il verdetto
         id: prepara
         if: ${{ !cancelled() }}
@@ -254,7 +255,7 @@ jobs:
           fi
           if [ "$SCARICATO" != "success" ]; then
             echo "artifact=mancante" >> "$GITHUB_OUTPUT"
-            echo "::error title=Artifact non trovato::'${ARTEFATTO:-nessun nome}', download: ${SCARICATO:-non eseguito}"
+            echo "::error title=Artifact non scaricato::'${ARTEFATTO:-nessun nome}', download: ${SCARICATO:-non eseguito}"
             exit 4
           fi
           echo "artifact ricevuto: ${ARTEFATTO}"
@@ -320,6 +321,7 @@ jobs:
           PREPARA: ${{ steps.prepara.outcome }}
           USCITA_PREPARA: ${{ steps.prepara.outputs.uscita }}
           ARTIFACT: ${{ steps.prepara.outputs.artifact }}
+          ARTEFATTO: ${{ steps.scegli.outputs.nome }}
           LUNGO: ${{ steps.prepara.outputs.lungo }}
           ARTEFATTO_URL: ${{ steps.artefatto.outputs.artifact-url }}
           SHA: ${{ github.event.pull_request.head.sha }}
@@ -328,7 +330,8 @@ jobs:
           corpo="$RUNNER_TEMP/verdetto-da-pubblicare.md"
           # Nessun marcatore: una decisione non presa non e' un verdetto e non
           # deve diventare il bersaglio di un rimando.
-          # $1 e' il motivo fra parentesi: «uscita N» o «artifact non trovato».
+          # $1 e' il motivo fra parentesi: «uscita N», o il nome del guasto
+          # («artifact non trovato», «artifact presente ma non scaricato», …).
           non_presa() {
             printf 'Commit `%s`\n\n**Collaudo: decisione non presa (%s).** %s Il job non sa se questo commit abbia un verdetto.\n' \
               "${SHA:0:7}" "$1" "$2" > "$corpo"
@@ -340,9 +343,31 @@ jobs:
             non_presa "output «tentativo» del job ventaglio mancante o non valido" "Senza quel valore il job non sa quale esecuzione del ventaglio giudicare, e il download non e' stato tentato."
           fi
           if [ "$ARTIFACT" = "mancante" ]; then
-            # L'API non distingue un artifact scaduto da uno mai caricato: le liste
-            # degli artifact non elencano quelli scaduti (journal 2026-10-01).
-            non_presa "artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»" "L'artifact del ventaglio non si e' trovato o non si e' scaricato."
+            # Il download non e' riuscito: l'artifact manca, o c'e' e non si e'
+            # scaricato (download-artifact v8 fallisce anche su un digest che non
+            # torna). Lo dice l'API degli artifact del run, filtrata per nome
+            # (docs, list-workflow-run-artifacts: «only artifacts with this name
+            # will be returned»). Dell'API nella shell arriva una parola scritta
+            # dal filtro, mai un campo della risposta; il nome il filtro lo legge
+            # dall'ambiente. Un artifact scaduto, se l'API lo elenca, non c'e' piu':
+            # vale come mai caricato. Una risposta con un'altra forma e' un errore.
+            stato=""
+            stato=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" \
+              -X GET -f name="$ARTEFATTO" -f per_page=100 \
+              --jq 'if (.artifacts | type) != "array" then error("forma inattesa")
+                    else [.artifacts[] | select(.name == $ENV.ARTEFATTO) | .expired] as $e
+                    | if any($e[]; type != "boolean") then error("expired non booleano")
+                      elif any($e[]; . == false) then "presente" else "assente" end
+                    end') || stato="illeggibile"
+            echo "artifact '${ARTEFATTO}' secondo l'API del run: ${stato}"
+            case "$stato" in
+              assente)
+                non_presa "artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»" "L'artifact del ventaglio non si e' trovato." ;;
+              presente)
+                non_presa "artifact presente ma non scaricato: integrità non verificata o download fallito" "Non rilanciare l'agente: va guardato il log del job pubblica." ;;
+              *)
+                non_presa "API degli artifact non leggibile" "Il download dell'artifact non e' riuscito, e l'API non ha detto se l'artifact c'e'." ;;
+            esac
           fi
           if [ "$PREPARA" != "success" ]; then
             non_presa "uscita ${USCITA_PREPARA:-sconosciuta}" "La preparazione del verdetto non e' riuscita."

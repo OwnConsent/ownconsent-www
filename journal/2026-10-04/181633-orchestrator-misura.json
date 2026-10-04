@@ -1,0 +1,25 @@
+{
+  "ts": "2026-10-04T18:16:33+02:00",
+  "agente": "orchestrator",
+  "issue": "",
+  "lotto": "collaudo/ubuntu-2604-node24",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "fase 1: SHA, runtime e note di rilascio delle quattro action del collaudo",
+  "contesto": "Prima di toccare claude-pr-review.yml: ogni SHA verificato con gh api, action.yml letto allo SHA, note di rilascio lette da gh api repos/<repo>/releases/tags/<tag>. Nessun file del meccanismo modificato.",
+  "evidenza": [
+    "gh api repos/actions/checkout/commits/v7.0.1 --jq .sha -> 3d3c42e5aac5ba805825da76410c181273ba90b1; action.yml riga 116: using: node24",
+    "gh api repos/actions/upload-artifact/commits/v7.0.1 --jq .sha -> 043fb46d1a93c77aae656e7c1c64a875d1fc6a0a; action.yml riga 74: using: 'node24'",
+    "gh api repos/actions/download-artifact/commits/v8.0.1 --jq .sha -> 3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c; action.yml riga 52: using: 'node24'",
+    "gh api repos/anthropics/claude-code-action/commits/v1.0.241 --jq .sha -> cab360f6565aa35a51d6ce9e43f1f4287c0a32ea (il ref del tag e' un tag annotato, 400f8c3b3562dd02bfa65aba481641b97dbafe23); action.yml riga 190: using: \"composite\", NON node24; unica action annidata oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 (v2.2.0), il cui action.yml riga 60 dichiara using: \"node24\"",
+    "SHA oggi nel workflow -> tag (gh api repos/<repo>/tags): checkout 11d5960 = v4.4.0 (node20); upload-artifact ea165f8 = v4.6.2 (node20); download-artifact d3f86a1 = v4.3.0 (node20); claude-code-action 8ce9314 = v1.0.236 (composite)",
+    "diff action.yml checkout v4.4.0 -> v7.0.1: solo riga 116 node20 -> node24. Note: v6.0.0 «Persist creds to a separate file» (noi: persist-credentials false); v7.0.0 «block checking out fork pr for pull_request_target and workflow_run» (noi: evento pull_request)",
+    "diff action.yml upload-artifact v4.6.2 -> v7.0.1: input nuovo archive (default 'true'), runtime node24; name, path, if-no-files-found, retention-days, overwrite invariati. Note v7.0.0: «Callers can set the new archive parameter to false to skip zipping»; con il default l'artifact resta zip e name vale",
+    "diff action.yml download-artifact v4.3.0 -> v8.0.1: input nuovi skip-decompress (default 'false') e digest-mismatch (default 'error'), runtime node24. Note v8.0.0: «Hash mismatches will now error by default»; «the action will no longer attempt to unzip all downloaded files. Instead, the action checks the Content-Type header ahead of unzipping and skips non-zipped files». Note v5.0.0: cambio di path solo per download per ID («No Action Needed If: You download artifacts by name»)",
+    "claude-code-action v1.0.236 -> v1.0.241: diff di action.yml vuoto (exit 0): nessun input cambiato. compare: ahead_by=6, 18 file; codice dell'action toccato solo in src/entrypoints/run.ts e base-action/action.yml, una riga ciascuno: Claude Code 2.1.284 -> 2.1.289. Note di rilascio v1.0.237, .239, .240, .241 vuote (solo Full Changelog); v1.0.238: «ci: security hardening for GitHub Actions workflows that call Claude» (#1867, file sotto .github/ dell'action)",
+    "Changelog di Claude Code 2.1.288 e 2.1.289 letto (anthropics/claude-code CHANGELOG.md): voci su auto mode e regole Bash deny/ask, nessuna dichiarata incompatibile. 2.1.285-2.1.287 non letti in questo giro",
+    "download-artifact v8.0.1 src/download-artifact.ts righe 234-241 e 249-251: digest sbagliato con digest-mismatch error -> throw «Digest validation failed for artifact(s): …» -> core.setFailed(«Unable to download artifact(s): …»): lo step fallisce DOPO aver scaricato ed estratto"
+  ],
+  "esito": "tre SHA su quattro dichiarano node24; claude-code-action e' composite; un cambio incompatibile (digest-mismatch error per default) tocca il download che usiamo: vedi il gate dello stesso giro",
+  "umano_coinvolto": false
+}

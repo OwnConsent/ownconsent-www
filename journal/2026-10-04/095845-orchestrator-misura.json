@@ -1,0 +1,26 @@
+{
+  "ts": "2026-10-04T09:58:45+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "PR #82 impilata sulla #81: Image ubuntu-24.04 nei job ventaglio e pubblica, verdetto con marcatore al primo giro",
+  "contesto": "Seguito della voce 2026-10-04/095311 (commit e9e3f2b, PR #81). Percorso normale dal vivo del collaudo dopo il passaggio a runs-on: ubuntu-24.04: PR #82, ramo esperimento-collaudo-2404 da collaudo/ubuntu-2404, base collaudo/ubuntu-2404, commit e9ac8ee con il solo file journal/esperimento-silenzio-2026-09-27.md. Un giro all'apertura; il rerun era previsto solo in caso di silenzio dell'agente e non e' servito.",
+  "evidenza": [
+    "`git hash-object journal/esperimento-silenzio-2026-09-27.md` sul ramo dell'esperimento -> '9a43b86877513a0ded0da9fd0f9971c7ef347a5a', uguale a `git rev-parse aa8b2de:journal/esperimento-silenzio-2026-09-27.md` (e a 5c57cc2, 9b85022, cb63f2c): il file e' identico a quello delle #66-#68",
+    "`gh run view 37187183909 --json status,conclusion,attempt,jobs` -> status 'completed', conclusion 'success', attempt 1; job 'ventaglio' (111391510197) success, job 'pubblica' (111392062601) success",
+    "`gh run view --job 111391510197 --log | grep 'Image: '` -> 'ventaglio  Set up job  2026-10-04T07:54:37.0683605Z Image: ubuntu-24.04'; righe accanto: 'Version: 20260927.320.1', sistema operativo 'Ubuntu' '24.04.5' 'LTS'",
+    "`gh run view --job 111392062601 --log | grep 'Image: '` -> 'pubblica  Set up job  2026-10-04T07:57:34.8168835Z Image: ubuntu-24.04'; righe accanto: 'Version: 20260927.320.1', 'Ubuntu' '24.04.5' 'LTS'",
+    "`gh api repos/OwnConsent/ownconsent-www/issues/82/comments` -> 1 commento, di github-actions[bot], 2026-10-04T07:57:40Z, 1784 caratteri; prima riga '<!-- cantiere-collaudo tipo=verdetto sha=e9ac8eec1480e7e7d7ce9cf590ceae34afe9eb34 -->', poi 'Commit `e9ac8ee`', '## Collaudo — run 37187183909, tentativo 1', 'Nessun finding bloccante. Nessun finding di gravità alta o critica.'",
+    "`gh pr checks 82` -> 'ci pass 2m4s', 'pubblica pass 9s', 'ventaglio pass 2m56s'",
+    "PR #81, stesso workflow su se' stesso, run 37187175636: 'ventaglio ... 2026-10-04T07:53:51.5045033Z Image: ubuntu-24.04', 'pubblica ... 2026-10-04T07:57:42.0866301Z Image: ubuntu-24.04'; `gh pr checks 81` -> 'ci pass 2m7s', 'pubblica pass 5s', 'ventaglio pass 3m49s'; commento con marcatore 'tipo=verdetto sha=e9e3f2b2aa45abf05a223f5df85066917da4ddd3'. Le righe Image sono un fatto del runner e valgono; il verdetto sulla #81 non e' una prova, per la regola del CLAUDE.md"
+  ],
+  "differenze": [
+    "Il ramo «l'agente tace -> nessun verdetto pubblicato -> un rerun» non si e' attivato: su ubuntu-24.04 fissato quel ramo non e' stato osservato dal vivo in questo giro. Resta coperto solo dai test e dal banco di mutazioni.",
+    "Un solo giro: che il verdetto arrivi e' un'osservazione su una run, non una frequenza."
+  ],
+  "cosa_non_e_misurato": "La revisione con la skill code-review sulla #81: la lancia Andrea. Niente su ubuntu-26.04. La #82 resta aperta: la chiude Andrea, e il ramo esperimento-collaudo-2404 si cancella allora.",
+  "esito": "atteso confermato: Image ubuntu-24.04 in entrambi i job, verdetto con marcatore in prima riga",
+  "umano_coinvolto": true
+}

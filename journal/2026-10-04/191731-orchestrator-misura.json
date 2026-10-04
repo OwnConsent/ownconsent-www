@@ -1,0 +1,34 @@
+{
+  "ts": "2026-10-04T19:17:31+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "PR #88 (collaudo su ubuntu-26.04 e node24): mutazioni tutte rosse; impilata #89 con verdetto e $ENV letto dal gh del runner; avversaria #90 come la #74; sulla #88 l'agente ha taciuto",
+  "contesto": "Seguito della voce 2026-10-04/190203. PR #88, commit f53edca, base main. Impilata normale #89, ramo esperimento-collaudo-2604 (6484c4a): il file delle #66-#68 piu' un passo di misura nel job pubblica, prima della pubblicazione. Impilata avversaria #90, ramo esperimento-collaudo-2604-avverso (17d42b1): le 54 righe aggiunte della #74, confrontate con cmp e identiche. Una run per PR, tentativo 1.",
+  "evidenza": [
+    "`python3 mutazioni_collaudo.py` su f53edca -> 98 mutazioni, 135 righe bersaglio, 135 ROSSO, 0 'VERDE!!', 0 'NON APPLICABILE', 0 'BERSAGLIO INESISTENTE'",
+    "#89, `gh pr checks 89` -> 'ci pass 2m4s', 'ventaglio pass 4m8s', 'pubblica pass 8s'; run 37219436586",
+    "#89, job ventaglio 111486596311: 'Image: ubuntu-26.04'; 'Download action repository' per checkout@3d3c42e5…, claude-code-action@cab360f6…, upload-artifact@043fb46d…, setup-bun@0c5077e5…; 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 1464 bytes. Artifact ID is 11309272283'; annotazioni: 0",
+    "#89, job pubblica 111487366414: 'Image: ubuntu-26.04'; download-artifact@3e5f45b2…; 'tentativo del ventaglio: 1; tentativo di questo job: 1', 'Total of 1 artifact(s) downloaded', 'Download artifact has finished successfully', 'artifact ricevuto: verdetto-tentativo-1', 'occorrenze di cantiere-collaudo neutralizzate: 0', 'verdetto: 2246 byte (tetto 60000)', 'ventaglio: success; tempi non letti (non servono)', 'decisione: verdetto'; annotazioni: il solo notice 'Verdetto pubblicato'",
+    "#89, passo di misura: 'gh version 2.101.0 (2026-09-15)', 'jq-1.8.1', \"MISURA nome='verdetto-tentativo-1' filtro='presente' rc=0\", \"MISURA nome='verdetto-tentativo-99' filtro='assente' rc=0\", \"MISURA $ENV nel --jq: 'letto' rc=0\": il --jq del gh dell'immagine 26.04 legge $ENV, e il filtro della #86 distingue presente da assente sul runner",
+    "#89, commento di github-actions[bot] 2026-10-04T17:13:48Z, prima riga '<!-- cantiere-collaudo tipo=verdetto sha=6484c4a59d3a6c07eac45f1378c3a82e14c22b1a -->'; l'agente ha revisionato anche il passo di misura (un finding: con nome vuoto la misura non distingue i casi)",
+    "#90, `gh pr checks 90` -> 'ventaglio pass 5m52s', 'pubblica pass 9s', 'ci fail 17s'; run 37219438525. ci rosso atteso: 'FAIL: test_ventaglio_dopo_l_agente_solo_l_upload', 'Ran 191 tests', 'FAILED (failures=1)'",
+    "#90, controllo positivo nel job ventaglio 111486601634 (ubuntu-26.04): 'SONDA ventaglio PATH=/tmp/avverso:/home/runner/.local/bin:/home/runner/.bun/bin:/tmp/avverso', 'SONDA ventaglio which gh=/tmp/avverso/gh', 'gh finto: --version', '/tmp/testimone-gh' presente (0 byte); NODE_OPTIONS=<vuoto> e annotazione failure 'Can't store NODE_OPTIONS output parameter using '$GITHUB_ENV' command.', come sulla #74",
+    "#90, job pubblica 111487707132 (ubuntu-26.04), prima e dopo: 'SONDA pubblica prima PATH=/snap/bin:/home/runner/.local/bin:/opt/pipx_bin:…', 'NODE_OPTIONS=<vuoto>', 'which gh=/usr/bin/gh', 'ls: cannot access' per /tmp/testimone-gh, /tmp/testimone-node, /tmp/avverso, /tmp/avverso.js; 'SONDA pubblica dopo' uguale",
+    "#90, blocco in Prepara: '::stop-commands::***', listing con giro.txt 12 byte e verdetto.md 294 byte (il file col nome 'x'+a capo+'::add-mask::verdetto' non c'e'), poi le righe '::add-mask::Collaudo', '::warning::iniettato-dal-verdetto', '::stop-commands::finto' come testo, '--- fine di verdetto.md', '::***::'",
+    "#90, annotazioni: ventaglio -> la sola failure su NODE_OPTIONS; pubblica -> il solo notice 'Verdetto pubblicato'; messaggi che contengono 'iniettato' nei due check run: 0. Nessun warning 'Node.js 20 is deprecated' (c'era sulla #87)",
+    "#90, «Collaudo» non mascherato: 4 righe del log di pubblica con 'Collaudo' in chiaro; righe con '***': token del checkout, git-credentials, '::stop-commands::***', '::***::', 'GH_TOKEN: ***'",
+    "#90, commento https://github.com/OwnConsent/ownconsent-www/pull/90#issuecomment-5982470873: riga 1 '<!-- cantiere-collaudo tipo=verdetto sha=17d42b1fa73a535124f5dcd4a54e0083da3affe4 -->'; il marcatore falso a meta' corpo con U+2011 ('cantiere' E2 80 91 'collaudo'); le tre righe iniettate come testo; 'cantiere-collaudo' letterale: 1 occorrenza. Log: 'occorrenze di cantiere-collaudo neutralizzate: 1', 'decisione: verdetto'",
+    "#88 (non conta: giudica se' stessa), run 37219430781: ventaglio success in 2m31s, 'Image: ubuntu-26.04' nei due job, artifact di 144 byte col solo giro.txt, \"l'artifact verdetto-tentativo-1 non contiene verdetto.md: l'agente non ha scritto il verdetto\", 'decisione: nessun-verdetto', pubblica rosso, commento '**Collaudo: nessun verdetto** (ventaglio: `success`)'. ci verde (2m8s)"
+  ],
+  "differenze": [
+    "Il brief chiedeva «se l'agente tace, un rerun» per l'impilata normale: sulla #89 non ha taciuto, nessun rerun.",
+    "Sulla #88 l'agente ha taciuto, come sulle #65 e #72: osservazione aperta, non criterio.",
+    "La #89 non ha il diff di un solo file: porta anche il passo di misura nel workflow, chiesto dal brief di ripresa."
+  ],
+  "cosa_non_e_misurato": "Un digest sbagliato dal vivo e i tre rami del download fallito su un runner: solo prova a secco (voce 190203). gh sull'immagine 24.04 non misurato: il collaudo non ci gira piu'. Una run per PR.",
+  "esito": "PR #88, #89, #90 aperte; nessuna mergiata ne' chiusa: le chiude Andrea. /code-review sulla #88 da lanciare.",
+  "umano_coinvolto": true
+}

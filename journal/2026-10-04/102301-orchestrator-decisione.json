@@ -1,0 +1,46 @@
+{
+  "ts": "2026-10-04T10:23:01+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "claude-nightly-maintenance.yml e claude-release-comms.yml: actions/checkout e anthropics/claude-code-action fissate allo SHA a cui i tag v4 e v1 puntano oggi",
+  "contesto": "Brief di Andrea del 04/10. Fonte: finding di gravita' media, dimensione security, del collaudo sulla PR #80 (commento 5973003966, run 37149916372, commit 42ee8bc): i due workflow usano actions/checkout@v4 e anthropics/claude-code-action@v1 per tag, con permessi contents: write (e pull-requests: write nel notturno); ci.yml e claude-pr-review.yml sono gia' fissati a SHA. Un tag lo sposta chi controlla il repository dell'action. Non e' un aggiornamento di versione: si fissa cio' a cui i tag risolvono oggi. Lavoro sequenziale di una sessione sola: nessuna delega. Worktree .claude/worktrees/uses-sha, ramo ci/uses-sha da origin/main (4274d53). Nessun cambio a permessi, runs-on o passi. claude-pr-review.yml non e' toccato: questa non e' una PR sul meccanismo di collaudo.",
+  "alternative": [
+    {
+      "opzione": "aggiornare subito alle versioni maggiori su node24 (actions/checkout v5 o successive)",
+      "scartata_perche": "metterebbe nello stesso diff il passaggio da tag a SHA e un cambio di versione maggiore: un rosso dopo il merge non si saprebbe a quale dei due attribuire. In piu' i due workflow non partono su una PR (schedule, push di un tag, workflow_dispatch) e il notturno oggi e' rosso per un altro motivo: una versione nuova non avrebbe una run verde contro cui misurarsi. L'aggiornamento resta una PR sua"
+    },
+    {
+      "opzione": "lasciare i tag v4 e v1",
+      "scartata_perche": "il tag v1 di claude-code-action si muove: l'oggetto tag di oggi porta la data 2026-10-03T23:16:20Z e punta a v1.0.241, mentre claude-pr-review.yml, fissato in precedenza, sta su 8ce9314 = v1.0.236. Con il tag, il codice che gira con contents: write cambia senza un commit di questo repository"
+    }
+  ],
+  "evidenza": [
+    "`gh api repos/actions/checkout/git/ref/tags/v4 --jq '{ref, type: .object.type, sha: .object.sha}'` -> {\"ref\":\"refs/tags/v4\",\"sha\":\"11d5960a326750d5838078e36cf38b85af677262\",\"type\":\"commit\"}",
+    "`git ls-remote --tags https://github.com/actions/checkout.git | grep 11d5960a326750d5838078e36cf38b85af677262` -> 'refs/tags/v4' e 'refs/tags/v4.4.0', stesso SHA: versione esatta v4.4.0. `gh api repos/actions/checkout/releases/tags/v4.4.0 --jq '{tag_name, published_at}'` -> v4.4.0, 2026-07-20T15:36:10Z. E' lo stesso SHA gia' in ci.yml:30",
+    "`gh api repos/anthropics/claude-code-action/git/ref/tags/v1 --jq '{ref, type: .object.type, sha: .object.sha}'` -> {\"ref\":\"refs/tags/v1\",\"sha\":\"1bc23c05956f182d538474fec6c62d9c830b47e9\",\"type\":\"tag\"}: tag annotato, 1bc23c0 e' l'oggetto tag e non il commit",
+    "`gh api repos/anthropics/claude-code-action/git/tags/1bc23c05956f182d538474fec6c62d9c830b47e9 --jq '{tag, type: .object.type, sha: .object.sha, date: .tagger.date}'` -> {\"date\":\"2026-10-03T23:16:20Z\",\"sha\":\"cab360f6565aa35a51d6ce9e43f1f4287c0a32ea\",\"tag\":\"v1\",\"type\":\"commit\"}",
+    "`git ls-remote --tags https://github.com/anthropics/claude-code-action.git | grep cab360f6565aa35a51d6ce9e43f1f4287c0a32ea` -> 'refs/tags/v1^{}' e 'refs/tags/v1.0.241^{}': versione esatta v1.0.241",
+    "stesso ls-remote, righe con 8ce9314fa9a404564fa7e954cd84f25bcba2b829 -> 'refs/tags/v1.0.236^{}': e' lo SHA di claude-pr-review.yml:95, cinque patch indietro rispetto al v1 di oggi",
+    "`gh api repos/anthropics/claude-code-action/releases/latest --jq '{tag_name, published_at, target_commitish}'` -> tag_name 'v1', published_at 2025-08-26T17:01:10Z: la release non da' la versione esatta, la danno i tag",
+    "prima: `grep -n 'uses:' .github/workflows/*.yml` su origin/main -> nightly:25 'actions/checkout@v4', nightly:29 'anthropics/claude-code-action@v1', release-comms:27 'actions/checkout@v4', release-comms:31 'anthropics/claude-code-action@v1'",
+    "dopo: le stesse quattro righe -> 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0' e 'anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea # v1.0.241'; `git diff` -> 2 file, 4 righe tolte e 4 aggiunte, tutte righe uses:",
+    "`gh run list --workflow claude-nightly-maintenance.yml -L 3` -> una sola run, 36537879381, evento schedule, 2026-09-29T07:38:51Z, conclusion failure; `gh run view 36537879381 --log-failed | grep -i 'not installed'` -> 'App token exchange failed: 401 Unauthorized - Claude Code is not installed on this repository. Please install the Claude Code GitHub App at https://github.com/apps/claude'"
+  ],
+  "differenze": [
+    "Nel repository restano due versioni di anthropics/claude-code-action: v1.0.236 in claude-pr-review.yml, v1.0.241 nei due workflow di questa PR. Il brief chiede cio' a cui il tag punta oggi, e claude-pr-review.yml e' nel perimetro del collaudo: non si allinea qui.",
+    "In claude-pr-review.yml il commento accanto allo SHA e' la sola versione maggiore ('# v4', '# v1'), non la versione esatta come in ci.yml. Resta com'e'."
+  ],
+  "fallimenti": [
+    "Il primo comando che scriveva questa voce e' stato fermato da guard-paths.sh: il percorso del file era costruito con una sostituzione di comando dopo 'journal/' e il gate ha letto '/$' come percorso fuori dal progetto. Niente e' stato scritto ne' committato da quel comando. Voce riscritta con percorso esplicito e ts da `date -Is` -> '2026-10-04T10:23:01+02:00'."
+  ],
+  "limiti": [
+    "Il notturno oggi fallisce per un motivo che questa PR non tocca: l'app GitHub di Claude Code non e' installata sul repository (scambio del token: 401). Fissare lo SHA non lo rende verde.",
+    "I due workflow non partono su una PR: lo SHA fissato non e' eseguito dal vivo da questa PR."
+  ],
+  "cosa_non_e_misurato": "Una run dei due workflow con le action fissate. Il contenuto del diff fra v1.0.236 e v1.0.241 di claude-code-action. Se e quando v4 di actions/checkout si spostera' ancora.",
+  "esito": "applicata nei due workflow, nello stesso commit di questa voce; non mergiata",
+  "umano_coinvolto": true
+}

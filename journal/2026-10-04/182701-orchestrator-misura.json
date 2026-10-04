@@ -1,0 +1,23 @@
+{
+  "ts": "2026-10-04T18:27:01+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "API degli artifact di un run: forma della risposta per nome, nome assente, run inesistente, e come esce gh",
+  "contesto": "Prima di scrivere il ramo «artifact presente ma non scaricato» in claude-pr-review.yml. Run vero: 37214752012 (collaudo della PR #85). gh version 2.102.0, jq-1.7, in locale su WSL2.",
+  "evidenza": [
+    "`gh api repos/OwnConsent/ownconsent-www/actions/runs/37214752012/artifacts?name=verdetto-tentativo-1` -> total_count 1; artifacts[0]: id 11307684241, name 'verdetto-tentativo-1', size_in_bytes 1989, expired false, digest 'sha256:143e0ee77c33ebacd3b39e57b2b96693313851b320864e1a5f28c2a72722298a', created_at 2026-10-04T15:59:26Z, expires_at 2026-10-11T15:59:25Z, workflow_run.id 37214752012",
+    "stessa chiamata con name=verdetto-tentativo-99 -> '{\"total_count\":0,\"artifacts\":[]}', rc=0",
+    "`gh api -X GET …/runs/37214752012/artifacts -f name=verdetto --jq .total_count` -> 0; con name=VERDETTO-TENTATIVO-1 -> 0: il nome e' un confronto esatto, non un prefisso, e distingue le maiuscole",
+    "`gh api …/actions/runs/1/artifacts?name=x` -> stdout '{\"message\":\"Not Found\",…,\"status\":\"404\"}', stderr 'gh: Not Found (HTTP 404)', rc=1: su un errore HTTP gh stampa comunque il corpo sullo stdout, quindi lo stdout si usa solo con rc=0",
+    "`gh api … --jq 'if (.nonce|type) != \"array\" then error(\"forma inattesa\") else \"x\" end'` -> 'error: forma inattesa', rc=1: un error() del filtro fa uscire gh con 1",
+    "`ARTEFATTO=verdetto-tentativo-1 gh api -X GET … -f name=verdetto-tentativo-1 -f per_page=100 --jq '<filtro con $ENV.ARTEFATTO>'` -> 'presente', rc=0; con verdetto-tentativo-9 -> 'assente', rc=0: il --jq di gh legge $ENV",
+    "tutti i 13 artifact del repo (`gh api repos/OwnConsent/ownconsent-www/actions/artifacts?per_page=100`): 13 run, ognuno con il solo 'verdetto-tentativo-1', tutti expired=false; nessun artifact scaduto da osservare",
+    "documentazione, docs.github.com/en/rest/actions/artifacts, «List workflow run artifacts», parametro name: «The name field of an artifact. When specified, only artifacts with this name will be returned.»; per_page: default 30, massimo 100; expired: booleano obbligatorio, senza descrizione; digest: stringa o null, senza descrizione; se gli scaduti siano elencati: non detto"
+  ],
+  "cosa_non_e_misurato": "Un artifact con expired true: nel repo non ce ne sono, e la voce 2026-10-01 dice che le liste non elencano gli scaduti. Il ramo «scaduto» e' quindi coperto solo dal banco, con una risposta costruita. La versione di gh sul runner ubuntu-24.04 e se il suo --jq legga $ENV: non misurato dal vivo; se non lo leggesse il filtro darebbe 'assente' per ogni nome (select su null), cioe' il messaggio di oggi.",
+  "esito": "forma della risposta nota; il ramo si scrive su name ed expired, con il filtro che restituisce una parola",
+  "umano_coinvolto": false
+}

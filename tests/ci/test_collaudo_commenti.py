@@ -149,6 +149,10 @@ def _senza_funzioni(righe: list[str]) -> list[str]:
 
 API_DEI_JOB = re.compile(
     r'gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/attempts/\$TENTATIVO/jobs"')
+# Dopo un download non riuscito Pubblica chiede all'API degli artifact del run se
+# l'artifact c'e': sono metadati del run, non commenti.
+API_DEGLI_ARTIFACT = re.compile(
+    r'gh api "repos/\$GITHUB_REPOSITORY/actions/runs/\$GITHUB_RUN_ID/artifacts"')
 
 
 class TestStaticaLetturaDeiCommenti(unittest.TestCase):
@@ -165,7 +169,9 @@ class TestStaticaLetturaDeiCommenti(unittest.TestCase):
     def test_a_nessuna_lettura_dei_commenti_prima_della_decisione_sul_file(self):
         # Prima del #69: nessun gh prima dello script. Dal #69 prima dello script
         # c'e' la lettura dei tempi dall'API dei job, e la definizione di
-        # non_presa (che non si esegue li'). Resta vietato ogni altro gh.
+        # non_presa (che non si esegue li'); con il ramo dell'artifact presente
+        # ma non scaricato, anche l'API degli artifact del run. Resta vietato
+        # ogni altro gh.
         i_script = self._indice(lambda r: "collaudo-esito.sh" in r, "chiamata allo script")
         i_api = self._indice(lambda r: re.search(r"\bgh api\b.*/comments", r), "gh api …/comments")
         self.assertLess(i_script, i_api,
@@ -173,7 +179,8 @@ class TestStaticaLetturaDeiCommenti(unittest.TestCase):
         prima = _senza_funzioni(self.righe[:i_script])
         gh_prima = [r for r in prima if re.search(r"\bgh\b", r)]
         for r in gh_prima:
-            self.assertRegex(r, API_DEI_JOB, "prima della decisione, solo l'API dei job")
+            self.assertTrue(API_DEI_JOB.search(r) or API_DEGLI_ARTIFACT.search(r),
+                            f"prima della decisione, solo l'API dei job e degli artifact: {r.strip()}")
         self.assertNotRegex("\n".join(prima), r"/comments")
 
     def test_a_la_lettura_dipende_dall_uscita_3(self):

@@ -29,7 +29,11 @@ Fedelta' al YAML:
     finto ($GITHUB_WORKSPACE/.github/scripts), come fa lo step di checkout.
 
 Un `gh` finto in PATH registra le chiamate e risponde a tre API:
-  - …/actions/runs/N/artifacts           (JSON degli artifact del run, --jq vero)
+  - …/actions/runs/N/artifacts           (JSON degli artifact del run, --jq vero;
+                                          con `-f name=X` restano solo quelli con
+                                          quel nome, come fa l'API: misura nel
+                                          journal 2026-10-04, PR dell'artifact
+                                          presente ma non scaricato)
   - …/actions/runs/N/attempts/A/jobs     (JSON dei job DELL'ATTEMPT A, filtrato con il
                                           --jq vero; un attempt che il banco non
                                           conosce risponde 404)
@@ -67,9 +71,12 @@ printf '%s\n' "$*" >> "$GH_LOG"
 case "$1" in
   api)
     percorso=$2; shift 2
-    filtro=""
+    filtro=""; nome_chiesto=""; con_nome=""
     while [ "$#" -gt 0 ]; do
-      case "$1" in --jq) filtro=$2; shift ;; esac
+      case "$1" in
+        --jq) filtro=$2; shift ;;
+        -f) case "$2" in name=*) nome_chiesto=${2#name=}; con_nome=1 ;; esac; shift ;;
+      esac
       shift
     done
     case "$percorso" in
@@ -95,7 +102,12 @@ case "$1" in
           echo "HTTP 502: Bad Gateway" >&2
           exit 1
         fi
-        risposta=$GH_ARTIFACTS_RISPOSTA ;;
+        risposta=$GH_ARTIFACTS_RISPOSTA
+        if [ -n "$con_nome" ] && [ -z "${GH_ARTIFACTS_IGNORA_NOME:-}" ]; then
+          jq --arg n "$nome_chiesto" 'if (.artifacts | type) == "array" then .artifacts |= map(select(.name == $n)) | .total_count = (.artifacts | length) else . end' \
+            "$risposta" > "$risposta.per-nome"
+          risposta="$risposta.per-nome"
+        fi ;;
       *)
         echo "gh finto: api inattesa: $percorso" >&2
         exit 99 ;;
@@ -209,7 +221,8 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
                api_fallisce=False, risposta="vuoto.json", commenti_piantati=None,
                jobs_falliscono=False, tentativo="1", run_attempt="1", tempi=None,
                artefatti=None, download_fallisce=False, artefatti_falliscono=False,
-               altri_nel_run=("verdetto-completo-tentativo-1",), prepara_illeggibile=False):
+               altri_nel_run=("verdetto-completo-tentativo-1",), prepara_illeggibile=False,
+               scaduti=(), risposta_artefatti=None, api_ignora_nome=False):
     """Esegue Scegli, (Ricevi simulato), Prepara, Pubblica del job pubblica.
 
     verdetto          contenuto dell'artifact del tentativo `tentativo`:
@@ -221,6 +234,11 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
     altri_nel_run     altri nomi che l'API elenca (non del ventaglio)
     download_fallisce il download fallisce anche se l'artifact esiste
     artefatti_falliscono l'API degli artifact risponde con un errore
+    scaduti           nomi che l'API elenca con expired true (gli altri: false)
+    risposta_artefatti il JSON dell'API degli artifact, cosi' com'e', al posto
+                      di quello costruito da artefatti, altri_nel_run e scaduti
+    api_ignora_nome   l'API degli artifact elenca tutto il run anche se le si
+                      chiede un nome: il nome lo deve guardare chi legge
     tempi             {attempt: trascorsi | None | "vuoti"} per l'API dei job, per
                       attempt; default: l'attempt del ventaglio (il tentativo
                       valido, o il piu' alto degli artifact non oltre run_attempt,
@@ -250,8 +268,12 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
             shutil.copy(FIXTURE / commenti_piantati, rt / "commenti.json")
         f_art = tmp / "artifacts.json"
         nomi_run = list(altri_nel_run) + list(artefatti)
-        f_art.write_text(json.dumps({"total_count": len(nomi_run), "artifacts": [
-            {"id": 100 + i, "name": n} for i, n in enumerate(nomi_run)]}), encoding="utf-8")
+        # La forma e' quella misurata sull'API: name, expired, digest.
+        if risposta_artefatti is None:
+            risposta_artefatti = {"total_count": len(nomi_run), "artifacts": [
+                {"id": 100 + i, "name": n, "expired": n in scaduti,
+                 "digest": "sha256:" + "0" * 64} for i, n in enumerate(nomi_run)]}
+        f_art.write_text(json.dumps(risposta_artefatti), encoding="utf-8")
         if tempi is None:
             if re.fullmatch(r"[1-9][0-9]*", tentativo or ""):
                 a_v = tentativo
@@ -292,6 +314,8 @@ def esegui_job(*, verdetto=ASSENTE, esito="failure", trascorsi=100,
             base["GH_JOBS_FALLISCE"] = "1"
         if artefatti_falliscono:
             base["GH_ARTIFACTS_FALLISCE"] = "1"
+        if api_ignora_nome:
+            base["GH_ARTIFACTS_IGNORA_NOME"] = "1"
         for k, v in (doc.get("env") or {}).items():
             base[k] = str(v)
         for k, v in (job.get("env") or {}).items():

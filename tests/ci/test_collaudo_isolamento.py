@@ -297,9 +297,10 @@ class TestEsecuzioneIsolamento(unittest.TestCase):
         self._non_presa(r, 2)
 
     def test_uscita_imprevista_di_prepara_decisione_non_presa(self):
-        # Prima di beab008 il caso era «download fallito, API conta 1» -> uscita 4:
-        # ora quel caso e' «artifact non trovato» (TestArtifactMancante). Resta
-        # un Prepara che fallisce per altro: verdetto.md scaricato ma illeggibile.
+        # Un download fallito non passa da qui: ha i suoi nomi, «artifact non
+        # trovato», «artifact presente ma non scaricato» e «API degli artifact
+        # non leggibile» (TestArtifactMancante). Qui resta un Prepara che
+        # fallisce per altro: verdetto.md scaricato ma illeggibile.
         r = esegui_job(verdetto=TESTO_VERDETTO_BREVE, esito="success", prepara_illeggibile=True)
         self.assertNotEqual(r["rc_prepara"], 0, r["stdout"])
         self.assertNotEqual(r["rc_prepara"], 4, "4 e' l'uscita dell'artifact mancante")
@@ -617,8 +618,48 @@ MOTIVO_ARTIFACT = (f"artifact non trovato: mai caricato o scaduto dopo {GIORNI_R
                    "serve «Re-run all jobs»")
 CORPO_ARTIFACT_NON_TROVATO = (
     f"Commit `{CORTO}`\n\n**Collaudo: decisione non presa ({MOTIVO_ARTIFACT}).** "
-    "L'artifact del ventaglio non si e' trovato o non si e' scaricato. "
+    "L'artifact del ventaglio non si e' trovato. "
     "Il job non sa se questo commit abbia un verdetto.\n")
+
+# Download fallito con l'artifact nel run: un nome suo. Con download-artifact v8
+# ci finisce anche un digest che non torna (digest-mismatch: error per default).
+MOTIVO_ARTIFACT_PRESENTE = ("artifact presente ma non scaricato: integrità non verificata "
+                            "o download fallito")
+CORPO_ARTIFACT_PRESENTE = (
+    f"Commit `{CORTO}`\n\n**Collaudo: decisione non presa ({MOTIVO_ARTIFACT_PRESENTE}).** "
+    "Non rilanciare l'agente: va guardato il log del job pubblica. "
+    "Il job non sa se questo commit abbia un verdetto.\n")
+MOTIVO_API_ARTIFACT = "API degli artifact non leggibile"
+CORPO_API_ARTIFACT = (
+    f"Commit `{CORTO}`\n\n**Collaudo: decisione non presa ({MOTIVO_API_ARTIFACT}).** "
+    "Il download dell'artifact non e' riuscito, e l'API non ha detto se l'artifact c'e'. "
+    "Il job non sa se questo commit abbia un verdetto.\n")
+API_ARTIFACT_DEL_RUN = "api repos/OwnConsent/ownconsent-www/actions/runs/4242/artifacts"
+
+
+def _download_fallito(self, r, corpo_atteso, motivo, nome="verdetto-tentativo-1"):
+    """Comune ai tre esiti di un download non riuscito: rosso, un commento solo,
+    uguale carattere per carattere, senza marcatore; una sola chiamata API, quella
+    degli artifact del run, col nome dell'artifact atteso."""
+    self.assertEqual(r["scaricato"], "failure", r["stdout"])
+    self.assertEqual(r["rc"], 1, f"rosso: {r['stdout']}")
+    self.assertEqual(len(r["pubblicati"]), 1, r["stdout"])
+    corpo = r["pubblicati"][0]
+    self.assertEqual(corpo, corpo_atteso)
+    self.assertIn(f"({motivo})", r["stdout"], "l'annotazione ::error riporta il motivo")
+    self.assertNotIn("cantiere-collaudo", corpo)
+    self.assertNotIn("tipo=", corpo)
+    self.assertNotIn("nessun verdetto", corpo.lower())
+    self.assertNotIn("timeout", corpo.lower())
+    self.assertEqual(len(r["api"]), 1, f"una sola API: {r['chiamate_gh']}")
+    self.assertEqual(r["api"], r["api_artefatti"], r["chiamate_gh"])
+    self.assertTrue(r["api"][0].startswith(API_ARTIFACT_DEL_RUN + " "), r["api"])
+    self.assertIn(f"-f name={nome} ", r["api"][0])
+    self.assertEqual(r["uscite_prepara"].get("artifact"), "mancante")
+    self.assertEqual(r["rc_prepara"], 4, r["stdout"])
+    # Prepara non sa se l'artifact c'e': non lo chiama «non trovato».
+    self.assertIn("::error title=Artifact non scaricato::", r["stdout_passi"]["prepara"])
+    self.assertNotIn("non trovato", r["stdout_passi"]["prepara"])
 
 
 def _artifact_non_trovato(self, r):
@@ -634,9 +675,8 @@ def _artifact_non_trovato(self, r):
     self.assertNotIn("nessun verdetto", corpo.lower())
     self.assertNotIn("timeout", corpo.lower())
     self.assertIn(f"`{CORTO}`", corpo)
-    self.assertEqual(r["api"], [], f"nessuna API: {r['chiamate_gh']}")
-    self.assertEqual(r["uscite_prepara"].get("artifact"), "mancante")
-    self.assertEqual(r["rc_prepara"], 4, r["stdout"])
+    self.assertNotIn("presente ma non scaricato", corpo)
+    _download_fallito(self, r, CORPO_ARTIFACT_NON_TROVATO, MOTIVO_ARTIFACT)
 
 
 # 5a65f8c (voce 2026-10-01/101052): senza un tentativo valido il download non si
@@ -670,16 +710,87 @@ class TestArtifactMancante(unittest.TestCase):
     def test_d_download_fallito(self):
         casi = {
             "nome dall'output, artifact assente nel run": dict(tentativo="1", artefatti={}),
-            "artifact presente, download fallito": dict(tentativo="1", download_fallisce=True),
             "rerun di pubblica, artifact del tentativo 1 sparito": dict(
                 tentativo="1", run_attempt="2", artefatti={"verdetto-tentativo-2": ASSENTE}),
+            # Nel run c'e' un artifact, ma con un altro nome: non e' quello atteso.
+            "download fallito, nel run solo un nome che contiene quello atteso": dict(
+                tentativo="1", artefatti={"verdetto-tentativo-10": TESTO_VERDETTO_BREVE},
+                altri_nel_run=("verdetto-completo-tentativo-1", "xverdetto-tentativo-1")),
+            # L'API risponde con tutto il run invece che col solo nome chiesto:
+            # un artifact con un altro nome non e' quello atteso.
+            "l'API ignora il nome e nel run ci sono altri artifact": dict(
+                tentativo="1", artefatti={"verdetto-tentativo-2": TESTO_VERDETTO_BREVE},
+                api_ignora_nome=True),
+            # Scaduto: l'API oggi non lo elenca (journal 2026-10-01); se lo
+            # elencasse, con expired true, non ci sarebbe comunque niente da scaricare.
+            "artifact presente ma scaduto": dict(
+                tentativo="1", download_fallisce=True, scaduti=("verdetto-tentativo-1",)),
         }
         for nome, kw in casi.items():
             for esito in ("success", "failure"):
                 with self.subTest(caso=nome, esito=esito):
                     r = esegui_job(esito=esito, trascorsi=CONFINE + 5, **kw)
-                    self.assertEqual(r["scaricato"], "failure", r["stdout"])
                     _artifact_non_trovato(self, r)
+
+    def test_e_artifact_presente_ma_non_scaricato(self):
+        casi = {
+            "agente muto": dict(verdetto=ASSENTE),
+            "verdetto scritto": dict(verdetto=TESTO_VERDETTO_BREVE),
+            "accanto a un omonimo scaduto": dict(
+                verdetto=TESTO_VERDETTO_BREVE,
+                risposta_artefatti={"total_count": 2, "artifacts": [
+                    {"id": 1, "name": "verdetto-tentativo-1", "expired": True, "digest": None},
+                    {"id": 2, "name": "verdetto-tentativo-1", "expired": False,
+                     "digest": "sha256:" + "a" * 64}]}),
+        }
+        for nome, kw in casi.items():
+            for esito in ("success", "failure"):
+                with self.subTest(caso=nome, esito=esito):
+                    r = esegui_job(esito=esito, trascorsi=CONFINE + 5, tentativo="1",
+                                   download_fallisce=True, **kw)
+                    corpo = r["pubblicati"][0] if r["pubblicati"] else ""
+                    self.assertNotIn("non trovato", corpo)
+                    self.assertNotIn("Re-run all jobs", corpo)
+                    # Nessun verdetto pubblicato, anche se l'agente l'aveva scritto.
+                    self.assertNotIn("Nessun finding", corpo)
+                    _download_fallito(self, r, CORPO_ARTIFACT_PRESENTE, MOTIVO_ARTIFACT_PRESENTE)
+
+    def test_f_api_degli_artifact_non_leggibile(self):
+        casi = {
+            "errore HTTP": dict(artefatti_falliscono=True),
+            "risposta senza artifacts": dict(risposta_artefatti={"message": "Not Found"}),
+            "artifacts non e' una lista": dict(risposta_artefatti={"total_count": 1, "artifacts": "x"}),
+            "expired assente": dict(risposta_artefatti={"total_count": 1, "artifacts": [
+                {"id": 1, "name": "verdetto-tentativo-1"}]}),
+            "expired non booleano": dict(risposta_artefatti={"total_count": 1, "artifacts": [
+                {"id": 1, "name": "verdetto-tentativo-1", "expired": "false"}]}),
+        }
+        for nome, kw in casi.items():
+            # Con l'artifact nel run e senza: l'errore non diventa ne' l'uno ne' l'altro.
+            for artefatti in (None, {}):
+                with self.subTest(caso=nome, nel_run=artefatti is None):
+                    r = esegui_job(esito="failure", trascorsi=CONFINE + 5, tentativo="1",
+                                   verdetto=TESTO_VERDETTO_BREVE, download_fallisce=True,
+                                   artefatti=artefatti, **kw)
+                    corpo = r["pubblicati"][0] if r["pubblicati"] else ""
+                    self.assertNotIn("non trovato", corpo)
+                    self.assertNotIn("presente ma non scaricato", corpo)
+                    _download_fallito(self, r, CORPO_API_ARTIFACT, MOTIVO_API_ARTIFACT)
+
+    def test_g_dell_api_nel_log_solo_la_parola_del_filtro(self):
+        # Un nome o un campo della risposta non arriva nella shell ne' nel log:
+        # del run si stampa una parola fra tre.
+        ostile = {"total_count": 2, "artifacts": [
+            {"id": 1, "name": "verdetto-tentativo-1", "expired": False,
+             "digest": "::warning::iniettato-dal-digest"},
+            {"id": 2, "name": "::add-mask::Collaudo", "expired": False, "digest": None}]}
+        r = esegui_job(esito="failure", tentativo="1", download_fallisce=True,
+                       risposta_artefatti=ostile)
+        _download_fallito(self, r, CORPO_ARTIFACT_PRESENTE, MOTIVO_ARTIFACT_PRESENTE)
+        self.assertNotIn("iniettato-dal-digest", r["stdout"])
+        self.assertNotIn("::add-mask::", r["stdout"])
+        righe = [l for l in r["stdout_passi"]["pubblica"].splitlines() if "secondo l'API" in l]
+        self.assertEqual(righe, ["artifact 'verdetto-tentativo-1' secondo l'API del run: presente"])
 
     def test_d_nessun_nome(self):
         for kw in (dict(tentativo="", artefatti={}), dict(tentativo="", verdetto=TESTO_VERDETTO_BREVE)):

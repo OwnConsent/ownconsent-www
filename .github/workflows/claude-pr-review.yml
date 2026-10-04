@@ -37,9 +37,10 @@ jobs:
     # entrambi i job, per costruzione; non verificato dal vivo.
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     # Immagine fissata a ubuntu-26.04: migrazione fatta con una prova, non per
-    # il calendario di ubuntu-latest (actions/runner-images#14748). Prove del
-    # 04/10: sul repo cantiere e qui, PR #84 e #85 (journal/2026-10-04/163102
-    # e 180008).
+    # il calendario di ubuntu-latest (actions/runner-images#14748). La prova di
+    # questi due job sono le PR #89 e #90 (journal/2026-10-04/191731). Prima,
+    # sempre il 04/10, 26.04 era stata provata sul repo cantiere e qui sul job
+    # ci (PR #84 e #85), col collaudo ancora su 24.04.
     runs-on: ubuntu-26.04
     # Rete di sicurezza: il budget che conta e' quello dello step ventaglio, e
     # scade prima di questo. Il job non accetta env qui (contexts.md), quindi il
@@ -181,9 +182,10 @@ jobs:
     # da solo farebbe girare questo job.
     if: ${{ !cancelled() && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository }}
     # Immagine fissata a ubuntu-26.04: migrazione fatta con una prova, non per
-    # il calendario di ubuntu-latest (actions/runner-images#14748). Prove del
-    # 04/10: sul repo cantiere e qui, PR #84 e #85 (journal/2026-10-04/163102
-    # e 180008).
+    # il calendario di ubuntu-latest (actions/runner-images#14748). La prova di
+    # questi due job sono le PR #89 e #90 (journal/2026-10-04/191731). Prima,
+    # sempre il 04/10, 26.04 era stata provata sul repo cantiere e qui sul job
+    # ci (PR #84 e #85), col collaudo ancora su 24.04.
     runs-on: ubuntu-26.04
     timeout-minutes: 10
     # L'unico job che scrive sulla PR. actions: read serve all'API dei job e

@@ -30,8 +30,8 @@ resta com'e'. Qui quel file e' controllato come gli altri.
 Limiti:
 - il commento deve avere la forma di una versione (`v4`, `v4.4.0`), ma che
   quello SHA sia davvero quella versione questo test non lo sa: non va in rete;
-- la versione puo' essere solo la maggiore (`# v4`), com'e' oggi in
-  claude-pr-review.yml;
+- la versione puo' essere solo la maggiore (`# v4`): il test non chiede il
+  tag esatto;
 - dentro un'azione locale (`./...`) non si guarda;
 - per `docker://` non si chiede il digest.
 """

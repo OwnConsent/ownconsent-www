@@ -1,0 +1,20 @@
+{
+  "ts": "2026-10-04T20:55:38+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "/code-review sulla PR #88 (a28bade): nessun bug; tre note di gravita' bassa su commenti, due corrette",
+  "contesto": "/code-review 88 lanciato da Andrea.",
+  "evidenza": [
+    "nota 1, claude-pr-review.yml righe 39 e 183: il commento di runs-on citava come prova le PR #84 e #85 e le voci 163102 e 180008, che per questi due job dicono il contrario ('I job ventaglio e pubblica … non toccati, girano su 24.04'; 'Il collaudo … e' girato su ubuntu-24.04, come deve'). Errore mio: avevo ricalcato il commento di ci.yml. Corretto: la prova dei due job sono le #89 e #90, voce 191731",
+    "nota 2, tests/ci/test_uses_sha.py riga 33: «com'e' oggi in claude-pr-review.yml» non e' piu' vero, le sei uses: portano il tag esatto. Corretto il docstring",
+    "nota 3, tests/ci/test_runs_on.py riga 34: «fissato i due job a ubuntu-24.04». Lasciato: racconta la PR che ha tolto l'eccezione, ed e' vero al passato; la riga 21 parla dell'etichetta in generale",
+    "controllato dal revisore e trovato a posto: perimetro del diff, stringhe delle mutazioni, SHA di claude-code-action uguale agli altri due workflow, percorso del digest fino al ramo della #86, nessun vecchio SHA ne' ubuntu-24.04 sotto .github/",
+    "non fatto dal revisore: test e mutazioni non eseguiti, SHA non verificati a monte, sorgenti delle action non letti",
+    "dopo la correzione: `git diff f53edca -- .github/workflows/claude-pr-review.yml`, righe cambiate che non sono commenti -> 0; `python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 191 tests in 9.136s', 'OK (skipped=2)'. Banco delle mutazioni non rieseguito: nessuna mutazione cita le righe cambiate (`grep -c 'Prove del\\|La prova di questi' tests/ci/mutazioni_collaudo.py` da rifare se serve)"
+  ],
+  "esito": "solo commenti e un docstring: nessuna riga eseguita cambia, nessuna correzione di gravita' media o superiore, /code-review non va ripetuto. Le impilate #89 e #90 hanno girato su f53edca, prima di questo commit.",
+  "umano_coinvolto": true
+}

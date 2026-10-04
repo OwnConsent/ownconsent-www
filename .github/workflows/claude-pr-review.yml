@@ -305,6 +305,32 @@ jobs:
           path: ${{ runner.temp }}/verdetto.md
           if-no-files-found: error
 
+      # MISURA, solo in questa PR impilata (non mergiare): la versione di gh
+      # sull'immagine e il filtro --jq della #86, lo stesso, su un nome presente
+      # e su uno assente. Dice se il --jq del gh del runner legge $ENV.
+      - name: Misura — gh e $ENV nel filtro --jq
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PRESENTE: ${{ steps.scegli.outputs.nome }}
+        run: |
+          gh --version
+          jq --version || true
+          for nome in "$PRESENTE" "verdetto-tentativo-99"; do
+            rc=0
+            stato=$(ARTEFATTO="$nome" gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts" \
+              -X GET -f name="$nome" -f per_page=100 \
+              --jq 'if (.artifacts | type) != "array" then error("forma inattesa")
+                    else [.artifacts[] | select(.name == $ENV.ARTEFATTO) | .expired] as $e
+                    | if any($e[]; type != "boolean") then error("expired non booleano")
+                    elif any($e[]; . == false) then "presente" else "assente" end
+                    end') || rc=$?
+            echo "MISURA nome='${nome}' filtro='${stato}' rc=${rc}"
+          done
+          rc=0
+          letto=$(MISURA_ENV=letto gh api "repos/$GITHUB_REPOSITORY" --jq '$ENV.MISURA_ENV // "non letto"') || rc=$?
+          echo "MISURA \$ENV nel --jq: '${letto}' rc=${rc}"
+
       # Pubblicare non e' una scelta dell'agente: il 26/09 l'agente ha taciuto
       # su 4 riesecuzioni su 5, e sul rerun anche con l'istruzione di commentare
       # sempre (36257241401, tentativo 2). Il rosso e' riservato al verdetto

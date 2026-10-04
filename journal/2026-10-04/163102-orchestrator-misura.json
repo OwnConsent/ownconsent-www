@@ -1,0 +1,29 @@
+{
+  "ts": "2026-10-04T16:31:02+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "PR #84 in bozza, run 37209354472: su ubuntu-26.04 ogni passo del job ci ha lo stesso esito che su ubuntu-24.04; tests/ci 188 OK su entrambe",
+  "contesto": "Seguito della voce 2026-10-04/162723 (commit ae62354). PR #84 «PROVA ubuntu-26.04 — non mergiare», in bozza, ramo prova/ubuntu-2604, base main. Una run, tentativo 1. Job prova-2604 (111457174715) e prova-2404 (111457174689); il job ci (111457174585) e' quello non modificato.",
+  "evidenza": [
+    "`gh pr checks 84` -> 'ci pass 2m4s', 'prova-2404 pass 1m53s', 'prova-2604 pass 1m50s', 'pubblica skipping', 'ventaglio skipping': in bozza il collaudo non e' partito",
+    "`gh run view --job 111457174715 --log`, Set up job -> 'Ubuntu' '26.04.1' 'LTS', 'Image: ubuntu-26.04', 'Version: 20260927.149.1'; job 111457174689 -> 'Ubuntu' '24.04.5' 'LTS', 'Image: ubuntu-24.04', 'Version: 20260927.320.1'",
+    "Passo «Prova — immagine e strumenti», 26.04 -> 'Image: ubuntu26', 'Version: 20260927.149.1', 'Python 3.14.4', '6.0.3' (uscita di import yaml: 0); stat, date, od, tr, head, wc, mktemp: '<cmd> (uutils coreutils) 0.10.0', uscite '0 0' per tutti e sette",
+    "Stesso passo, 24.04 -> 'Image: ubuntu24', 'Version: 20260927.320.1', 'Python 3.12.3', '6.0.1' (uscita 0); i sette comandi: '<cmd> (GNU coreutils) 9.4', uscite '0 0'",
+    "Passo «Collaudo del workflow (tests/ci)», 26.04 -> 'Python 3.14.4', 'PyYAML 6.0.3', 'Ran 188 tests in 6.472s', 'OK'; 24.04 -> 'Python 3.12.3', 'PyYAML 6.0.1', 'Ran 188 tests in 5.959s', 'OK'. Nessuna riga FAIL, ERROR o skipped in nessuno dei due",
+    "Passo «Prova — riassunto degli esiti», identico sui due job: 15 righe 'ESITO success' (da Checkout a Misura di laboratorio (AC39)), 5 righe 'ESITO skipped' (i cinque passi api/: 'area api/: assente'), 0 'ESITO failure'",
+    "Su entrambi: 'v22.23.2' (node), '12.4.1' (pnpm), 'area site/: presente (site/package.json)', e2e '319 passed (33.7s)'; perf '8 passed (27.0s)' su 26.04 e '8 passed (26.9s)' su 24.04",
+    "`grep -ciE 'warning|deprecat'` sul log intero -> 10 su ciascun job, le stesse dieci righe: hint di git nel checkout, opzione --warning di tar, sei avvisi ts di astro check, '- 0 warnings', e l'annotazione 'Node.js 20 is deprecated ... actions/checkout@11d5960...'. Nessun avviso che compaia solo su 26.04",
+    "In locale (Python 3.12.3), `CI=true python3 -m unittest <modulo>`: test_collaudo_commenti 13, test_collaudo_esito 33, test_collaudo_isolamento 42 -> 88 dei 188 sono i test sui frammenti del collaudo"
+  ],
+  "differenze": [
+    "La prova in cantiere del 04/10 riportava GNU coreutils 9.7 con prefisso «gnu» su 26.04: il passo iniziale non lo interroga, il brief chiedeva i sette comandi senza prefisso. Non misurato qui.",
+    "PyYAML su 26.04 non era misurato: e' 6.0.3, importabile dal Python di sistema.",
+    "L'output di unittest nel job non e' verboso: dal log di 26.04 si legge il totale (188, OK), non il conteggio per modulo. La ripartizione 88/100 e' contata in locale sullo stesso commit."
+  ],
+  "cosa_non_e_misurato": "I cinque passi api/: saltati su entrambe le immagini, l'area non esiste. I job ventaglio e pubblica di claude-pr-review.yml su ubuntu-26.04: non toccati, girano su 24.04 e in bozza non sono partiti; di quel workflow su 26.04 sono misurati solo i frammenti run: che tests/ci esegue. mutazioni_collaudo.py non e' un passo del job ci e non e' girato su 26.04. Una run per immagine: osservazione, non frequenza.",
+  "esito": "nessuna differenza di esito fra le due immagini; nessuna correzione; la PR #84 resta aperta in bozza, la chiude Andrea",
+  "umano_coinvolto": true
+}

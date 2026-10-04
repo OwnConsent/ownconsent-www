@@ -17,17 +17,17 @@ permissions:
 jobs:
   ci:
     name: ci
-    # Immagine fissata: dal 19/10 al 19/11/2026 ubuntu-latest passa a
-    # Ubuntu 26.04 (actions/runner-images#14748). Il passaggio a 26.04 si
-    # prova in una PR sua, non arriva da solo.
-    runs-on: ubuntu-24.04
+    # Immagine fissata a ubuntu-26.04: migrazione fatta con una prova
+    # (PR #84, journal/2026-10-04/163102), non per il calendario di
+    # ubuntu-latest (actions/runner-images#14748).
+    runs-on: ubuntu-26.04
     env:
       # ADR-0002, D9: nessuna telemetria di terzi da un repository pubblico.
       # Vale anche quando site/ e' assente (ADR-0003, D4).
       ASTRO_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Node.js (da .nvmrc)
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0

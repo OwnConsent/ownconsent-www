@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-04T18:00:08+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "PR #85, commit 781f6e9: job ci verde su ubuntu-26.04 con checkout v7.0.1, tests/ci 188 OK, 0 annotazioni; collaudo con verdetto «nessun finding»",
+  "contesto": "Seguito della voce 2026-10-04/175319. PR #85, ramo ci/ubuntu-2604, base main, non in bozza. Run CI 37214752047, job ci 111472885393; run del collaudo 37214752012, job ventaglio 111472885130 e pubblica 111473830695. Una run, tentativo 1.",
+  "evidenza": [
+    "`gh pr checks 85` -> 'ci pass 1m36s', 'ventaglio pass 5m9s', 'pubblica pass 8s'",
+    "`gh run view --job 111472885393 --log`, Set up job -> 'Ubuntu' '26.04.1' 'LTS', 'Image: ubuntu-26.04', 'Version: 20260927.149.1'; 'Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1''",
+    "Passo «Collaudo del workflow (tests/ci)» -> 'Python 3.14.4', 'PyYAML 6.0.3', 'Ran 188 tests in 5.198s', 'OK'",
+    "`gh api .../actions/jobs/111472885393 --jq .steps` -> success: Set up job, Checkout, Node.js (da .nvmrc), Versione Node in uso, SHA verificato, Rilevamento aree, Collaudo del workflow (tests/ci), site/ pnpm, site/ installazione dipendenze, site/ build, site/ lint, site/ astro check, Progetto di collaudo installazione, Playwright Chromium, Test di accettazione (e2e), Misura di laboratorio (AC39), Post Node.js, Post Checkout, Complete job; skipped: i cinque passi api/",
+    "Dal log: 'node: v22.23.2', pnpm '12.4.1', 'area site/: presente (site/package.json)', 'area api/: assente', astro check '- 0 errors' '- 0 warnings', e2e '319 passed (30.5s)', perf '8 passed (25.2s)'",
+    "`gh api repos/OwnConsent/ownconsent-www/check-runs/111472885393/annotations --jq length` -> 0; check run: conclusion 'success', annotations_count 0, head_sha 781f6e9597579f7a7a1fa148c9437fbebda53773",
+    "Controllo positivo, stessa chiamata sul job ci della PR #84 (111457174585, checkout 11d5960) -> 1, 'warning: Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262'",
+    "`grep -c 'Node.js 20'` sul log del job -> 0; `grep -ciE 'warning|deprecat'` -> 9 (erano 10 sui job della PR #84: manca la riga dell'annotazione di checkout)",
+    "Commento di github-actions sulla PR, 2026-10-04T15:59:35Z, marcatore 'cantiere-collaudo tipo=verdetto sha=781f6e9...': 'Nessun finding. La PR e' pulita.'; dimensioni code-review, security, qa-test esaminate, privacy, performance, accessibility saltate come non pertinenti"
+  ],
+  "differenze": [
+    "Il brief dava tests/ci in locale come requisito e l'esito del job dal log: i due totali coincidono (188), i tempi no (4.460s in locale, 5.198s nel job), come atteso.",
+    "Questa voce arriva con un commit successivo a 781f6e9: la run che descrive e' quella di 781f6e9, non quella del commit che la contiene."
+  ],
+  "cosa_non_e_misurato": "claude-nightly-maintenance.yml e claude-release-comms.yml su ubuntu-26.04 con checkout v7.0.1: non partono su pull_request e non sono stati lanciati a mano. I cinque passi api/: saltati, l'area non esiste. Il collaudo (ventaglio e pubblica) e' girato su ubuntu-24.04, come deve. Una run: osservazione, non frequenza.",
+  "esito": "criteri del brief soddisfatti sul commit 781f6e9; PR #85 aperta, non mergiata: il merge e' di Andrea",
+  "umano_coinvolto": true
+}

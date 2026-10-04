@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-04T17:53:19+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Migrazione a ubuntu-26.04 e actions/checkout v7.0.1 in ci.yml, claude-nightly-maintenance.yml e claude-release-comms.yml; il collaudo resta su ubuntu-24.04 fino alla sua PR",
+  "contesto": "Brief di Andrea del 04/10. Worktree .claude/worktrees/migrazione-2604, ramo ci/ubuntu-2604 da origin/main (6d4c22f). Fonti: la prova della PR #84 (chiusa senza merge, commit ae62354 e 72961c4, voci 2026-10-04/162723 e 163102 portate in questo ramo identiche con `git checkout origin/prova/ubuntu-2604 -- <percorsi>`; il job di prova del workflow non e' riportato) e la prova in cantiere (PR 21 e 22 di quel repository), riferita dal brief e non rimisurata qui. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "alternative": [
+    {
+      "opzione": "migrare nella stessa PR anche .github/workflows/claude-pr-review.yml",
+      "scartata_perche": "e' nel perimetro del collaudo: su un diff che lo tocca il collaudo giudica se' stesso e il suo esito non prova niente (CLAUDE.md). Tenendolo fuori, il collaudo di questa PR conta. Della PR #84 su 26.04 sono misurati solo i frammenti run: che tests/ci esegue, non i job ventaglio e pubblica"
+    },
+    {
+      "opzione": "cambiare solo runs-on e lasciare actions/checkout a v4.4.0 (11d5960)",
+      "scartata_perche": "la run della PR #84 porta l'annotazione 'Node.js 20 is deprecated' per actions/checkout@11d5960 su entrambe le immagini (voce 163102); v7.0.1 dichiara using: node24"
+    },
+    {
+      "opzione": "aggiornare nello stesso giro anche claude-code-action, setup-node, setup-go e golangci-lint",
+      "scartata_perche": "fuori dal brief: nessuna prova li copre, e un cambio per volta lascia leggibile la causa se la run diventa rossa"
+    }
+  ],
+  "evidenza": [
+    "`gh api repos/actions/checkout/git/ref/tags/v7.0.1` -> object.sha '3d3c42e5aac5ba805825da76410c181273ba90b1', object.type 'commit' (tag leggero: lo SHA e' il commit, non un oggetto tag)",
+    "`gh api repos/actions/checkout/commits/3d3c42e5aac5ba805825da76410c181273ba90b1` -> date '2026-07-17T18:45:11Z', messaggio 'prep v7.0.1 release (#2531)'",
+    "action.yml a quello SHA, `grep -n using` -> '116:  using: node24'",
+    "`git diff --stat` sui workflow -> tre file, '15 insertions(+), 15 deletions(-)': in ciascuno tre righe di commento, runs-on e la riga uses: di checkout",
+    "`grep -n 'runs-on\\|actions/checkout' .github/workflows/claude-pr-review.yml` -> righe 42 e 185 'runs-on: ubuntu-24.04', righe 66 e 195 'actions/checkout@11d5960... # v4': non toccato",
+    "`cd tests/ci && CI=true python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 188 tests in 4.460s', 'OK'; `env -u CI python3 -m unittest test_runs_on test_uses_sha` -> 'Ran 24 tests in 0.066s', 'OK'. In locale, Python 3.12.3"
+  ],
+  "differenze": [
+    "Il commento sopra runs-on cita la PR #84 e la voce 163102 invece del solo calendario di ubuntu-latest: la PR e' chiusa e il suo ramo verra' cancellato, la voce di journal resta nel repository.",
+    "tests/ci/test_runs_on.py e test_uses_sha.py nominano ubuntu-24.04, v4.4.0 e 11d5960 nelle docstring e nei casi di prova: sono esempi per le regole, non lo stato dei workflow, e non sono toccati."
+  ],
+  "scadenza": "Il collaudo resta su ubuntu-24.04 finche' .github/workflows/claude-pr-review.yml porta 'runs-on: ubuntu-24.04' (oggi righe 42 e 185). Condizione verificabile dal repo: `grep -rn 'ubuntu-24.04' .github/workflows/` deve tornare vuoto quando la PR del collaudo e' mergiata. Limite esterno: dal 19/10 al 19/11/2026 ubuntu-latest passa a 26.04 (actions/runner-images#14748), ma l'etichetta fissata non si muove da sola.",
+  "cosa_non_e_misurato": "La run della PR su ubuntu-26.04 con checkout v7.0.1: voce successiva. claude-nightly-maintenance.yml e claude-release-comms.yml non girano su pull_request: su 26.04 e con checkout v7 non sono eseguiti da questa PR, solo letti da tests/ci. La prova in cantiere non e' rimisurata.",
+  "esito": "applicata nello stesso commit di questa voce; non mergiata",
+  "umano_coinvolto": true
+}

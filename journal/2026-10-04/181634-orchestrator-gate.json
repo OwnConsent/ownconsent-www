@@ -1,0 +1,21 @@
+{
+  "ts": "2026-10-04T18:16:34+02:00",
+  "agente": "orchestrator",
+  "issue": "",
+  "lotto": "collaudo/ubuntu-2604-node24",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "fermo prima della fase 2: il digest sbagliato finisce in «artifact non trovato», e il ramo «artifact presente ma download fallito -> uscita 4» su main non esiste",
+  "contesto": "La consegna chiede di verificare che un digest sbagliato di download-artifact v8 finisca nel ramo «artifact presente ma download fallito» e non in «artifact non trovato», e di fermarsi se finisce altrove. La prova a secco attesa era «decisione non presa (uscita 4)».",
+  "evidenza": [
+    "claude-pr-review.yml righe 255-258: if [ \"$SCARICATO\" != \"success\" ] -> artifact=mancante, ::error title=Artifact non trovato, exit 4. Riga 342-345: ARTIFACT=mancante -> «decisione non presa (artifact non trovato: mai caricato o scaduto dopo 7 giorni; serve «Re-run all jobs»)». Non c'e' altro ramo per un download fallito",
+    "tests/ci/test_collaudo_isolamento.py righe 300-301: «Prima di beab008 il caso era «download fallito, API conta 1» -> uscita 4: ora quel caso e' «artifact non trovato»»; riga 673: il caso «artifact presente, download fallito» e' atteso in _artifact_non_trovato",
+    "git log -1 beab008 -> 2026-09-29 ci(collaudo): artifact del tentativo del ventaglio, artifact mancante = decisione non presa; PR da fork saltate (#69)",
+    "download-artifact v8.0.1: digest sbagliato -> setFailed -> steps.scarica.outcome=failure (continue-on-error) -> stesso ramo. Il commento direbbe «mai caricato o scaduto… serve Re-run all jobs» per un artifact presente e scaricato ma con hash diverso",
+    "grep su tutti i rami remoti e gh pr list --state open: nessun ramo o PR con un ramo distinto per il digest"
+  ],
+  "chi_ha_deciso": "la consegna di Andrea («Se finisce altrove, fermati e riporta»)",
+  "cosa_serviva": "decisione di Andrea: (a) accettare che il digest sbagliato resti in «artifact non trovato», correggendo attesa e testo del messaggio; (b) reintrodurre un ramo distinto, che pero' e' un cambio di logica in Prepara e Pubblica e contraddice «Nient'altro» della fase 2; (c) digest-mismatch: warn, che pubblicherebbe un verdetto con hash non verificato",
+  "esito": "fermo: workflow, test e mutazioni non toccati; nessuna PR aperta, ramo non pubblicato",
+  "umano_coinvolto": true
+}

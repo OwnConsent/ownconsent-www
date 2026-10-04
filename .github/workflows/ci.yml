@@ -148,3 +148,409 @@ jobs:
         if: steps.rilevamento.outputs.api == 'presente'
         working-directory: api
         run: go test -race -count=1 -v ./...
+
+  # PROVA ESPLORATIVA, da non mergiare: copia del job `ci` su ubuntu-26.04, ogni
+  # passo con continue-on-error, per leggere tutti gli esiti in una run sola.
+  # Non e' un contesto richiesto.
+  prova-2604:
+    name: prova-2604
+    runs-on: ubuntu-26.04
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Prova — immagine e strumenti
+        run: |
+          set +e
+          echo "Image: ${ImageOS:-non definita}"
+          echo "Version: ${ImageVersion:-non definita}"
+          python3 --version
+          echo "uscita di python3 --version: $?"
+          python3 -c 'import yaml; print(yaml.__version__)'
+          echo "uscita di import yaml: $?"
+          for cmd in stat date od tr head wc mktemp; do
+            echo "--- $cmd"
+            "$cmd" --version | head -1
+            echo "uscita di $cmd --version | head -1: ${PIPESTATUS[0]} ${PIPESTATUS[1]}"
+          done
+          exit 0
+
+      - name: Checkout
+        id: checkout
+        continue-on-error: true
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Node.js (da .nvmrc)
+        id: node
+        continue-on-error: true
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Versione Node in uso
+        id: node_v
+        continue-on-error: true
+        run: node -v
+
+      - name: SHA verificato
+        id: sha
+        continue-on-error: true
+        run: git rev-parse HEAD
+
+      - name: Rilevamento aree
+        id: rilevamento
+        continue-on-error: true
+        run: |
+          set +e
+          bash .github/ci/area.sh site
+          site_status=$?
+          bash .github/ci/area.sh api
+          api_status=$?
+          set -e
+          if [ "$site_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Collaudo del workflow (tests/ci)
+        id: tests_ci
+        continue-on-error: true
+        working-directory: tests/ci
+        run: |
+          python3 --version
+          python3 -c "import yaml; print('PyYAML', yaml.__version__)"
+          python3 -m unittest discover -s . -p 'test_*.py'
+
+      - name: site/ — pnpm (corepack) e versione in uso
+        id: site_pnpm
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: |
+          corepack enable
+          pnpm -v
+
+      - name: site/ — installazione dipendenze
+        id: site_install
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: site/ — build
+        id: site_build
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm build
+
+      - name: site/ — lint
+        id: site_lint
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm lint
+
+      - name: site/ — astro check
+        id: site_check
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm astro check
+
+      - name: Progetto di collaudo (radice) — installazione dipendenze
+        id: radice_install
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright — Chromium
+        id: playwright
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test di accettazione (e2e)
+        id: e2e
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:e2e
+
+      - name: Misura di laboratorio (AC39)
+        id: perf
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:perf
+
+      - name: api/ — Go (da api/go.mod)
+        id: go
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: api/go.mod
+          cache: false
+
+      - name: Versione Go in uso
+        id: go_v
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        run: go version
+
+      - name: api/ — build
+        id: api_build
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go build ./...
+
+      - name: api/ — lint (golangci-lint)
+        id: api_lint
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        with:
+          working-directory: api
+          version-file: .golangci-lint-version
+          skip-cache: true
+
+      - name: api/ — test (-race -count=1 -v, niente cache)
+        id: api_test
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go test -race -count=1 -v ./...
+
+      - name: Prova — riassunto degli esiti
+        if: always()
+        run: |
+          fallito=0
+          while IFS='|' read -r esito nome; do
+            if [ -z "$nome" ]; then continue; fi
+            echo "ESITO $esito | $nome"
+            if [ "$esito" = "failure" ]; then fallito=1; fi
+          done <<'ESITI'
+          ${{ steps.checkout.outcome }}|Checkout
+          ${{ steps.node.outcome }}|Node.js (da .nvmrc)
+          ${{ steps.node_v.outcome }}|Versione Node in uso
+          ${{ steps.sha.outcome }}|SHA verificato
+          ${{ steps.rilevamento.outcome }}|Rilevamento aree
+          ${{ steps.tests_ci.outcome }}|Collaudo del workflow (tests/ci)
+          ${{ steps.site_pnpm.outcome }}|site/ — pnpm (corepack) e versione in uso
+          ${{ steps.site_install.outcome }}|site/ — installazione dipendenze
+          ${{ steps.site_build.outcome }}|site/ — build
+          ${{ steps.site_lint.outcome }}|site/ — lint
+          ${{ steps.site_check.outcome }}|site/ — astro check
+          ${{ steps.radice_install.outcome }}|Progetto di collaudo (radice) — installazione dipendenze
+          ${{ steps.playwright.outcome }}|Playwright — Chromium
+          ${{ steps.e2e.outcome }}|Test di accettazione (e2e)
+          ${{ steps.perf.outcome }}|Misura di laboratorio (AC39)
+          ${{ steps.go.outcome }}|api/ — Go (da api/go.mod)
+          ${{ steps.go_v.outcome }}|Versione Go in uso
+          ${{ steps.api_build.outcome }}|api/ — build
+          ${{ steps.api_lint.outcome }}|api/ — lint (golangci-lint)
+          ${{ steps.api_test.outcome }}|api/ — test (-race -count=1 -v, niente cache)
+          ESITI
+          exit "$fallito"
+
+  # PROVA ESPLORATIVA, da non mergiare: copia del job `ci` su ubuntu-24.04, ogni
+  # passo con continue-on-error, per leggere tutti gli esiti in una run sola.
+  # Non e' un contesto richiesto.
+  prova-2404:
+    name: prova-2404
+    runs-on: ubuntu-24.04
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+    steps:
+      - name: Prova — immagine e strumenti
+        run: |
+          set +e
+          echo "Image: ${ImageOS:-non definita}"
+          echo "Version: ${ImageVersion:-non definita}"
+          python3 --version
+          echo "uscita di python3 --version: $?"
+          python3 -c 'import yaml; print(yaml.__version__)'
+          echo "uscita di import yaml: $?"
+          for cmd in stat date od tr head wc mktemp; do
+            echo "--- $cmd"
+            "$cmd" --version | head -1
+            echo "uscita di $cmd --version | head -1: ${PIPESTATUS[0]} ${PIPESTATUS[1]}"
+          done
+          exit 0
+
+      - name: Checkout
+        id: checkout
+        continue-on-error: true
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+
+      - name: Node.js (da .nvmrc)
+        id: node
+        continue-on-error: true
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+
+      - name: Versione Node in uso
+        id: node_v
+        continue-on-error: true
+        run: node -v
+
+      - name: SHA verificato
+        id: sha
+        continue-on-error: true
+        run: git rev-parse HEAD
+
+      - name: Rilevamento aree
+        id: rilevamento
+        continue-on-error: true
+        run: |
+          set +e
+          bash .github/ci/area.sh site
+          site_status=$?
+          bash .github/ci/area.sh api
+          api_status=$?
+          set -e
+          if [ "$site_status" -ne 0 ] || [ "$api_status" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Collaudo del workflow (tests/ci)
+        id: tests_ci
+        continue-on-error: true
+        working-directory: tests/ci
+        run: |
+          python3 --version
+          python3 -c "import yaml; print('PyYAML', yaml.__version__)"
+          python3 -m unittest discover -s . -p 'test_*.py'
+
+      - name: site/ — pnpm (corepack) e versione in uso
+        id: site_pnpm
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: |
+          corepack enable
+          pnpm -v
+
+      - name: site/ — installazione dipendenze
+        id: site_install
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm install --frozen-lockfile
+
+      - name: site/ — build
+        id: site_build
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm build
+
+      - name: site/ — lint
+        id: site_lint
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm lint
+
+      - name: site/ — astro check
+        id: site_check
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        working-directory: site
+        run: pnpm astro check
+
+      - name: Progetto di collaudo (radice) — installazione dipendenze
+        id: radice_install
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright — Chromium
+        id: playwright
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test di accettazione (e2e)
+        id: e2e
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:e2e
+
+      - name: Misura di laboratorio (AC39)
+        id: perf
+        continue-on-error: true
+        if: steps.rilevamento.outputs.site == 'presente'
+        run: pnpm test:perf
+
+      - name: api/ — Go (da api/go.mod)
+        id: go
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: api/go.mod
+          cache: false
+
+      - name: Versione Go in uso
+        id: go_v
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        run: go version
+
+      - name: api/ — build
+        id: api_build
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go build ./...
+
+      - name: api/ — lint (golangci-lint)
+        id: api_lint
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # v9.3.0
+        with:
+          working-directory: api
+          version-file: .golangci-lint-version
+          skip-cache: true
+
+      - name: api/ — test (-race -count=1 -v, niente cache)
+        id: api_test
+        continue-on-error: true
+        if: steps.rilevamento.outputs.api == 'presente'
+        working-directory: api
+        run: go test -race -count=1 -v ./...
+
+      - name: Prova — riassunto degli esiti
+        if: always()
+        run: |
+          fallito=0
+          while IFS='|' read -r esito nome; do
+            if [ -z "$nome" ]; then continue; fi
+            echo "ESITO $esito | $nome"
+            if [ "$esito" = "failure" ]; then fallito=1; fi
+          done <<'ESITI'
+          ${{ steps.checkout.outcome }}|Checkout
+          ${{ steps.node.outcome }}|Node.js (da .nvmrc)
+          ${{ steps.node_v.outcome }}|Versione Node in uso
+          ${{ steps.sha.outcome }}|SHA verificato
+          ${{ steps.rilevamento.outcome }}|Rilevamento aree
+          ${{ steps.tests_ci.outcome }}|Collaudo del workflow (tests/ci)
+          ${{ steps.site_pnpm.outcome }}|site/ — pnpm (corepack) e versione in uso
+          ${{ steps.site_install.outcome }}|site/ — installazione dipendenze
+          ${{ steps.site_build.outcome }}|site/ — build
+          ${{ steps.site_lint.outcome }}|site/ — lint
+          ${{ steps.site_check.outcome }}|site/ — astro check
+          ${{ steps.radice_install.outcome }}|Progetto di collaudo (radice) — installazione dipendenze
+          ${{ steps.playwright.outcome }}|Playwright — Chromium
+          ${{ steps.e2e.outcome }}|Test di accettazione (e2e)
+          ${{ steps.perf.outcome }}|Misura di laboratorio (AC39)
+          ${{ steps.go.outcome }}|api/ — Go (da api/go.mod)
+          ${{ steps.go_v.outcome }}|Versione Go in uso
+          ${{ steps.api_build.outcome }}|api/ — build
+          ${{ steps.api_lint.outcome }}|api/ — lint (golangci-lint)
+          ${{ steps.api_test.outcome }}|api/ — test (-race -count=1 -v, niente cache)
+          ESITI
+          exit "$fallito"

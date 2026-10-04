@@ -1,0 +1,33 @@
+{
+  "ts": "2026-10-04T16:27:23+02:00",
+  "agente": "orchestrator",
+  "issue": null,
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "Prova esplorativa ubuntu-26.04: job prova-2604 e prova-2404 in ci.yml, copie del job ci con continue-on-error; PR in bozza, da non mergiare",
+  "contesto": "Brief di Andrea del 04/10: misurare cosa cambia su ubuntu-26.04 per ci.yml e per i frammenti del collaudo che tests/ci esegue. Worktree .claude/worktrees/prova-2604, ramo prova/ubuntu-2604 da origin/main (6d4c22f). claude-pr-review.yml e gli altri file del perimetro del collaudo non sono toccati. La PR si apre in bozza e non si mergia: la chiude Andrea. Lavoro sequenziale di una sessione sola: nessuna delega.",
+  "alternative": [
+    {
+      "opzione": "scrivere i passi una volta sola con un'ancora YAML e richiamarli nel secondo job",
+      "scartata_perche": "tests/ci/test_uses_sha.py confronta i uses: letti dal parser con le righe uses: del testo grezzo, nello stesso ordine: con un alias il parser ne vede il doppio del testo. Non provato: scartata leggendo il test"
+    },
+    {
+      "opzione": "un job solo con matrice sulle due immagini",
+      "scartata_perche": "runs-on diventerebbe un'espressione, che test_runs_on.py rifiuta; il brief chiede due job con etichetta esplicita"
+    }
+  ],
+  "evidenza": [
+    "I due job sono generati da uno script in scratch a partire dai passi del job ci: a ogni passo si aggiungono id e continue-on-error: true, in testa il passo «Prova — immagine e strumenti», in coda «Prova — riassunto degli esiti» che stampa steps.<id>.outcome di ciascuno e esce 1 se uno e' failure",
+    "Controllo col parser YAML: runs-on 'ubuntu-26.04' e 'ubuntu-24.04'; i passi dei due job di prova sono uguali fra loro (True); 22 passi contro i 20 del job ci; tolti id e continue-on-error, i 20 passi centrali sono uguali a quelli del job ci (True)",
+    "`git diff --stat` -> '.github/workflows/ci.yml | 406 +', '1 file changed, 406 insertions(+)': il job ci non e' modificato",
+    "`cd tests/ci && env -u CI python3 -m unittest discover -s . -p 'test_*.py'` -> 'Ran 188 tests in 4.858s', 'OK (skipped=2)'; con CI=true -> 'Ran 188 tests in 5.624s', 'OK'. In locale: Python 3.12.3, PyYAML 6.0.1"
+  ],
+  "differenze": [
+    "Nel passo iniziale «Image» e «Version» sono le variabili d'ambiente ImageOS e ImageVersion del runner; le righe 'Image:' e 'Version:' scritte dal runner stanno nel log di «Set up job» e si leggono da li'.",
+    "I commenti del job ci non sono copiati nei due job di prova."
+  ],
+  "cosa_non_e_misurato": "Tutto cio' che riguarda ubuntu-26.04: si misura sulla run della PR, voce successiva. Che l'etichetta ubuntu-26.04 sia disponibile per questo repository non e' verificato prima del push.",
+  "esito": "applicata nello stesso commit di questa voce; non mergiata",
+  "umano_coinvolto": true
+}

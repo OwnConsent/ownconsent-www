@@ -91,6 +91,16 @@ jobs:
           echo "github.event.pull_request.head.sha=${HEAD_SHA}"
           echo "github.sha=${MERGE_SHA}"
 
+      # ESPERIMENTO, solo sulla PR impilata: non va su main. Stampa la variabile
+      # dall'ambiente di questo step, che la dichiara con lo stesso valore dello
+      # step dell'agente. L'env dello step dell'agente lo stampa il runner da se',
+      # nell'intestazione del suo log.
+      - name: Misura della variabile (esperimento)
+        env:
+          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"
+        run: |
+          echo "MISURA CLAUDE_CODE_DISABLE_BACKGROUND_TASKS='${CLAUDE_CODE_DISABLE_BACKGROUND_TASKS-<non definita>}'"
+
       - name: Ventaglio di revisione
         id: ventaglio
         timeout-minutes: ${{ fromJSON(env.BUDGET_VENTAGLIO_MIN) }}

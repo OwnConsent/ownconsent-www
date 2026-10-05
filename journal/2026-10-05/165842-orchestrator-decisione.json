@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-05T16:58:42+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "collaudo: prompt con le tre regole di esecuzione (variante A) piu' CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1 nello step dell'agente; soglia di tenuta scritta prima del merge",
+  "contesto": "Brief di Andrea del 05/10. Causa del silenzio, misurata da Andrea il 04-05/10 in locale e riferita nel brief (archivio /home/andreapernici/ownconsent-archivio/collaudo-silenzio-2026-10-05, fuori dal perimetro di questa sessione: non letto): l'agente lancia i subagent in background e chiude il turno con un messaggio di attesa; l'action esce al primo result e il verdetto non si scrive. Ramo collaudo/subagenti-in-primo-piano da origin/main 1fa1e2c, worktree .claude/worktrees/collaudo-silenzio.",
+  "alternative": [
+    {
+      "opzione": "solo la variante A: le tre regole in testa al prompt, nessuna variabile",
+      "scartata_perche": "riferito da Andrea: 8 lanci su 8 col verdetto, ma la tenuta dipende da un'istruzione che l'agente puo' non seguire; e' lo stesso tipo di rimedio che il 26/09 non ha retto (istruzione di commentare sempre, silenzio sul rerun 36257241401)"
+    },
+    {
+      "opzione": "solo la variabile CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1, prompt di main",
+      "scartata_perche": "non misurata da sola: le prove locali riferite sono A e B (testo piu' variabile). La variabile toglie il background, ma non dice all'agente che il lavoro finisce col file scritto; e il riferimento a ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md resterebbe nel prompt, dove in CI non si risolve (#76)"
+    }
+  ],
+  "evidenza": [
+    "riferito da Andrea, non rimisurato qui: in CI 10 giri muti su 40 esecuzioni, tutti di 72-150 s, success, zero negazioni, tutti su PR senza verdetto precedente",
+    "riferito da Andrea, non rimisurato qui: in locale, prompt di main, 5 lanci su 6 chiusi con «Waiting…» prima di scrivere; variante A 8 su 8; variante B (A piu' la variabile) 8 su 8 col verdetto scritto prima del primo result, e in B i subagent vanno in primo piano anche quando l'agente non lo chiede",
+    "`gh api repos/anthropics/claude-code-action/contents/base-action/src/run-claude-sdk.ts?ref=cab360f6565aa35a51d6ce9e43f1f4287c0a32ea` -> righe 198-209: `if (message.type === \"result\") { resultMessage = …; … break; }`, col commento 'Break explicitly: by SDK contract no further messages follow a result'",
+    "https://code.claude.com/docs/en/env-vars, letta il 05/10 -> 'CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: Set to `1` to disable all background task functionality, including the `run_in_background` parameter on Bash and subagent tools, auto-backgrounding, and the Ctrl+B shortcut'",
+    "https://code.claude.com/docs/en/sub-agents, sezione «Run subagents in foreground or background», letta il 05/10 -> 'If you set CLAUDE_CODE_DISABLE_BACKGROUND_TASKS to 1, Claude Code runs the subagent in the foreground, in every kind of session and whether or not fork mode is on'; e 'Where fork mode is off, Claude runs the subagent in the background by default … Fork mode is off in non-interactive mode with -p and in the Agent SDK'",
+    "stessa pagina, nota: 'In version 2.1.63, the Task tool was renamed to Agent. Existing Task(...) references … still work as aliases': da qui Agent al posto di Task in --allowedTools",
+    "soglia: (20/30)^15 = 0,00228: col tasso di silenzio precedente, quindici primi giri senza silenzio capitano per caso circa 2 volte su mille"
+  ],
+  "soglia": "La correzione regge se nei primi giri delle prossime 15 PR senza verdetto precedente non c'e' nessun silenzio. Un solo silenzio riapre il lavoro. Si conta dalla prima PR aperta dopo il merge di questa; un «silenzio» e' un commento '**Collaudo: nessun verdetto**' con ventaglio success.",
+  "interpretazioni_mie": [
+    "Il brief da' 10 muti su 40 esecuzioni e, per la soglia, un tasso di 10 su 30: leggo il 30 come i primi giri su PR senza verdetto precedente. Non e' scritto nel brief e non l'ho misurato.",
+    "La definizione operativa di «silenzio» nel campo soglia (il commento 'nessun verdetto' con ventaglio success) e' mia: il brief dice solo «nessun silenzio»."
+  ],
+  "cosa_non_e_misurato": "Le cifre della causa: sono riferite. La sola variabile senza il testo. Che l'env dello step arrivi al processo di Claude Code dentro l'action: lo dice solo, indirettamente, l'esito dell'impilata (voce successiva).",
+  "esito": "applicata sul ramo; test, mutazioni e impilata nelle voci successive",
+  "umano_coinvolto": true
+}

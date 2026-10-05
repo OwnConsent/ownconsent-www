@@ -1,0 +1,18 @@
+{
+  "ts": "2026-10-05T17:01:59+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "primo lancio del banco delle mutazioni a vuoto: il comando in background non e' partito da tests/ci",
+  "contesto": "Lancio in background di `cd …/tests/ci && python3 mutazioni_collaudo.py > mutazioni.txt`. Il processo e' terminato subito e il conteggio dava zero su ogni riga.",
+  "evidenza": [
+    "uscita del comando: 'rc=2'; mutazioni.txt, 161 byte: \"python3: can't open file '…/collaudo-silenzio/mutazioni_collaudo.py': [Errno 2] No such file or directory\"",
+    "conteggio sul file: 'mutazioni: 0', 'righe bersaglio: 0', 'ROSSO: 0', 'VERDE!!: 0'",
+    "rilancio con `python3 <percorso assoluto>/tests/ci/mutazioni_collaudo.py` (lo script usa gia' cwd=TESTS per i sottoprocessi) -> 108 mutazioni, voce 171049"
+  ],
+  "cosa_si_e_imparato": "Zero 'VERDE!!' non e' un esito: e' anche cio' che si legge da un banco che non e' partito. Il conteggio va letto insieme al numero di mutazioni e di righe bersaglio, e il banco si lancia per percorso assoluto.",
+  "esito": "rilanciato, nessun effetto sul ramo",
+  "umano_coinvolto": false
+}

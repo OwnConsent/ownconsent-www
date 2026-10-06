@@ -1,0 +1,20 @@
+{
+  "ts": "2026-10-06T09:21:29+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "/code-review sulla #91 (06ed614): nessun difetto di correttezza, tre osservazioni; il titolo della PR ora dice «parte di #76»",
+  "contesto": "Seguito della voce 2026-10-05/172003. /code-review 91 lanciato da Andrea il 06/10 sul commit 06ed614, base origin/main, 3 commit. Nessuna correzione di gravita' media o superiore: nessun secondo giro da chiedere.",
+  "evidenza": [
+    "esito riportato dalla revisione: 'no correctness bugs found in PR #91'. Eseguiti da lei: `python3 -m unittest test_collaudo_attesa` -> 7 test, OK; discover -> 198 test, OK (skipped=2); le 10 mutazioni nuove applicate una volta ciascuna, 12 righe bersaglio rosse, 0 'VERDE!!', 0 'NON APPLICABILE'",
+    "la mutazione variabile-dei-background-nel-job-pubblica cade davvero nel job pubblica: l'unico 'GH_TOKEN: ${{ github.token }}' e' alla riga 343, dopo 'pubblica:' alla riga 201",
+    "osservazione 1: la voce 2026-10-05/171049 dice che la PR si intitola «chiude #76». `gh api …/issues/91/timeline` -> 'andreapernici 2026-10-06T07:16:22Z «… (chiude #76)» -> «… (parte di #76)»': il titolo e' stato cambiato da Andrea dopo quella voce, che era vera quando e' stata scritta. La #76 resta aperta per claude-nightly-maintenance.yml e claude-release-comms.yml",
+    "osservazione 2: tests/ci/test_collaudo_attesa.py, _strumenti riconosce solo la forma '--allowedTools \"valore\"' con lo spazio; con '--allowedTools=…' o '--allowed-tools' cadrebbe sull'assert dell'helper: un rosso falso, non un verde falso. Lasciato com'e'",
+    "osservazione 3: niente mostra che il processo di Claude Code legga la variabile, e con le regole da sole a 8 su 8 il verdetto della #92 non separa l'effetto della variabile da quello del prompt. Gia' fra i limiti della voce 172003"
+  ],
+  "cosa_non_e_misurato": "La revisione non ha ricontrollato su GitHub le cifre della #92 (347 s, num_turns 10): vengono dalla voce 172003. Lo strumento ReportFindings non era disponibile nella sessione della revisione: i finding sono arrivati come testo.",
+  "esito": "nessuna modifica al codice; descrizione della #91 allineata al titolo. PR #91 e #92 aperte.",
+  "umano_coinvolto": true
+}

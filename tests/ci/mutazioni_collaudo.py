@@ -1,14 +1,14 @@
 """Mutazioni del workflow e dello script del collaudo (#69), ognuna su una copia via CI_ROOT.
 
 Non e' un test (nessun prefisso test_): e' il banco delle prove-by-mutation dei
-test di test_collaudo_{esito,commenti,isolamento}.py. Ogni mutazione deve far
+test di test_collaudo_{esito,commenti,isolamento,attesa}.py. Ogni mutazione deve far
 diventare ROSSO il test bersaglio; una riga «VERDE!!» e' un test che non prova
 cio' che dichiara.
 
 Uso, da tests/ci:  python3 mutazioni_collaudo.py [nome ...]
 Per ogni mutazione: copia .github in una cartella nuova, applica la sostituzione
 (che deve colpire esattamente il numero atteso di occorrenze), esegue il test
-bersaglio con CI_ROOT=<copia> e poi i tre moduli del collaudo, e stampa esito."""
+bersaglio con CI_ROOT=<copia> e poi i quattro moduli del collaudo, e stampa esito."""
 import os
 import re
 import shutil
@@ -24,6 +24,7 @@ SC = ".github/scripts/collaudo-esito.sh"
 C = "test_collaudo_commenti"
 E = "test_collaudo_esito"
 I = "test_collaudo_isolamento"
+A = "test_collaudo_attesa"
 
 # (nome, file, vecchio, nuovo, regex?, bersagli)
 M = [
@@ -426,6 +427,48 @@ M = [
      r'          if \[ "\$ARTIFACT" = "senza-tentativo" \]; then\n.*?\n          fi\n', "", True,
      [f"{I}.TestSceltaDellArtifact.test_b_output_tentativo_mancante_o_non_numerico_nessuna_riserva",
       f"{I}.TestArtifactMancante.test_d_nessun_nome"]),
+    # --- #76: subagent in primo piano, regole di esecuzione in testa al prompt ---
+    ("variabile-dei-background-tolta", WF,
+     '          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"\n', "", False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_variabile_a_1_nell_env_dello_step_dell_agente"]),
+    ("variabile-dei-background-a-zero", WF,
+     '          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"\n',
+     '          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "0"\n', False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_variabile_a_1_nell_env_dello_step_dell_agente"]),
+    ("variabile-dei-background-nel-job-pubblica", WF,
+     r'          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"\n(.*?)(          GH_TOKEN: \$\{\{ github\.token \}\}\n)',
+     r'\1\2          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"\n', True,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_variabile_a_1_nell_env_dello_step_dell_agente"]),
+    ("riferimento-alla-skill-rimesso", WF,
+     "            Esegui il collaudo della PR #${{ github.event.pull_request.number }} con la procedura che segue.\n",
+     "            Esegui la procedura di ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md sulla PR\n            #${{ github.event.pull_request.number }}.\n",
+     False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_prompt_senza_riferimento_alla_skill"]),
+    ("regola-dell-attesa-tolta", WF,
+     "            - Un messaggio che dice di attendere i subagent non chiude il lavoro: non\n              terminare il turno con un messaggio di attesa.\n",
+     "", False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_regola_dell_attesa"]),
+    ("regola-del-verdetto-tolta", WF,
+     "            - Il lavoro finisce solo quando il file del verdetto è scritto. Scrivi il\n              verdetto prima di terminare.\n",
+     "", False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_regola_del_verdetto_prima_di_terminare"]),
+    ("regola-del-primo-piano-tolta", WF,
+     r"            - I subagent si lanciano con lo strumento Agent in primo piano, mai in\n.*?prima di ogni altra cosa\.\n",
+     "", True,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_regola_dei_subagent_in_primo_piano"]),
+    ("regole-in-coda-al-prompt", WF,
+     r"(            Regole di esecuzione, valgono per tutto il lavoro:\n.*?messaggio di attesa\.\n\n)(.*?Non approvare\. Non mergiare\.\n)",
+     r"\2\n\1", True,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_regola_dei_subagent_in_primo_piano",
+      f"{A}.TestStaticaAttesaDeiSubagent.test_regola_del_verdetto_prima_di_terminare",
+      f"{A}.TestStaticaAttesaDeiSubagent.test_regola_dell_attesa"]),
+    ("task-al-posto-di-agent", WF,
+     'Bash(gh pr diff *),Agent"', 'Bash(gh pr diff *),Task"', False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_agent_e_non_task_fra_gli_strumenti_ammessi"]),
+    ("agente-sostituito-da-un-run", WF,
+     "        uses: anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea # v1.0.241\n",
+     "        run: 'true'\n", False,
+     [f"{A}.TestStaticaAttesaDeiSubagent.test_lo_step_dell_agente_e_la_claude_code_action"]),
 ]
 
 
@@ -464,7 +507,7 @@ def esiste(target):
 
 def falliti(root):
     env = dict(os.environ, CI_ROOT=root)
-    p = subprocess.run([sys.executable, "-m", "unittest", "-v", C, E, I], cwd=TESTS, env=env,
+    p = subprocess.run([sys.executable, "-m", "unittest", "-v", C, E, I, A], cwd=TESTS, env=env,
                        capture_output=True, text=True)
     out = []
     for r in p.stderr.splitlines():
@@ -494,7 +537,7 @@ for nome, file, vecchio, nuovo, rx, bersagli in M:
             continue
         print(f"   $ CI_ROOT={root} python3 -m unittest {b}\n     -> rc={rc} '{ultima}'  {'ROSSO' if rc else 'VERDE!!'}")
     f, tot = falliti(root)
-    print(f"   tre moduli: {' '.join(tot)}; falliti: {len(f)}")
+    print(f"   quattro moduli: {' '.join(tot)}; falliti: {len(f)}")
     for x in f:
         print(f"     - {x}")
     shutil.rmtree(root)

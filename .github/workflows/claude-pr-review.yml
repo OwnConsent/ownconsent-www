@@ -104,8 +104,17 @@ jobs:
           # (Actions, Workflows e hook in scrittura compresi).
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
-            Esegui la procedura di ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md sulla PR
-            #${{ github.event.pull_request.number }}.
+            Regole di esecuzione, valgono per tutto il lavoro:
+
+            - I subagent si lanciano con lo strumento Agent in primo piano, mai in
+              background: `run_in_background` non si usa, o vale `false`. Dopo averli
+              lanciati attendi il loro esito nello stesso turno, prima di ogni altra cosa.
+            - Il lavoro finisce solo quando il file del verdetto è scritto. Scrivi il
+              verdetto prima di terminare.
+            - Un messaggio che dice di attendere i subagent non chiude il lavoro: non
+              terminare il turno con un messaggio di attesa.
+
+            Esegui il collaudo della PR #${{ github.event.pull_request.number }} con la procedura che segue.
 
             Il diff è `git diff origin/${{ github.base_ref }}...HEAD`.
 
@@ -142,11 +151,24 @@ jobs:
           claude_args: |
             --max-turns 40
             --permission-mode auto
-            --allowedTools "Read,Grep,Glob,Edit(./.collaudo/**),Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Task"
+            --allowedTools "Read,Grep,Glob,Edit(./.collaudo/**),Bash(git *),Bash(gh pr view *),Bash(gh pr diff *),Agent"
             --disallowedTools "Bash(gh pr comment *),Bash(gh pr review *),Bash(gh api *)"
             --model claude-opus-4-6
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Subagent in primo piano. A 1 questa variabile toglie run_in_background
+          # a Bash e ai subagent (docs, env-vars), e Claude Code lancia ogni
+          # subagent in primo piano, in ogni tipo di sessione (docs, sub-agents,
+          # «Run subagents in foreground or background»). Senza, l'agente li
+          # lanciava in background e chiudeva il turno con un messaggio di attesa:
+          # l'action esce al primo result (base-action/src/run-claude-sdk.ts,
+          # 198-209 a cab360f) e il verdetto non si scriveva. Misura del 04-05/10
+          # in locale, riferita da Andrea: prompt di prima, 5 lanci su 6 chiusi
+          # cosi'; regole in testa al prompt piu' questa variabile, 8 su 8 col
+          # verdetto scritto prima del primo result. Le regole da sole reggono
+          # 8 su 8, ma sono un'istruzione: la variabile non dipende da chi la
+          # legge (journal/2026-10-05/165842).
+          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: "1"
 
       # Dopo l'agente, in questo job, solo la consegna del file: ogni step qui
       # gira nell'ambiente che l'agente puo' aver cambiato, e cio' che stampa puo'

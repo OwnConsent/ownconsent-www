@@ -1,0 +1,37 @@
+{
+  "ts": "2026-10-05T17:20:03+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "lotto": null,
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "silenzio del collaudo: la causa (subagent in background, turno chiuso su un messaggio di attesa) e l'impilata #92 — variabile a 1, verdetto al primo giro, 347 s, num_turns 10",
+  "contesto": "Seguito delle voci 2026-10-05/165842 e 171049. PR #91 (ramo collaudo/subagenti-in-primo-piano, 2f6758e, base main). Impilata normale #92 (ramo esperimento-subagenti, bce29ae, base il ramo della #91): journal/esperimento-silenzio-2026-09-27.md identico a quello delle #66-#68 piu', solo li', uno step «Misura della variabile (esperimento)» nel job ventaglio subito prima dell'agente. Una run per PR, tentativo 1. Niente impilata avversaria: il confine fra i job non e' toccato.",
+  "causa_riferita_da_andrea": [
+    "Misurata il 04-05/10 in locale. Archivio, come riferito: /home/andreapernici/ownconsent-archivio/collaudo-silenzio-2026-10-05. E' fuori dal perimetro di questa sessione: non letto, cifre non rimisurate.",
+    "In CI i giri muti sono tutti brevi (72-150 s), success, zero negazioni: 10 su 40 esecuzioni, tutte su PR senza verdetto precedente.",
+    "In locale, prompt di main: l'agente lancia i subagent in background e chiude il turno con «Waiting…» prima di scrivere, in 5 lanci su 6.",
+    "Variante A (solo testo): 8 su 8. Variante B (testo piu' CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1): 8 su 8 col verdetto scritto prima del primo result; in B i subagent vanno in primo piano anche quando l'agente non lo chiede.",
+    "Il riferimento a ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md non spiega il silenzio (#76), ma in CI non si risolve."
+  ],
+  "evidenza": [
+    "misurato qui: `gh api …/claude-code-action/contents/base-action/src/run-claude-sdk.ts?ref=cab360f…`, righe 198-209 -> il ciclo sui messaggi fa `break` al primo `message.type === \"result\"`",
+    "#92, blob del file: `git hash-object journal/esperimento-silenzio-2026-09-27.md` -> 9a43b86877513a0ded0da9fd0f9971c7ef347a5a, uguale a refs/pull/66, 67, 68 e 89; `cmp` col file della #68: identico. `git diff --stat collaudo/subagenti-in-primo-piano esperimento-subagenti` -> 2 file, 12 righe aggiunte",
+    "#92, `gh pr checks 92` -> 'ventaglio pass 5m54s', 'ci pass 1m58s', 'pubblica pass 9s'; run 37331027754, job ventaglio 111833847079, job pubblica 111836667186",
+    "#92, step di misura, riga 196 del log: \"MISURA CLAUDE_CODE_DISABLE_BACKGROUND_TASKS='1'\"",
+    "#92, env dello step dell'agente stampato dal runner nell'intestazione del log di «Ventaglio di revisione», riga 262: '  CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: 1' (ripetuto alle righe 273, 290, 327, 653 per i passi interni dell'action)",
+    "#92, API dei job, attempt 1: 'Ventaglio di revisione: success 2026-10-05T15:13:24Z -> 2026-10-05T15:19:11Z' = 347 s",
+    "#92, result nel log dell'action: '\"subtype\": \"success\"', '\"is_error\": false', '\"duration_ms\": 331749', '\"num_turns\": 10', '\"permission_denials_count\": 0'",
+    "#92, 'Artifact verdetto-tentativo-1 has been successfully uploaded! Final size is 1877 bytes'; pubblica: 'artifact ricevuto: verdetto-tentativo-1', 'occorrenze di cantiere-collaudo neutralizzate: 0', 'verdetto: 3447 byte (tetto 60000)', 'decisione: verdetto'",
+    "#92, commento di github-actions 2026-10-05T15:19:24Z, https://github.com/OwnConsent/ownconsent-www/pull/92#issuecomment-5997446984: riga 1 '<!-- cantiere-collaudo tipo=verdetto sha=bce29ae644acc496c1c5a6c675f2f5acbcc95937 -->', poi 'Commit `bce29ae`' e '## Collaudo — run 37331027754, tentativo 1'. Subagent lanciati: code-reviewer, security, qa-test; saltati e dichiarati: performance, accessibility, privacy",
+    "#91 (non conta: giudica se' stessa), run 37330930645: 'ventaglio pass 5m11s', 'pubblica pass 9s', 'ci pass 2m5s'; step dell'agente 15:12:41Z -> 15:17:44Z = 303 s; '\"duration_ms\": 288372', '\"num_turns\": 8', '\"permission_denials_count\": 0'; 'decisione: verdetto'; commento con marcatore in riga 1, sha 2f6758e…, 'Esito: nessun finding'",
+    "confronto coi giri muti riferiti (72-150 s): i due giri di oggi durano 303 e 347 s"
+  ],
+  "differenze": [
+    "Lo step di misura stampa la variabile dal PROPRIO ambiente, dove la dichiara con lo stesso valore scritto a mano: da solo direbbe 1 anche se lo step dell'agente non l'avesse. La riga che misura lo step dell'agente e' quella che il runner stampa nell'intestazione del suo log (riga 262). Nessuna delle due dice che il processo di Claude Code l'abbia letta: lo suggerisce solo l'esito.",
+    "Sulla #91 l'agente ha scritto il verdetto. Sulle #65, #72 e #88, PR che toccavano lo stesso workflow, aveva taciuto. Osservazione, non prova: la #91 giudica se' stessa."
+  ],
+  "cosa_non_e_misurato": "Una run per PR: 2 giri con verdetto non dicono niente sul tasso; lo dira' la soglia della voce 165842 (15 primi giri). Non si e' visto nel log se i subagent siano partiti in primo piano: show_full_output e' spento e il log porta solo init e result. La sola variabile senza le regole.",
+  "esito": "PR #91 e #92 aperte; nessuna mergiata ne' chiusa. La #92 la chiude Andrea. /code-review sulla #91 da lanciare.",
+  "umano_coinvolto": true
+}

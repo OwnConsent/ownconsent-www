@@ -1,0 +1,28 @@
+{
+  "ts": "2026-10-05T17:10:49+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "lotto": null,
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "collaudo, subagent in primo piano: diff del prompt contro main, test statici nuovi, 108 mutazioni tutte rosse",
+  "contesto": "Seguito della voce 2026-10-05/165842. Commit b8853ad sul ramo collaudo/subagenti-in-primo-piano. Il prompt e' generato dal file .work/collaudo-silenzio/prompt-A.tmpl (scratch, non versionato) con i segnaposto mappati: @PR@ -> github.event.pull_request.number, @BASE_REF@ -> github.base_ref, @WORKSPACE@ -> github.workspace, @RUN@ -> github.run_id, @TENTATIVO@ -> github.run_attempt. Test nuovi in tests/ci/test_collaudo_attesa.py, scritti da questa sessione: non sono AC di una spec, e dal 03/10 i test delle regole di CI li scrive chi porta la regola (c340dfa, e9e3f2b, ad55dcb, f53edca).",
+  "evidenza": [
+    "prompt reso col parser YAML, origin/main contro ramo, difflib: le sole righe cambiate sono le prime. Tolte: 'Esegui la procedura di ${CLAUDE_PLUGIN_ROOT}/skills/collaudo/SKILL.md sulla PR' e '#${{ github.event.pull_request.number }}.'. Aggiunte: 'Regole di esecuzione, valgono per tutto il lavoro:', le tre regole (9 righe con le vuote) e 'Esegui il collaudo della PR #${{ github.event.pull_request.number }} con la procedura che segue.'. Dal rigo 'Il diff è' in poi, identico",
+    "claude_args, stesso confronto: una riga, '…Bash(gh pr diff *),Task\"' -> '…Bash(gh pr diff *),Agent\"'",
+    "env dello step dell'agente: {'GH_TOKEN': …} -> {'GH_TOKEN': …, 'CLAUDE_CODE_DISABLE_BACKGROUND_TASKS': '1'}",
+    "`grep -rn \"prompt\\|claude_args\\|allowedTools\" tests/ -l` su origin/main -> nessun file: nessun test e nessun banco confrontava il prompt o gli argomenti di main, quindi niente da aggiornare su quel punto",
+    "`env -u CI python3 -m unittest discover -s . -p 'test_*.py'` da tests/ci -> 'Ran 198 tests in 10.379s', 'OK (skipped=2)'; con CI=true -> 'Ran 198 tests in 8.651s', 'OK'. Erano 191 su main (voce 2026-10-04/190203): 7 test nuovi",
+    "`python3 tests/ci/mutazioni_collaudo.py` su b8853ad -> 108 mutazioni, 147 righe bersaglio, 147 ROSSO, 0 'VERDE!!', 0 'NON APPLICABILE', 0 'BERSAGLIO INESISTENTE'. Erano 98 e 135 (voce 2026-10-04/191731): 10 mutazioni nuove, 12 righe bersaglio",
+    "le 10 nuove: variabile-dei-background-tolta, variabile-dei-background-a-zero, variabile-dei-background-nel-job-pubblica, riferimento-alla-skill-rimesso, regola-dell-attesa-tolta, regola-del-verdetto-tolta, regola-del-primo-piano-tolta, regole-in-coda-al-prompt, task-al-posto-di-agent, agente-sostituito-da-un-run",
+    "riferimento-alla-skill-rimesso fa cadere 4 test, non 1: senza la riga 'Esegui il collaudo della PR' i tre test delle regole non trovano piu' l'inizio della procedura"
+  ],
+  "differenze": [
+    "Il brief chiede «Agent al posto di Task» anche nel diff del prompt: il prompt di main non nominava Task. Agent compare nel prompt solo dentro la prima regola nuova; la sostituzione vera e' in --allowedTools.",
+    "La PR si intitola «chiude #76», ma la #76 elenca lo stesso riferimento in claude-nightly-maintenance.yml (riga 33) e claude-release-comms.yml (riga 35): restano, fuori dal perimetro di questa PR. Segnalato ad Andrea nella descrizione della PR.",
+    "Le due domande aperte della #76 (come arriva CLAUDE_PLUGIN_ROOT in CI, cosa legge l'agente a quel percorso) non sono state misurate: il riferimento si toglie senza rispondere."
+  ],
+  "cosa_non_e_misurato": "Niente dal vivo: l'impilata e' nella voce successiva. I test sono statici: non dicono che la variabile arrivi a Claude Code ne' che l'agente segua le regole.",
+  "esito": "test e mutazioni verdi/rosse come atteso; PR da aprire",
+  "umano_coinvolto": true
+}

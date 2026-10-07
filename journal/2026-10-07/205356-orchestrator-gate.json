@@ -1,0 +1,17 @@
+{
+  "ts": "2026-10-07T20:53:56+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "guard-paths nega la lettura delle versioni di claude installate fuori dal progetto: la 2.1.289 del runner resta non provata in locale",
+  "contesto": "Per rifare la prova C sulla versione del runner serviva sapere se la 2.1.289 fosse gia' installata in locale. Il comando elencava una cartella sotto la home, fuori dal progetto.",
+  "chi_ha_deciso": "hook PreToolUse guard-paths.sh del plugin cantiere",
+  "cosa_serviva": "un via libera di Andrea a leggere fuori dal progetto, oppure a eseguire la 2.1.289 in locale",
+  "evidenza": [
+    "'GATE: il percorso ... porta fuori dal progetto ... fuori dal perimetro di questa sessione. Se ti serve davvero, chiedilo a una persona invece di aggirarlo.'",
+    "claude --version -> 2.1.293 (Claude Code); log del run 37618168526: 'Installing Claude Code v2.1.289...'"
+  ],
+  "esito": "non aggirato; nessun altro tentativo di arrivare a quella cartella. Lo scarto di versione sta fra i non misurati di 2026-10-07/205331.",
+  "umano_coinvolto": false
+}

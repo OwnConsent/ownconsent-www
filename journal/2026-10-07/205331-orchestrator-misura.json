@@ -1,0 +1,30 @@
+{
+  "ts": "2026-10-07T20:53:31+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "tetto dei turni del notturno: l'action confronta num_turns col tetto dopo un successo; in locale num_turns conta le chiamate di tool, il tetto del CLI conta le risposte API — 13 contro 3 con Read in parallelo",
+  "contesto": "Seguito di 2026-10-07/141033, che lasciava non misurato perche' i turni contati sono 51 con un tetto a 30. Solo misura: nessun workflow modificato, nessun workflow lanciato. Lavoro fatto dalla sessione, senza subagent: sequenziale. Worktree .claude/worktrees/nightly-max-turns, ramo nightly-max-turns da origin/main a3d0faa.",
+  "evidenza": [
+    "claude-nightly-maintenance.yml:50 '--max-turns 30' dentro claude_args, unica occorrenza; :52 allowedTools 'Read,Grep,Glob,Edit,Write,Bash,Task'; :22 timeout-minutes 45",
+    "action alla SHA cab360f, base-action/src/parse-sdk-options.ts:207-208: 'max-turns' viene tolto da extraArgs; :318-322 diventa sdkOptions.maxTurns (parseInt). Log del run 37618168526: 'SDK options: { ... \"maxTurns\": 30 ...'",
+    "stessa SHA, base-action/src/run-claude-sdk.ts:241-250: se subtype === 'success' && !is_error && maxTurns !== undefined && resultMessage.num_turns > sdkOptions.maxTurns -> core.error + throw 'Claude reported a successful result after N turns, exceeding the configured maximum of M'. E' un controllo a posteriori sul messaggio result, non un arresto; :198-210 il ciclo esce al primo messaggio result",
+    "stessa SHA, base-action/test/run-claude-sdk.test.ts:221 'fails closed when a successful result exceeds maxTurns' (73 contro 60): il comportamento e' voluto e provato dall'action",
+    "prova A, locale, claude 2.1.293: claude -p --model claude-haiku-4-5-20251001 --max-turns 3 --output-format json --allowedTools Read, quattro Read uno alla volta -> exit 1, subtype error_max_turns, is_error true, num_turns 4, terminal_reason max_turns, stop_reason tool_use, total_cost_usd 0.0477033",
+    "prova C, locale, stessa riga con --output-format stream-json --verbose, due blocchi da sei Read in parallelo -> exit 0, subtype success, is_error false, num_turns 13, terminal_reason completed, total_cost_usd 0.06478679999999999; nel flusso 3 message.id distinti di assistant nel filo principale e 12 tool_use Read",
+    "prova B, locale, --max-turns 3 --allowedTools Read,Task,Agent, un subagente general-purpose con sei Read uno alla volta -> exit 0, due messaggi result: result_index 0 num_turns 2, result_index 1 num_turns 1, entrambi success; subagent_stats spawned 1, started_in_background 1; total_cost_usd 0.09920535000000001. I sei Read del subagente non compaiono in num_turns",
+    "costo delle tre prove locali: 0.0477033 + 0.09920535 + 0.0647868 = 0.21169545 USD"
+  ],
+  "non_misurato": [
+    "che nel run 37618168526 i 51 turni vengano da chiamate di tool in parallelo: il flusso dell'agente sul runner e' nascosto (show_full_output assente), il log porta solo init e result. La prova C mostra che il meccanismo esiste, non che e' quello",
+    "il comportamento della 2.1.289 del runner: le prove sono sulla 2.1.293 locale",
+    "come l'SDK passa maxTurns al CLI: il sorgente dell'SDK non e' stato letto, solo quello dell'action",
+    "quante risposte API ha usato il run: num_turns 51 e' l'unico conteggio leggibile",
+    "quanti turni chiede il compito reale e come si dividono fra le tre fasi del prompt: dal log si leggono solo l'inizio dell'agente 12:02:38Z, il result 12:09:15Z e, dalla voce 141033, i due push 12:05:35Z e 12:06:02Z",
+    "se sul runner il subagente Task parte in background e produce piu' messaggi result come in locale: l'action si ferma al primo",
+    "le prove locali girano con le impostazioni e i plugin di questa macchina, il runner no"
+  ],
+  "esito": "meccanismo dell'action misurato sul sorgente; scarto fra tetto e num_turns riprodotto in locale; causa del run reale non misurata. Nessuna correzione applicata: le opzioni vanno ad Andrea.",
+  "umano_coinvolto": true
+}

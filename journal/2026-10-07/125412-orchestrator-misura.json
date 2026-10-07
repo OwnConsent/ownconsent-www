@@ -1,0 +1,25 @@
+{
+  "ts": "2026-10-07T12:54:12+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "nightly e release-comms: github_token al posto dello scambio OIDC, via id-token: write e ${CLAUDE_PLUGIN_ROOT}",
+  "contesto": "I due workflow usano claude-code-action@cab360f (v1.0.241) senza github_token: l'action chiede l'OIDC e lo scambia con un token dell'app GitHub di Claude, che sul repo non e' installata. File toccati: .github/workflows/claude-nightly-maintenance.yml, .github/workflows/claude-release-comms.yml. Nessuno dei due e' nel perimetro del collaudo. Lavoro fatto dalla sessione, senza subagent: sequenziale.",
+  "evidenza": [
+    "gh run view 36537879381 --log-failed -> 'App token exchange failed: 401 Unauthorized - Claude Code is not installed on this repository', 3 tentativi, poi '##[error]Action failed'",
+    "sorgente alla SHA pinnata, src/github/token.ts:160-165: con OVERRIDE_GITHUB_TOKEN valorizzato setupGitHubToken ritorna il token e non arriva a getOidcToken (riga 168); action.yml:298 'OVERRIDE_GITHUB_TOKEN: ${{ inputs.github_token }}'",
+    "docs/faq.md:29 alla stessa SHA: 'If you wish to not use the GitHub app, you can instead provide a github_token input'; docs/security.md:18: il token del workflow 'is scoped to the job's declared permissions'",
+    "grep -rn 'CLAUDE_PLUGIN_ROOT\\|id-token' sui due workflow dopo la modifica -> nessuna riga, exit 1",
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> Ran 198 tests in 7.396s, OK (skipped=2)",
+    "which actionlint -> exit 1: non installato in locale, e ci.yml non lo invoca",
+    "gh api repos/OwnConsent/ownconsent-www/actions/permissions/workflow -> {\"default_workflow_permissions\":\"read\",\"can_approve_pull_request_reviews\":false}"
+  ],
+  "non_misurato": [
+    "i run dal vivo dei due workflow: non ancora lanciati quando questa voce e' stata scritta",
+    "can_approve_pull_request_reviews=false: atteso che gh pr create col GITHUB_TOKEN venga rifiutato; e' una deduzione dall'impostazione, non una misura",
+    "release-comms dichiara pull-requests: read ma il prompt chiede di aprire una PR; il notturno chiede di aprire issue senza il permesso issues. Non allargati: fuori dagli allentamenti ammessi"
+  ],
+  "esito": "modifica applicata sul ramo nightly-github-token, verifica dal vivo da fare",
+  "umano_coinvolto": true
+}

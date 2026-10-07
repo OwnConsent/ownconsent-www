@@ -14,7 +14,6 @@ permissions:
   contents: write
   issues: read
   pull-requests: read
-  id-token: write
 
 jobs:
   note:
@@ -31,8 +30,13 @@ jobs:
       - uses: anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea # v1.0.241
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Senza questo input l'azione si autentica come app GitHub di Claude, che
+          # su questo repo non e' installata (401 sul notturno, run 36537879381).
+          # Col token del workflow i permessi sono quelli dichiarati sopra, e
+          # l'OIDC non viene chiesto (token.ts).
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
-            Esegui ${CLAUDE_PLUGIN_ROOT}/skills/release-notes/SKILL.md per il tag
+            Prepara le note di rilascio per il tag
             ${{ github.event.inputs.tag || github.ref_name }}.
 
             Delega a @comms-release la scrittura e a @docs-writer il changelog tecnico.

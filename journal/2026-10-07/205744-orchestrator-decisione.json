@@ -1,0 +1,40 @@
+{
+  "ts": "2026-10-07T20:57:44+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "notturno: --max-turns da 30 a 100, valore stimato",
+  "contesto": "Seguito di 2026-10-07/205331. Decisione di Andrea fra le opzioni del rapporto di misura. Unico file toccato: .github/workflows/claude-nightly-maintenance.yml, fuori dal perimetro del collaudo. Trigger, permessi, prompt, modello e timeout invariati. Lavoro fatto dalla sessione, senza subagent: sequenziale.",
+  "alternative": [
+    {
+      "opzione": "un run con show_full_output: true prima di scegliere il numero",
+      "scartata_perche": "scelta di Andrea: non attivarlo; su un repo pubblico l'output completo dell'agente finirebbe nel log"
+    },
+    {
+      "opzione": "togliere --max-turns",
+      "scartata_perche": "non scelta da Andrea; resterebbero solo timeout e costo"
+    },
+    {
+      "opzione": "restringere il compito o chiedere nel prompt chiamate non parallele",
+      "scartata_perche": "non scelta da Andrea; il prompt non si tocca in questo lavoro"
+    }
+  ],
+  "evidenza": [
+    "100 e' circa il doppio dell'unico dato misurato: num_turns 51 nel run 37618168526. Non viene da una misura del compito",
+    "misurato, da 205331: l'action confronta num_turns col tetto dopo un successo (run-claude-sdk.ts:241-250 alla SHA cab360f); in locale num_turns conta le chiamate di tool e il CLI applica il tetto alle risposte API (13 contro 3)",
+    "git rebase origin/main -> 'Current branch nightly-max-turns is up to date.', exit 0; origin/main a3d0faa",
+    "git diff --stat -> 1 file, 7 inserimenti, 1 rimozione: sei righe di commento YAML sopra claude_args e '--max-turns 30' -> '--max-turns 100'",
+    "il commento sta sopra claude_args e non accanto al valore: dentro lo scalare a blocco sarebbe testo passato all'action. yaml.safe_load del file -> claude_args '--max-turns 100\\n--permission-mode auto\\n--allowedTools \"Read,Grep,Glob,Edit,Write,Bash,Task\"\\n--model claude-haiku-4-5-20251001\\n'",
+    "grep -rn 'max-turns' .github tests/ci -> claude-pr-review.yml:152 '--max-turns 40' (non toccato) e la riga del notturno: nessun test porta il valore",
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> Ran 198 tests in 6.088s, OK (skipped=2)"
+  ],
+  "non_misurato": [
+    "che i 51 turni del run 37618168526 vengano da chiamate in parallelo",
+    "quanti turni chiede il compito reale: 100 puo' essere troppo o troppo poco",
+    "il run dal vivo col valore nuovo: non ancora lanciato quando questa voce e' stata scritta",
+    "il comportamento della 2.1.289 del runner rispetto alla 2.1.293 locale"
+  ],
+  "esito": "applicata sul ramo nightly-max-turns; verifica dal vivo da fare",
+  "umano_coinvolto": true
+}

@@ -1,0 +1,27 @@
+{
+  "ts": "2026-10-07T12:56:49+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "notturno dal ramo: il 401 non c'e' piu', il run fallisce lo stesso — l'agente chiude in errore in 484 ms, modello claude-haiku-4-6 non riconosciuto in locale",
+  "contesto": "Seguito di 2026-10-07/125412. gh workflow run claude-nightly-maintenance.yml --ref nightly-github-token, commit b230d61. release-comms non lanciato: spinge un ramo e apre una PR con le note di rilascio su un repo pubblico e chiede un tag che non esiste (git ls-remote --tags origin: vuoto; gh release list: vuoto); riportato ad Andrea, che aveva posto quel gate.",
+  "evidenza": [
+    "run https://github.com/OwnConsent/ownconsent-www/actions/runs/37610470945 — workflow_dispatch, conclusion failure, creato 10:54:21Z, aggiornato 10:54:48Z (27 s); step dell'action 10:54:28Z-10:54:45Z, failure",
+    "log: 'GITHUB_TOKEN Permissions: Contents: write, Metadata: read, PullRequests: write' — nessun IdToken",
+    "log: 'Using provided GITHUB_TOKEN for authentication'; nessuna riga 'Requesting OIDC token', nessun 401, nessun 'not installed'",
+    "log: result subtype success, is_error true, duration_ms 484, num_turns 1, total_cost_usd 0, modelUsage {}; '##[error]Action failed with error: Claude execution failed: result is_error:true'",
+    "log: 'No plugins specified, skipping plugins installation'",
+    "in locale: claude -p --model claude-haiku-4-6 --output-format json 'rispondi ok' -> '[claude-code:unrecognized_model] {\"model\":\"claude-haiku-4-6\"...}', total_cost_usd 0, modelUsage {}, terminal_reason api_error",
+    "git log -S'claude-haiku-4-6' sul workflow -> 2c0b095 'chore: impianto iniziale del cantiere': il valore c'e' dall'inizio",
+    "dopo il run: nessun ramo nuovo su origin, nessuna PR e nessuna issue nuova"
+  ],
+  "cosa_si_e_imparato": "Il 401 copriva un secondo guasto: lo scambio OIDC falliva prima che l'agente partisse, quindi il modello non era mai stato chiesto. Il testo dell'errore in CI e' nascosto ('full output hidden for security'): che sia lo stesso unrecognized_model visto in locale e' una corrispondenza di forma (0 costo, 0 uso, 1 turno), non una misura sul runner; il CLI locale puo' non essere la 2.1.289 del runner.",
+  "non_misurato": [
+    "il testo dell'errore dell'agente sul runner",
+    "tutto cio' che viene dopo l'avvio dell'agente: push di rami, gh pr create con can_approve_pull_request_reviews=false, apertura di issue senza il permesso issues",
+    "release-comms dal vivo: nessun run, ne' prima ne' dopo la modifica"
+  ],
+  "esito": "guasto riportato, non corretto: cambiare --model non e' fra le modifiche ammesse di questo lavoro. La #76 non si chiude su questa evidenza.",
+  "umano_coinvolto": true
+}

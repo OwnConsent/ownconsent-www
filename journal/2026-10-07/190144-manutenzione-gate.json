@@ -1,0 +1,25 @@
+{
+  "ts": "2026-10-07T19:01:44+00:00",
+  "agente": "maintenance",
+  "tipo": "gate",
+  "titolo": "PR creation blocked: GitHub Actions lacks permission",
+  "contesto": "Manutenzione ricorrente: aggiornamenti patch e minor delle dipendenze. Branch maintenance/deps-site-patch-astro è pronto con tutti i test verdi (172/172 e2e).",
+  "chi_ha_deciso": "GitHub Actions permissions",
+  "cosa_serviva": "GitHub Actions permission to create pull requests (createPullRequest via GraphQL)",
+  "dettagli": {
+    "branch": "maintenance/deps-site-patch-astro",
+    "commit": "9ba156e",
+    "changes": [
+      "site/package.json: astro 7.3.5 → 7.3.6",
+      "site/pnpm-lock.yaml: transitive updates"
+    ],
+    "test_results": {
+      "lint": "passed",
+      "astro_check": "passed",
+      "build": "passed",
+      "e2e": "172/172 passed"
+    },
+    "pr_status": "Ready for manual creation at https://github.com/OwnConsent/ownconsent-www/pull/new/maintenance/deps-site-patch-astro"
+  },
+  "esito": "bloccato"
+}

@@ -1,0 +1,46 @@
+{
+  "ts": "2026-10-07T19:02:00+00:00",
+  "agente": "maintenance",
+  "tipo": "gate",
+  "titolo": "Issue creation blocked: GitHub Actions lacks permission (3 HIGH CVEs found)",
+  "contesto": "Security audit durante la manutenzione ricorrente: trovate 3 CVE ad alto livello nel site/.",
+  "chi_ha_deciso": "GitHub Actions permissions",
+  "cosa_serviva": "GitHub Actions permission to create issues (createIssue via GraphQL)",
+  "cve_trovate": [
+    {
+      "pacchetto": "http-cache-semantics",
+      "versione_vulnerabile": "<=4.2.0",
+      "fix": ">=4.3.0",
+      "severita": "HIGH",
+      "advisory": "GHSA-ch52-4w7c-c8xp",
+      "percorso": "astro > http-cache-semantics",
+      "descrizione": "max-stale handling can disclose cross-user cached responses"
+    },
+    {
+      "pacchetto": "source-map-js",
+      "versione_vulnerabile": ">=1.0.0 <1.2.2",
+      "fix": ">=1.2.2",
+      "severita": "HIGH",
+      "advisory": "GHSA-68fv-2mgg-jv7q",
+      "percorsi": [
+        "astro > magicast > source-map-js",
+        "astro > svgo > css-tree > source-map-js",
+        "astro > svgo > csso > css-tree > source-map-js"
+      ],
+      "descrizione": "event-loop denial of service through indexed source-map section offsets"
+    },
+    {
+      "pacchetto": "sharp",
+      "versione_vulnerabile": "<0.35.5",
+      "fix": ">=0.35.5",
+      "severita": "HIGH",
+      "advisory": "GHSA-wq5f-xc86-pv6w",
+      "percorso": "astro > sharp",
+      "descrizione": "Vulnerability in librsvg dependency CVE-2026-96889"
+    }
+  ],
+  "osservazione": "Tutte le CVE sono dipendenze transitive di Astro. Potrebbero essere risolte aggiornando Astro a versioni più recenti.",
+  "issue_creation_status": "bloccato - mancano permessi GitHub Actions",
+  "audit_command": "cd site && pnpm audit --audit-level high",
+  "esito": "bloccato"
+}

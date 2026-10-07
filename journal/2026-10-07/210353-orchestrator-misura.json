@@ -1,0 +1,31 @@
+{
+  "ts": "2026-10-07T21:03:53+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "notturno dal ramo con --max-turns 100: run verde, 52 turni, un ramo maintenance/* spinto, nessuna PR e nessuna issue; l'agente dichiara bloccate entrambe e segnala CVE alte",
+  "contesto": "Seguito di 2026-10-07/205744. gh workflow run claude-nightly-maintenance.yml --ref nightly-max-turns, commit 373a81b, lanciato alle 20:58:37+02:00 con l'autorizzazione di Andrea. show_full_output non attivato. Premessa dichiarata prima del lancio: con le #94 e #95 gia' mergiate il run avrebbe avuto poco da fare e non avrebbe esercitato il tetto. La misura la smentisce in parte.",
+  "evidenza": [
+    "run https://github.com/OwnConsent/ownconsent-www/actions/runs/37670948691 — workflow_dispatch, headSha 373a81b, conclusion success, creato 18:58:39Z, aggiornato 19:02:47Z (4 min 8 s); step dell'action 18:58:45Z-19:02:44Z, success",
+    "log: 'Using provided GITHUB_TOKEN for authentication'; 'Installing Claude Code v2.1.289...'; SDK options '\"maxTurns\": 100'; 'show_full_output: false'",
+    "log: result subtype success, is_error false, duration_ms 222451, num_turns 52, total_cost_usd 0.29172230000000005, permission_denials_count 0; nessuna riga ##[error]",
+    "52 > 30: col tetto di prima questo run sarebbe stato bocciato dal controllo di run-claude-sdk.ts:241-250. 52 < 100: il tetto nuovo non e' stato raggiunto",
+    "git ls-remote --heads origin dopo il run: un ramo nuovo, maintenance/deps-site-patch-astro (7e90978), due commit di claude[bot] sopra 373a81b: 9ba156e 19:01:18Z 'chore(deps): update Astro to 7.3.6 in site/' e 7e90978 19:02:33Z 'journal: manutenzione ricorrente ...'. Rispetto a 373a81b: site/package.json (astro ^7.3.5 -> ^7.3.6), site/pnpm-lock.yaml, journal/2026-10-07/190144-manutenzione-gate.json, journal/2026-10-07/190200-sicurezza-cve.json",
+    "il ramo dell'agente parte da 373a81b, non da main: porta con se' i commit di questo ramo, modifica al workflow compresa",
+    "gh pr list --state all --head maintenance/deps-site-patch-astro -> []; gh pr list --state open -> []; issue piu' recente per data di creazione: la #76 del 02/10. Nessuna PR e nessuna issue nuove",
+    "gh api .../commits/7e90978/check-runs -> nessun check: ci non e' girato su quel ramo",
+    "dato dell'agente, non verificato: le due voci che ha scritto dicono 'PR creation blocked: GitHub Actions lacks permission (createPullRequest via GraphQL)', 'Issue creation blocked ... (createIssue via GraphQL)', test verdi prima del push (lint, astro check, build, e2e 172/172) e 3 CVE alte in site/",
+    "controllo del dato sulle CVE, in locale sul lockfile di a3d0faa: cd site && pnpm audit --audit-level high -> '10 vulnerabilities found — Severity: 1 low | 3 moderate | 6 high'; fra le alte http-cache-semantics (GHSA-ch52-4w7c-c8xp), source-map-js (GHSA-68fv-2mgg-jv7q), sharp (GHSA-wq5f-xc86-pv6w), tutte sotto astro"
+  ],
+  "non_misurato": [
+    "che il tetto a 100 fermi o bocci qualcosa: non raggiunto",
+    "che i 52 turni vengano da chiamate in parallelo, e quante risposte API ha usato il run: il flusso resta nascosto",
+    "il testo dell'errore di gh pr create e di gh issue create sul runner: lo riferisce l'agente nelle sue voci, il log non lo mostra. Coerente con can_approve_pull_request_reviews=false (voce 125412) e con l'assenza del permesso issues nel workflow, non una misura",
+    "i test verdi dichiarati dall'agente: nessun check sul ramo",
+    "se astro 7.3.6 chiude le vulnerabilita': l'audit non e' stato rifatto sul ramo dell'agente",
+    "un secondo run: 51 e 52 sono due dati, su due stati diversi delle dipendenze"
+  ],
+  "esito": "il guasto 'tetto dei turni superato' non si ripresenta con 100. Il ramo maintenance/deps-site-patch-astro resta su origin, non cancellato e senza PR: decide Andrea. Le CVE alte non hanno una issue: aprirla non era fra le azioni autorizzate. La #76 non si chiude su questa evidenza.",
+  "umano_coinvolto": true
+}

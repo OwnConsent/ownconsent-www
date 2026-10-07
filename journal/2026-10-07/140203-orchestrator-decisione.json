@@ -1,0 +1,29 @@
+{
+  "ts": "2026-10-07T14:02:03+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "notturno: --model claude-haiku-4-5-20251001 al posto di claude-haiku-4-6",
+  "contesto": "Seguito di 2026-10-07/125649: il guasto 'modello non riconosciuto'. Decisione di Andrea, che riferisce di aver provato in locale claude-haiku-4-5-20251001 e claude-haiku-4-5 con risposta corretta; quelle due prove non sono state rifatte da questa sessione.",
+  "alternative": [
+    {
+      "opzione": "claude-haiku-4-5 (alias)",
+      "scartata_perche": "scelta di Andrea per l'identificativo con data; un alias puo' cambiare bersaglio senza un commit"
+    },
+    {
+      "opzione": "togliere --model",
+      "scartata_perche": "cambierebbe modello e costo del notturno senza che nessuno l'abbia deciso"
+    }
+  ],
+  "evidenza": [
+    "grep -rn 'claude-haiku-4-6' . -> una sola riga di workflow, claude-nightly-maintenance.yml:53; le altre tre sono nella voce 125649, lasciata com'e'",
+    "nessun workflow gemello porta la stringa: claude-release-comms.yml non ha --model; claude-pr-review.yml:156 usa claude-opus-4-6 e non e' stato toccato",
+    "cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> Ran 198 tests in 4.382s, OK (skipped=2)"
+  ],
+  "non_misurato": [
+    "il run dal vivo col modello nuovo: non ancora lanciato quando questa voce e' stata scritta"
+  ],
+  "esito": "applicata sul ramo nightly-github-token",
+  "umano_coinvolto": true
+}

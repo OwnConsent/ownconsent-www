@@ -50,6 +50,6 @@ jobs:
             --max-turns 30
             --permission-mode auto
             --allowedTools "Read,Grep,Glob,Edit,Write,Bash,Task"
-            --model claude-haiku-4-6
+            --model claude-haiku-4-5-20251001
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,17 @@
+{
+  "ts": "2026-10-07T20:53:56+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "due passi falsi nella misura del tetto dei turni: prompt mangiato da --allowedTools, e l'ipotesi «i turni del subagente gonfiano num_turns» smentita dalla prova",
+  "contesto": "Durante le prove locali di 2026-10-07/205331.",
+  "evidenza": [
+    "primo lancio della prova A col prompt come argomento dopo --allowedTools \"Read\" -> exit 1, 'Error: Input must be provided either through stdin or as a prompt argument when using --print': l'opzione e' variadica e ha preso il prompt come nome di strumento. Rifatta col prompt da stdin",
+    "ipotesi fatta dopo la prova A: il notturno ha Task fra gli strumenti, quindi i turni dei subagenti entrano in num_turns senza essere fermati dal tetto. Prova B: sei Read nel subagente, num_turns 2 e 1 sui due result. Ipotesi smentita sulla 2.1.293",
+    "lo scarto e' comparso con la prova C, chiamate in parallelo nel filo principale: num_turns 13 con --max-turns 3"
+  ],
+  "cosa_si_e_imparato": "L'ipotesi piu' ovvia guardando gli allowedTools era sbagliata, e senza la prova B sarebbe finita nel rapporto come causa. In un lancio claude -p con opzioni variadiche il prompt va da stdin.",
+  "esito": "prova A rifatta; ipotesi del subagente scartata per la versione locale",
+  "umano_coinvolto": false
+}

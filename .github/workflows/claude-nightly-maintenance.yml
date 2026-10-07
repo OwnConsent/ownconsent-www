@@ -46,8 +46,14 @@ jobs:
             aprirla e apri invece una issue con l'errore.
 
             Se in totale non c'è nulla da fare, non aprire nulla e termina.
+          # --max-turns 100 e' una stima: circa il doppio dell'unico dato misurato,
+          # 51 (run 37618168526, fallito col tetto a 30). L'action confronta il
+          # tetto con num_turns, che conta le chiamate di tool; il CLI lo applica
+          # alle risposte API (journal/2026-10-07/205331). Il tetto reale e'
+          # timeout-minutes del job. Il commento sta qui e non accanto al valore
+          # perche' dentro lo scalare a blocco sarebbe un argomento.
           claude_args: |
-            --max-turns 30
+            --max-turns 100
             --permission-mode auto
             --allowedTools "Read,Grep,Glob,Edit,Write,Bash,Task"
             --model claude-haiku-4-5-20251001

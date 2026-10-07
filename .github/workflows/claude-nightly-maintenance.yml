@@ -12,7 +12,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  id-token: write
 
 jobs:
   manutenzione:
@@ -29,8 +28,13 @@ jobs:
       - uses: anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea # v1.0.241
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Senza questo input l'azione si autentica come app GitHub di Claude, che
+          # su questo repo non e' installata: 401 il 29/09 (run 36537879381). Col
+          # token del workflow i permessi sono quelli dichiarati sopra, e l'OIDC
+          # non viene chiesto (token.ts).
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
-            Agisci come il subagent @maintenance (${CLAUDE_PLUGIN_ROOT}/agents/maintenance.md).
+            Fai la manutenzione ricorrente di questo repository.
 
             1. Aggiornamenti patch e minor delle dipendenze, raggruppati per ecosistema.
             2. Test flaky: identifica, riproduci ripetendo, correggi la causa.
@@ -46,6 +50,6 @@ jobs:
             --max-turns 30
             --permission-mode auto
             --allowedTools "Read,Grep,Glob,Edit,Write,Bash,Task"
-            --model claude-haiku-4-6
+            --model claude-haiku-4-5-20251001
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

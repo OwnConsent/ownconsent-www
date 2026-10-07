@@ -1,0 +1,27 @@
+{
+  "ts": "2026-10-07T14:10:33+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "fallimento",
+  "titolo": "notturno dal ramo col modello corretto: l'agente lavora 51 turni e spinge due rami, il run fallisce sul tetto di 30 turni; nessuna PR aperta",
+  "contesto": "Seguito di 2026-10-07/140203. gh workflow run claude-nightly-maintenance.yml --ref nightly-github-token, commit f49bc90. release-comms non lanciato.",
+  "evidenza": [
+    "run https://github.com/OwnConsent/ownconsent-www/actions/runs/37618168526 — workflow_dispatch, conclusion failure, creato 12:02:16Z, aggiornato 12:09:20Z (7 min 4 s); step dell'action 12:02:25Z-12:09:15Z",
+    "log: 'Using provided GITHUB_TOKEN for authentication'; permessi del token 'Contents: write, Metadata: read, PullRequests: write'",
+    "log: init 'model': 'claude-haiku-4-5-20251001'; result subtype success, is_error false, duration_ms 397065, num_turns 51, total_cost_usd 0.31187319999999996, permission_denials_count 0, modelUsage con la sola chiave claude-haiku-4-5-20251001",
+    "log: '##[error]Claude reported a successful result after 51 turns, exceeding the configured maximum of 30' -> '##[error]Action failed with error: ...' -> exit code 1",
+    "git ls-remote --heads origin dopo il run: due rami nuovi, maintenance/deps-root-patch (6fae5c8, claude[bot], 12:05:35Z, package.json e pnpm-lock.yaml) e maintenance/deps-site-patch-minor (83e3885, claude[bot], 12:06:02Z, site/package.json e site/pnpm-lock.yaml)",
+    "gh pr list --state all --head <ciascuno dei due rami> -> []: nessuna PR; gh issue list: nessuna issue nuova",
+    "gh pr checks 93 -> ci pass 2m4s (run 37618175642)"
+  ],
+  "cosa_si_e_imparato": "Il guasto 'modello non riconosciuto' e' chiuso: il modello risponde e costa. Sotto ce n'era un terzo, 'tetto dei turni superato': l'agente dichiara successo a 51 turni contro --max-turns 30 e l'action lo conta come fallimento. Il tetto non ha fermato l'agente a 30.",
+  "non_misurato": [
+    "perche' nessuna PR e' stata aperta: l'output dell'agente e' nascosto. can_approve_pull_request_reviews=false resta la spiegazione attesa, non misurata; puo' anche non averci provato",
+    "se i test dei due rami erano verdi prima del push, come chiede il prompt",
+    "perche' i turni contati sono 51 con un tetto a 30",
+    "release-comms dal vivo"
+  ],
+  "esito": "guasto riportato, non corretto: turni, permessi e impostazioni del repo sono fuori dalle modifiche autorizzate. I due rami maintenance/* restano su origin: non cancellati, decide Andrea. La #76 non si chiude su questa evidenza.",
+  "umano_coinvolto": true
+}

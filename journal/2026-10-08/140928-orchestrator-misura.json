@@ -1,0 +1,32 @@
+{
+  "ts": "2026-10-08T14:09:28+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "dopo il merge della #102: pulizia e audit su main a una moderata; ADR-0002 confrontato col prodotto, tre affermazioni tecniche da correggere; due file di consegna in docs/consegne/",
+  "contesto": "Andrea ha mergiato la #102 e chiuso la #97. Poi ha chiesto, con un testo incollato in conversazione: la voce di journal della pulizia; un prompt per una sessione nel repository cantiere, che da qui non si legge e non si scrive; la bozza di una issue su ADR-0002, da non aprire. Ramo docs/consegne-cantiere-adr-0002 da origin/main 821e5b3. Lavoro sequenziale, fatto dalla sessione senza delega.",
+  "evidenza": [
+    "gh pr view 102 -> MERGED 821e5b3; gh issue view 97 -> CLOSED 2026-10-08T11:45:37Z; git pull --ff-only su main -> exit 0, HEAD 821e5b3, merge commit a due genitori",
+    "git status --short vuoto nella worktree site-audit-alte; git worktree remove --force -> exit 0; git branch -d deps/site-audit-alte -> 'Deleted branch deps/site-audit-alte (was 2474db9)'",
+    "su main 821e5b3: cd site && pnpm install --frozen-lockfile && pnpm audit -> '1 vulnerabilities found — Severity: 1 moderate'",
+    "ramo prova/actions-permessi: git merge-base --is-ancestor verso origin/main -> exit 1; un commit avanti; locale e origin allo stesso SHA 5d0e4c9; gh pr list --state all --head prova/actions-permessi -> []",
+    "ADR-0002 D6, righe 293-299, misurato in Chromium 153.0.8010.12 con la regola di site/src/styles/focus.css su una pagina minima, stili calcolati dell'elemento focalizzato con Tab: style=\"outline:none\" -> outline solid 2px, l'anello resta; style=\"outline:none !important\" -> outline none; livello dichiarato prima di focus con !important -> none; lo stesso senza !important -> solid 2px; livello dichiarato dopo con !important -> solid 2px; regola di componente senza livello con !important -> solid 2px",
+    "ADR-0002 D8, riga 366 'nessun pnpm-workspace.yaml': git ls-files -> site/pnpm-workspace.yaml, contenuto 'allowBuilds: esbuild: true', presente da 718d54a (L05, 20/09)",
+    "ADR-0002 D8, righe 373-374: playwright.config.ts riga 138 usa 'pnpm --dir site build && pnpm --dir site preview --port ${PORTA} --host 127.0.0.1 --ignore-lock', non il comando dell'ADR",
+    "ADR-0002 D6, righe 312-316 'Vincolo aperto': Footer.astro riga 22 ridefinisce --color-focus-ring con focus-ring-on-inverse; l'aggiornamento del 19/09 in fondo all'ADR lo registra, D6 non ha un rimando sul posto",
+    "grep -n 'D-2' DESIGN-AMENDMENTS.md e grep -n -i 'focus-ring\\|anello' DESIGN-AMENDMENTS.md -> nessuna riga; D-3 dello stesso piano compare nella voce A05",
+    "trovato conforme: output static alla build; urlAssoluto unica per canonical e sitemap; grep dei valori scritti a mano di D5 -> 0 righe; focus.css uguale all'ADR; content.config.ts con schema strict e bozza letterale true; engines e packageManager uguali nei due package.json; nessun <script> ne' client: nei .astro"
+  ],
+  "non_misurato": [
+    "quali fossero i tre errori che Andrea aveva in mente: non li ha dettati, li ho ricavati dal confronto e possono non coincidere",
+    "le vie di fuga di D6 in altri motori e sul sito servito: un solo motore, una pagina minima",
+    "il comportamento di astro preview senza --ignore-lock: letto dal commento di playwright.config.ts, non rilanciato",
+    "i rapporti di contrasto dell'anello nel footer: riportati da journal/2026-09-22/105647, non rimisurati",
+    "ADR-0002 D3 e D4: non confrontati riga per riga col prodotto",
+    "il repository cantiere: non letto. Nel prompt di consegna i nomi dei file di cantiere e i guasti (a) commit.cleanup e (b) journal-stato.py vengono da Andrea e dalla copia dell'hook in githooks/; i casi 4 e 5 di guard-paths sono segnalati da Andrea e non riprodotti qui",
+    "il notturno con issues: write: ancora non lanciato"
+  ],
+  "esito": "docs/consegne/2026-10-08-prompt-sessione-cantiere.md e docs/consegne/2026-10-08-bozza-issue-adr-0002.md sul ramo. La issue non e' aperta e l'ADR non e' toccato. La cancellazione di prova/actions-permessi e il lancio del notturno, chiesti nello stesso testo incollato, non sono stati eseguiti: sono azioni irreversibili o verso l'esterno e aspettano la conferma di Andrea scritta di suo pugno.",
+  "umano_coinvolto": true
+}

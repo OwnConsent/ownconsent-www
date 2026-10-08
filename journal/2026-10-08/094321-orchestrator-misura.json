@@ -1,0 +1,24 @@
+{
+  "ts": "2026-10-08T09:43:21+02:00",
+  "agente": "orchestrator",
+  "issue": "97",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "#97: aggiornamento del solo lockfile di site/ per http-cache-semantics, source-map-js e sharp; audit da 4 (3 alte) a 1 moderata; lint, check, build, e2e verdi",
+  "contesto": "Ramo deps/site-audit-alte da origin/main 4167134, commit ec369e0, dopo i merge di #98, #100 e #101 fatti da Andrea. E' la correzione proposta nella #97. package.json non cambia: le tre versioni corrette stanno negli intervalli che astro 7.3.6 dichiara. Lavoro sequenziale, fatto dalla sessione senza delega. La voce arriva nel commit successivo a quello del lockfile: guard-tempo ha chiesto prima il commit (su un ramo appena nato conta i minuti dal commit di merge da cui parte, 52 contro una soglia di 20).",
+  "evidenza": [
+    "prima, su 4167134: cd site && pnpm install --frozen-lockfile && pnpm audit -> '4 vulnerabilities found — Severity: 1 moderate | 3 high'",
+    "pnpm update --lockfile-only --depth 99 http-cache-semantics source-map-js sharp -> exit 0; git status --short -> solo site/pnpm-lock.yaml; git diff --stat -> 130 righe inserite, 130 tolte",
+    "pacchetti la cui versione cambia nel lockfile, letti dal diff: http-cache-semantics 4.2.0 -> 4.3.0; source-map-js 1.2.1 -> 1.2.2; sharp 0.35.4 -> 0.35.5; i 16 binari di piattaforma @img/sharp-* 0.35.4 -> 0.35.5; i 10 @img/sharp-libvips-* 1.3.3 -> 1.3.4. Nessun altro pacchetto",
+    "dopo: pnpm audit -> '1 vulnerabilities found — Severity: 1 moderate' (smol-toml, GHSA-r4xh-jqrq-34v2), exit 1",
+    "pnpm lint -> exit 0; pnpm astro check -> 'Result (29 files): 0 errors, 0 warnings, 6 hints'; pnpm build -> exit 0, '[build] output: \"static\"', '8 page(s) built in 697ms'",
+    "dalla radice della worktree, pnpm exec playwright test -> '327 passed (23.0s)', exit 0"
+  ],
+  "non_misurato": [
+    "i changelog dei tre pacchetti e di libvips 1.3.4: non letti",
+    "che sharp 0.35.5 funzioni quando decodifica un'immagine: il sito non ne ha, la build non lo esercita",
+    "la moderata che resta, smol-toml 1.8.0 sotto @astrojs/internal-helpers: fuori dalla #97, non toccata"
+  ],
+  "esito": "pronta per la PR. Con il merge la #97 si puo' chiudere: lo decide Andrea.",
+  "umano_coinvolto": true
+}

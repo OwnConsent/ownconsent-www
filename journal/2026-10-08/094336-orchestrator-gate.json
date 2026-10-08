@@ -1,0 +1,26 @@
+{
+  "ts": "2026-10-08T09:43:36+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "dopo i merge di #98, #100 e #101: pulizia fatta; il run dal vivo del notturno negato alla sessione; l'impostazione del repo sulle PR di Actions resta spenta per decisione di Andrea",
+  "contesto": "Andrea ha mergiato #98, #100 e #101 con un merge commit ciascuna. Restavano la pulizia delle worktree e il run dal vivo del notturno con issues: write, dichiarato come limite nella #100.",
+  "evidenza": [
+    "gh pr view: 98 MERGED 952e7f3, 100 MERGED 394dd26, 101 MERGED 4167134; git log --merges: tre commit a due genitori",
+    "git pull --ff-only su main -> exit 0, HEAD 4167134",
+    "git status --short vuoto sulle quattro worktree astro-7.3.6, actions-permessi, nightly-issues-write, issue-70; git worktree remove --force -> exit 0 su tutte; git branch -d di deps/astro-7.3.6, ci/nightly-issues-write, docs/issue-70-journal -> 'Deleted branch'. Il ramo prova/actions-permessi resta, in locale e su origin",
+    "su main dopo i merge: cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 203 tests', 'OK (skipped=2)'",
+    "gh workflow run claude-nightly-maintenance.yml --ref main: non eseguito. Al primo tentativo un hook ha riscritto la chiamata e il classificatore della modalita' automatica non ha dato un verdetto; al secondo, 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Create Unsafe Agents]'. Nessun'altra strada tentata",
+    "decisione di Andrea, in conversazione: l'impostazione 'Allow GitHub Actions to create and approve pull requests' per ora non si attiva. Stato misurato in 2026-10-08/082306: can_approve_pull_request_reviews false",
+    "sul costo, letto dal workflow: l'action si autentica con il segreto CLAUDE_CODE_OAUTH_TOKEN, un token OAuth di Claude Code. Di chi sia il token e se quell'account abbia l'uso extra attivo non risulta dal repository"
+  ],
+  "chi_ha_deciso": "il classificatore della modalita' automatica per il lancio del notturno; Andrea per l'impostazione del repo",
+  "cosa_serviva": "per il run dal vivo: che lo lanci Andrea, gh workflow run claude-nightly-maintenance.yml --ref main, oppure il prossimo run programmato del martedi'. Per le PR del notturno: l'impostazione del repo, che cambia solo Andrea",
+  "non_misurato": [
+    "che il notturno con issues: write apra davvero una issue, e con la label security",
+    "che con l'impostazione attiva Actions crei la PR"
+  ],
+  "esito": "il notturno puo' aprire issue e spingere rami, non aprire PR. La riapertura della decisione sull'impostazione non ha una data: resta legata alla #76 aperta, dove e' annotata in un commento.",
+  "umano_coinvolto": true
+}

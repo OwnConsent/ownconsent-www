@@ -1,0 +1,30 @@
+{
+  "ts": "2026-10-08T08:33:58+02:00",
+  "agente": "orchestrator",
+  "issue": "70",
+  "stadio": "03-costruzione",
+  "tipo": "decisione",
+  "titolo": "#70: controllo del campo obbligatorio per tipo e del nome HHMMSS in tests/ci, con le voci gia' fuori formato come elenco chiuso; durate di L02 e L11 nella ricognizione; docs/JOURNAL.md allineato alla pratica",
+  "contesto": "La #70 chiede le durate mancanti in §3 della ricognizione, il controllo dei campi obbligatori per tipo in tests/ci e, dal commento di Andrea, docs/JOURNAL.md allineato al nome HHMMSS, perche' fra documento e pratica vince la pratica. Ramo docs/issue-70-journal da origin/main 062c19f, commit b64037f. Lavoro sequenziale, fatto dalla sessione senza delega. Questa voce arriva nel commit successivo a quello del codice: il gate a tempo (guard-tempo, soglia 20 minuti) ha fermato la scrittura e chiesto prima il commit.",
+  "alternative": [
+    { "opzione": "sanare le voci fuori formato con una voce di correzione ciascuna", "scartata_perche": "il campo che manca e' di un altro agente e di un altro giorno: dod_soddisfatta di una consegna di @qa-test del 23/09 non la conosco, e scriverla ora sarebbe una ricostruzione. Le voci esistenti non si modificano" },
+    { "opzione": "far valere la regola solo da una data in poi", "scartata_perche": "una soglia di data lascia passare in silenzio una voce vecchia aggiunta o retrodatata; l'elenco chiuso nomina ogni eccezione e TestEccezioni diventa rosso se una smette di esserlo" },
+    { "opzione": "controllare anche i campi del tipo correzione e il campo corretta_da", "scartata_perche": "la tabella di docs/JOURNAL.md non da' campi obbligatori a correzione, e la #70 lascia aperto se corregge puo' essere una lista e se corretta_da diventa una regola: lo decide Andrea, non una PR di implementazione" }
+  ],
+  "evidenza": [
+    "misura su origin/main 062c19f: 536 voci, tutte JSON valido e tutte con ts; tipi: 188 misura, 154 decisione, 76 fallimento, 42 gate, 40 consegna, 36 correzione",
+    "24 voci senza il campo obbligatorio del loro tipo: 7 consegna senza dod_soddisfatta, 6 decisione senza alternative, 6 misura senza evidenza, 5 fallimento senza cosa_si_e_imparato. La ricognizione ne contava 15 nel suo intervallo; le altre 9 sono del 26 e 27/09",
+    "nomi: 505 HHMMSS, 31 HHMM, tutti questi in journal/2026-09-13 e journal/2026-09-20",
+    "durate dal campo lotto, issue 8: L02 12 voci, 2026-09-13T19:46:00 -> 2026-09-14T10:31:44; L11 5 voci, 2026-09-13T19:35:11 -> 19:39:07",
+    "cd tests/ci && python3 -m unittest test_journal_formato -> 'Ran 5 tests', OK; python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 203 tests in 6.638s', 'OK (skipped=2)'",
+    "mutazioni su una copia di journal/ puntata con CI_ROOT, una regola alla volta, tutte rosse: misura nuova senza evidenza; gate nuovo con cosa_serviva vuoto; voce nuova col nome HHMM; voce nuova non JSON; eccezione sui campi che non e' piu' una violazione; eccezione sui campi su file assente; eccezione sul nome su file assente. La copia non mutata resta verde"
+  ],
+  "non_misurato": [
+    "il tipo correzione: nessun campo controllato",
+    "la corrispondenza fra il nome del file e i campi ts, agente e tipo: la voce 081849-orchestrator-fallimento della PR #98 ha il nome un secondo avanti rispetto al suo ts, e questo test non lo vedrebbe",
+    "le mutazioni non sono un file committato: sono state eseguite a mano",
+    "che le durate di L02 e L11 seguano lo stesso criterio delle altre righe di §3: il criterio dichiarato e' 'prima -> ultima voce del lotto', applicato qui al campo lotto con issue 8; come siano state calcolate le altre righe non l'ho rifatto"
+  ],
+  "esito": "applicata sul ramo. Restano aperte nella #70, per Andrea: i campi obbligatori di correzione, corregge come stringa o lista, corretta_da come regola scritta.",
+  "umano_coinvolto": false
+}

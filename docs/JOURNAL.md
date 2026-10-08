@@ -38,10 +38,14 @@ e va rimosso.
 
     journal/
       2026-09-15/
-        1412-database-decisione.json
-        1436-database-fallimento.json
-        1502-privacy-gate.json
-        1530-performance-misura.json
+        141200-database-decisione.json
+        143605-database-fallimento.json
+        150233-privacy-gate.json
+        153047-performance-misura.json
+
+Il nome e' `HHMMSS-<agente>-<tipo>.json`. Le prime voci
+portano `HHMM`: restano come sono, e sono un elenco chiuso in
+`tests/ci/test_journal_formato.py`, che controlla anche il campo obbligatorio per tipo.
 
 ## Formato
 

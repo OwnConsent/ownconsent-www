@@ -14,10 +14,19 @@
  *     - eccezione Inline (ADR-0005): display inizia con "inline", il genitore ha testo
  *       proprio (textContent tolti gli elementi interattivi, dopo il trim non vuoto),
  *       e OGNI rettangolo ha altezza <= line-height calcolata del genitore + 1px;
- *     - eccezione Spacing: distanza centro-centro >= 24px dal rettangolo piu' vicino di
- *       un ALTRO bersaglio (equivalente alla condizione dei cerchi di 24px);
+ *     - eccezione Spacing (WCAG 2.5.8): il cerchio di 24px di diametro centrato sul
+ *       rettangolo sotto misura non interseca un ALTRO bersaglio. Contro un rettangolo
+ *       di almeno 24x24 si confronta con la sua AREA (distanza dal centro al rettangolo
+ *       >= 12px); contro un altro rettangolo sotto misura si confronta con il suo
+ *       cerchio (distanza fra i centri >= 24px). Il centro-centro da solo sarebbe piu'
+ *       indulgente contro un bersaglio grande (finding del collaudo sulla #105);
  *     - Equivalent, Essential e User agent control NON sono concesse dal test
  *       (ADR-0005): un bersaglio che le invoca fallisce.
+ *
+ * Limiti noti: i rettangoli dello stesso bersaglio non contano come vicini fra loro; lo
+ * Spacing si applica per rettangolo (l'ADR non lo dice); con line-height non numerica
+ * ("normal") il bersaglio non e' Inline; il cerchio e' centrato sul rettangolo di riga,
+ * non sul riquadro dell'elemento.
  */
 
 import type { Page } from '@playwright/test';
@@ -32,6 +41,8 @@ export interface RettangoloMisurato {
 }
 
 export interface BersaglioMisurato {
+  /** Posizione nell'ordine del documento: identifica il bersaglio anche con testo uguale. */
+  indice: number;
   tag: string;
   estratto: string;
   display: string;
@@ -43,6 +54,7 @@ export interface BersaglioMisurato {
 }
 
 export interface RettangoloNonConforme extends RettangoloMisurato {
+  indice: number;
   tag: string;
   estratto: string;
   distanzaMinima: number | null;
@@ -64,16 +76,18 @@ export async function raccogliBersagli(page: Page): Promise<BersaglioMisurato[]>
 
     function genitoreHaTestoProprio(genitore: Element): boolean {
       const copia = genitore.cloneNode(true) as Element;
-      for (const interattivo of Array.from(copia.querySelectorAll(selettore))) interattivo.remove();
+      // style e script hanno textContent ma non sono testo letto da nessuno.
+      for (const el of Array.from(copia.querySelectorAll(selettore + ', style, script'))) el.remove();
       return (copia.textContent ?? '').trim().length > 0;
     }
 
     return Array.from(document.querySelectorAll(selettore))
       .filter(eVisibile)
-      .map((el) => {
+      .map((el, indice) => {
         const genitore = el.parentElement;
         const lh = genitore ? parseFloat(getComputedStyle(genitore).lineHeight) : NaN;
         return {
+          indice,
           tag: el.tagName,
           estratto: (el.textContent ?? '').trim().slice(0, 40),
           display: getComputedStyle(el).display,
@@ -95,6 +109,20 @@ export function eInLinea(b: BersaglioMisurato): boolean {
   return b.rettangoli.every((r) => r.height <= b.lineHeightGenitorePx! + 1);
 }
 
+/**
+ * Distanza "fra cerchi" di 24px: contro un rettangolo >= 24x24 e' la distanza dal centro di
+ * `r` al rettangolo `ra` piu' 12px (raggio del cerchio), contro uno piu' piccolo e' la
+ * distanza fra i centri. Lo Spacing e' soddisfatto se vale almeno SOGLIA_PX.
+ */
+export function distanzaEquivalente(r: RettangoloMisurato, ra: RettangoloMisurato): number {
+  if (ra.width >= SOGLIA_PX && ra.height >= SOGLIA_PX) {
+    const dx = Math.max(Math.abs(r.cx - ra.cx) - ra.width / 2, 0);
+    const dy = Math.max(Math.abs(r.cy - ra.cy) - ra.height / 2, 0);
+    return Math.hypot(dx, dy) + SOGLIA_PX / 2;
+  }
+  return Math.hypot(r.cx - ra.cx, r.cy - ra.cy);
+}
+
 export function trovaNonConformi(bersagli: BersaglioMisurato[]): RettangoloNonConforme[] {
   const risultato: RettangoloNonConforme[] = [];
 
@@ -108,13 +136,13 @@ export function trovaNonConformi(bersagli: BersaglioMisurato[]): RettangoloNonCo
       bersagli.forEach((altro, j) => {
         if (i === j) return;
         for (const ra of altro.rettangoli) {
-          const d = Math.hypot(r.cx - ra.cx, r.cy - ra.cy);
+          const d = distanzaEquivalente(r, ra);
           if (distanzaMinima === null || d < distanzaMinima) distanzaMinima = d;
         }
       });
 
       const spaziaturaOk = distanzaMinima === null || distanzaMinima >= SOGLIA_PX;
-      if (!spaziaturaOk) risultato.push({ tag: b.tag, estratto: b.estratto, ...r, distanzaMinima });
+      if (!spaziaturaOk) risultato.push({ indice: b.indice, tag: b.tag, estratto: b.estratto, ...r, distanzaMinima });
     }
   });
 
@@ -125,7 +153,7 @@ export function trovaNonConformi(bersagli: BersaglioMisurato[]): RettangoloNonCo
 export function regolaCheLoPromuove(b: BersaglioMisurato, tutti: BersaglioMisurato[]): string {
   if (b.rettangoli.every((r) => r.width >= SOGLIA_PX && r.height >= SOGLIA_PX)) return 'dimensione';
   if (eInLinea(b)) return 'Inline';
-  return trovaNonConformi(tutti).some((n) => n.tag === b.tag && n.estratto === b.estratto) ? 'nessuna' : 'Spacing';
+  return trovaNonConformi(tutti).some((n) => n.indice === b.indice) ? 'nessuna' : 'Spacing';
 }
 
 // Pagine di prova costruite dal test (page.setContent) per la prova per reversione della

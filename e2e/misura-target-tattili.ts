@@ -140,7 +140,7 @@ export const HTML_DUE_LINK_IN_LINEA =
 // Bersagli NON in linea (block / inline-block) sotto 24x24, adiacenti: non conformi.
 export const HTML_BLOCCHI_PICCOLI =
   BASE_STILE +
-  '<button type="button" style="display:block;width:20px;height:20px;padding:0;margin:0">a</button>' +
+  '<button type="button" style="display:block;width:20px;height:20px;padding:0;margin:0;border:0">a</button>' +
   '<a href="#b" style="display:inline-block;width:20px;height:20px;vertical-align:top">b</a>';
 
 // Link a capo su due righe da 17px (unione 34px) nel <li> senza testo proprio (condizione
@@ -149,4 +149,4 @@ export const HTML_BLOCCHI_PICCOLI =
 export const HTML_LINK_A_CAPO_FUORI_DA_INLINE =
   BASE_STILE +
   '<ul><li style="width:30px"><a href="#x">abc def</a></li></ul>' +
-  '<button type="button" style="display:block;width:24px;height:24px;padding:0;margin:0">ok</button>';
+  '<button type="button" style="display:block;width:24px;height:24px;padding:0;margin:0;border:0">ok</button>';

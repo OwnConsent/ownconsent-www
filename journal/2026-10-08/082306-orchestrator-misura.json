@@ -1,0 +1,36 @@
+{
+  "ts": "2026-10-08T08:23:06+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "Actions e il token del workflow: issue negata senza issues: write e creata con; PR negata in entrambi i casi dall'impostazione del repo",
+  "contesto": "Seguito di 2026-10-07/210353, dove 'PR e issue rifiutate per permessi' era un dato dell'agente. Qui lo misura una sonda senza agente. Ramo prova/actions-permessi (5d0e4c9, da origin/main 062c19f): sostituisce il notturno, solo su quel ramo, con due job in sequenza che eseguono gh issue create e gh pr create col token del workflow; fra i due job cambia un solo permesso. Il ramo non si mergia. Lanciato con gh workflow run claude-nightly-maintenance.yml --ref prova/actions-permessi, con l'autorizzazione di Andrea al workflow_dispatch dai rami di lavoro.",
+  "alternative": [
+    { "opzione": "lanciare il notturno vero con issues: write e guardare se l'agente apre una issue", "scartata_perche": "l'esito dipenderebbe da cio' che l'agente decide di fare, non riproducibile a comando; con la #98 aperta e le alte ancora su main potrebbe aprire un doppione della #97 e spingere un altro ramo maintenance/*" },
+    { "opzione": "due rami di sonda, uno per insieme di permessi", "scartata_perche": "due rami remoti che non sono autorizzato a cancellare; i permessi a livello di job danno la stessa misura in un run solo, e il log di Set up job dice quali permessi ha avuto il token" }
+  ],
+  "evidenza": [
+    "gh api repos/OwnConsent/ownconsent-www/actions/permissions/workflow -> {\"default_workflow_permissions\":\"read\",\"can_approve_pull_request_reviews\":false}",
+    "gh api repos/OwnConsent/ownconsent-www/actions/permissions -> {\"enabled\":true,\"allowed_actions\":\"all\",\"sha_pinning_required\":false}",
+    "gh api orgs/OwnConsent/actions/permissions/workflow -> HTTP 403 'You must be an org admin or have the actions policies fine-grained permission.': l'impostazione a livello di organizzazione non e' leggibile con questo token",
+    "permessi dichiarati su main: notturno contents: write, pull-requests: write; ci contents: read; claude-pr-review permissions: {} con ventaglio contents: read, pull-requests: read e pubblica contents: read, actions: read, pull-requests: write; release-comms contents: write, issues: read, pull-requests: read. Nessun workflow ha issues: write",
+    "run https://github.com/OwnConsent/ownconsent-www/actions/runs/37737231690 — workflow_dispatch, headSha 5d0e4c9, conclusion success, job base e con-issues success",
+    "job base, Set up job, GITHUB_TOKEN Permissions: Contents: write, Metadata: read, PullRequests: write",
+    "job base: 'SONDA issue-create job=base rc=1', 'OUTPUT: GraphQL: Resource not accessible by integration (createIssue)'",
+    "job base: 'SONDA pr-create job=base rc=1', 'OUTPUT: pull request create failed: GraphQL: GitHub Actions is not permitted to create or approve pull requests (createPullRequest)'",
+    "job con-issues, GITHUB_TOKEN Permissions: Contents: write, Issues: write, Metadata: read, PullRequests: write",
+    "job con-issues: 'SONDA issue-create job=con-issues rc=0', 'OUTPUT: https://github.com/OwnConsent/ownconsent-www/issues/99', 'SONDA issue-close job=con-issues rc=0'",
+    "job con-issues: 'SONDA pr-create job=con-issues rc=1', stesso testo del job base",
+    "gh issue view 99 -> state CLOSED, author app/github-actions, closedAt 2026-10-08T06:22:33Z"
+  ],
+  "non_misurato": [
+    "che con can_approve_pull_request_reviews a true la PR venga creata: l'impostazione la cambia solo Andrea, e non e' stata toccata",
+    "l'impostazione dell'organizzazione, che puo' vincolare quella del repo: 403",
+    "il notturno vero con issues: write: l'agente non e' stato lanciato; che apra davvero una issue, e con la label security, resta da osservare",
+    "che il permesso dichiarato a livello di workflow, come nella PR, dia lo stesso token del permesso a livello di job usato dalla sonda: il meccanismo e' lo stesso per la documentazione di GitHub, ma dal vivo e' stato misurato solo il livello di job",
+    "l'applicazione di una label da parte del token del workflow: la sonda crea la issue senza label"
+  ],
+  "esito": "il dato dell'agente e' confermato su entrambi i punti, con due cause diverse. Allentamento giustificato dalla misura: uno solo, issues: write nel notturno. Per le PR non c'e' un permesso di workflow da aggiungere: pull-requests: write c'e' gia' e non basta; serve l'impostazione del repo, che decide Andrea. Il ramo prova/actions-permessi resta su origin: cancellarlo non e' fra le azioni autorizzate.",
+  "umano_coinvolto": true
+}

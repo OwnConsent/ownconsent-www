@@ -59,7 +59,7 @@ const PREDICATI_DI_STATO = new RegExp(
 );
 
 const VENIRE_PRIMA = /\b(?:viene|vengono|venga|vengano|verr[àa]|verranno)\s+(?:[\wàèéìòù']+\s+){0,2}$/i;
-const AGENTE_DOPO = /\bda(?:l|llo|lla|i|gli|lle)?\s+([^\s,;]+)/i;
+const AGENTE_DOPO = /\bda(?:(?:l|llo|lla|i|gli|lle)?\s+|ll['’])([^\s,;]+)/i;
 
 function frasi(testo: string): string[] {
   return testo.split(/(?<=[.!?;])\s+/).filter((f) => f.length > 0);

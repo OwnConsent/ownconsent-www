@@ -23,11 +23,15 @@ const STATO: Array<[string, string]> = [
   ['controllo originale', 'IAB Europe ha approvato OwnConsent: CMP approvata.'],
   ['conservativo: agente IAB', 'La CMP viene registrata da IAB Europe.'],
   ['conservativo: senza agente', 'La CMP viene registrata presso IAB Europe.'],
+  ['conservativo: agente IAB elisione', "La CMP viene registrata dall'IAB Europe."],
+  ['conservativo: agente IAB elisione tipografica', 'La CMP viene registrata dall’IAB Europe.'],
 ];
 
 const AMMESSE: Array<[string, string]> = [
   ['#57 passiva di responsabilità', 'la CMP viene registrata da noi presso IAB Europe'],
   ['#57 attiva di responsabilità', 'la registrazione della CMP presso IAB Europe la gestiamo noi'],
+  ['responsabilità, agente con elisione', "La CMP viene registrata dall'agenzia presso IAB Europe."],
+  ['responsabilità, apostrofo tipografico', 'La CMP viene registrata dall’agenzia presso IAB Europe.'],
   ['responsabilità, on-premise', 'La CMP viene registrata dal cliente a proprio nome presso IAB Europe.'],
   ['conformità allo standard', 'OwnConsent è conforme a IAB TCF v2.2 e v2.3, specifiche di IAB Europe.'],
   ['nessun IAB', 'La tua scelta è stata registrata.'],

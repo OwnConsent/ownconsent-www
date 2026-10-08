@@ -1,0 +1,20 @@
+{
+  "ts": "2026-10-08T16:24:57+02:00",
+  "agente": "qa-test",
+  "issue": "57",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "AC7: finding del collaudo sulla #104 confermato, la forma elisa dall' era un falso rosso; corretta con apostrofo dritto e tipografico",
+  "contesto": "Finding medio: AGENTE_DOPO non conosceva dall' davanti a vocale, quindi la passiva di responsabilita' con agente non IAB e' rossa. Rimisurato prima di toccare.",
+  "evidenza": [
+    "prima, violazioniAC7 su 4 frasi -> ROSSO su dall'agenzia (dritto), ROSSO su dall’agenzia (tipografico), ROSSO su dall'IAB Europe, ROSSO su dall’IAB Europe",
+    "dopo la modifica della sola regex AGENTE_DOPO -> verde su dall'agenzia e dall’agenzia; ROSSO su dall'IAB Europe e dall’IAB Europe (agente IAB, resta stato)",
+    "pnpm exec playwright test e2e/ac07 -> '32 passed (3.8s)'; pnpm exec playwright test -> '351 passed (25.9s)'"
+  ],
+  "non_misurato": [
+    "il test del finding con la regex vecchia dentro la suite Playwright: la reversione e' misurata con la funzione, non con la tabella rossa",
+    "altre forme elise o con preposizioni articolate (dagl', dall'ex)"
+  ],
+  "esito": "corretta; l'eccezione non e' allargata alle quattro forme lasciate come domanda ad Andrea",
+  "umano_coinvolto": false
+}

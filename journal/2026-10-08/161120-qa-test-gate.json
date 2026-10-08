@@ -1,0 +1,13 @@
+{
+  "ts": "2026-10-08T16:11:20+02:00",
+  "agente": "qa-test",
+  "issue": "56",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "guard-tempo ha negato due scritture: 37 minuti dall'ultimo commit, 2 file non committati",
+  "contesto": "Ho scritto ac07-riconoscimento.ts e modificato lo spec senza committare; le due scritture successive (tabella di frasi e strumento di misura v2) sono state negate dall'hook. Il conteggio dei minuti e' quello dell'hook e parte dall'ultimo commit del ramo (origine di main), non dall'inizio del mio lavoro.",
+  "chi_ha_deciso": "hook guard-tempo.py (PreToolUse)",
+  "cosa_serviva": "un commit e un push del ramo; fatto (be9c47a), poi le scritture sono passate. Nessun aggiramento.",
+  "esito": "gate rispettato; lezione: committare appena il primo file sta in piedi, prima di scrivere il secondo",
+  "umano_coinvolto": false
+}

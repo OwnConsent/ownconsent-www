@@ -1,0 +1,19 @@
+{
+  "ts": "2026-10-08T08:34:55+02:00",
+  "agente": "orchestrator",
+  "issue": "76",
+  "stadio": "04-collaudo",
+  "tipo": "gate",
+  "titolo": "merge delle PR #98 e #100 negato dal gate guard-prod: resta di una persona anche quando la persona lo chiede all'agente",
+  "contesto": "Con #98 e #100 verdi (ci, ventaglio, pubblica: pass; stato CLEAN; verdetto del collaudo al primo giro su entrambe, senza bloccanti) Andrea ha scritto in conversazione di mergiare cio' che andava mergiato. Ho lanciato gh pr merge 98 --merge con --match-head-commit.",
+  "evidenza": [
+    "PreToolUse guard-prod.sh del plugin cantiere: 'GATE: merge di PR — questa azione richiede una persona. Prepara il cambiamento e fermati.' Il comando non e' stato eseguito",
+    "gh pr view 98 e 100 prima del tentativo: state OPEN, mergeable MERGEABLE, mergeStateStatus CLEAN",
+    "nello stesso giro guard-paths ha negato un terzo comando che non usciva dal progetto: uno script Python in un heredoc con una stringa fatta di una barra seguita da una virgola e da una cifra, letta come percorso. Riscritto senza quella stringa. Si aggiunge ai due casi di 2026-10-08/081849",
+    "guard-tempo ha negato due scritture di voci di journal: 'sono passati 22 minuti dall'ultimo commit (soglia 20) e ci sono 3 file non committati'. Committato e spinto b64037f, poi riprese le voci"
+  ],
+  "chi_ha_deciso": "il gate del plugin cantiere, coerente con la regola 4 di CLAUDE.md; non aggirato",
+  "cosa_serviva": "il merge fatto da Andrea, con 'Create a merge commit', della #98 e poi della #100",
+  "esito": "fermo sul merge; riportato ad Andrea. Pulizia delle worktree e run dal vivo del notturno con issues: write restano in attesa dei due merge. Nel frattempo e' andato avanti il lavoro sulla #70, che non ne dipende.",
+  "umano_coinvolto": true
+}

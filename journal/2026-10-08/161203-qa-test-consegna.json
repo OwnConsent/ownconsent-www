@@ -1,0 +1,18 @@
+{
+  "ts": "2026-10-08T16:12:03+02:00",
+  "agente": "qa-test",
+  "issue": "58",
+  "stadio": "05-test",
+  "tipo": "consegna",
+  "titolo": "ac37-mobile-360 allineato ad ADR-0005: rettangoli per riga, Inline e Spacing",
+  "contesto": "Il test misurava l'unione di getBoundingClientRect e non conosceva Inline. Ora e' diviso in raccolta (e2e/misura-target-tattili.ts) e giudizio, con tre casi costruiti con page.setContent.",
+  "dod_soddisfatta": [
+    "pnpm exec playwright test dalla radice: 330 passed",
+    "pnpm exec playwright test e2e/ac37-mobile-360.spec.ts per tre volte: 27 passed, 27 passed, 27 passed",
+    "prova per reversione nei due versi: algoritmo vecchio sulle stesse pagine di prova, due link in linea 2 non conformi (falso rosso), blocchi piccoli 2 non conformi, link a capo fuori da Inline 0 non conformi (falso verde); algoritmo nuovo 0, 2, 1",
+    "mailto dell'informativa a 360x640: righe 133x17 e 315x17, display inline, genitore con testo proprio, line-height 24px, promosso dalla regola Inline",
+    "site/, spec, contracts/ e ADR non toccati"
+  ],
+  "esito": "consegnato, PR da aprire a cura dell'orchestratore",
+  "umano_coinvolto": false
+}

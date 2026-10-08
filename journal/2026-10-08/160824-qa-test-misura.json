@@ -1,0 +1,18 @@
+{
+  "ts": "2026-10-08T16:08:24+02:00",
+  "agente": "qa-test",
+  "issue": "58",
+  "stadio": "05-test",
+  "tipo": "misura",
+  "titolo": "Rimisura del mailto dell'informativa prima di toccare ac37-mobile-360",
+  "contesto": "La issue #58 riporta 315x41 di unione e righe 133x17 e 315x17 a 360x640. Prima di correggere il test si rimisura sulla build servita.",
+  "evidenza": [
+    "pnpm --dir site build; pnpm --dir site preview --port 45493 --host 127.0.0.1 --ignore-lock (porta scelta dal sistema operativo)",
+    "node docs/evidenza/8/l14/sessione/misura-ac37-rettangoli.mjs http://127.0.0.1:45493",
+    "360x640 {\"display\":\"inline\",\"line_height_genitore\":\"24px\",\"unione\":{\"w\":315,\"h\":41},\"righe\":[{\"w\":133,\"h\":17},{\"w\":315,\"h\":17}]}",
+    "1280x800 {\"display\":\"inline\",\"line_height_genitore\":\"24px\",\"unione\":{\"w\":449,\"h\":17},\"righe\":[{\"w\":449,\"h\":17}]}",
+    "I numeri coincidono con quelli della issue: si procede."
+  ],
+  "esito": "misura coincidente con la descrizione",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,19 @@
+{
+  "ts": "2026-10-08T16:28:51+02:00",
+  "agente": "qa-test",
+  "issue": "58",
+  "stadio": "05-test",
+  "tipo": "decisione",
+  "titolo": "Finding del collaudo #105 su ac37: Spacing contro area, style/script, indice stabile",
+  "contesto": "Quattro finding medi sul codice di e2e/misura-target-tattili.ts. Prima di toccare, ogni caso e' stato costruito e misurato contro il codice di 198e1d2 (con border:0 nei pulsanti): A, B ed E rossi (finding veri), C e D verdi (sono copertura mancante, non bug).",
+  "alternative": [
+    { "opzione": "lasciare lo Spacing centro-centro e riportare la domanda a @architect", "scartata_perche": "ADR-0005 non lo definisce (dice solo 'eccezione di spaziatura di 2.5.8'); design-tokens.json min-undisturbed-space dice 'diametro dello spazio indisturbato ... non sovrapposto allo spazio di un altro bersaglio'; docs/spec/issue-8.json dice 'rispetta la spaziatura di WCAG 2.2, criterio 2.5.8'. Nessun documento dichiara centro-centro: lo diceva solo il commento del test. Vale WCAG, cerchio contro area." },
+    { "opzione": "tenere l'identificazione per tag e testo in regolaCheLoPromuove e scrivere il limite", "scartata_perche": "la correzione e' un campo indice nella raccolta, poche righe" }
+  ],
+  "evidenza": [
+    "git show 198e1d2:e2e/misura-target-tattili.ts (piu' border:0) al posto del file corrente, pnpm exec playwright test e2e/ac37-mobile-360.spec.ts -g '#58': 3 failed (Spacing contro area, style e script, stesso testo), 4 passed",
+    "file corrente (5b884bc): 7 passed con lo stesso comando; 31 passed per tre volte sul file intero; suite intera 334 passed"
+  ],
+  "esito": "applicata; A, B, E corretti, C e D aggiunti",
+  "umano_coinvolto": false
+}

@@ -1,0 +1,13 @@
+esito vecchio -> nuovo | atteso nuovo | frase
+verde -> ROSSO | ROSSO | OwnConsent è iscritta al registro CMP di IAB Europe.
+verde -> ROSSO | ROSSO | CMP autorizzata da IAB Europe.
+verde -> ROSSO | ROSSO | OwnConsent è accreditata presso IAB Europe.
+verde -> ROSSO | ROSSO | OwnConsent è riconosciuta da IAB Europe.
+verde -> ROSSO | ROSSO | OwnConsent figura nell'elenco CMP di IAB Europe.
+verde -> ROSSO | ROSSO | OwnConsent è registrata xxxxxxxxxxxxxxxx [144 caratteri] xxxxxxxxxxx presso IAB Europe.
+verde -> ROSSO | ROSSO | OwnConsent è registrata. Lo ha confermato IAB Europe.
+verde -> ROSSO | ROSSO | cmpId=1234
+ROSSO -> ROSSO | ROSSO | CMP ID: 1234
+ROSSO -> verde | verde | la CMP viene registrata da noi presso IAB Europe
+verde -> verde | verde | la registrazione della CMP presso IAB Europe la gestiamo noi
+TUTTE le frasi hanno l'esito atteso nel test nuovo

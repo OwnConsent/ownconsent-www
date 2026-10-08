@@ -1,0 +1,17 @@
+{
+  "ts": "2026-10-08T16:11:09+02:00",
+  "agente": "qa-test",
+  "issue": "56",
+  "stadio": "04-collaudo",
+  "tipo": "decisione",
+  "titolo": "AC7: riconoscimento per frase con lessico di stato piu' largo ed eccezione stretta di responsabilita'; il confine oltre le due forme delle issue resta una domanda per Andrea",
+  "contesto": "La #56 dice che un vocabolario chiuso scade; la #57 chiede che la passiva di responsabilita' sia verde. Regola: spec AC7, campo interpretazione (Andrea, 2026-09-22).",
+  "alternative": [
+    { "opzione": "solo allungare l'elenco di radici lasciando la distanza di 100 caratteri", "scartata_perche": "non chiude la forma a 144 caratteri ne' le due frasi; sposta il problema" },
+    { "opzione": "qualunque participio vicino a IAB Europe e' stato", "scartata_perche": "piu' severo della regola: 'il TCF e' sviluppato da IAB Europe' sarebbe rosso, e un test piu' severo produce falsi rossi (la famiglia della #57)" },
+    { "opzione": "eccezione di responsabilita' per ogni forma con 'noi' o futuro ('sara' registrata da noi', 'va registrata dal cliente')", "scartata_perche": "la spec non dice dove passa il confine: regola inventata. Tenuta fuori, resta rossa come oggi, riportata ad Andrea come domanda" },
+    { "opzione": "scelta: frase come unita' (niente distanza fissa), finestra di una frase per lato, famiglia di predicati di stato piu' larga, eccezione solo per 'viene/vengono/verra' + participio + 'da X' con X diverso da IAB", "scartata_perche": "non scartata: e' la scelta. Limiti scritti in testa a e2e/ac07-riconoscimento.ts" }
+  ],
+  "esito": "applicata; domande per Andrea: 'viene registrata da IAB Europe' (agente IAB), 'viene registrata presso IAB Europe' (senza agente), 'sara' registrata da noi', 'va registrata dal cliente' restano rosse (comportamento invariato) finche' non decide",
+  "umano_coinvolto": false
+}

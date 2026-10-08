@@ -1,0 +1,22 @@
+{
+  "ts": "2026-10-08T16:10:47+02:00",
+  "agente": "qa-test",
+  "issue": "56",
+  "stadio": "04-collaudo",
+  "tipo": "misura",
+  "titolo": "AC7 (#56, #57): le 11 frasi delle issue misurate sul test vecchio e sul nuovo; suite 347 passati",
+  "contesto": "Worktree qa-ac07, ramo test/ac07-vocabolario-e-passiva da origin/main 16d844f. Il test vecchio e' preso con git show origin/main; il nuovo e' e2e/ac07-riconoscimento.ts, usato da e2e/ac07-nessuna-registrazione-iab.spec.ts.",
+  "evidenza": [
+    "prima, node docs/evidenza/8/l14/sessione/misura-ac07-vocabolario.mjs e2e/ac07-nessuna-registrazione-iab.spec.ts -> 'regex: 2 affermazione + 1 identificativo'; verde su iscritta, autorizzata, accreditata, riconosciuta, figura, 144 caratteri, due frasi, cmpId=1234; ROSSO su 'CMP ID: 1234' e su 'la CMP viene registrata da noi presso IAB Europe'; verde sulla attiva di responsabilita'",
+    "dopo, node docs/evidenza/8/l14/sessione/misura-ac07-vocabolario-v2.mjs <spec vecchio> e2e/ac07-riconoscimento.ts -> 'verde -> ROSSO' sulle 8 frasi di stato, 'ROSSO -> ROSSO' su CMP ID: 1234, 'ROSSO -> verde' sulla passiva di responsabilita', 'verde -> verde' sulla attiva; ultima riga 'TUTTE le frasi hanno l'esito atteso nel test nuovo'. Output intero in docs/evidenza/8/l14/sessione/misura-ac07-vocabolario-v2.txt",
+    "pnpm exec playwright test dalla radice -> '347 passed (30.1s)' (include le 8 pagine di ac07 sul prodotto servito, e le 20 frasi di ac07-riconoscimento.spec.ts)",
+    "pnpm exec playwright test e2e/ac07 -> '28 passed (3.7s)'"
+  ],
+  "non_misurato": [
+    "il nuovo test su una pagina con una frase di stato iniettata nel prodotto: la prova e' sulle frasi, non su una pagina modificata",
+    "la suite tre volte di fila: eseguita una volta sola",
+    "frasi diverse da quelle delle issue, a parte i controlli aggiunti nella tabella di ac07-riconoscimento.spec.ts"
+  ],
+  "esito": "test corretto, verde sul prodotto, frasi delle due issue con l'esito atteso",
+  "umano_coinvolto": false
+}

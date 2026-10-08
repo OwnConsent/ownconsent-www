@@ -144,9 +144,9 @@ export const HTML_BLOCCHI_PICCOLI =
   '<a href="#b" style="display:inline-block;width:20px;height:20px;vertical-align:top">b</a>';
 
 // Link a capo su due righe da 17px (unione 34px) nel <li> senza testo proprio (condizione
-// (b) dell'ADR non soddisfatta: non e' in linea). Sotto, un pulsante 120x30. L'unione
+// (b) dell'ADR non soddisfatta: non e' in linea). Sotto, un pulsante 24x24 (conforme per dimensione). L'unione
 // supera 24px, le righe no: la seconda riga sta a meno di 24px dal pulsante.
 export const HTML_LINK_A_CAPO_FUORI_DA_INLINE =
   BASE_STILE +
-  '<ul><li><a href="#x">testo del link che va a capo</a></li></ul>' +
-  '<button type="button" style="display:block;width:120px;height:30px;padding:0;margin:0">ok</button>';
+  '<ul><li style="width:30px"><a href="#x">abc def</a></li></ul>' +
+  '<button type="button" style="display:block;width:24px;height:24px;padding:0;margin:0">ok</button>';

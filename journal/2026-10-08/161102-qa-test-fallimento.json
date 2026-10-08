@@ -1,0 +1,16 @@
+{
+  "ts": "2026-10-08T16:11:02+02:00",
+  "agente": "qa-test",
+  "issue": "58",
+  "stadio": "05-test",
+  "tipo": "fallimento",
+  "titolo": "Primo caso costruito 'link a capo fuori da Inline' non produceva il rosso atteso",
+  "contesto": "Caso 3 della prova per reversione: link a capo su due righe da 17px nel <li> senza testo proprio, con un pulsante 120x30 sotto. Il test nuovo ha dato 0 non conformi invece di 1.",
+  "cosa_si_e_imparato": "Il difetto era nel caso, non nel giudizio: la distanza centro-centro dalla seconda riga al pulsante largo 120px era >= 24 per lo scarto orizzontale dei centri. Corretto con un pulsante 24x24 e un li stretto (30px), così i centri sono vicini; il test ora controlla le precondizioni misurate (due righe < 24px, unione >= 24px, genitore senza testo proprio) prima di giudicare. Non ho toccato la regola per far passare il test.",
+  "evidenza": [
+    "pnpm exec playwright test e2e/ac37-mobile-360.spec.ts: 26 passed, 1 failed (Expected length: 1, Received length: 0) con il caso 3 originale",
+    "stesso comando con il caso 3 corretto, filtro -g '#58': 3 passed"
+  ],
+  "esito": "caso corretto, regola invariata",
+  "umano_coinvolto": false
+}

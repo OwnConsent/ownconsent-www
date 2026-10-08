@@ -1,0 +1,17 @@
+{
+  "ts": "2026-10-08T08:18:48+02:00",
+  "agente": "orchestrator",
+  "issue": "97",
+  "stadio": "03-costruzione",
+  "tipo": "fallimento",
+  "titolo": "guard-paths ha negato due comandi che non uscivano dal progetto; un terzo comando e' fallito per un argomento sbagliato",
+  "contesto": "Durante la misura del bump di astro e la scrittura della issue #97. Il gate e' il PreToolUse guard-paths.sh del plugin cantiere.",
+  "evidenza": [
+    "comando con 'git -C .. ls-files' lanciato da site/ dentro la worktree: negato con \"GATE: il percorso '..' porta fuori dal progetto (/home/andreapernici/src/ownconsent)\". Il gate ha risolto '..' rispetto alla radice del progetto, non rispetto al cd dentro il comando: il bersaglio era la radice della worktree. Rifatto con il percorso assoluto della worktree, passato",
+    "comando con un heredoc che conteneva, nel testo della issue, il percorso dell'endpoint delle advisory dell'API di GitHub: negato con \"GATE: il percorso '/advisories/' porta fuori dal progetto (/advisories)\". Era prosa dentro il corpo di una issue, non un percorso del filesystem. Poco prima lo stesso endpoint, passato a gh api con l'identificativo in una variabile, non era stato negato. Il corpo e' stato scritto con lo strumento di scrittura dei file e passato a gh con --body-file",
+    "pnpm update --lockfile-only --depth Infinity ... -> \"error: invalid value 'Infinity' for '--depth <DEPTH>': invalid digit found in string\", exit 2. Con pnpm 12.4.1 --depth vuole un numero: rifatto con --depth 99, exit 0"
+  ],
+  "cosa_si_e_imparato": "Il gate dei percorsi legge il testo del comando, non il suo effetto: nega un '..' che un cd precedente rende interno e nega una stringa con una barra iniziale dentro un heredoc. In entrambi i casi il bersaglio reale era dentro il perimetro e l'azione e' stata rifatta dicendo il bersaglio in modo esplicito; nessuna delle due era un accesso fuori dal progetto. Sono due casi concreti per il lavoro di backlog su guard-paths in cantiere. --depth Infinity non vale piu' con pnpm 12.",
+  "esito": "nessuna azione fuori dal perimetro; i due falsi positivi sono riportati ad Andrea nel rapporto",
+  "umano_coinvolto": false
+}

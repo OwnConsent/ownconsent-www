@@ -1,0 +1,29 @@
+{
+  "ts": "2026-10-08T08:18:48+02:00",
+  "agente": "orchestrator",
+  "issue": "97",
+  "stadio": "03-costruzione",
+  "tipo": "misura",
+  "titolo": "astro ^7.3.5 -> ^7.3.6 da origin/main: audit da 10 (6 alte) a 4 (3 alte); lint, check, build, e2e verdi; le 3 alte che restano hanno la issue #97",
+  "contesto": "Ramo deps/astro-7.3.6 da origin/main 062c19f, worktree .claude/worktrees/astro-7.3.6. Il ramo remoto maintenance/deps-site-patch-astro non e' usato: parte da 373a81b e porta commit non suoi (voce 2026-10-07/210353). Il lavoro e' sequenziale e l'ha fatto la sessione, senza delega. Autorizzazione di Andrea in conversazione: gh in scrittura su ownconsent-www, rami e worktree nuovi, push dei rami di lavoro.",
+  "evidenza": [
+    "prima del bump, cd site && pnpm install --frozen-lockfile && pnpm audit -> '10 vulnerabilities found — Severity: 1 low | 3 moderate | 6 high', exit 1",
+    "pnpm add 'astro@^7.3.6' -> '- astro 7.3.5 / + astro 7.3.6', 'Packages: +15 -28', exit 0; git diff --stat -> site/package.json 2 righe, site/pnpm-lock.yaml 238 righe (123 inserite, 117 tolte)",
+    "dopo il bump, pnpm audit -> '4 vulnerabilities found — Severity: 1 moderate | 3 high', exit 1. Alte: http-cache-semantics 4.2.0 (GHSA-ch52-4w7c-c8xp), source-map-js 1.2.1 (GHSA-68fv-2mgg-jv7q), sharp 0.35.4 (GHSA-wq5f-xc86-pv6w). Moderata: smol-toml 1.8.0 (GHSA-r4xh-jqrq-34v2)",
+    "pnpm lint -> exit 0; pnpm astro check -> 'Result (29 files): 0 errors, 0 warnings, 6 hints', exit 0; pnpm build -> exit 0, '[build] output: \"static\"', '8 page(s) built in 838ms'",
+    "dalla radice della worktree, pnpm exec playwright test -> '327 passed (29.5s)', exit 0",
+    "advisory lette con gh api sul database di GitHub: http-cache-semantics CVSS 7.5 C:H, cache condivisa e max-stale; source-map-js CVSS 7.5 A:H, source map indicizzata con offset enorme; sharp senza CVSS, librsvg, decodifica di SVG su Linux glibc con node non PIE",
+    "raggio d'azione sul sito: in astro 7.3.6 http-cache-semantics e' importato solo da dist/assets/build/remote.js, sharp solo da dist/assets/services/sharp.js; grep di astro:assets, <Image, <Picture, getImage, .svg in site/src -> nessuna riga; git ls-files di immagini in site/ -> nessuna; la cartella di output ha 11 file, nessuna immagine, nessuna .map",
+    "prova della correzione su una copia di package.json e pnpm-lock.yaml fuori dal repository: pnpm update --lockfile-only --depth 99 http-cache-semantics source-map-js sharp -> exit 0, lockfile a 4.3.0, 1.2.2, 0.35.5, package.json invariato; pnpm audit -> '1 vulnerabilities found — Severity: 1 moderate'",
+    "label security creata (gh label create, exit 0); issue https://github.com/OwnConsent/ownconsent-www/issues/97 aperta con la label"
+  ],
+  "non_misurato": [
+    "che il codice vulnerabile non venga eseguito durante la build: dedotto dall'assenza di immagini e dagli import di astro, nessun tracciamento a runtime",
+    "se il node del runner di CI e' compilato come PIE",
+    "le 260 righe che la prova del lockfile cambia: non controllate riga per riga; su quel lockfile ne' build ne' lint ne' e2e",
+    "i changelog di astro 7.3.6 e dei tre pacchetti: non letti",
+    "come viene servito il sito in produzione: non risulta dal repository"
+  ],
+  "esito": "bump pronto per la PR, con il solo astro. La correzione delle tre alte e' proposta nella #97 e non applicata: va in una PR a parte.",
+  "umano_coinvolto": true
+}

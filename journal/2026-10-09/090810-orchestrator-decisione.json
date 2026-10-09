@@ -1,0 +1,33 @@
+{
+  "ts": "2026-10-09T09:08:10+02:00",
+  "agente": "orchestrator",
+  "issue": "8",
+  "stadio": "05-consegna",
+  "tipo": "decisione",
+  "titolo": "consuntivo del piano della #8 aggiunto in coda al file, senza riscrivere i lotti; e la registrazione di ciò che dall'08/10 non aveva ancora una voce",
+  "contesto": "docs/plan/issue-8.json diceva ancora «proposto: nessun lotto e stato delegato, nessun codice scritto», e nessun lotto aveva uno stato, con la consegna costruita e su main. Andrea ha chiesto il consuntivo il 09/10. Ramo docs/piano-8-consuntivo da origin/main fc0e157. Lavoro sequenziale, fatto dalla sessione senza delega. La voce arriva nel commit successivo a quello del piano: guard-tempo chiede il commit prima di una seconda scrittura su un ramo appena nato.",
+  "alternative": [
+    { "opzione": "aggiungere un campo stato a ciascuno degli undici lotti", "scartata_perche": "riscrive il piano del 19/09 dall'interno: chi lo legge non distingue più ciò che era stato pianificato da ciò che è stato misurato dopo" },
+    { "opzione": "una voce in più in modifiche_dopo_la_consegna", "scartata_perche": "quel campo registra cambi al piano decisi da Andrea; un consuntivo non cambia il piano, dice che cosa ne è stato" },
+    { "opzione": "scrivere «chiuso» per ogni lotto", "scartata_perche": "dal repository si verifica che la PR è mergiata, non che la Definition of Done fosse soddisfatta: L05 non ha una voce di consegna, L12 e L13 la dichiarano parziale, sei voci di consegna non hanno dod_soddisfatta. Il consuntivo dice «mergiato» e riporta il resto" }
+  ],
+  "evidenza": [
+    "il file si rilegge identico con json.dumps(indent=2, ensure_ascii=False): lo script lo verifica prima di scrivere. git diff --stat -> 172 righe inserite, 2 tolte: la riga di «stato», che conserva il testo originale fra virgolette, e la parentesi di chiusura dell'ultimo campo",
+    "gh pr list --state all, PR dalla 33 alla 60: L05 #34 718d54a, L04 #35 95c50a8, L07 #37 0a7a469, L06 #38 233881d, L08 #41 d797f0c, L12 #46 8ae445b, L09 #49 492786e, L13 #50 4dd121b, L10 #51 6ffbb41, L15 #53 f4009b5, L14 #55 47c78e6 e #59 cb2e804; tutte MERGED fra il 20 e il 24/09",
+    "voci di tipo consegna per lotto, issue 8: L05 0 su 8 voci; L04 1 senza dod_soddisfatta; L06 1; L07 2, agente feature; L08 1; L09 1 del lotto del piano (la 2026-09-21/140341 è l'altro lavoro con la stessa etichetta); L10 1; L12 2, la prima parziale; L13 1, parziale; L14 8, di cui 5 di qa-test senza dod_soddisfatta; L15 1. I percorsi citati nel consuntivo esistono tutti: verificato con os.path.exists",
+    "su main fc0e157 il 09/10: pnpm exec playwright test -> '358 passed (28.9s)'; cd tests/ci && python3 -m unittest discover -s . -p 'test_*.py' -> 'Ran 203 tests', 'OK (skipped=2)'",
+    "dall'08/10, senza voce finora — #103: gh pr view -> MERGED 16d844f; worktree consegne rimossa a status vuoto, git branch -d docs/consegne-cantiere-adr-0002 -> 'Deleted branch (was 411be2d)'",
+    "dall'08/10 — ramo di sonda: autorizzato da Andrea in conversazione («cancella pure i rami di prova»); git branch -D prova/actions-permessi -> 'Deleted branch prova/actions-permessi (was 5d0e4c9)'; git push origin --delete prova/actions-permessi -> '- [deleted]'; git ls-remote --heads origin prova/actions-permessi -> nessuna riga. Gli altri cinque rami locali prova/* non sono stati toccati",
+    "dall'08/10 — #56, #57 e #58 delegate a due agenti qa-test in parallelo, in due worktree: i test di accettazione sono di qa-test e i due lavori toccano file diversi. PR #104 (2bb0435) e #105 (fc0e157), mergiate da Andrea. Su ciascuna il collaudo del primo commit aveva finding medi, rimandati allo stesso agente; sulla #105 la prova per reversione è stata rieseguita dalla sessione: '3 failed, 4 passed' col file al commit precedente, '7 passed' col file corrente",
+    "il collaudo gira solo all'apertura della PR (.github/workflows/claude-pr-review.yml, types: opened, ready_for_review, reopened): i commit di correzione di #104 e #105 hanno avuto ci e nessun secondo verdetto. Avevo scritto ad Andrea che ne sarebbe arrivato uno: era sbagliato, corretto nello stesso giro",
+    "il 09/10: worktree qa-ac07 e qa-ac37 rimosse a status vuoto; git branch -d dei due rami -> 'Deleted branch'"
+  ],
+  "non_misurato": [
+    "che ogni lotto abbia soddisfatto la propria Definition of Done: il consuntivo riporta le voci di consegna, non le rigiudica",
+    "il consuntivo dei turni e dei costi: non ricavabile, come già scritto nella ricognizione",
+    "le suite intere sui commit di correzione di #104 e #105 le ha eseguite ci; in locale la sessione le ha rieseguite solo su main dopo i merge",
+    "il notturno con issues: write: ancora non lanciato"
+  ],
+  "esito": "applicata sul ramo. Chiudere la #8 resta una decisione di Andrea e dipende dal gate di pubblicazione.",
+  "umano_coinvolto": true
+}

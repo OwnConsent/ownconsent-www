@@ -16,10 +16,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "astro": "^7.3.6"
+    "astro": "^7.4.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.12",
     "@eslint/js": "^9.39.5",
     "eslint": "^9.39.5",
     "lightningcss": "^1.27.0",

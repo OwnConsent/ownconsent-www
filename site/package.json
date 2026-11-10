@@ -15,15 +15,13 @@
     "check": "astro check",
     "lint": "eslint ."
   },
-  "dependencies": {
-    "astro": "^7.3.6"
-  },
   "devDependencies": {
-    "@astrojs/check": "^0.9.4",
+    "@astrojs/check": "^0.9.12",
     "@eslint/js": "^9.39.5",
+    "astro": "^7.4.7",
     "eslint": "^9.39.5",
     "lightningcss": "^1.27.0",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.71.1"
+    "typescript-eslint": "^8.72.1"
   }
 }
